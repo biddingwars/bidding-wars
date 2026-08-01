@@ -187,7 +187,21 @@ const LANDMASS={
    The continents are drawn straight into the texture, independent of the
    optional real-border fetch below, so the globe always looks like Earth
    even with zero network access. */
-function earthTexture(){
+/* Longitudes are made continuous so a country spanning the antimeridian
+   (Russia, Fiji, Antarctica) doesn't smear a band across the whole map. */
+function unwrap(ring){
+  const out=[[ring[0][0], ring[0][1]]];
+  for(let i=1;i<ring.length;i++){
+    let lon=ring[i][0];
+    const prev=out[i-1][0];
+    while(lon-prev> 180) lon-=360;
+    while(lon-prev<-180) lon+=360;
+    out.push([lon, ring[i][1]]);
+  }
+  return out;
+}
+
+function earthTexture(feats, ownedSet){
   const W=2048, H=1024;
   const c=document.createElement('canvas'); c.width=W; c.height=H;
   const x=c.getContext('2d');
@@ -221,14 +235,29 @@ function earthTexture(){
     });
     x.closePath(); x.fill(); x.stroke();
   };
-  x.fillStyle='#3E7A4A'; x.strokeStyle='#2A5636'; x.lineWidth=1.4;
-  Object.values(LANDMASS).forEach(poly=>{
-    drawLand(poly,0); drawLand(poly,-W); drawLand(poly,W);
-  });
+  if(feats && feats.length){
+    /* Real Natural Earth coastlines: fill the land, then stroke every national
+       border on top. Painted into the texture so the lines actually have width. */
+    feats.forEach((f,i)=>{
+      const owned = ownedSet && ownedSet.has(i);
+      x.fillStyle   = owned ? '#7A6A22' : '#356945';
+      x.strokeStyle = owned ? '#FFD84D' : '#8FD8B0';
+      x.lineWidth   = owned ? 3.2 : 1.5;
+      f.rings.forEach(ring=>{
+        const u=unwrap(ring);
+        [0,-W,W].forEach(dx=>drawLand(u,dx));
+      });
+    });
+  } else {
+    x.fillStyle='#356945'; x.strokeStyle='#24503A'; x.lineWidth=1.2;
+    Object.values(LANDMASS).forEach(poly=>{
+      drawLand(poly,0); drawLand(poly,-W); drawLand(poly,W);
+    });
+  }
 
   // faint terrain shading so land doesn't read as flat green
   x.globalAlpha=.18;
-  Object.values(LANDMASS).forEach(poly=>{
+  if(!(feats && feats.length)) Object.values(LANDMASS).forEach(poly=>{
     const lg=x.createLinearGradient(0,0,0,H);
     lg.addColorStop(0,'rgba(255,255,255,.5)'); lg.addColorStop(1,'rgba(0,0,0,.35)');
     x.fillStyle=lg;
@@ -283,10 +312,8 @@ function globe3d(host, owned){
   scene.add(new THREE.Points(sg, new THREE.PointsMaterial({color:0xBFD4FF, size:0.075, sizeAttenuation:true, transparent:true, opacity:.8})));
 
   /* the planet */
-  const earth=new THREE.Mesh(
-    new THREE.SphereGeometry(1,96,64),
-    new THREE.MeshPhongMaterial({map:earthTexture(), shininess:12, specular:0x224466, emissive:0x060C18})
-  );
+  const earthMat=new THREE.MeshPhongMaterial({map:earthTexture(), shininess:12, specular:0x224466, emissive:0x060C18});
+  const earth=new THREE.Mesh(new THREE.SphereGeometry(1,96,64), earthMat);
   rig.add(earth);
 
   /* atmosphere */
@@ -370,23 +397,29 @@ function globe3d(host, owned){
       });
       if(best>=0 && bd<90) claimed.add(best);
     });
+    /* Repaint the globe with the real coastlines. Done in the texture rather than
+       as 3D lines because WebGL ignores line thickness — hairlines vanish at
+       this scale. In the texture the borders get real width and antialiasing. */
+    const old = earthMat.map;
+    earthMat.map = earthTexture(feats, claimed);
+    earthMat.needsUpdate = true;
+    if(old && old.dispose) old.dispose();
+
+    /* Winner's countries also get a raised gold outline so they read in 3D. */
     feats.forEach((f,i)=>{
-      const target = claimed.has(i) ? mine : rest;
+      if(!claimed.has(i)) return;
       f.rings.forEach(r=>{
         for(let k=0;k<r.length-1;k++){
-          const p=toVec(r[k][1], r[k][0], 1.003), n=toVec(r[k+1][1], r[k+1][0], 1.003);
-          target.push(p.x,p.y,p.z,n.x,n.y,n.z);
+          const p=toVec(r[k][1], r[k][0], 1.008), n=toVec(r[k+1][1], r[k+1][0], 1.008);
+          mine.push(p.x,p.y,p.z,n.x,n.y,n.z);
         }
       });
     });
-    const add=(arr,colour,op,width)=>{
-      if(!arr.length) return;
+    if(mine.length){
       const g=new THREE.BufferGeometry();
-      g.setAttribute('position', new THREE.Float32BufferAttribute(arr,3));
-      rig.add(new THREE.LineSegments(g, new THREE.LineBasicMaterial({color:colour, transparent:true, opacity:op, linewidth:width})));
-    };
-    add(rest, 0x7FA8D8, 0.34, 1);
-    add(mine, 0xFFC400, 1.0, 2);
+      g.setAttribute('position', new THREE.Float32BufferAttribute(mine,3));
+      rig.add(new THREE.LineSegments(g, new THREE.LineBasicMaterial({color:0xFFE680, transparent:true, opacity:0.95})));
+    }
   });
 
   /* ---- labels ---- */
