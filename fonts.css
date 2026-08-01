@@ -1,0 +1,12 @@
+/* Bundled fonts only — no network request, ever.
+   Drop the .woff2 files listed in www/fonts/README.md next to this file.
+   Until then the fallback stack below keeps the layout intact. */
+
+@font-face{font-family:'Archivo Black';src:url('../fonts/ArchivoBlack-Regular.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Space Grotesk';src:url('../fonts/SpaceGrotesk-Regular.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Space Grotesk';src:url('../fonts/SpaceGrotesk-Bold.woff2') format('woff2');
+  font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Space Mono';src:url('../fonts/SpaceMono-Bold.woff2') format('woff2');
+  font-weight:700;font-style:normal;font-display:swap}

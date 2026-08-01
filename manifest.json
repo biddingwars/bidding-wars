@@ -1,0 +1,18 @@
+{
+  "name": "Bidding Wars",
+  "short_name": "Bidding Wars",
+  "description": "A country auction game. Population is points, money runs out.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#D6161F",
+  "theme_color": "#D6161F",
+  "lang": "en",
+  "categories": ["games", "education"],
+  "icons": [
+    { "src": "img/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "img/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "img/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#D6161F">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Bidding Wars">
+<meta name="description" content="A country auction game. Population is points, money runs out.">
+<title>Bidding Wars</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<link rel="icon" href="img/icon-180.png">
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<!-- Launch curtain. Removed once the first frame has painted, so the app never
+     shows a white flash between the iOS launch screen and the menu. -->
+<div id="curtain" aria-hidden="true">
+  <div class="curtain-mark">Bidding<br>Wars</div>
+</div>
+
+<button class="mute" id="mute" aria-label="Sound on or off">♪</button>
+<button class="homebtn" id="hb" aria-label="Back to main menu">☰ Menu</button>
+
+<div class="wrap">
+  <div class="mast">
+    <h1>Bidding<br>Wars</h1>
+    <div class="sub">Use your knowledge to beat your rivals</div>
+  </div>
+  <main id="app"></main>
+  <div class="foot">NO ACCOUNTS · NO TRACKING · <span id="cc">0</span> COUNTRIES</div>
+</div>
+
+<!-- three.js is bundled, never fetched. If www/vendor/three.min.js is absent the
+     results screen falls back to the flat canvas globe and the app still works. -->
+<script src="vendor/three.min.js" onerror="window.__noThree=1"></script>
+
+<script src="js/platform.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/globe.js"></script>
+<script>
+  Promise.all([loadLang(), loadRec()]).then(() => {
+    const sub = document.querySelector('.mast .sub');
+    if (sub) sub.textContent = t('tagline');
+    home();
+    Shell.ready();
+
+    /* Offline cache. Only on the web — inside the Capacitor app the files are
+       already local and a second cache layer just gets in the way. */
+    if ('serviceWorker' in navigator && !Native.is && location.protocol !== 'file:') {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+    const c = document.getElementById('curtain');
+    if (c) { c.classList.add('gone'); setTimeout(() => c.remove(), 420); }
+  });
+</script>
+</body>
+</html>

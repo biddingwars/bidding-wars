@@ -1,0 +1,19 @@
+{
+  "appId": "com.v1rotate.biddingwars",
+  "appName": "Bidding Wars",
+  "webDir": "www",
+  "server": { "androidScheme": "https", "iosScheme": "capacitor" },
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#D6161FFF",
+    "limitsNavigationsToAppBoundDomains": true
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false,
+      "backgroundColor": "#D6161F",
+      "showSpinner": false
+    },
+    "Keyboard": { "resize": "none" }
+  }
+}
