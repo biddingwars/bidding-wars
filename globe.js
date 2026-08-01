@@ -160,6 +160,27 @@ async function loadBorders(){
   BORDER_CACHE=false; return false;             // globe still renders without outlines
 }
 
+/* NASA-derived satellite imagery. Tried in order: a copy bundled with the app,
+   then two public CDNs. Falls back to the drawn texture if all three fail. */
+const EARTH_TEXTURES=[
+  'earth.jpg',
+  'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/textures/planets/earth_atmos_2048.jpg',
+  'https://unpkg.com/three@0.128.0/examples/textures/planets/earth_atmos_2048.jpg'
+];
+
+function loadEarthTexture(done){
+  if(!window.THREE || !THREE.TextureLoader){ done(null); return; }
+  const loader=new THREE.TextureLoader();
+  loader.setCrossOrigin('anonymous');
+  let i=0;
+  const next=()=>{
+    if(i>=EARTH_TEXTURES.length){ done(null); return; }
+    const url=EARTH_TEXTURES[i++];
+    loader.load(url, tex=>{ tex.anisotropy=8; done(tex); }, undefined, ()=>next());
+  };
+  next();
+}
+
 const toVec=(lat,lon,r)=>{
   const a=(90-lat)*Math.PI/180, b=(lon+180)*Math.PI/180;
   return new THREE.Vector3(-r*Math.sin(a)*Math.cos(b), r*Math.cos(a), r*Math.sin(a)*Math.sin(b));
@@ -318,6 +339,21 @@ function globe3d(host, owned){
   const earth=new THREE.Mesh(new THREE.SphereGeometry(1,96,64), earthMat);
   rig.add(earth);
 
+  let satelliteOn=false;
+  loadEarthTexture(tex=>{
+    if(!tex) return;
+    satelliteOn=true;
+    const old=earthMat.map;
+    earthMat.map=tex;
+    earthMat.emissive=new THREE.Color(0x000000);
+    earthMat.specular=new THREE.Color(0x223344);
+    earthMat.shininess=15;
+    earthMat.needsUpdate=true;
+    if(old && old.dispose) old.dispose();
+    const cap=host.parentNode && host.parentNode.querySelector('.gcap');
+    if(cap) cap.textContent += ' · satellite';
+  });
+
   /* atmosphere */
   const atmo=new THREE.Mesh(new THREE.SphereGeometry(1,64,48), new THREE.ShaderMaterial({
     vertexShader:'varying vec3 vN; void main(){ vN=normalize(normalMatrix*normal); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
@@ -384,7 +420,7 @@ function globe3d(host, owned){
       if(cap) cap.textContent += ' · simplified outlines';
       return;
     }
-    if(cap) cap.textContent += ' · ' + feats.length + ' real borders';
+    if(cap && !satelliteOn) cap.textContent += ' · ' + feats.length + ' real borders';
     bordersOn=true;
     const mine=[], rest=[];
     const centroid=f=>{
@@ -407,10 +443,12 @@ function globe3d(host, owned){
     /* Repaint the globe with the real coastlines. Done in the texture rather than
        as 3D lines because WebGL ignores line thickness — hairlines vanish at
        this scale. In the texture the borders get real width and antialiasing. */
-    const old = earthMat.map;
-    earthMat.map = earthTexture(feats, claimed);
-    earthMat.needsUpdate = true;
-    if(old && old.dispose) old.dispose();
+    if(!satelliteOn){
+      const old = earthMat.map;
+      earthMat.map = earthTexture(feats, claimed);
+      earthMat.needsUpdate = true;
+      if(old && old.dispose) old.dispose();
+    }
 
     /* Winner's countries also get a raised gold outline so they read in 3D. */
     feats.forEach((f,i)=>{
