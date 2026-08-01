@@ -120,7 +120,8 @@ function globe2d(host, owned){
 
 /* Borders are a bundled asset. Nothing here touches the network — an app that
    needs a server to draw its own map fails review the moment it is tested offline. */
-const BORDER_FILE='data/countries-110m.json';
+const BORDER_FILE='countries-110m.json';
+const BORDER_FALLBACK='https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 let BORDER_CACHE=null;
 
 /* minimal TopoJSON reader — saves pulling in topojson-client */
@@ -148,16 +149,27 @@ function topoFeatures(topo, key){
   }).filter(f=>f.rings.length);
 }
 
+let BORDER_ERR='';
 async function loadBorders(){
   if(BORDER_CACHE!==null) return BORDER_CACHE;
-  try{
-    const r=await fetch(BORDER_FILE);           // local file inside the bundle
-    if(r.ok){
-      const feats=topoFeatures(await r.json(),'countries');
-      if(feats.length){ BORDER_CACHE=feats; return feats; }
-    }
-  }catch(e){}
-  BORDER_CACHE=false; return false;             // globe still renders without outlines
+  const notes=[];
+  const tag=u=>u.indexOf('//')<0 ? 'local' : 'cdn';
+  for(const url of [BORDER_FILE, BORDER_FALLBACK]){
+    try{
+      const r=await fetch(url);
+      if(!r.ok){ notes.push(tag(url)+' HTTP'+r.status); continue; }
+      let j;
+      try{ j=await r.json(); }
+      catch(pe){ notes.push(tag(url)+' badJSON'); continue; }
+      let feats;
+      try{ feats=topoFeatures(j,'countries'); }
+      catch(te){ notes.push(tag(url)+' decode'); continue; }
+      if(feats && feats.length){ BORDER_CACHE=feats; return feats; }
+      notes.push(tag(url)+' 0feats');
+    }catch(e){ notes.push(tag(url)+' '+String(e.message||e.name).slice(0,20)); }
+  }
+  BORDER_ERR=notes.join(' / ');
+  BORDER_CACHE=false; return false;
 }
 
 /* NASA-derived satellite imagery. Tried in order: a copy bundled with the app,
@@ -417,7 +429,7 @@ function globe3d(host, owned){
     note.remove();
     const cap=host.parentNode && host.parentNode.querySelector('.gcap');
     if(!feats){
-      if(cap) cap.textContent += ' · simplified outlines';
+      if(cap) cap.textContent += ' · borders failed: ' + (BORDER_ERR||'unknown');
       return;
     }
     if(cap && !satelliteOn) cap.textContent += ' · ' + feats.length + ' real borders';
