@@ -165,23 +165,83 @@ const toVec=(lat,lon,r)=>{
   return new THREE.Vector3(-r*Math.sin(a)*Math.cos(b), r*Math.cos(a), r*Math.sin(a)*Math.sin(b));
 };
 
-/* ocean + graticule painted into a texture */
+const LANDMASS={
+  "north_america":[[-156,71],[-165,66],[-160,59],[-152,58],[-135,55],[-130,55],[-125,49],[-124,40],[-122,37],[-117,33],[-110,31],[-106,23],[-97,20],[-92,16],[-88,14],[-84,9],[-80,8],[-77,8],[-79,9],[-83,12],[-86,16],[-88,18],[-90,19],[-92,20],[-97,21],[-97,26],[-94,29],[-90,29],[-87,30],[-84,30],[-82,27],[-81,25],[-80,25],[-81,31],[-77,34],[-75,39],[-74,40],[-70,42],[-67,45],[-64,47],[-60,50],[-56,52],[-53,49],[-56,54],[-65,58],[-75,62],[-85,62],[-95,63],[-90,68],[-100,70],[-110,72],[-130,71],[-145,70],[-156,71]],
+  "south_america":[[-77,8],[-79,2],[-80,-4],[-81,-6],[-71,-18],[-70,-25],[-70,-33],[-73,-42],[-74,-52],[-68,-55],[-65,-54],[-62,-52],[-58,-38],[-57,-35],[-48,-25],[-40,-15],[-35,-8],[-35,-5],[-45,0],[-50,2],[-60,5],[-67,8],[-72,9],[-77,8]],
+  "africa":[[-17,21],[-16,15],[-11,7],[-9,5],[3,5],[9,4],[9,2],[13,-5],[12,-18],[13,-27],[18,-34],[26,-33],[32,-29],[35,-22],[40,-15],[43,-11],[51,-12],[51,-2],[45,2],[43,10],[42,12],[43,14],[38,18],[35,22],[33,27],[32,31],[25,32],[10,37],[0,36],[-6,35],[-9,31],[-15,25],[-17,21]],
+  "eurasia":[[-9,43],[-9,38],[-6,36],[3,42],[8,44],[10,44],[13,38],[20,35],[23,36],[26,40],[29,41],[35,36],[36,34],[35,31],[34,29],[42,15],[43,12],[48,12],[52,16],[56,22],[60,25],[63,25],[68,24],[72,20],[73,17],[77,8],[80,7],[80,13],[83,17],[88,22],[92,22],[95,20],[98,16],[100,13],[104,10],[107,10],[109,15],[108,21],[112,23],[120,23],[122,28],[121,32],[124,35],[127,37],[130,36],[132,38],[135,42],[140,43],[145,43],[155,60],[160,60],[168,65],[175,67],[179,69],[177,71],[170,70],[160,71],[140,73],[120,74],[100,77],[80,78],[60,78],[40,77],[28,71],[20,70],[10,68],[5,62],[10,58],[15,55],[10,54],[5,52],[3,51],[-1,52],[-3,49],[-9,43]],
+  "scandinavia":[[5,58],[8,58],[11,59],[13,63],[15,66],[19,69],[24,70],[28,70],[30,69],[28,66],[24,64],[20,60],[14,57],[10,56],[6,57],[5,58]],
+  "australia":[[113,-22],[114,-26],[115,-34],[118,-35],[122,-34],[131,-32],[136,-35],[138,-35],[140,-38],[145,-38],[147,-38],[150,-37],[153,-29],[153,-25],[150,-22],[145,-17],[143,-11],[137,-12],[132,-12],[130,-13],[127,-14],[123,-17],[121,-18],[114,-22],[113,-22]],
+  "greenland":[[-45,60],[-42,60],[-25,70],[-22,76],[-30,82],[-45,83],[-55,76],[-56,70],[-52,64],[-45,60]],
+  "madagascar":[[43,-25],[44,-25],[47,-24],[50,-16],[49,-12],[47,-13],[44,-16],[43,-20],[43,-25]],
+  "gb_ireland":[[-5,58],[-3,58],[-1,56],[0,53],[1,52],[-1,51],[-3,50],[-5,50],[-6,52],[-10,53],[-8,55],[-6,55],[-5,58]],
+  "japan":[[130,31],[133,32],[136,34],[139,36],[140,38],[141,41],[142,43],[145,44],[143,45],[139,42],[136,38],[133,35],[130,33],[129,32],[130,31]],
+  "nz":[[173,-41],[175,-37],[178,-38],[178,-40],[175,-42],[173,-44],[171,-44],[169,-46],[167,-45],[171,-42],[173,-41]],
+  "indonesia_1":[[95,6],[98,3],[102,-3],[104,-5],[106,-7],[110,-8],[114,-8.5],[116,-8],[119,-8],[119,-4],[116,-2],[112,-2],[108,0],[104,2],[100,4],[97,5],[95,6]],
+  "indonesia_2":[[110,-1],[113,1],[117,1],[119,0],[117,-2],[113,-3],[110,-2],[110,-1]],
+  "philippines":[[121,18],[122,14],[124,10],[126,8],[125,6],[123,7],[121,10],[120,14],[121,18]],
+  "antarctica":[[-180,-63],[-90,-63],[0,-63],[90,-63],[180,-63],[180,-90],[-180,-90],[-180,-63]]
+};
+
+/* ocean + baked-in continents + graticule painted into a texture.
+   The continents are drawn straight into the texture, independent of the
+   optional real-border fetch below, so the globe always looks like Earth
+   even with zero network access. */
 function earthTexture(){
-  const c=document.createElement('canvas'); c.width=2048; c.height=1024;
+  const W=2048, H=1024;
+  const c=document.createElement('canvas'); c.width=W; c.height=H;
   const x=c.getContext('2d');
-  const g=x.createLinearGradient(0,0,0,1024);
-  g.addColorStop(0,'#0A1730'); g.addColorStop(.45,'#12294D'); g.addColorStop(.55,'#143059');
-  g.addColorStop(1,'#0A1730');
-  x.fillStyle=g; x.fillRect(0,0,2048,1024);
-  for(let i=0;i<9000;i++){
-    x.fillStyle='rgba(120,170,230,'+(Math.random()*0.05)+')';
-    x.fillRect(Math.random()*2048,Math.random()*1024,2,2);
+
+  const g=x.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'#0A1B3A');   g.addColorStop(.28,'#123058');
+  g.addColorStop(.5,'#164070');  g.addColorStop(.72,'#123058');
+  g.addColorStop(1,'#0A1B3A');
+  x.fillStyle=g; x.fillRect(0,0,W,H);
+
+  // subtle depth bands so open ocean doesn't read as a flat fill
+  x.globalAlpha=.5;
+  for(let i=0;i<6;i++){
+    const ry=Math.random()*H, rx=Math.random()*W, rr=140+Math.random()*260;
+    const rg=x.createRadialGradient(rx,ry,0,rx,ry,rr);
+    rg.addColorStop(0,'rgba(90,150,200,.10)'); rg.addColorStop(1,'rgba(90,150,200,0)');
+    x.fillStyle=rg; x.fillRect(rx-rr,ry-rr,rr*2,rr*2);
   }
+  x.globalAlpha=1;
+
+  const project=(lon,lat)=>{
+    const px=((lon+180)%360+360)%360/360*W;
+    const py=(90-lat)/180*H;
+    return [px,py];
+  };
+  const drawLand=(poly,dx)=>{
+    x.beginPath();
+    poly.forEach(([lon,lat],i)=>{
+      const [px,py]=project(lon,lat);
+      i===0 ? x.moveTo(px+dx,py) : x.lineTo(px+dx,py);
+    });
+    x.closePath(); x.fill(); x.stroke();
+  };
+  x.fillStyle='#3E7A4A'; x.strokeStyle='#2A5636'; x.lineWidth=1.4;
+  Object.values(LANDMASS).forEach(poly=>{
+    drawLand(poly,0); drawLand(poly,-W); drawLand(poly,W);
+  });
+
+  // faint terrain shading so land doesn't read as flat green
+  x.globalAlpha=.18;
+  Object.values(LANDMASS).forEach(poly=>{
+    const lg=x.createLinearGradient(0,0,0,H);
+    lg.addColorStop(0,'rgba(255,255,255,.5)'); lg.addColorStop(1,'rgba(0,0,0,.35)');
+    x.fillStyle=lg;
+    [0,-W,W].forEach(dx=>drawLand(poly,dx));
+  });
+  x.globalAlpha=1;
+
   x.strokeStyle='rgba(120,190,255,.10)'; x.lineWidth=2;
-  for(let lat=-75;lat<=75;lat+=15){ const y=(90-lat)/180*1024; x.beginPath(); x.moveTo(0,y); x.lineTo(2048,y); x.stroke(); }
-  for(let lon=-180;lon<180;lon+=15){ const px=(lon+180)/360*2048; x.beginPath(); x.moveTo(px,0); x.lineTo(px,1024); x.stroke(); }
-  x.strokeStyle='rgba(255,196,0,.20)'; x.lineWidth=3;
-  x.beginPath(); x.moveTo(0,512); x.lineTo(2048,512); x.stroke();
+  for(let lat=-75;lat<=75;lat+=15){ const y=(90-lat)/180*H; x.beginPath(); x.moveTo(0,y); x.lineTo(W,y); x.stroke(); }
+  for(let lon=-180;lon<180;lon+=15){ const px=(lon+180)/360*W; x.beginPath(); x.moveTo(px,0); x.lineTo(px,H); x.stroke(); }
+  x.strokeStyle='rgba(255,196,0,.22)'; x.lineWidth=3;
+  x.beginPath(); x.moveTo(0,H/2); x.lineTo(W,H/2); x.stroke();
+
   const t=new THREE.CanvasTexture(c);
   t.anisotropy=4;
   return t;
