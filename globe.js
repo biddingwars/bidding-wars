@@ -207,9 +207,9 @@ function earthTexture(feats, ownedSet){
   const x=c.getContext('2d');
 
   const g=x.createLinearGradient(0,0,0,H);
-  g.addColorStop(0,'#0A1B3A');   g.addColorStop(.28,'#123058');
-  g.addColorStop(.5,'#164070');  g.addColorStop(.72,'#123058');
-  g.addColorStop(1,'#0A1B3A');
+  g.addColorStop(0,'#071A33');   g.addColorStop(.28,'#0C2A50');
+  g.addColorStop(.5,'#0F3563');  g.addColorStop(.72,'#0C2A50');
+  g.addColorStop(1,'#071A33');
   x.fillStyle=g; x.fillRect(0,0,W,H);
 
   // subtle depth bands so open ocean doesn't read as a flat fill
@@ -223,7 +223,9 @@ function earthTexture(feats, ownedSet){
   x.globalAlpha=1;
 
   const project=(lon,lat)=>{
-    const px=((lon+180)%360+360)%360/360*W;
+    /* No modulo here on purpose: unwrap() produces continuous longitudes that can
+       run past 180, and the -W / 0 / +W triple-draw below handles the wrap. */
+    const px=(lon+180)/360*W;
     const py=(90-lat)/180*H;
     return [px,py];
   };
@@ -240,16 +242,16 @@ function earthTexture(feats, ownedSet){
        border on top. Painted into the texture so the lines actually have width. */
     feats.forEach((f,i)=>{
       const owned = ownedSet && ownedSet.has(i);
-      x.fillStyle   = owned ? '#7A6A22' : '#356945';
-      x.strokeStyle = owned ? '#FFD84D' : '#8FD8B0';
-      x.lineWidth   = owned ? 3.2 : 1.5;
+      x.fillStyle   = owned ? '#FFC42E' : '#6FB37A';
+      x.strokeStyle = owned ? '#7A4E00' : '#2E6B4A';
+      x.lineWidth   = owned ? 2.2 : 0.9;
       f.rings.forEach(ring=>{
         const u=unwrap(ring);
         [0,-W,W].forEach(dx=>drawLand(u,dx));
       });
     });
   } else {
-    x.fillStyle='#356945'; x.strokeStyle='#24503A'; x.lineWidth=1.2;
+    x.fillStyle='#6FB37A'; x.strokeStyle='#2E6B4A'; x.lineWidth=1.0;
     Object.values(LANDMASS).forEach(poly=>{
       drawLand(poly,0); drawLand(poly,-W); drawLand(poly,W);
     });
@@ -312,21 +314,21 @@ function globe3d(host, owned){
   scene.add(new THREE.Points(sg, new THREE.PointsMaterial({color:0xBFD4FF, size:0.075, sizeAttenuation:true, transparent:true, opacity:.8})));
 
   /* the planet */
-  const earthMat=new THREE.MeshPhongMaterial({map:earthTexture(), shininess:12, specular:0x224466, emissive:0x060C18});
+  const earthMat=new THREE.MeshPhongMaterial({map:earthTexture(), shininess:6, specular:0x101c2e, emissive:0x0A1424});
   const earth=new THREE.Mesh(new THREE.SphereGeometry(1,96,64), earthMat);
   rig.add(earth);
 
   /* atmosphere */
   const atmo=new THREE.Mesh(new THREE.SphereGeometry(1,64,48), new THREE.ShaderMaterial({
     vertexShader:'varying vec3 vN; void main(){ vN=normalize(normalMatrix*normal); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
-    fragmentShader:'varying vec3 vN; void main(){ float i=pow(0.62-dot(vN,vec3(0.0,0.0,1.0)),2.6); gl_FragColor=vec4(1.0,0.58,0.12,1.0)*clamp(i,0.0,1.4); }',
+    fragmentShader:'varying vec3 vN; void main(){ float i=pow(0.58-dot(vN,vec3(0.0,0.0,1.0)),3.4); gl_FragColor=vec4(1.0,0.62,0.18,1.0)*clamp(i,0.0,0.85); }',
     blending:THREE.AdditiveBlending, side:THREE.BackSide, transparent:true, depthWrite:false
   }));
-  atmo.scale.setScalar(1.19); scene.add(atmo);
+  atmo.scale.setScalar(1.13); scene.add(atmo);
 
-  scene.add(new THREE.AmbientLight(0x5a6f96, 0.85));
-  const key=new THREE.DirectionalLight(0xfff0d8, 1.25); key.position.set(-3,2.2,3.4); scene.add(key);
-  const rim=new THREE.DirectionalLight(0xff7a00, 0.75); rim.position.set(3.5,-1.5,-2.5); scene.add(rim);
+  scene.add(new THREE.AmbientLight(0x9FB4D0, 1.15));
+  const key=new THREE.DirectionalLight(0xfff6e8, 1.35); key.position.set(-3,2.2,3.4); scene.add(key);
+  const rim=new THREE.DirectionalLight(0xff9126, 0.45); rim.position.set(3.5,-1.5,-2.5); scene.add(rim);
 
   /* ---- the winner's lots: pillars + glow ---- */
   const big=Math.max(...owned.map(c=>c.pop), 1);
@@ -377,7 +379,12 @@ function globe3d(host, owned){
 
   loadBorders().then(feats=>{
     note.remove();
-    if(!feats) return;
+    const cap=host.parentNode && host.parentNode.querySelector('.gcap');
+    if(!feats){
+      if(cap) cap.textContent += ' · simplified outlines';
+      return;
+    }
+    if(cap) cap.textContent += ' · ' + feats.length + ' real borders';
     bordersOn=true;
     const mine=[], rest=[];
     const centroid=f=>{
@@ -432,7 +439,7 @@ function globe3d(host, owned){
   });
 
   /* ---- camera + controls ---- */
-  let lon=0, lat=18, dist=3.05, drag=null, auto=true, raf=null, resume=0;
+  let lon=0, lat=18, dist=2.62, drag=null, auto=true, raf=null, resume=0;
   let sx=0, sy=0;
   owned.forEach(c=>{ const q=GEO[c.code]; if(!q) return; const r=q[1]*Math.PI/180; sx+=Math.cos(r); sy+=Math.sin(r); });
   if(sx||sy) lon = -Math.atan2(sy,sx)*180/Math.PI - 90;
