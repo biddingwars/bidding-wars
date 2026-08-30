@@ -165,7 +165,7 @@ const isOnline = () => navigator.onLine !== false;
 const app=document.getElementById('app');
 let S={}, T=null;
 const esc=s=>String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
-function go(h){ app.innerHTML=h; window.scrollTo({top:0,behavior:'instant'}); }
+function go(h, scroll=true){ app.innerHTML=h; if(scroll) window.scrollTo({top:0,behavior:'instant'}); }
 function on(id,fn){ const e=document.getElementById(id); if(e) e.onclick=fn; }
 function val(id){ const e=document.getElementById(id); return e?e.value.trim():''; }
 function clearTimer(){ if(T){ clearInterval(T); T=null; } }
@@ -788,7 +788,7 @@ function paint(fresh){
       <div class="k">${t('nowBidding')}</div>
       <div class="w">${esc(actor.name)}</div>
     </div>
-    <div id="act"></div>`);
+    <div id="act"></div>`, fresh);
 
   if(fresh) speak(cname(c));
   if(isAI) return aiTurn();
@@ -880,7 +880,7 @@ function award(){
       </div>
       ${S._taunt?`<div class="card ink" style="padding:11px 13px"><span class="label">${esc((S.players.find(p=>p.ai)||{}).name||'Rival')}</span><p style="margin:0;font-style:italic;font-size:14.5px">&ldquo;${esc(S._taunt)}&rdquo;</p></div>`:''}
       <div class="strip">${S.players.map((p,i)=>`<div class="pl2 seat${i}"><div class="n">${esc(p.name)}</div><div class="b">€${p.budget}</div><div class="c">${p.bought.length} ×</div></div>`).join('')}</div>
-      <button class="btn go" id="n">${t('nextLot')}</button>`);
+      <button class="btn go" id="n">${t('nextLot')}</button>`, false);
     on('n',()=>{S.i++;lot();});
   },520);
 }
@@ -916,7 +916,7 @@ async function aiTurn(){
     const contested = rivals.some(i=>S.players[i].budget > L.price + 1);
     const step = !contested ? 1
                : L.price<5 ? 1
-               : Math.max(1, Math.round(L.price*0.18));
+               : Math.max(1, Math.round(L.price*(0.12 + rnd(15)/100)));
     const amount = Math.min(me.budget, hardCap, L.price + step);
     if(amount > L.price){
       S._taunt = tauntFor(c, S._taunt);

@@ -1,27 +1,28 @@
 /* Service worker — the whole game is cached on first visit, then served from
    cache. After that it runs with no connection at all, which is the point. */
 
-const CACHE = 'bidding-wars-v8';
+const CACHE = 'bidding-wars-v9';
 
 const SHELL = [
   './',
   './index.html',
   './manifest.json',
-  './css/app.css',
-  './css/fonts.css',
-  './js/platform.js',
-  './js/data.js',
-  './js/app.js',
-  './js/globe.js',
-  './vendor/three.min.js',
-  './data/countries-110m.json',
-  './fonts/ArchivoBlack-Regular.woff2',
-  './fonts/SpaceGrotesk-Regular.woff2',
-  './fonts/SpaceGrotesk-Bold.woff2',
-  './fonts/SpaceMono-Bold.woff2',
-  './img/icon-192.png',
-  './img/icon-512.png',
-  './img/icon-180.png'
+  './app.css',
+  './fonts.css',
+  './platform.js',
+  './data.js',
+  './app.js',
+  './globe.js',
+  './three.min.js',
+  './countries-110m.json',
+  './ArchivoBlack-Regular.woff2',
+  './SpaceGrotesk-Regular.woff2',
+  './SpaceGrotesk-Bold.woff2',
+  './SpaceMono-Bold.woff2',
+  './icon-192.png',
+  './icon-512.png',
+  './icon-512-maskable.png',
+  './icon-180.png'
 ];
 
 /* Missing optional files (fonts you have not dropped in yet) must not abort the
