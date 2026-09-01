@@ -135,6 +135,13 @@ body.playing .wrap{padding-top:calc(56px + env(safe-area-inset-top))}
 /* mid-auction: the logo, tagline and privacy footer just eat space the player
    wants spent on the lot itself — hide them while a round is in progress. */
 body.playing .mast,body.playing .foot{display:none}
+/* and lock the page itself in place — no rubber-band bounce, no accidental
+   drift away from the bidding controls. .wrap keeps its own overflow-y so
+   a tall lot (taunt bubble + timer + a full 4-player strip) on a short
+   screen still scrolls internally instead of stranding the action buttons
+   off-screen — the player just never sees the outer page move. */
+body.playing{position:fixed;inset:0;overflow:hidden}
+body.playing .wrap{height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch}
 
 /* in-page dialogs — sandboxed frames block native alert/confirm */
 .veil{position:fixed;inset:0;background:rgba(20,15,12,.72);z-index:90;display:flex;align-items:center;justify-content:center;padding:22px}
