@@ -98,10 +98,10 @@ function knock(){
   const g2=c.createGain(); g2.gain.value=.55;
   n.connect(bp).connect(g2).connect(c.destination); n.start(t);
 }
-function blip(f=680,v=.16){
+function blip(f=680,v=.16,type='square'){
   const c=actx(); if(!c||window.MUTED) return;
   const t=c.currentTime,o=c.createOscillator(),g=c.createGain();
-  o.type='square'; o.frequency.value=f;
+  o.type=type; o.frequency.value=f;
   g.gain.setValueAtTime(v,t); g.gain.exponentialRampToValueAtTime(.001,t+.09);
   o.connect(g).connect(c.destination); o.start(t); o.stop(t+.1);
 }
@@ -699,9 +699,11 @@ function setup(kind){
   </div>`);
   const sync=()=>{ document.getElementById('bud').textContent='€'+budgetFor(parseInt(val('n'))||5); };
   document.getElementById('n').onchange=sync; sync();
+  Store.get('name:v1').then(n=>{ const el=document.getElementById('p1'); if(n && el) el.value=n; });
   on('back',()=>{knock();home();});
   on('start',()=>{
     knock(); actx();
+    const p1val=val('p1'); if(p1val) Store.set('name:v1', p1val);
     let names, engine;
     if(kind==='solo'){
       engine='bot';
@@ -847,7 +849,9 @@ function startClock(onOut){
 function raise(amount){
   const L=S.L, actor=S.players[L.turn];
   if(amount>actor.budget) return toast(t('tooMuch'));
-  blip(760,.14); Haptics.light();
+  /* the bot bids on its own, unprompted, several times a lot — a quieter,
+     softer tone keeps that from turning into a grating loop */
+  actor.ai ? blip(640,.07,'sine') : blip(760,.14); Haptics.light();
   L.price=amount; L.holder=L.turn; L.turn=nextAfter(L.holder);
   if(L.turn===null) return award();
   paint(false);
@@ -855,8 +859,8 @@ function raise(amount){
 }
 
 function pass(timedOut){
-  const L=S.L;
-  blip(220,.12); Haptics.medium();
+  const L=S.L, actor=S.players[L.turn];
+  actor.ai ? blip(190,.05,'sine') : blip(220,.12); Haptics.medium();
   L.active=L.active.filter(i=>i!==L.turn);
   if(L.active.length<=1) return award(timedOut);
   L.turn=nextAfter(L.holder);

@@ -124,11 +124,17 @@ input:focus,select:focus,button:focus-visible{outline:3px solid var(--amber);out
 }
 .homebtn{
   position:fixed;top:calc(8px + env(safe-area-inset-top));left:calc(8px + env(safe-area-inset-left));z-index:80;background:var(--ink);color:var(--cream);
-  border:3px solid var(--cream);padding:0 12px;height:38px;line-height:1;display:none;
+  border:3px solid var(--cream);border-radius:10px;padding:0 12px;height:38px;line-height:1;display:none;
+  align-items:center;box-shadow:var(--shadow-sm);
   font-family:'Archivo Black',Impact,'Haettenschweiler','Arial Narrow Bold',sans-serif;font-size:13px;letter-spacing:.08em;text-transform:uppercase;
+  transition:transform .07s,box-shadow .07s;
 }
-body.playing .homebtn{display:block}
+.homebtn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
+body.playing .homebtn{display:flex}
 body.playing .wrap{padding-top:calc(56px + env(safe-area-inset-top))}
+/* mid-auction: the logo, tagline and privacy footer just eat space the player
+   wants spent on the lot itself — hide them while a round is in progress. */
+body.playing .mast,body.playing .foot{display:none}
 
 /* in-page dialogs — sandboxed frames block native alert/confirm */
 .veil{position:fixed;inset:0;background:rgba(20,15,12,.72);z-index:90;display:flex;align-items:center;justify-content:center;padding:22px}
@@ -249,7 +255,14 @@ body.playing .wrap{padding-top:calc(56px + env(safe-area-inset-top))}
 @keyframes sp{to{transform:rotate(360deg)}}
 .vlist{max-height:320px;overflow-y:auto;border:3px solid var(--ink);background:#fff}
 .foot{font-family:'Space Mono','SF Mono',Menlo,Consolas,monospace;font-size:9.5px;font-weight:700;letter-spacing:.16em;color:var(--cream);text-align:center;margin-top:20px;opacity:.85}
-.mute{position:fixed;top:calc(8px + env(safe-area-inset-top));right:calc(8px + env(safe-area-inset-right));z-index:70;background:var(--ink);color:var(--cream);border:3px solid var(--cream);width:38px;height:38px;font-size:15px;line-height:1}
+.mute{
+  position:fixed;top:calc(8px + env(safe-area-inset-top));right:calc(8px + env(safe-area-inset-right));z-index:70;
+  background:linear-gradient(180deg,var(--ink2),var(--ink));color:var(--cream);
+  border:3px solid var(--cream);border-radius:50%;width:38px;height:38px;font-size:15px;line-height:1;
+  box-shadow:var(--shadow-sm);display:flex;align-items:center;justify-content:center;
+  transition:transform .07s,box-shadow .07s,opacity .15s;
+}
+.mute:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
 .hide{display:none!important}
 .rec{display:flex;gap:8px;text-align:center;margin-bottom:10px}
 .rec>div{flex:1;border:3px solid var(--ink);padding:7px 3px;background:var(--cream)}
