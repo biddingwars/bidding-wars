@@ -251,10 +251,10 @@ en:{
  youTag:'you', hostTag:'HOST',
  privacy:'Privacy', soon:'Soon', soonBody:'Online play is not switched on yet. Everything else works without a connection.',
  privP1:'This game has no accounts, no sign-in and no analytics. Nothing you do here is sent anywhere.',
- privP2:'Two things are saved, and only on this device: the language you picked and your record against the bot. Deleting the app deletes both.',
+ privP2:'Three things are saved, and only on this device: the language you picked, your record against the bot, and the name you last entered. Deleting the app deletes all three.',
  privP3:'Nicknames are optional. They are only used to label the players on screen during a round and are never stored.',
  privP4:'No advertising, no tracking, no third-party software development kits.',
- wipe:'Delete all data', wipeTitle:'Delete everything?', wipeBody:'Your record and your language choice will be removed from this device.', wiped:'Deleted.',
+ wipe:'Delete all data', wipeTitle:'Delete everything?', wipeBody:'Your record, your saved name and your language choice will be removed from this device.', wiped:'Deleted.',
  loadingBorders:'loading borders…'
 },
 de:{
@@ -309,10 +309,10 @@ de:{
  youTag:'du', hostTag:'GASTGEBER',
  privacy:'Datenschutz', soon:'Bald', soonBody:'Online-Spiel ist noch nicht freigeschaltet. Alles andere läuft ohne Verbindung.',
  privP1:'Dieses Spiel hat keine Konten, keine Anmeldung und keine Analyse. Nichts, was du hier tust, wird irgendwohin gesendet.',
- privP2:'Zwei Dinge werden gespeichert, und nur auf diesem Gerät: deine Sprache und deine Bilanz gegen den Bot. Beim Löschen der App verschwinden beide.',
+ privP2:'Drei Dinge werden gespeichert, und nur auf diesem Gerät: deine Sprache, deine Bilanz gegen den Bot und der zuletzt eingegebene Name. Beim Löschen der App verschwinden alle drei.',
  privP3:'Spitznamen sind freiwillig. Sie dienen nur der Beschriftung während einer Runde und werden nie gespeichert.',
  privP4:'Keine Werbung, kein Tracking, keine Fremd-Bausteine.',
- wipe:'Alle Daten löschen', wipeTitle:'Alles löschen?', wipeBody:'Deine Bilanz und deine Sprachwahl werden von diesem Gerät entfernt.', wiped:'Gelöscht.',
+ wipe:'Alle Daten löschen', wipeTitle:'Alles löschen?', wipeBody:'Deine Bilanz, dein gespeicherter Name und deine Sprachwahl werden von diesem Gerät entfernt.', wiped:'Gelöscht.',
  loadingBorders:'Grenzen werden geladen…'
 },
 it:{
@@ -367,10 +367,10 @@ it:{
  youTag:'tu', hostTag:'HOST',
  privacy:'Privacy', soon:'Presto', soonBody:'Il gioco online non è ancora attivo. Tutto il resto funziona senza connessione.',
  privP1:'Questo gioco non ha account, né accessi, né analisi. Nulla di ciò che fai qui viene inviato da qualche parte.',
- privP2:'Due cose vengono salvate, e solo su questo dispositivo: la lingua scelta e il tuo bilancio contro il bot. Disinstallando l’app spariscono entrambe.',
+ privP2:'Vengono salvate tre cose, e solo su questo dispositivo: la lingua scelta, il tuo bilancio contro il bot e l’ultimo nome inserito. Disinstallando l’app spariscono tutte e tre.',
  privP3:'I soprannomi sono facoltativi. Servono solo a identificare i giocatori durante una partita e non vengono mai salvati.',
  privP4:'Nessuna pubblicità, nessun tracciamento, nessun componente di terze parti.',
- wipe:'Cancella tutti i dati', wipeTitle:'Cancellare tutto?', wipeBody:'Il tuo bilancio e la lingua scelta verranno rimossi da questo dispositivo.', wiped:'Cancellato.',
+ wipe:'Cancella tutti i dati', wipeTitle:'Cancellare tutto?', wipeBody:'Il tuo bilancio, il nome salvato e la lingua scelta verranno rimossi da questo dispositivo.', wiped:'Cancellato.',
  loadingBorders:'caricamento confini…'
 },
 es:{
@@ -425,10 +425,10 @@ es:{
  youTag:'tú', hostTag:'ANFITRIÓN',
  privacy:'Privacidad', soon:'Pronto', soonBody:'El juego en línea aún no está activado. Todo lo demás funciona sin conexión.',
  privP1:'Este juego no tiene cuentas, ni inicio de sesión, ni analíticas. Nada de lo que haces aquí se envía a ningún sitio.',
- privP2:'Se guardan dos cosas, y solo en este dispositivo: el idioma que elegiste y tu balance contra el bot. Al borrar la app desaparecen las dos.',
+ privP2:'Se guardan tres cosas, y solo en este dispositivo: el idioma que elegiste, tu balance contra el bot y el último nombre introducido. Al borrar la app desaparecen las tres.',
  privP3:'Los apodos son opcionales. Solo sirven para identificar a los jugadores durante una partida y nunca se guardan.',
  privP4:'Sin publicidad, sin rastreo, sin componentes de terceros.',
- wipe:'Borrar todos los datos', wipeTitle:'¿Borrar todo?', wipeBody:'Tu balance y tu idioma se eliminarán de este dispositivo.', wiped:'Borrado.',
+ wipe:'Borrar todos los datos', wipeTitle:'¿Borrar todo?', wipeBody:'Tu balance, tu nombre guardado y tu idioma se eliminarán de este dispositivo.', wiped:'Borrado.',
  loadingBorders:'cargando fronteras…'
 },
 fr:{
@@ -483,10 +483,10 @@ fr:{
  youTag:'toi', hostTag:'HÔTE',
  privacy:'Confidentialité', soon:'Bientôt', soonBody:'Le jeu en ligne n’est pas encore activé. Tout le reste fonctionne sans connexion.',
  privP1:'Ce jeu n’a ni compte, ni connexion, ni analyse. Rien de ce que tu fais ici n’est envoyé où que ce soit.',
- privP2:'Deux choses sont enregistrées, uniquement sur cet appareil : la langue choisie et ton bilan face au bot. Supprimer l’app supprime les deux.',
+ privP2:'Trois choses sont enregistrées, uniquement sur cet appareil : la langue choisie, ton bilan face au bot et le dernier prénom saisi. Supprimer l’app supprime les trois.',
  privP3:'Les pseudos sont facultatifs. Ils servent seulement à identifier les joueurs pendant une partie et ne sont jamais enregistrés.',
  privP4:'Aucune publicité, aucun suivi, aucun composant tiers.',
- wipe:'Effacer toutes les données', wipeTitle:'Tout effacer ?', wipeBody:'Ton bilan et ta langue seront retirés de cet appareil.', wiped:'Effacé.',
+ wipe:'Effacer toutes les données', wipeTitle:'Tout effacer ?', wipeBody:'Ton bilan, ton prénom enregistré et ta langue seront retirés de cet appareil.', wiped:'Effacé.',
  loadingBorders:'chargement des frontières…'
 }
 };
@@ -638,7 +638,7 @@ function privacy(){
     <button class="btn" id="b" style="margin-top:8px">${t('back')}</button>
   </div>`);
   on('wipe',()=>{ knock(); ask(t('wipeTitle'), t('wipeBody'), t('wipe'), async()=>{
-    await clearRec(); await Store.remove('lang:v1'); toast(t('wiped')); home();
+    await clearRec(); await Store.remove('lang:v1'); await Store.remove('name:v1'); toast(t('wiped')); home();
   }); });
   on('b',()=>{knock();home();});
 }
