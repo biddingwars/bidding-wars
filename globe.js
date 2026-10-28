@@ -559,15 +559,32 @@ function globe3d(host, owned){
   }
   frame();
 
-  const onResize=()=>{
+  /* A window resize isn't the only thing that can change host's size — a
+     Split View/Stage Manager drag, a fold/unfold, or our own CSS breakpoints
+     applying can all resize host without ever firing a window resize event.
+     ResizeObserver watches host itself, whatever the cause. requestAnimationFrame
+     coalesces a drag/fold's flood of callbacks into at most one update per
+     rendered frame, and the pixel ratio is re-read here too (not just at
+     creation) in case the window crosses to a different-density display. */
+  let resizeRaf=0;
+  const applyResize=()=>{
+    resizeRaf=0;
     const w=Math.min(host.clientWidth||360,560), h=Math.round(w*0.98);
+    renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
     renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix();
   };
-  window.addEventListener('resize',onResize);
+  let ro=null;
+  if(typeof ResizeObserver!=='undefined'){
+    ro=new ResizeObserver(()=>{ if(!resizeRaf) resizeRaf=requestAnimationFrame(applyResize); });
+    ro.observe(host);
+  }else{
+    window.addEventListener('resize',applyResize);
+  }
 
   return ()=>{
     if(raf) cancelAnimationFrame(raf);
-    window.removeEventListener('resize',onResize);
+    if(resizeRaf) cancelAnimationFrame(resizeRaf);
+    if(ro) ro.disconnect(); else window.removeEventListener('resize',applyResize);
     window.removeEventListener('mousemove',onMouseMove);
     window.removeEventListener('mouseup',release);
     try{ renderer.dispose(); }catch(e){}
