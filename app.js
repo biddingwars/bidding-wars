@@ -944,27 +944,31 @@ function finish(){
   const best=rows.slice().sort((a,b)=>b.pts-a.pts)[0];
   const bestEff=rows.slice().sort((a,b)=>a.eff-b.eff)[0];
 
-  go(`<div class="card ink">
-      <span class="label">${t('sealed')}</span>
-      <h2>${t('nobody')}</h2>
-      <p class="small">${t('revealHint')}</p>
-      <button class="btn go sm" id="rev" style="margin-top:9px">${t('liftAll')}</button>
+  go(`<div class="results-wrap">
+    <div class="results-main">
+      <div class="card ink">
+        <span class="label">${t('sealed')}</span>
+        <h2>${t('nobody')}</h2>
+        <p class="small">${t('revealHint')}</p>
+        <button class="btn go sm" id="rev" style="margin-top:9px">${t('liftAll')}</button>
+      </div>
+      ${rows.map((s,ri)=>`
+      <div class="card">
+        <h2 style="margin-bottom:8px">${esc(s.p.name)}</h2>
+        ${s.p.bought.length? s.p.bought.map(b=>`
+          <div class="line">
+            <span class="l"><span style="font-size:16px">${flag(b.code)}</span><b>${esc(cname(b))}</b></span>
+            <span class="r">${b.free?'free':'€'+b.price} · <span class="redact"><span class="v">${fmtPop(b.pop)}</span></span></span>
+          </div>`).join('') : `<p class="small">${t('nothing')}</p>`}
+        <div class="total"><span>${t('points')}</span><span class="redact"><span class="v">${s.pts.toFixed(1)}</span></span></div>
+        <div class="total" style="border:0;padding-top:3px;font-size:12.5px;opacity:.7">
+          <span>${t('spentEff',{n:s.spent})}</span>
+          <span class="redact"><span class="v">${s.eff===Infinity?'—':s.eff.toFixed(2)+' €/M'}</span></span>
+        </div>
+      </div>`).join('')}
     </div>
     <div id="verdict"></div>
-    ${rows.map((s,ri)=>`
-    <div class="card">
-      <h2 style="margin-bottom:8px">${esc(s.p.name)}</h2>
-      ${s.p.bought.length? s.p.bought.map(b=>`
-        <div class="line">
-          <span class="l"><span style="font-size:16px">${flag(b.code)}</span><b>${esc(cname(b))}</b></span>
-          <span class="r">${b.free?'free':'€'+b.price} · <span class="redact"><span class="v">${fmtPop(b.pop)}</span></span></span>
-        </div>`).join('') : `<p class="small">${t('nothing')}</p>`}
-      <div class="total"><span>${t('points')}</span><span class="redact"><span class="v">${s.pts.toFixed(1)}</span></span></div>
-      <div class="total" style="border:0;padding-top:3px;font-size:12.5px;opacity:.7">
-        <span>${t('spentEff',{n:s.spent})}</span>
-        <span class="redact"><span class="v">${s.eff===Infinity?'—':s.eff.toFixed(2)+' €/M'}</span></span>
-      </div>
-    </div>`).join('')}
+    </div>
     <div class="row">
       <button class="btn ghost" id="again">${t('playAgain')}</button>
       <button class="btn" id="menu">${t('menu')}</button>
