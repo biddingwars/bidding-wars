@@ -768,29 +768,33 @@ function paint(fresh){
   const actor=S.players[L.turn], holder=S.players[L.holder];
   const isAI=actor&&actor.ai;
 
-  go(`<div class="stage ${fresh?'in':''}">
-      <div class="flag">${flag(c.code)}</div>
-      <div class="cname">${esc(cname(c))}</div>
-      <div class="lot">${t('lot')} ${S.i+1} <span class="of">${t('of')} ${S.countries.length}</span></div>
+  go(`<div class="lot-wrap">
+    <div class="lot-main">
+      <div class="stage ${fresh?'in':''}">
+        <div class="top">
+          <div class="flag">${flag(c.code)}</div>
+          <div class="lot">${t('lot')} ${S.i+1} <span class="of">${t('of')} ${S.countries.length}</span></div>
+        </div>
+        <div class="cname">${esc(cname(c))}</div>
+      </div>
+      <div class="price" id="pb">
+        <div class="pl">${t('standing')}</div>
+        <div class="pv">€${L.price}</div>
+        <div><span class="hold seat${L.holder}">${t('topBid')} · ${esc(holder.name)}</span></div>
+      </div>
+      ${S._taunt?`<div class="taunt">&ldquo;${esc(S._taunt)}&rdquo;</div>`:''}
+      ${S.clock&&!isAI?'<div class="timer" id="tb"><i></i></div>':''}
     </div>
-    <div class="price" id="pb">
-      <div class="pl">${t('standing')}</div>
-      <div class="pv">€${L.price}</div>
-      <div><span class="hold seat${L.holder}">${t('topBid')} · ${esc(holder.name)}</span></div>
+    <div class="lot-side">
+      <div class="strip">${S.players.map((p,i)=>`
+        <div class="pl2 seat${i} ${i===L.turn?'turn':''} ${L.active.includes(i)?'':'out'}">
+          <div class="n">${esc(p.name)}</div>
+          <div class="b">€${p.budget}</div>
+          <div class="role">${i===L.holder?t('topBid')+' · €'+L.price : i===L.turn?t('biddingNow') : L.active.includes(i)?p.bought.length+' ×':'—'}</div>
+        </div>`).join('')}</div>
+      <div id="act" class="dock"></div>
     </div>
-    ${S._taunt?`<div class="card ink" style="padding:10px 12px;margin-bottom:12px"><p class="small" style="margin:0;opacity:.9;font-style:italic">&ldquo;${esc(S._taunt)}&rdquo;</p></div>`:''}
-    ${S.clock&&!isAI?'<div class="timer" id="tb"><i></i></div>':''}
-    <div class="strip">${S.players.map((p,i)=>`
-      <div class="pl2 seat${i} ${i===L.turn?'turn':''} ${L.active.includes(i)?'':'out'}">
-        <div class="n">${esc(p.name)}</div>
-        <div class="b">€${p.budget}</div>
-        <div class="role">${i===L.holder?t('topBid')+' · €'+L.price : i===L.turn?t('biddingNow') : L.active.includes(i)?p.bought.length+' ×':'—'}</div>
-      </div>`).join('')}</div>
-    <div class="turnbar seat${L.turn}">
-      <div class="k">${t('nowBidding')}</div>
-      <div class="w">${esc(actor.name)}</div>
-    </div>
-    <div id="act"></div>`, fresh);
+  </div>`, fresh);
 
   if(fresh) speak(cname(c));
   if(isAI) return aiTurn();
@@ -799,21 +803,19 @@ function paint(fresh){
 
 function humanTurn(){
   const L=S.L, actor=S.players[L.turn];
-  const room=actor.budget-L.price;
   const steps=[1,2,5,10,25].filter(s=>L.price+s<=actor.budget);
   document.getElementById('act').innerHTML=`
-    <div class="card">
+    <div class="card tight">
       <span class="label">${esc(actor.name)} — ${t('raiseOrDrop')}</span>
-      ${steps.length?`<div class="grid5" style="margin-bottom:9px">
-        ${steps.map(s=>`<button class="btn sm go" data-s="${s}">+${s}</button>`).join('')}
+      ${steps.length?`<div class="grid5" style="margin-bottom:6px">
+        ${steps.map(s=>`<button class="btn xs go" data-s="${s}">+${s}</button>`).join('')}
       </div>
-      <div class="row" style="margin-bottom:9px">
+      <div class="row" style="margin-bottom:6px">
         <input id="cus" type="number" inputmode="numeric" min="${L.price+1}" max="${actor.budget}" placeholder="€${L.price+1}+">
-        <button class="btn sm" id="cb" style="flex:0 0 40%">Bid</button>
+        <button class="btn xs" id="cb" style="flex:0 0 40%">Bid</button>
       </div>`
-      :`<p class="small" style="margin-bottom:9px">${t('noRaise')}</p>`}
-      <button class="btn hot" id="pass">${t('dropOut')}</button>
-      ${room>0&&steps.length?`<p class="small" style="margin-top:8px">${t('dropHint',{name:esc(S.players[L.holder].name), price:L.price})}</p>`:''}
+      :`<p class="small" style="margin-bottom:6px">${t('noRaise')}</p>`}
+      <button class="btn xs hot" id="pass">${t('dropOut')}</button>
     </div>`;
   document.getElementById('act').querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>raise(L.price+parseInt(b.dataset.s)));
   on('cb',()=>{ const v=parseInt(val('cus')); if(!v||v<=L.price) return toast(t('mustBeat',{price:L.price})); raise(v); });
@@ -877,14 +879,16 @@ function award(){
   gavel(t('sold'));
   setTimeout(()=>{
     go(`<div class="stage">
-        <div class="flag">${flag(c.code)}</div>
+        <div class="top">
+          <div class="flag">${flag(c.code)}</div>
+          <div class="lot">${t('lot')} ${S.i+1} <span class="of">${t('of')} ${S.countries.length}</span></div>
+        </div>
         <div class="cname">${esc(cname(c))}</div>
-        <div style="margin-top:11px"><span class="stamp">${esc(w.name)} · €${L.price}</span></div>
-        <div class="lot" style="margin-top:13px">Lot ${S.i+1} <span class="of">of ${S.countries.length}</span></div>
+        <div style="margin-top:6px"><span class="stamp">${esc(w.name)} · €${L.price}</span></div>
       </div>
-      ${S._taunt?`<div class="card ink" style="padding:11px 13px"><span class="label">${esc((S.players.find(p=>p.ai)||{}).name||'Rival')}</span><p style="margin:0;font-style:italic;font-size:14.5px">&ldquo;${esc(S._taunt)}&rdquo;</p></div>`:''}
+      ${S._taunt?`<div class="card ink" style="padding:8px 11px"><span class="label">${esc((S.players.find(p=>p.ai)||{}).name||'Rival')}</span><p style="margin:0;font-style:italic;font-size:13.5px">&ldquo;${esc(S._taunt)}&rdquo;</p></div>`:''}
       <div class="strip">${S.players.map((p,i)=>`<div class="pl2 seat${i}"><div class="n">${esc(p.name)}</div><div class="b">€${p.budget}</div><div class="c">${p.bought.length} ×</div></div>`).join('')}</div>
-      <button class="btn go" id="n">${t('nextLot')}</button>`, false);
+      <button class="btn go dock" id="n">${t('nextLot')}</button>`, false);
     on('n',()=>{S.i++;lot();});
   },520);
 }
@@ -898,7 +902,7 @@ function think(ms){
 
 async function aiTurn(){
   const L=S.L, c=S.countries[S.i], me=S.players[L.turn];
-  document.getElementById('act').innerHTML=`<div class="card">
+  document.getElementById('act').innerHTML=`<div class="card tight">
       <h2>${esc(me.name)} ${t('deciding')}</h2>
       <p class="small" style="margin:0">${t('sizing',{price:L.price})}</p>
       <div class="thinkbar" id="think"><i></i></div>

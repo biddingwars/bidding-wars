@@ -44,6 +44,20 @@ body{
 @media (min-width:640px){ .wrap{max-width:760px} }
 @media (min-width:980px){ .wrap{max-width:1040px} }
 
+/* anti-stretch: at the wider tiers, scale padding/type with the container
+   instead of just spreading phone-sized chrome across more empty space.
+   Each clamp() floor equals today's base-tier value, so there's no jump at
+   the breakpoint — phones (below 640px) are completely untouched by these. */
+@container page (min-width:640px){
+  .card{padding:clamp(15px,2.4cqi,22px)}
+  .btn{font-size:clamp(19px,2.6cqi,21px);padding:clamp(13px,1.8cqi,15px) 14px}
+  h2{font-size:clamp(25px,3.6cqi,30px)}
+}
+@container page (min-width:980px){
+  .card{padding:clamp(18px,2.2cqi,26px)}
+  .mode{padding:clamp(15px,1.6cqi,20px) 62px 15px 20px}
+}
+
 /* results screen: sealed card + player cards beside the verdict/globe once
    revealed, on wide screens. #verdict starts empty and is only filled once
    every redaction bar is lifted (see finish() in app.js) — the :has() rule
@@ -78,6 +92,9 @@ body{
 }
 .card.ink{background:var(--ink);color:var(--cream)}
 .card.amber{background:var(--amber)}
+/* used only by the live-auction action panel (humanTurn()/aiTurn()) — the
+   base .card rule elsewhere (menus, dialogs, results) is left untouched */
+.card.tight{padding:9px 11px;margin-bottom:0}
 .label{
   font-family:'Space Mono','SF Mono',Menlo,Consolas,monospace;font-size:10px;font-weight:700;letter-spacing:.2em;
   text-transform:uppercase;display:block;margin-bottom:6px;opacity:.75;
@@ -100,6 +117,10 @@ button{font-family:'Space Grotesk',-apple-system,BlinkMacSystemFont,system-ui,sa
 .btn.ghost{background:transparent;color:var(--ink)}
 .card.ink .btn.ghost{color:var(--cream);border-color:var(--cream);box-shadow:3px 3px 0 rgba(255,243,224,.35)}
 .btn.sm{font-size:15px;padding:9px 10px}
+/* used only by the live-auction raise-grid/custom-bid/drop-out buttons —
+   .btn.sm is shared with the unrelated online-room "join" button, so this
+   is a separate modifier rather than a change to .btn.sm itself */
+.btn.xs{font-size:14px;padding:6px 8px}
 .btn[disabled]{opacity:.35;pointer-events:none}
 .row{display:flex;gap:9px}.row>*{flex:1}
 .grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
@@ -153,6 +174,9 @@ input:focus,select:focus,button:focus-visible{outline:3px solid var(--amber);out
 .homebtn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
 body.playing .homebtn{display:flex}
 body.playing .wrap{padding-top:calc(56px + env(safe-area-inset-top))}
+/* the footer is hidden while playing (below), so its 60px bottom clearance
+   is wasted space on the one screen most starved for vertical room */
+body.playing .wrap{padding-bottom:calc(14px + env(safe-area-inset-bottom))}
 /* mid-auction: the logo, tagline and privacy footer just eat space the player
    wants spent on the lot itself — hide them while a round is in progress. */
 body.playing .mast,body.playing .foot{display:none}
@@ -160,9 +184,28 @@ body.playing .mast,body.playing .foot{display:none}
    drift away from the bidding controls. .wrap keeps its own overflow-y so
    a tall lot (taunt bubble + timer + a full 4-player strip) on a short
    screen still scrolls internally instead of stranding the action buttons
-   off-screen — the player just never sees the outer page move. */
+   off-screen — the player just never sees the outer page move. The auction
+   layout below is budgeted to never actually need this fallback; it stays
+   in place defensively and because the results screen still relies on it. */
 body.playing{position:fixed;inset:0;overflow:hidden}
 body.playing .wrap{height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch}
+/* bid controls anchored to the bottom of the screen, with whatever slack is
+   left above them — degrades gracefully: if content ever does overflow
+   despite the budget, the auto margin resolves to 0 and .dock just sits
+   after the previous element, falling back to the scroll-lock above. */
+body.playing #app{display:flex;flex-direction:column;min-height:100%}
+body.playing .dock{margin-top:auto}
+/* iPad landscape (reuses the existing wide tier, no new breakpoint): lot
+   info on one side, players + bid controls on the other. display:contents
+   below this tier means .lot-wrap/.lot-main/.lot-side generate no boxes at
+   all, so phone/medium layout is exactly as if these wrapper divs weren't
+   there. */
+.lot-wrap,.lot-main,.lot-side{display:contents}
+@container page (min-width:980px){
+  .lot-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:1;min-height:0}
+  .lot-main{display:flex;flex-direction:column}
+  .lot-side{display:flex;flex-direction:column}
+}
 
 /* in-page dialogs — sandboxed frames block native alert/confirm */
 .veil{position:fixed;inset:0;background:rgba(20,15,12,.72);z-index:90;display:flex;align-items:center;justify-content:center;padding:22px}
@@ -176,49 +219,61 @@ body.playing .wrap{height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch}
 }
 @keyframes tin{from{transform:translate(-50%,-14px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
 
-/* lot stage */
+/* lot stage — compact: flag + lot-number share a row, name below, clamped to
+   2 lines as a safety cap so even the longest translated country name can
+   never blow the auction screen's no-scroll budget. */
 .stage{
   background:var(--cream);border:3px solid var(--ink);box-shadow:var(--shadow);
-  padding:16px 12px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden;
+  padding:6px 10px;text-align:left;margin-bottom:7px;position:relative;overflow:hidden;
 }
 .stage::before{
   content:"";position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(rgba(20,15,12,.09) 1px, transparent 1.1px);background-size:7px 7px;
 }
-.flag{font-size:46px;line-height:1;position:relative}
+.stage .top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.flag{font-size:26px;line-height:1;position:relative}
 .cname{
   font-family:'Archivo Black',Impact,'Haettenschweiler','Arial Narrow Bold',sans-serif;text-transform:uppercase;
-  font-size:clamp(26px,9vw,46px);line-height:.9;margin:6px 0 3px;letter-spacing:-.02em;position:relative;
+  font-size:clamp(16px,5.4cqi,22px);line-height:1.08;margin:2px 0 0;letter-spacing:-.02em;position:relative;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
 }
 .lot{
-  font-family:'Archivo Black',Impact,'Haettenschweiler','Arial Narrow Bold',sans-serif;font-size:19px;letter-spacing:.02em;margin-top:8px;
-  display:inline-block;background:var(--ink);color:var(--amber);padding:5px 13px;text-transform:uppercase;
+  font-family:'Archivo Black',Impact,'Haettenschweiler','Arial Narrow Bold',sans-serif;font-size:10px;letter-spacing:.02em;margin:0;
+  display:inline-block;background:var(--ink);color:var(--amber);padding:3px 8px;text-transform:uppercase;flex:0 0 auto;
 }
-.lot .of{color:var(--cream);opacity:.75;font-size:15px}
+.lot .of{color:var(--cream);opacity:.75;font-size:9px}
 .stage.in{animation:drop .4s cubic-bezier(.2,1.5,.4,1)}
 @keyframes drop{0%{transform:translateY(-22px) scale(1.06);opacity:0}100%{transform:none;opacity:1}}
 
-/* price */
-.price{background:var(--ink);color:var(--amber);border:3px solid var(--ink);padding:11px;text-align:center;margin-bottom:12px;box-shadow:var(--shadow-sm)}
+/* price — stays the single largest element on screen */
+.price{background:var(--ink);color:var(--amber);border:3px solid var(--ink);padding:7px 10px 6px;text-align:center;margin-bottom:7px;box-shadow:var(--shadow-sm)}
 .price .pl{font-family:'Space Mono','SF Mono',Menlo,Consolas,monospace;font-size:10px;font-weight:700;letter-spacing:.2em;color:var(--cream);opacity:.7}
-.price .pv{font-family:'Archivo Black',Impact,'Haettenschweiler','Arial Narrow Bold',sans-serif;font-size:46px;line-height:1;margin-top:2px}
+.price .pv{font-family:'Archivo Black',Impact,'Haettenschweiler','Arial Narrow Bold',sans-serif;font-size:42px;line-height:1;margin-top:2px}
 .price .ph{font-family:'Space Mono','SF Mono',Menlo,Consolas,monospace;font-size:12px;font-weight:700;color:var(--cream);margin-top:3px}
 .price.bump{animation:bump .25s ease}
 @keyframes bump{0%{transform:scale(1)}45%{transform:scale(1.06)}100%{transform:scale(1)}}
 
-/* timer */
-.timer{height:30px;border:4px solid var(--ink);background:var(--cream);margin-bottom:12px;position:relative;box-shadow:var(--shadow-sm)}
+/* taunt — a short caption, fixed height always, never pushes the layout */
+.taunt{
+  height:22px;overflow:hidden;margin:0 0 7px;padding:0 10px;
+  background:var(--ink);color:var(--amber);border:2px solid var(--ink);
+  font-size:11px;font-style:italic;line-height:22px;text-align:center;
+  white-space:nowrap;text-overflow:ellipsis;
+}
+
+/* timer — thin bar */
+.timer{height:13px;border:2px solid var(--ink);background:var(--cream);margin-bottom:7px;position:relative;box-shadow:var(--shadow-sm)}
 .timer>i{display:block;height:100%;background:var(--amber);width:100%;transition:width .1s linear}
 .timer.warn>i{background:var(--red);animation:flash .5s steps(1) infinite}
 @keyframes flash{0%,49%{opacity:1}50%,100%{opacity:.25}}
 
 /* players strip */
-.strip{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.strip{display:flex;gap:5px;margin-bottom:7px;flex-wrap:wrap}
 /* Every seat keeps one colour for the whole auction, so the money tile never
    changes meaning. Seat 1 red, seat 2 black, seat 3 blue, seat 4 green. */
 .pl2{
   flex:1 1 46%;border:3px solid var(--ink);color:var(--cream);
-  padding:8px 9px;box-shadow:var(--shadow-sm);min-width:0;
+  padding:5px 7px;box-shadow:var(--shadow-sm);min-width:0;
 }
 @container page (min-width:640px){ .pl2{flex:1 1 21%} }
 .seat0{background:#D6161F}
@@ -228,21 +283,13 @@ body.playing .wrap{height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .pl2.turn{box-shadow:0 0 0 4px var(--amber),var(--shadow-sm);animation:breathe 1.4s ease-in-out infinite}
 @keyframes breathe{0%,100%{box-shadow:0 0 0 4px var(--amber),var(--shadow-sm)}50%{box-shadow:0 0 0 8px var(--amber),var(--shadow-sm)}}
 .pl2.out{opacity:.35}
-.pl2 .role{font-family:'Space Mono','SF Mono',Menlo,Consolas,monospace;font-size:9.5px;font-weight:700;letter-spacing:.12em;margin-top:3px;opacity:.8}
+.pl2 .role{font-family:'Space Mono','SF Mono',Menlo,Consolas,monospace;font-size:8.5px;font-weight:700;letter-spacing:.12em;margin-top:2px;opacity:.8}
 .pl2 .c{opacity:.8}
-.turnbar{
-  color:var(--cream);border:3px solid var(--ink);padding:10px 12px;
-  margin-bottom:16px;text-align:center;
-  box-shadow:0 0 0 4px var(--amber),var(--shadow-sm);
-  animation:breathe 1.4s ease-in-out infinite;
-}
-.turnbar .k{font-family:'Space Mono','SF Mono',Menlo,Consolas,monospace;font-size:9.5px;font-weight:700;letter-spacing:.2em;opacity:.7}
-.turnbar .w{font-family:'Archivo Black',Impact,'Haettenschweiler','Arial Narrow Bold',sans-serif;font-size:26px;line-height:1;text-transform:uppercase;margin-top:2px}
-.hold{display:inline-block;color:var(--cream);font-family:'Space Mono','SF Mono',Menlo,Consolas,monospace;font-weight:700;font-size:11.5px;padding:3px 8px;border:2px solid var(--cream);margin-top:5px}
+.hold{display:inline-block;color:var(--cream);font-family:'Space Mono','SF Mono',Menlo,Consolas,monospace;font-weight:700;font-size:10.5px;padding:2px 7px;border:2px solid var(--cream);margin-top:3px}
 .thinkbar{height:12px;border:3px solid var(--ink);background:#fff;margin-top:9px;overflow:hidden}
 .thinkbar>i{display:block;height:100%;width:0;background:var(--red)}
-.pl2 .n{font-family:'Archivo Black',Impact,'Haettenschweiler','Arial Narrow Bold',sans-serif;font-size:15px;text-transform:uppercase;line-height:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pl2 .b{font-family:'Space Mono','SF Mono',Menlo,Consolas,monospace;font-size:17px;font-weight:700;margin-top:3px}
+.pl2 .n{font-family:'Archivo Black',Impact,'Haettenschweiler','Arial Narrow Bold',sans-serif;font-size:13px;text-transform:uppercase;line-height:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl2 .b{font-family:'Space Mono','SF Mono',Menlo,Consolas,monospace;font-size:15px;font-weight:700;margin-top:2px}
 .pl2 .c{font-family:'Space Mono','SF Mono',Menlo,Consolas,monospace;font-size:9.5px;letter-spacing:.1em;opacity:.75}
 
 /* gavel */
