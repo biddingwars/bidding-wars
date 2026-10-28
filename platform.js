@@ -9,9 +9,10 @@ const CONFIG = {
      that shows an error is an App Store rejection under Guideline 2.1. */
   online: false,
 
-  /* Set once you host these. Both are required by App Store Connect. */
-  privacyUrl: 'https://example.com/bidding-wars/privacy',
-  supportUrl: 'https://example.com/bidding-wars/support',
+  /* Both required by App Store Connect. Hosted as flat pages on the same
+     GitHub Pages site as the game itself. */
+  privacyUrl: 'https://biddingwars.github.io/bidding-wars/privacy.html',
+  supportUrl: 'https://biddingwars.github.io/bidding-wars/support.html',
 
   /* No ad SDK is bundled. See docs/APPSTORE.md before adding one — an ad SDK
      changes the privacy label, the age rating and the COPPA obligations. */

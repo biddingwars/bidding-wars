@@ -1,7 +1,7 @@
 /* Service worker — the whole game is cached on first visit, then served from
    cache. After that it runs with no connection at all, which is the point. */
 
-const CACHE = 'bidding-wars-v11';
+const CACHE = 'bidding-wars-v12';
 
 const SHELL = [
   './',
@@ -22,7 +22,9 @@ const SHELL = [
   './icon-192.png',
   './icon-512.png',
   './icon-512-maskable.png',
-  './icon-180.png'
+  './icon-180.png',
+  './privacy.html',
+  './support.html'
 ];
 
 /* Missing optional files (fonts you have not dropped in yet) must not abort the
