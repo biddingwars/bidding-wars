@@ -1,72 +1,23 @@
-/* ============ THE BOT'S PRICE TABLE ============
-   Countries are ranked 1 (smallest population) to 196 (largest). Each band sets what
-   the bot is willing to pay per million people: an ideal rate and a hard maximum.
-   Everything the bot does with money comes out of this table. */
-const RANK={};
-COUNTRIES.slice().sort((a,b)=>a.pop-b.pop).forEach((c,i)=>{ RANK[c.code]=i+1; });
+/* ============ ENGINE + PACK BINDINGS ============
+   The rules (pricing from percentile bands, the bot, the auction state machine,
+   scoring, records) live in engine.js — pure and unit-tested. Content (items,
+   names, taunts, difficulty filters, number format) lives in lazily loaded packs
+   (packs.js, pack-*.js). This file is the view: it renders what the engine
+   returns and plays sounds. Nothing here decides a price or a winner. */
+const rnd = Engine.defaultRng;
+const DEFAULT_PACK = 'countries';
+let PACK = null;                                    // pack of the auction / results on screen
 
-const BANDS=[
-  {from:1,   to:38,  ideal:1.00,  max:2.000},
-  {from:39,  to:62,  ideal:1.00,  max:1.750},
-  {from:63,  to:71,  ideal:1.00,  max:1.600},
-  {from:72,  to:102, ideal:0.75,  max:1.400},
-  {from:103, to:131, ideal:0.75,  max:1.100},
-  {from:132, to:166, ideal:0.50,  max:0.750},
-  {from:167, to:181, ideal:0.50,  max:0.600},
-  {from:182, to:194, ideal:0.25,  max:0.275},
-  {from:195, to:196, ideal:0.05,  max:0.067}
-];
-const bandOf = code => { const r=RANK[code]; return BANDS.find(b=>r>=b.from&&r<=b.to) || BANDS[BANDS.length-1]; };
-
-function priceOf(c){
-  const b=bandOf(c.code);
-  const ideal=Math.max(1, Math.round(c.pop*b.ideal));
-  return { ideal, max: Math.max(ideal, Math.round(c.pop*b.max)) };
+const cname = it => Engine.itemName(it, LANG);
+const flag = code => code.split('').map(ch=>String.fromCodePoint(0x1F1E6+ch.charCodeAt(0)-65)).join('');
+/* item icon: a flag where the pack has them, otherwise a text badge (or a given emoji) */
+function icon(it){
+  const ic = Engine.itemIcon(PACK, it);
+  return ic.flag ? flag(ic.flag) : ic.emoji ? esc(ic.emoji) : `<span class="ibadge">${esc(ic.badge)}</span>`;
 }
-const valueOf = c => priceOf(c).ideal;
-
-/* Per lot the bot rolls a walk-away ceiling above its target price, so it does not
-   always land a clean deal. Late in the auction it gets reckless, and on a top-five
-   country it throws the whole wallet at the lot. */
-/* One roll per lot, somewhere between the table's ideal price and its maximum.
-   The maximum is absolute — no endgame surge, no favourites, no stepping over it. */
-function botCeiling(c){
-  const { ideal, max } = priceOf(c);
-  return { ideal, max, walk: ideal + rnd(max-ideal+1) };
-}
-
-const pick = (arr, avoid) => {
-  if(!arr || !arr.length) return '';
-  if(arr.length===1) return arr[0];
-  let v, tries=0; do { v = arr[rnd(arr.length)]; } while(v===avoid && ++tries<12);
-  return v;
-};
-
-/* ---- difficulty: which countries can come up at all ---- */
-const EUROPE=new Set(["AL","AD","AT","BY","BE","BA","BG","HR","CY","CZ","DK","EE","FI","FR","DE",
-"GR","HU","IS","IE","IT","XK","LV","LI","LT","LU","MT","MD","MC","ME","NL","MK","NO","PL","PT",
-"RO","RU","SM","RS","SK","SI","ES","SE","CH","UA","GB","VA","TR"]);
-const LEVELS={
-  beginner:{ pool:()=>COUNTRIES.filter(c=>EUROPE.has(c.code)) },
-  medium:  { pool:()=>COUNTRIES.filter(c=>c.pop>=15) },
-  expert:  { pool:()=>COUNTRIES.slice() }
-};
-
-/* ---- true randomness, no bias toward tiny states ---- */
-function rnd(n){ const a=new Uint32Array(1); crypto.getRandomValues(a); return a[0]%n; }
-function draw(n, level){
-  const pool=(LEVELS[level]||LEVELS.expert).pool();
-  for(let i=pool.length-1;i>0;i--){const j=rnd(i+1);[pool[i],pool[j]]=[pool[j],pool[i]];}
-  return pool.slice(0,Math.min(n,pool.length));
-}
-
-/* ---- very wide estimate handed to the AI. Never shown on screen. ---- */
-function fuzzy(pop){
-  const lo=pop*(0.18+rnd(22)/100);
-  const hi=pop*(2.1+rnd(220)/100);
-  const r=v=> v>=100?Math.round(v/10)*10 : v>=10?Math.round(v/5)*5 : v>=1?Math.round(v) : Math.max(0.01,Math.round(v*100)/100);
-  return {lo:r(lo), hi:r(hi)};
-}
+const fmtVal = v => PACK.metric.format(v);
+const cur = () => (PACK ? PACK.currency.symbol : '€');
+const money = n => cur() + n;
 
 /* ============ SOUND ============ */
 let AC=null;
@@ -165,7 +116,8 @@ const isOnline = () => navigator.onLine !== false;
 const app=document.getElementById('app');
 let S={}, T=null;
 const esc=s=>String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
-function go(h, scroll=true){ app.innerHTML=h; if(scroll) window.scrollTo({top:0,behavior:'instant'}); }
+let navTok=0;                                    // bumped on every screen change, so an async screen can tell it was left
+function go(h, scroll=true){ navTok++; app.innerHTML=h; if(scroll) window.scrollTo({top:0,behavior:'instant'}); }
 function on(id,fn){ const e=document.getElementById(id); if(e) e.onclick=fn; }
 function val(id){ const e=document.getElementById(id); return e?e.value.trim():''; }
 function clearTimer(){ if(T){ clearInterval(T); T=null; } }
@@ -216,17 +168,17 @@ en:{
  raiseOrDrop:'raise or drop out', dropOut:'Drop out', bid:'Bid', lot:'Lot', of:'of',
  noRaise:'Not enough money left to raise. You have to drop out.',
  dropHint:'Drop out and {name} buys it for €{price}.',
- deciding:'is deciding', sizing:'Sizing up the lot at €{price}.',
+ deciding:'is deciding', sizing:'Sizing up the lot at {cur}{price}.',
  nextLot:'Next lot', sold:'Sold', result:'Result',
  sealed:'The books are sealed', nobody:'Nobody knows yet',
  revealHint:'Every population is still blacked out. Tap a bar to lift it, or lift them all at once. The result stands once the last bar is gone.',
  liftAll:'Lift every bar', final:'Final', takesIt:'{name} takes it',
  pointsAgainst:'{a} points against {b}.', smartest:'<b>{name}</b> shopped smartest at {v} € per million.',
- nothing:'Walked away with nothing.', points:'Points', spentEff:'€{n} spent · efficiency',
+ nothing:'Walked away with nothing.', points:'Points', spentEff:'{cur}{n} spent · efficiency',
  playAgain:'Play again', menu:'Menu', world:"{name}'s world · drag to spin and tilt · pinch to zoom",
  leaveTitle:'Leave the auction?', leaveBody:'This round will be lost and you go back to the main menu.',
  leave:'Leave', stay:'Stay here',
- twoMin:'Two players minimum.', tooMuch:'More than you have.', mustBeat:'Has to beat €{price}.',
+ twoMin:'Two players minimum.', tooMuch:'More than you have.', mustBeat:'Has to beat {cur}{price}.',
  record:'Record vs the bot', wins:'Wins', losses:'Losses', draws:'Draws',
  games:'Games', streak:'Streak', bestStreak:'Best streak', winRate:'Win rate', avgPts:'Average points',
  bestGame:'Best game', noGames:'No solo games yet. Beat the bot and it starts counting.',
@@ -244,7 +196,7 @@ en:{
  openRoom:'Open a room', joinRoom:'Join', roomCode:'Room code', shareCode:'Share this with the others.',
  inRoom:'In the room', waitHost:'Waiting for the host…', waitJoin:'Waiting for your opponent to join…',
  bothIn:'Both bidders are in.', startAuction:'Start the auction', leaveRoom:'Leave',
- sealedBid:'Sealed bid — you have €{n}', submit:'Submit', bidIn:'Bid is in', waitOthers:'Waiting for your opponent…',
+ sealedBid:'Sealed bid — you have {cur}{n}', submit:'Submit', bidIn:'Bid is in', waitOthers:'Waiting for your opponent…',
  fourChars:'Four characters, please.', noRoom:'No room with that code.', alreadyStarted:'That auction already started.',
  roomFull:'That room is full — this mode is 1 vs 1.', storageFail:'Storage is not reachable right now.',
  needsNet:'This mode needs an internet connection.', lotsWon:'lots',
@@ -255,6 +207,7 @@ en:{
  privP3:'Nicknames are optional. They are only used to label the players on screen during a round and are never stored.',
  privP4:'No advertising, no tracking, no third-party software development kits.',
  wipe:'Delete all data', wipeTitle:'Delete everything?', wipeBody:'Your record, your saved name and your language choice will be removed from this device.', wiped:'Deleted.',
+ packFail:'Could not load the game data. Check your connection and try again.',
  loadingBorders:'loading borders…'
 },
 de:{
@@ -274,17 +227,17 @@ de:{
  raiseOrDrop:'erhöhen oder aussteigen', dropOut:'Aussteigen', bid:'Bieten', lot:'Los', of:'von',
  noRaise:'Nicht genug Geld zum Erhöhen. Du musst aussteigen.',
  dropHint:'Steigst du aus, kauft {name} es für {price} €.',
- deciding:'überlegt', sizing:'Schätzt das Los bei {price} € ein.',
+ deciding:'überlegt', sizing:'Schätzt das Los bei {price} {cur} ein.',
  nextLot:'Nächstes Los', sold:'Verkauft', result:'Ergebnis',
  sealed:'Die Bücher sind versiegelt', nobody:'Noch weiß es niemand',
  revealHint:'Alle Einwohnerzahlen sind noch geschwärzt. Tippe einen Balken an oder deck alle auf einmal auf. Das Ergebnis steht erst, wenn der letzte Balken weg ist.',
  liftAll:'Alles aufdecken', final:'Endstand', takesIt:'{name} gewinnt',
  pointsAgainst:'{a} Punkte gegen {b}.', smartest:'<b>{name}</b> hat am klügsten eingekauft: {v} € pro Million.',
- nothing:'Ging leer aus.', points:'Punkte', spentEff:'{n} € ausgegeben · Effizienz',
+ nothing:'Ging leer aus.', points:'Punkte', spentEff:'{n} {cur} ausgegeben · Effizienz',
  playAgain:'Nochmal', menu:'Menü', world:'{name}s Welt · ziehen zum Drehen und Kippen · zwei Finger zum Zoomen',
  leaveTitle:'Auktion verlassen?', leaveBody:'Diese Runde geht verloren und du landest im Hauptmenü.',
  leave:'Verlassen', stay:'Hierbleiben',
- twoMin:'Mindestens zwei Spieler.', tooMuch:'Mehr als du hast.', mustBeat:'Muss über {price} € liegen.',
+ twoMin:'Mindestens zwei Spieler.', tooMuch:'Mehr als du hast.', mustBeat:'Muss über {price} {cur} liegen.',
  record:'Bilanz gegen den Bot', wins:'Siege', losses:'Niederlagen', draws:'Unentschieden',
  games:'Spiele', streak:'Serie', bestStreak:'Beste Serie', winRate:'Siegquote', avgPts:'Punkte im Schnitt',
  bestGame:'Bestes Spiel', noGames:'Noch keine Solo-Spiele. Schlag den Bot, dann fängt die Zählung an.',
@@ -302,7 +255,7 @@ de:{
  openRoom:'Raum eröffnen', joinRoom:'Beitreten', roomCode:'Raum-Code', shareCode:'Gib den Code an die anderen weiter.',
  inRoom:'Im Raum', waitHost:'Warte auf den Gastgeber…', waitJoin:'Warte darauf, dass dein Gegner beitritt…',
  bothIn:'Beide Bieter sind da.', startAuction:'Auktion starten', leaveRoom:'Verlassen',
- sealedBid:'Verdecktes Gebot — du hast {n} €', submit:'Abgeben', bidIn:'Gebot ist abgegeben', waitOthers:'Warte auf deinen Gegner…',
+ sealedBid:'Verdecktes Gebot — du hast {n} {cur}', submit:'Abgeben', bidIn:'Gebot ist abgegeben', waitOthers:'Warte auf deinen Gegner…',
  fourChars:'Bitte vier Zeichen.', noRoom:'Kein Raum mit diesem Code.', alreadyStarted:'Diese Auktion läuft schon.',
  roomFull:'Der Raum ist voll — dieser Modus ist 1 gegen 1.', storageFail:'Der Speicher ist gerade nicht erreichbar.',
  needsNet:'Dieser Modus braucht eine Internetverbindung.', lotsWon:'Lose',
@@ -313,6 +266,7 @@ de:{
  privP3:'Spitznamen sind freiwillig. Sie dienen nur der Beschriftung während einer Runde und werden nie gespeichert.',
  privP4:'Keine Werbung, kein Tracking, keine Fremd-Bausteine.',
  wipe:'Alle Daten löschen', wipeTitle:'Alles löschen?', wipeBody:'Deine Bilanz, dein gespeicherter Name und deine Sprachwahl werden von diesem Gerät entfernt.', wiped:'Gelöscht.',
+ packFail:'Die Spieldaten konnten nicht geladen werden. Prüfe deine Verbindung und versuch es noch einmal.',
  loadingBorders:'Grenzen werden geladen…'
 },
 it:{
@@ -332,17 +286,17 @@ it:{
  raiseOrDrop:'rilancia o ritirati', dropOut:'Ritirati', bid:'Offri', lot:'Lotto', of:'di',
  noRaise:'Non hai abbastanza per rilanciare. Devi ritirarti.',
  dropHint:'Se ti ritiri, {name} lo compra per {price} €.',
- deciding:'sta decidendo', sizing:'Sta valutando il lotto a {price} €.',
+ deciding:'sta decidendo', sizing:'Sta valutando il lotto a {price} {cur}.',
  nextLot:'Prossimo lotto', sold:'Venduto', result:'Risultato',
  sealed:'I libri sono sigillati', nobody:'Ancora nessuno lo sa',
  revealHint:'Tutte le popolazioni sono ancora oscurate. Tocca una barra per scoprirla, o scoprile tutte insieme. Il risultato vale quando sparisce l’ultima barra.',
  liftAll:'Scopri tutto', final:'Finale', takesIt:'{name} vince',
  pointsAgainst:'{a} punti contro {b}.', smartest:'<b>{name}</b> ha comprato meglio: {v} € per milione.',
- nothing:'Se n’è andato a mani vuote.', points:'Punti', spentEff:'{n} € spesi · efficienza',
+ nothing:'Se n’è andato a mani vuote.', points:'Punti', spentEff:'{n} {cur} spesi · efficienza',
  playAgain:'Rigioca', menu:'Menu', world:'Il mondo di {name} · trascina per ruotare · pizzica per lo zoom',
  leaveTitle:"Uscire dall'asta?", leaveBody:'Questo turno andrà perso e tornerai al menu principale.',
  leave:'Esci', stay:'Resta qui',
- twoMin:'Minimo due giocatori.', tooMuch:'Più di quanto hai.', mustBeat:'Deve superare {price} €.',
+ twoMin:'Minimo due giocatori.', tooMuch:'Più di quanto hai.', mustBeat:'Deve superare {price} {cur}.',
  record:'Bilancio contro il bot', wins:'Vittorie', losses:'Sconfitte', draws:'Pareggi',
  games:'Partite', streak:'Serie', bestStreak:'Serie migliore', winRate:'Percentuale di vittorie', avgPts:'Punti medi',
  bestGame:'Partita migliore', noGames:'Ancora nessuna partita in solo. Batti il bot e il conteggio parte.',
@@ -360,7 +314,7 @@ it:{
  openRoom:'Apri una stanza', joinRoom:'Entra', roomCode:'Codice stanza', shareCode:'Condividilo con gli altri.',
  inRoom:'Nella stanza', waitHost:'In attesa dell’host…', waitJoin:'In attesa che entri il tuo avversario…',
  bothIn:'Ci sono entrambi.', startAuction:'Avvia l’asta', leaveRoom:'Esci',
- sealedBid:'Offerta segreta — hai {n} €', submit:'Invia', bidIn:'Offerta inviata', waitOthers:'In attesa del tuo avversario…',
+ sealedBid:'Offerta segreta — hai {n} {cur}', submit:'Invia', bidIn:'Offerta inviata', waitOthers:'In attesa del tuo avversario…',
  fourChars:'Quattro caratteri, per favore.', noRoom:'Nessuna stanza con quel codice.', alreadyStarted:'Quell’asta è già iniziata.',
  roomFull:'La stanza è piena — questa modalità è 1 contro 1.', storageFail:'L’archivio non è raggiungibile in questo momento.',
  needsNet:'Questa modalità richiede una connessione a internet.', lotsWon:'lotti',
@@ -371,6 +325,7 @@ it:{
  privP3:'I soprannomi sono facoltativi. Servono solo a identificare i giocatori durante una partita e non vengono mai salvati.',
  privP4:'Nessuna pubblicità, nessun tracciamento, nessun componente di terze parti.',
  wipe:'Cancella tutti i dati', wipeTitle:'Cancellare tutto?', wipeBody:'Il tuo bilancio, il nome salvato e la lingua scelta verranno rimossi da questo dispositivo.', wiped:'Cancellato.',
+ packFail:'Impossibile caricare i dati di gioco. Controlla la connessione e riprova.',
  loadingBorders:'caricamento confini…'
 },
 es:{
@@ -390,17 +345,17 @@ es:{
  raiseOrDrop:'sube o retírate', dropOut:'Retirarse', bid:'Pujar', lot:'Lote', of:'de',
  noRaise:'No te queda dinero para subir. Tienes que retirarte.',
  dropHint:'Si te retiras, {name} lo compra por {price} €.',
- deciding:'está decidiendo', sizing:'Está valorando el lote a {price} €.',
+ deciding:'está decidiendo', sizing:'Está valorando el lote a {price} {cur}.',
  nextLot:'Siguiente lote', sold:'Vendido', result:'Resultado',
  sealed:'Los libros están sellados', nobody:'Todavía nadie lo sabe',
  revealHint:'Todas las poblaciones siguen tapadas. Toca una barra para levantarla, o levántalas todas. El resultado vale cuando desaparezca la última.',
  liftAll:'Levantar todo', final:'Final', takesIt:'{name} gana',
  pointsAgainst:'{a} puntos contra {b}.', smartest:'<b>{name}</b> compró mejor: {v} € por millón.',
- nothing:'Se fue con las manos vacías.', points:'Puntos', spentEff:'{n} € gastados · eficiencia',
+ nothing:'Se fue con las manos vacías.', points:'Puntos', spentEff:'{n} {cur} gastados · eficiencia',
  playAgain:'Otra vez', menu:'Menú', world:'El mundo de {name} · arrastra para girar · pellizca para acercar',
  leaveTitle:'¿Salir de la subasta?', leaveBody:'Perderás esta ronda y volverás al menú principal.',
  leave:'Salir', stay:'Quedarme',
- twoMin:'Mínimo dos jugadores.', tooMuch:'Más de lo que tienes.', mustBeat:'Tiene que superar {price} €.',
+ twoMin:'Mínimo dos jugadores.', tooMuch:'Más de lo que tienes.', mustBeat:'Tiene que superar {price} {cur}.',
  record:'Balance contra el bot', wins:'Victorias', losses:'Derrotas', draws:'Empates',
  games:'Partidas', streak:'Racha', bestStreak:'Mejor racha', winRate:'Porcentaje de victorias', avgPts:'Puntos de media',
  bestGame:'Mejor partida', noGames:'Todavía no hay partidas en solitario. Gana al bot y empieza el recuento.',
@@ -418,7 +373,7 @@ es:{
  openRoom:'Abrir una sala', joinRoom:'Entrar', roomCode:'Código de sala', shareCode:'Compártelo con los demás.',
  inRoom:'En la sala', waitHost:'Esperando al anfitrión…', waitJoin:'Esperando a que entre tu rival…',
  bothIn:'Ya están los dos.', startAuction:'Empezar la subasta', leaveRoom:'Salir',
- sealedBid:'Puja secreta — tienes {n} €', submit:'Enviar', bidIn:'Puja enviada', waitOthers:'Esperando a tu rival…',
+ sealedBid:'Puja secreta — tienes {n} {cur}', submit:'Enviar', bidIn:'Puja enviada', waitOthers:'Esperando a tu rival…',
  fourChars:'Cuatro caracteres, por favor.', noRoom:'No hay ninguna sala con ese código.', alreadyStarted:'Esa subasta ya ha empezado.',
  roomFull:'La sala está llena — este modo es 1 contra 1.', storageFail:'El almacenamiento no está disponible ahora mismo.',
  needsNet:'Este modo necesita conexión a internet.', lotsWon:'lotes',
@@ -429,6 +384,7 @@ es:{
  privP3:'Los apodos son opcionales. Solo sirven para identificar a los jugadores durante una partida y nunca se guardan.',
  privP4:'Sin publicidad, sin rastreo, sin componentes de terceros.',
  wipe:'Borrar todos los datos', wipeTitle:'¿Borrar todo?', wipeBody:'Tu balance, tu nombre guardado y tu idioma se eliminarán de este dispositivo.', wiped:'Borrado.',
+ packFail:'No se pudieron cargar los datos del juego. Comprueba tu conexión e inténtalo de nuevo.',
  loadingBorders:'cargando fronteras…'
 },
 fr:{
@@ -448,17 +404,17 @@ fr:{
  raiseOrDrop:'monte ou passe', dropOut:'Passer', bid:'Enchérir', lot:'Lot', of:'sur',
  noRaise:'Plus assez d’argent pour monter. Tu dois passer.',
  dropHint:'Si tu passes, {name} l’achète pour {price} €.',
- deciding:'réfléchit', sizing:'Évalue le lot à {price} €.',
+ deciding:'réfléchit', sizing:'Évalue le lot à {price} {cur}.',
  nextLot:'Lot suivant', sold:'Adjugé', result:'Résultat',
  sealed:'Les registres sont scellés', nobody:'Personne ne sait encore',
  revealHint:'Toutes les populations sont encore masquées. Touche une barre pour la lever, ou lève-les toutes. Le résultat compte une fois la dernière barre partie.',
  liftAll:'Tout dévoiler', final:'Final', takesIt:'{name} l’emporte',
  pointsAgainst:'{a} points contre {b}.', smartest:'<b>{name}</b> a le mieux acheté : {v} € par million.',
- nothing:'Reparti les mains vides.', points:'Points', spentEff:'{n} € dépensés · efficacité',
+ nothing:'Reparti les mains vides.', points:'Points', spentEff:'{n} {cur} dépensés · efficacité',
  playAgain:'Rejouer', menu:'Menu', world:'Le monde de {name} · fais glisser pour tourner · pince pour zoomer',
  leaveTitle:'Quitter la vente ?', leaveBody:'Cette manche sera perdue et tu retourneras au menu principal.',
  leave:'Quitter', stay:'Rester',
- twoMin:'Deux joueurs minimum.', tooMuch:'Plus que ce que tu as.', mustBeat:'Doit dépasser {price} €.',
+ twoMin:'Deux joueurs minimum.', tooMuch:'Plus que ce que tu as.', mustBeat:'Doit dépasser {price} {cur}.',
  record:'Bilan face au bot', wins:'Victoires', losses:'Défaites', draws:'Matchs nuls',
  games:'Parties', streak:'Série', bestStreak:'Meilleure série', winRate:'Taux de victoire', avgPts:'Points en moyenne',
  bestGame:'Meilleure partie', noGames:'Aucune partie en solo pour le moment. Bats le bot et le compteur démarre.',
@@ -476,7 +432,7 @@ fr:{
  openRoom:'Ouvrir un salon', joinRoom:'Rejoindre', roomCode:'Code du salon', shareCode:'Partage-le avec les autres.',
  inRoom:'Dans le salon', waitHost:'En attente de l’hôte…', waitJoin:'En attente de ton adversaire…',
  bothIn:'Les deux enchérisseurs sont là.', startAuction:'Lancer la vente', leaveRoom:'Quitter',
- sealedBid:'Offre secrète — tu as {n} €', submit:'Envoyer', bidIn:'Offre envoyée', waitOthers:'En attente de ton adversaire…',
+ sealedBid:'Offre secrète — tu as {n} {cur}', submit:'Envoyer', bidIn:'Offre envoyée', waitOthers:'En attente de ton adversaire…',
  fourChars:'Quatre caractères, s’il te plaît.', noRoom:'Aucun salon avec ce code.', alreadyStarted:'Cette vente a déjà commencé.',
  roomFull:'Le salon est complet — ce mode est en 1 contre 1.', storageFail:'Le stockage est injoignable pour le moment.',
  needsNet:'Ce mode nécessite une connexion internet.', lotsWon:'lots',
@@ -487,6 +443,7 @@ fr:{
  privP3:'Les pseudos sont facultatifs. Ils servent seulement à identifier les joueurs pendant une partie et ne sont jamais enregistrés.',
  privP4:'Aucune publicité, aucun suivi, aucun composant tiers.',
  wipe:'Effacer toutes les données', wipeTitle:'Tout effacer ?', wipeBody:'Ton bilan, ton prénom enregistré et ta langue seront retirés de cet appareil.', wiped:'Effacé.',
+ packFail:'Impossible de charger les données du jeu. Vérifie ta connexion et réessaie.',
  loadingBorders:'chargement des frontières…'
 }
 };
@@ -494,7 +451,8 @@ fr:{
 let LANG='en';
 function t(key, vars){
   let v=(STR[LANG]&&STR[LANG][key]) || STR.en[key] || key;
-  if(vars) Object.keys(vars).forEach(k=>{ v=v.split('{'+k+'}').join(vars[k]); });
+  vars=Object.assign({cur:cur()}, vars);
+  Object.keys(vars).forEach(k=>{ v=v.split('{'+k+'}').join(vars[k]); });
   return v;
 }
 async function loadLang(){
@@ -511,43 +469,27 @@ async function setLang(id){
 }
 
 /* ============ ALL-TIME RECORD — you against the bot, stored on this device ============
-   Only solo games count. Nothing leaves the phone and no names are kept. */
-const REC_KEY='record:v1';
-const BLANK={played:0, won:0, lost:0, drawn:0, pts:0, botPts:0, spent:0, streak:0, best:0,
-             bestGame:null, byLevel:{beginner:{played:0,won:0}, medium:{played:0,won:0}, expert:{played:0,won:0}}};
-let REC={...BLANK};
+   One value under `record:v1`, one record per pack (engine.js documents the shape and
+   migrates the original flat record). Only solo games count. Nothing leaves the phone
+   and no names are kept. */
+let RECS = Engine.parseRecords(null, Packs.ids());
+const recFor = id => RECS.packs[id] || (RECS.packs[id] = Engine.blankPackRecord());
 
-async function loadRec(){
-  try{
-    const raw=await Store.get(REC_KEY);
-    if(raw){ const v=JSON.parse(raw); REC={...BLANK, ...v, byLevel:{...BLANK.byLevel, ...(v.byLevel||{})}}; }
-  }catch(e){}
-}
-async function saveRec(){ await Store.set(REC_KEY, JSON.stringify(REC)); }
-async function clearRec(){ REC={...BLANK, byLevel:JSON.parse(JSON.stringify(BLANK.byLevel))}; await saveRec(); }
+async function loadRec(){ RECS = Engine.parseRecords(await Store.get(Engine.REC_KEY), Packs.ids()); }
+async function saveRec(){ await Store.set(Engine.REC_KEY, Engine.stringifyRecords(RECS)); }
+async function clearRec(){ RECS = Engine.parseRecords(null, Packs.ids()); await saveRec(); }
 
 /* returns what changed, so the results screen can show it */
 async function recordGame(you, bot, level){
-  const lvl=REC.byLevel[level] || (REC.byLevel[level]={played:0,won:0});
-  const win = you.pts > bot.pts, draw = you.pts === bot.pts;
-  REC.played++; lvl.played++;
-  if(win){ REC.won++; lvl.won++; REC.streak = REC.streak>=0 ? REC.streak+1 : 1; }
-  else if(draw){ REC.drawn++; REC.streak=0; }
-  else { REC.lost++; REC.streak = REC.streak<=0 ? REC.streak-1 : -1; }
-  REC.best=Math.max(REC.best, REC.streak);
-  REC.pts+=you.pts; REC.botPts+=bot.pts; REC.spent+=you.spent;
-  let record=false;
-  if(!REC.bestGame || you.pts > REC.bestGame.pts){
-    REC.bestGame={pts:Math.round(you.pts*10)/10, level, lots:you.p.bought.length};
-    record = REC.played>1;
-  }
+  const out = Engine.applyGame(recFor(S.pack.id), you, bot, level);
   await saveRec();
-  return {win, draw, record};
+  return out;
 }
 
 /* ============ HOME ============ */
 function home(){
   clearTimer(); stopPoll(); S={};
+  const REC=recFor(DEFAULT_PACK);
   if(stopGlobe){ stopGlobe(); stopGlobe=null; }
   document.body.classList.remove('playing');
   try{ speechSynthesis.cancel(); }catch(e){}
@@ -595,11 +537,14 @@ function home(){
   app.querySelectorAll('.lang').forEach(b=>b.onclick=()=>{ knock(); setLang(b.dataset.l); });
 }
 
-function recordScreen(){
+async function recordScreen(){
+  const REC=recFor(DEFAULT_PACK);
+  let pack=Packs.get(DEFAULT_PACK);
+  if(!pack){ try{ pack=await Packs.load(DEFAULT_PACK); }catch(e){} }   // only needed for the level names
   const pct = REC.played ? Math.round(REC.won/REC.played*100) : 0;
   const avg = REC.played ? (REC.pts/REC.played) : 0;
   const avgBot = REC.played ? (REC.botPts/REC.played) : 0;
-  const lvlName = {beginner:t('lvBeginner'), medium:t('lvMedium'), expert:t('lvExpert')};
+  const lvlName = k => { const l=pack&&pack.levels.find(x=>x.id===k); return l ? (l.label[LANG]||l.label.en) : k; };
   go(`<div class="card">
     <h2>${t('record')}</h2>
     ${REC.played?`
@@ -616,7 +561,7 @@ function recordScreen(){
       ${REC.bestGame?`<div class="line"><span class="l"><b>${t('bestGame')}</b></span><span class="r">${REC.bestGame.pts}</span></div>`:''}
       <div style="margin-top:12px">
         ${Object.keys(REC.byLevel).filter(k=>REC.byLevel[k].played).map(k=>`
-          <div class="line"><span class="l"><b>${lvlName[k]||k}</b></span><span class="r">${REC.byLevel[k].won}/${REC.byLevel[k].played}</span></div>`).join('')}
+          <div class="line"><span class="l"><b>${lvlName(k)}</b></span><span class="r">${REC.byLevel[k].won}/${REC.byLevel[k].played}</span></div>`).join('')}
       </div>
       <p class="small" style="margin-top:11px">${t('recordNote')}</p>
       <button class="btn ghost sm" id="rs" style="margin-top:10px">${t('reset')}</button>
@@ -658,15 +603,18 @@ function rules(){
 }
 
 /* ============ SETUP ============ */
-const KIND={
-  solo:{title:'Solo'},
-  multi:{title:'Multiplayer'}
-};
-const budgetFor = lots => lots*10;   // calibrated against the price table: 10 lots = 100
-
-function setup(kind){
+async function setup(kind, packId=DEFAULT_PACK){
   if(stopGlobe){ stopGlobe(); stopGlobe=null; }
-  const info = KIND[kind];
+  let pack=Packs.get(packId);
+  if(!pack){
+    go(`<div class="card"><p class="small"><span class="spin"></span></p></div>`);
+    const tok=navTok;
+    try{ pack=await Packs.load(packId); }
+    catch(e){ if(tok===navTok){ toast(t('packFail')); home(); } return; }
+    if(tok!==navTok) return;                       // the player already went elsewhere
+  }
+  PACK=pack;
+  const cur=pack.currency.symbol;
   go(`<div class="card">
     <h2>${kind==='solo'?t('solo'):t('multi')}</h2>
     ${kind==='solo'?`<div class="card amber" style="box-shadow:none;margin:0 0 12px;padding:11px">
@@ -674,17 +622,15 @@ function setup(kind){
         <p class="small" style="margin:0;opacity:.85">${t('rivalDesc')}</p>
       </div>`:''}
     <span class="label">${t('lots')}</span>
-    <select id="n"><option>5</option><option selected>10</option><option>15</option><option>20</option><option>30</option></select>
+    <select id="n">${pack.lots.options.map(n=>`<option${n===pack.lots.default?' selected':''}>${n}</option>`).join('')}</select>
     <div class="card ink" style="box-shadow:none;margin:11px 0;padding:11px">
       <span class="label">${t('budget')}</span>
-      <div style="font-family:'Archivo Black',sans-serif;font-size:30px;line-height:1" id="bud">€100</div>
+      <div style="font-family:'Archivo Black',sans-serif;font-size:30px;line-height:1" id="bud">${cur}100</div>
       <p class="small" style="margin:4px 0 0">${t('budgetNote')}</p>
     </div>
     <span class="label">${t('difficulty')}</span>
     <select id="lv">
-      <option value="beginner">${t('lvBeginner')}</option>
-      <option value="medium" selected>${t('lvMedium')}</option>
-      <option value="expert">${t('lvExpert')}</option>
+      ${pack.levels.map(l=>`<option value="${l.id}"${l.id===pack.defaultLevel?' selected':''}>${esc(l.label[LANG]||l.label.en)}</option>`).join('\n      ')}
     </select>
     <span class="label" style="margin-top:11px">${t('seconds')}</span>
     <select id="t"><option value="10" selected>10</option><option value="15">15</option><option value="20">20</option><option value="30">30</option><option value="0">${t('noClock')}</option></select>
@@ -697,28 +643,25 @@ function setup(kind){
     <button class="btn hot" id="start" style="margin-top:15px">${t('open')}</button>
     <button class="btn ghost sm" id="back" style="margin-top:8px">${t('back')}</button>
   </div>`);
-  const sync=()=>{ document.getElementById('bud').textContent='€'+budgetFor(parseInt(val('n'))||5); };
+  const sync=()=>{ document.getElementById('bud').textContent=cur+Engine.budgetFor(pack, parseInt(val('n'))||5); };
   document.getElementById('n').onchange=sync; sync();
   Store.get('name:v1').then(n=>{ const el=document.getElementById('p1'); if(n && el) el.value=n; });
   on('back',()=>{knock();home();});
   on('start',()=>{
     knock(); actx();
     const p1val=val('p1'); if(p1val) Store.set('name:v1', p1val);
-    let names, engine;
+    let players;
     if(kind==='solo'){
-      engine='bot';
-      names=[val('p1')||t('you'), t('bot')];
+      players=[{name:val('p1')||t('you')}, {name:t('bot'), ai:true}];
     }else{
-      engine='table';
       const ids = ['p1','p2','p3','p4'];
-      names = ids.map((id,i)=>val(id)||(i<2?`${t('player')} ${i+1}`:'')).filter(Boolean);
+      const names = ids.map((id,i)=>val(id)||(i<2?`${t('player')} ${i+1}`:'')).filter(Boolean);
       if(names.length<2) return toast(t('twoMin'));
+      players=names.map(name=>({name}));
     }
-    const lots=parseInt(val('n'))||5;
-    const budget=budgetFor(lots);
-    S={ kind, mode:engine, i:0, clock:parseInt(val('t')), level:val('lv')||'expert',
-        countries:draw(lots, val('lv')||'expert'),
-        players:names.map((n,idx)=>({name:n,budget,bought:[],ai:(kind==='solo'&&idx===1)})) };
+    S=Engine.newAuction({ pack, kind, level:val('lv')||pack.defaultLevel, lots:parseInt(val('n'))||5,
+                          clock:parseInt(val('t')), players, rng:rnd });
+    S.packId=pack.id;
     document.body.classList.add('playing');
     lot();
   });
@@ -727,43 +670,14 @@ function setup(kind){
 /* ============ THE LOT — ascending auction from €1 ============ */
 function lot(){
   clearTimer(); S._taunt='';
-  if(S.i>=S.countries.length) return finish();
-  const c=S.countries[S.i];
-  const eligible=S.players.map((p,i)=>i).filter(i=>S.players[i].budget>=1);
-
-  if(eligible.length===0){ // nobody can pay for anything anymore
-    while(S.i<S.countries.length){ S.i++; }
-    return finish();
-  }
-  if(eligible.length===1 && S.players.length>1){ // walkover: everything left goes to the last solvent bidder
-    const w=S.players[eligible[0]];
-    while(S.i<S.countries.length){
-      const cc=S.countries[S.i];
-      if(w.budget>=1){ w.budget-=1; w.bought.push({...cc,price:1}); }
-      else w.bought.push({...cc,price:0,free:true});
-      S.i++;
-    }
-    return finish();
-  }
-
-  /* The opening €1 bid rotates seat by seat: seat 1 opens the first lot, seat 2 the
-     second, and so on. Seats with no money left are skipped. */
-  const opener = eligible[S.i % eligible.length];
-  S.L={ price:1, holder:opener, active:eligible.slice(), turn:null };
-  S.L.turn=nextAfter(opener);
+  const r=Engine.startLot(S);                 // opener rotation, walkover and broke endings live in the engine
+  if(r.state==='done') return finish();
   paint(true);
-}
-
-function nextAfter(idx){
-  const a=S.L.active;
-  const pos=a.indexOf(idx);
-  for(let k=1;k<=a.length;k++){ const cand=a[(pos+k)%a.length]; if(cand!==S.L.holder) return cand; }
-  return null;
 }
 
 function paint(fresh){
   clearTimer();
-  const c=S.countries[S.i], L=S.L;
+  const c=S.items[S.i], L=S.L;
   if(L.turn===null || !S.players[L.turn]) return award();
   const actor=S.players[L.turn], holder=S.players[L.holder];
   const isAI=actor&&actor.ai;
@@ -772,14 +686,14 @@ function paint(fresh){
     <div class="lot-main">
       <div class="stage ${fresh?'in':''}">
         <div class="top">
-          <div class="flag">${flag(c.code)}</div>
-          <div class="lot">${t('lot')} ${S.i+1} <span class="of">${t('of')} ${S.countries.length}</span></div>
+          <div class="flag">${icon(c)}</div>
+          <div class="lot">${t('lot')} ${S.i+1} <span class="of">${t('of')} ${S.items.length}</span></div>
         </div>
         <div class="cname">${esc(cname(c))}</div>
       </div>
       <div class="price" id="pb">
         <div class="pl">${t('standing')}</div>
-        <div class="pv">€${L.price}</div>
+        <div class="pv">${money(L.price)}</div>
         <div><span class="hold seat${L.holder}">${t('topBid')} · ${esc(holder.name)}</span></div>
       </div>
       ${S._taunt?`<div class="taunt">&ldquo;${esc(S._taunt)}&rdquo;</div>`:''}
@@ -789,8 +703,8 @@ function paint(fresh){
       <div class="strip">${S.players.map((p,i)=>`
         <div class="pl2 seat${i} ${i===L.turn?'turn':''} ${L.active.includes(i)?'':'out'}">
           <div class="n">${esc(p.name)}</div>
-          <div class="b">€${p.budget}</div>
-          <div class="role">${i===L.holder?t('topBid')+' · €'+L.price : i===L.turn?t('biddingNow') : L.active.includes(i)?p.bought.length+' ×':'—'}</div>
+          <div class="b">${money(p.budget)}</div>
+          <div class="role">${i===L.holder?t('topBid')+' · '+money(L.price) : i===L.turn?t('biddingNow') : L.active.includes(i)?p.bought.length+' ×':'—'}</div>
         </div>`).join('')}</div>
       <div id="act" class="dock"></div>
     </div>
@@ -811,7 +725,7 @@ function humanTurn(){
         ${steps.map(s=>`<button class="btn xs go" data-s="${s}">+${s}</button>`).join('')}
       </div>
       <div class="row" style="margin-bottom:6px">
-        <input id="cus" type="number" inputmode="numeric" min="${L.price+1}" max="${actor.budget}" placeholder="€${L.price+1}+">
+        <input id="cus" type="number" inputmode="numeric" min="${L.price+1}" max="${actor.budget}" placeholder="${money(L.price+1)}+">
         <button class="btn xs" id="cb" style="flex:0 0 40%">Bid</button>
       </div>`
       :`<p class="small" style="margin-bottom:6px">${t('noRaise')}</p>`}
@@ -850,12 +764,13 @@ function startClock(onOut){
 
 function raise(amount){
   const L=S.L, actor=S.players[L.turn];
-  if(amount>actor.budget) return toast(t('tooMuch'));
+  const r=Engine.raise(S, amount);
+  if(r.error==='closed') return;                         // a late tap on a lot that was already sold
+  if(r.error) return toast(r.error==='tooMuch' ? t('tooMuch') : t('mustBeat',{price:L.price}));
   /* the bot bids on its own, unprompted, several times a lot — a quieter,
      softer tone keeps that from turning into a grating loop */
   actor.ai ? blip(640,.07,'sine') : blip(760,.14); Haptics.light();
-  L.price=amount; L.holder=L.turn; L.turn=nextAfter(L.holder);
-  if(L.turn===null) return award();
+  if(r.next==='award') return award();
   paint(false);
   const pb=document.getElementById('pb'); if(pb){ pb.classList.add('bump'); setTimeout(()=>pb.classList.remove('bump'),260); }
 }
@@ -863,31 +778,30 @@ function raise(amount){
 function pass(timedOut){
   const L=S.L, actor=S.players[L.turn];
   actor.ai ? blip(190,.05,'sine') : blip(220,.12); Haptics.medium();
-  L.active=L.active.filter(i=>i!==L.turn);
-  if(L.active.length<=1) return award(timedOut);
-  L.turn=nextAfter(L.holder);
-  if(L.turn===null) return award(timedOut);
+  const r=Engine.pass(S, timedOut);
+  if(r.error) return;
+  if(r.next==='award') return award(timedOut);
   paint(false);
 }
 
 function award(){
   clearTimer();
-  const c=S.countries[S.i], L=S.L, w=S.players[L.holder];
-  w.budget-=L.price;
-  w.bought.push({...c, price:L.price});
-  if(w.ai) S._taunt = winLine(S._taunt);
+  const a=Engine.award(S);
+  if(a.error) return;                                    // already sold — never charge the winner twice
+  const c=a.item, L=S.L, w=S.players[a.winner];
+  if(w.ai) S._taunt = Engine.winLine(Banter, LANG, S._taunt, rnd);
   gavel(t('sold'));
   setTimeout(()=>{
     go(`<div class="stage">
         <div class="top">
-          <div class="flag">${flag(c.code)}</div>
-          <div class="lot">${t('lot')} ${S.i+1} <span class="of">${t('of')} ${S.countries.length}</span></div>
+          <div class="flag">${icon(c)}</div>
+          <div class="lot">${t('lot')} ${S.i+1} <span class="of">${t('of')} ${S.items.length}</span></div>
         </div>
         <div class="cname">${esc(cname(c))}</div>
-        <div style="margin-top:6px"><span class="stamp">${esc(w.name)} · €${L.price}</span></div>
+        <div style="margin-top:6px"><span class="stamp">${esc(w.name)} · ${money(L.price)}</span></div>
       </div>
       ${S._taunt?`<div class="card ink" style="padding:8px 11px"><span class="label">${esc((S.players.find(p=>p.ai)||{}).name||'Rival')}</span><p style="margin:0;font-style:italic;font-size:13.5px">&ldquo;${esc(S._taunt)}&rdquo;</p></div>`:''}
-      <div class="strip">${S.players.map((p,i)=>`<div class="pl2 seat${i}"><div class="n">${esc(p.name)}</div><div class="b">€${p.budget}</div><div class="c">${p.bought.length} ×</div></div>`).join('')}</div>
+      <div class="strip">${S.players.map((p,i)=>`<div class="pl2 seat${i}"><div class="n">${esc(p.name)}</div><div class="b">${money(p.budget)}</div><div class="c">${p.bought.length} ×</div></div>`).join('')}</div>
       <button class="btn go dock" id="n">${t('nextLot')}</button>`, false);
     on('n',()=>{S.i++;lot();});
   },520);
@@ -901,7 +815,7 @@ function think(ms){
 }
 
 async function aiTurn(){
-  const L=S.L, c=S.countries[S.i], me=S.players[L.turn];
+  const S0=S, L=S.L, c=S.items[S.i], me=S.players[L.turn];
   document.getElementById('act').innerHTML=`<div class="card tight">
       <h2>${esc(me.name)} ${t('deciding')}</h2>
       <p class="small" style="margin:0">${t('sizing',{price:L.price})}</p>
@@ -909,29 +823,14 @@ async function aiTurn(){
     </div>`;
 
   await think(3000 + rnd(1200));   // 3.0 - 4.2 s, so the table can follow along
+  if(S!==S0 || S.L!==L || L.turn===null || S.players[L.turn]!==me) return;   // the player left or the lot moved on while it was thinking
 
-  if(!S._ceil || S._ceilLot!==S.i){ S._ceil=botCeiling(c); S._ceilLot=S.i; }
-  /* Outside the closing three lots the bot keeps a euro in hand for every lot still
-     to come, so it can never bid itself out of the auction early. */
-  const lotsAfter = S.countries.length - S.i - 1;
-  const reserve = lotsAfter >= 3 ? lotsAfter : 0;
-  const hardCap = Math.min(me.budget - reserve, S._ceil.walk);
-
-  if(L.price < hardCap && me.budget > L.price){
-    /* If nobody left in the room can top the next bid, one euro settles it. Paying
-       more than that is throwing money away, and the bot never does that. */
-    const rivals = L.active.filter(i=>i!==L.turn);
-    const contested = rivals.some(i=>S.players[i].budget > L.price + 1);
-    const step = !contested ? 1
-               : L.price<5 ? 1
-               : Math.max(1, Math.round(L.price*(0.12 + rnd(15)/100)));
-    const amount = Math.min(me.budget, hardCap, L.price + step);
-    if(amount > L.price){
-      S._taunt = tauntFor(c, S._taunt);
-      return raise(amount);
-    }
+  const d=Engine.botDecision(S);   // walk-away roll, reserve, uncontested +1 and the random step: all in the engine
+  if(d.type==='raise'){
+    S._taunt = Engine.tauntFor(S.pack, c, LANG, S._taunt, rnd);
+    return raise(d.amount);
   }
-  S._taunt = passLine(S._taunt);
+  S._taunt = Engine.passLine(Banter, LANG, S._taunt, rnd);
   pass();
 }
 
@@ -940,13 +839,9 @@ function finish(){
   clearTimer(); S._taunt='';
   document.body.classList.remove('playing');
   try{ speechSynthesis.cancel(); }catch(e){}
-  const rows=S.players.map(p=>{
-    const pts=p.bought.reduce((a,b)=>a+b.pop,0);
-    const spent=p.bought.reduce((a,b)=>a+b.price,0);
-    return {p,pts,spent,eff:pts>0?spent/pts:Infinity};
-  });
-  const best=rows.slice().sort((a,b)=>b.pts-a.pts)[0];
-  const bestEff=rows.slice().sort((a,b)=>a.eff-b.eff)[0];
+  PACK=S.pack;
+  const REC=recFor(S.pack.id);
+  const {rows,best,bestEff}=Engine.scoreboard(S);
 
   go(`<div class="results-wrap">
     <div class="results-main">
@@ -961,13 +856,13 @@ function finish(){
         <h2 style="margin-bottom:8px">${esc(s.p.name)}</h2>
         ${s.p.bought.length? s.p.bought.map(b=>`
           <div class="line">
-            <span class="l"><span style="font-size:16px">${flag(b.code)}</span><b>${esc(cname(b))}</b></span>
-            <span class="r">${b.free?'free':'€'+b.price} · <span class="redact"><span class="v">${fmtPop(b.pop)}</span></span></span>
+            <span class="l"><span style="font-size:16px">${icon(b)}</span><b>${esc(cname(b))}</b></span>
+            <span class="r">${b.free?'free':money(b.price)} · <span class="redact"><span class="v">${fmtVal(b.value)}</span></span></span>
           </div>`).join('') : `<p class="small">${t('nothing')}</p>`}
         <div class="total"><span>${t('points')}</span><span class="redact"><span class="v">${s.pts.toFixed(1)}</span></span></div>
         <div class="total" style="border:0;padding-top:3px;font-size:12.5px;opacity:.7">
           <span>${t('spentEff',{n:s.spent})}</span>
-          <span class="redact"><span class="v">${s.eff===Infinity?'—':s.eff.toFixed(2)+' €/M'}</span></span>
+          <span class="redact"><span class="v">${s.eff===Infinity?'—':s.eff.toFixed(2)+' '+S.pack.metric.effUnit}</span></span>
         </div>
       </div>`).join('')}
     </div>
@@ -991,7 +886,7 @@ function finish(){
       }
       gavel(t('result'));
       const v=document.getElementById('verdict');
-      const lots=best.p.bought.filter(b=>GEO[b.code]);
+      const lots=best.p.bought.filter(Engine.hasCoords);
       v.innerHTML=`<div class="card amber">
         <span class="label">${t('final')}</span>
         <h2 style="font-size:31px">${t('takesIt',{name:esc(best.p.name)})}</h2>
@@ -1006,10 +901,10 @@ function finish(){
       </div>`:''}
       ${lots.length?`<div class="card" style="padding:0;border:0;box-shadow:none;margin-bottom:16px">
         <div class="globe" id="gl"></div><div class="gcap">${t('world',{name:esc(best.p.name)})}</div>
-        <div class="chips">${lots.map(b=>`<span class="chip">${flag(b.code)} ${esc(cname(b))}</span>`).join('')}</div>
+        <div class="chips">${lots.map(b=>`<span class="chip">${icon(b)} ${esc(cname(b))}</span>`).join('')}</div>
       </div>`:''}`;
       const host=document.getElementById('gl');
-      if(host){ if(stopGlobe) stopGlobe(); stopGlobe = globe(host, lots); }
+      if(host){ if(stopGlobe) stopGlobe(); stopGlobe = globe(host, lots, S.pack); }
       best.p.ai ? defeatSting() : (fanfare(), Haptics.success());
       v.scrollIntoView({behavior:'smooth',block:'start'});
     },420);
@@ -1029,9 +924,18 @@ const stopPoll=()=>{ if(poll){clearInterval(poll);poll=null;} };
 async function rget(k){ const v=await Net.get(k); return v?JSON.parse(v):null; }
 async function rset(k,v){ return Net.set(k, JSON.stringify(v)); }
 
-function online(){
+async function online(){
   stopPoll(); actx(); S={kind:'net'};
   document.body.classList.remove('playing');
+  let pack=Packs.get(DEFAULT_PACK);
+  if(!pack){
+    go(`<div class="card"><p class="small"><span class="spin"></span></p></div>`);
+    const tok=navTok;
+    try{ pack=await Packs.load(DEFAULT_PACK); }
+    catch(e){ if(tok===navTok){ toast(t('packFail')); home(); } return; }
+    if(tok!==navTok) return;
+  }
+  PACK=pack; S.pack=pack; S.packId=pack.id;
   go(`<div class="card">
     <h2>${t('onlineTitle')}</h2>
     <p class="small">${t('onlineIntro')}</p>
@@ -1051,8 +955,8 @@ function online(){
   on('new',async()=>{
     const code=Array.from({length:4},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[rnd(32)]).join('');
     const room={code,host:RID,phase:'lobby',round:0,
-      countries:draw(10,'expert').map(c=>({code:c.code,name:c.name,pop:c.pop})),
-      players:[{id:RID,name:HANDLE,budget:budgetFor(10),bought:[]}]};
+      items:Engine.draw(pack,10,'expert',rnd).map(c=>({id:c.id,name:c.name,value:c.value,lat:c.lat,lon:c.lon})),
+      players:[{id:RID,name:HANDLE,budget:Engine.budgetFor(pack,10),bought:[]}]};
     if(!await rset('room:'+code,room)) return toast(t('storageFail'));
     lobby(code);
   });
@@ -1064,7 +968,7 @@ function online(){
     if(room.phase!=='lobby') return toast(t('alreadyStarted'));
     if(!room.players.find(p=>p.id===RID)){
       if(room.players.length>=2) return toast(t('roomFull'));
-      room.players.push({id:RID,name:HANDLE,budget:budgetFor(10),bought:[]});
+      room.players.push({id:RID,name:HANDLE,budget:Engine.budgetFor(pack,10),bought:[]});
       await rset('room:'+code,room);
     }
     lobby(code);
@@ -1100,11 +1004,11 @@ function onlineLot(code){
     const room=await rget('room:'+code); if(!room) return;
     if(room.phase==='done'){
       stopPoll(); clearTimer();
-      S={kind:'net',mode:'online',players:room.players.map(p=>({name:p.name+(p.id===RID?' · '+t('youTag'):''),budget:p.budget,bought:p.bought}))};
+      S={kind:'net',mode:'online',pack:Packs.get(DEFAULT_PACK),packId:DEFAULT_PACK,players:room.players.map(p=>({name:p.name+(p.id===RID?' · '+t('youTag'):''),budget:p.budget,bought:p.bought}))};
       return finish();
     }
     const me=room.players.find(p=>p.id===RID); if(!me) return;
-    const c=room.countries[room.round];
+    const c=room.items[room.round];
     if(!c){ if(room.host===RID){ room.phase='done'; await rset('room:'+code,room);} return; }
 
     if(room.host===RID){
@@ -1115,7 +1019,7 @@ function onlineLot(code){
         for(const p of room.players){ const b=Math.min(bids[p.id],p.budget); if(b>0&&(!top||b>top.b)) top={p,b}; }
         if(top){ top.p.budget-=top.b; top.p.bought.push({...c,price:top.b}); }
         room.round++;
-        if(room.round>=room.countries.length) room.phase='done';
+        if(room.round>=room.items.length) room.phase='done';
         await rset('room:'+code,room);
         sent=false; return;
       }
@@ -1127,15 +1031,15 @@ function onlineLot(code){
     clearTimer();
     document.body.classList.add('playing');
     speak(cname(c));
-    go(`<div class="stage in"><div class="flag">${flag(c.code)}</div><div class="cname">${esc(cname(c))}</div>
-        <div class="lot">Lot ${room.round+1} <span class="of">of ${room.countries.length}</span></div>
+    go(`<div class="stage in"><div class="flag">${icon(c)}</div><div class="cname">${esc(cname(c))}</div>
+        <div class="lot">${t('lot')} ${room.round+1} <span class="of">${t('of')} ${room.items.length}</span></div>
         <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.2em;opacity:.6;margin-top:7px">ROOM ${code}</div></div>
       <div class="card">
         <span class="label">${t('sealedBid',{n:me.budget})}</span>
         <input id="bid" type="number" min="0" max="${me.budget}" value="1" inputmode="numeric">
         <button class="btn hot" id="ok" style="margin-top:11px">${t('submit')}</button>
       </div>
-      <div class="card ink">${room.players.map(p=>`<div class="line"><span class="l"><b>${esc(p.name)}${p.id===RID?' · '+t('youTag'):''}</b></span><span class="r">€${p.budget} · ${p.bought.length} ${t('lotsWon')}</span></div>`).join('')}</div>`);
+      <div class="card ink">${room.players.map(p=>`<div class="line"><span class="l"><b>${esc(p.name)}${p.id===RID?' · '+t('youTag'):''}</b></span><span class="r">${money(p.budget)} · ${p.bought.length} ${t('lotsWon')}</span></div>`).join('')}</div>`);
     on('ok',async()=>{
       const b=Math.max(0,Math.min(me.budget,parseInt(val('bid'))||0));
       await rset(`room:${code}:r${room.round}:${RID}`,{bid:b});

@@ -1,14 +1,19 @@
 /* ============ THE WINNER'S GLOBE ============
-   Plain canvas, no libraries, works offline. Every country is a dot at its own
-   coordinates, so the dots themselves draw the continents. The winner's lots
-   burn brighter and are sized by population. */
-function globe2d(host, owned){
+   Plain canvas, no libraries, works offline. Every item of the pack that has
+   coordinates is a dot at its own position (for the countries pack the dots
+   themselves draw the continents). The winner's lots burn brighter and are sized
+   by value. Items without lat/lon are simply not shown; with none at all the
+   caller shows no globe. `pack` supplies the dots, the number format and the
+   globe options (pack.globe.claimBorders: country packs only). */
+const posOf = c => Engine.hasCoords(c) ? [c.lat, c.lon] : null;
+
+function globe2d(host, owned, pack){
   const cv=host.querySelector('canvas'), ctx=cv.getContext('2d');
-  const own=new Set(owned.map(c=>c.code));
-  const big=Math.max(1, Math.max(...owned.map(c=>c.pop)));
+  const own=new Set(owned.map(c=>c.id));
+  const big=Math.max(1, Math.max(...owned.map(c=>c.value)));
   // open facing whatever the winner actually took
   let sx=0, sy=0;
-  owned.forEach(c=>{ const q=GEO[c.code]; if(!q) return; const r=q[1]*Math.PI/180; sx+=Math.cos(r); sy+=Math.sin(r); });
+  owned.forEach(c=>{ const q=posOf(c); if(!q) return; const r=q[1]*Math.PI/180; sx+=Math.cos(r); sy+=Math.sin(r); });
   let spin = (sx||sy) ? -Math.atan2(sy,sx) : -Math.PI/2;
   let tilt=0.38, drag=null, auto=true, raf=null;
 
@@ -58,21 +63,21 @@ function globe2d(host, owned){
       ctx.stroke();
     }
 
-    COUNTRIES.forEach(c=>{
-      const q=GEO[c.code]; if(!q) return;
+    (pack&&pack.items||[]).forEach(c=>{
+      const q=posOf(c); if(!q) return;
       const p=project(q[0],q[1]); if(p.z<=0) return;
       const X=cx+p.x*R, Y=cy-p.y*R, fade=Math.min(1,p.z*1.5+0.15);
-      if(own.has(c.code)) return;
+      if(own.has(c.id)) return;
       ctx.fillStyle='rgba(226,232,240,'+(0.30*fade)+')';
       ctx.beginPath(); ctx.arc(X,Y,W*0.006,0,7); ctx.fill();
     });
 
-    owned.slice().sort((a,b)=>project(GEO[a.code][0],GEO[a.code][1]).z-project(GEO[b.code][0],GEO[b.code][1]).z)
+    owned.slice().sort((a,b)=>project(posOf(a)[0],posOf(a)[1]).z-project(posOf(b)[0],posOf(b)[1]).z)
     .forEach(c=>{
-      const q=GEO[c.code]; if(!q) return;
+      const q=posOf(c); if(!q) return;
       const p=project(q[0],q[1]); if(p.z<=0) return;
       const X=cx+p.x*R, Y=cy-p.y*R, fade=Math.min(1,p.z*1.6+0.1);
-      const r=W*(0.010+0.026*Math.sqrt(c.pop/big));
+      const r=W*(0.010+0.026*Math.sqrt(c.value/big));
       const halo=ctx.createRadialGradient(X,Y,0,X,Y,r*3);
       halo.addColorStop(0,'rgba(255,122,0,'+(0.55*fade)+')');
       halo.addColorStop(1,'rgba(255,122,0,0)');
@@ -321,7 +326,7 @@ function glowSprite(colour){
   return new THREE.CanvasTexture(c);
 }
 
-function globe3d(host, owned){
+function globe3d(host, owned, pack){
   const wrap=document.createElement('div');
   wrap.style.cssText='position:relative';
   const W=Math.min(host.clientWidth||360, 560), H=Math.round(W*0.98);
@@ -379,11 +384,11 @@ function globe3d(host, owned){
   const rim=new THREE.DirectionalLight(0xff9126, 0.45); rim.position.set(3.5,-1.5,-2.5); scene.add(rim);
 
   /* ---- the winner's lots: pillars + glow ---- */
-  const big=Math.max(...owned.map(c=>c.pop), 1);
+  const big=Math.max(...owned.map(c=>c.value), 1);
   const tips=[];
   owned.forEach(c=>{
-    const q=GEO[c.code]; if(!q) return;
-    const h=0.07+0.40*Math.sqrt(c.pop/big);
+    const q=posOf(c); if(!q) return;
+    const h=0.07+0.40*Math.sqrt(c.value/big);
     const dir=toVec(q[0],q[1],1).normalize();
     const pillar=new THREE.Mesh(
       new THREE.CylinderGeometry(0.011,0.019,h,14),
@@ -395,7 +400,7 @@ function globe3d(host, owned){
 
     const s=new THREE.Sprite(new THREE.SpriteMaterial({map:glowSprite('rgba(255,170,30,1)'), blending:THREE.AdditiveBlending, transparent:true, depthWrite:false}));
     s.position.copy(dir.clone().multiplyScalar(1+h));
-    s.scale.setScalar(0.20+0.16*Math.sqrt(c.pop/big));
+    s.scale.setScalar(0.20+0.16*Math.sqrt(c.value/big));
     rig.add(s);
 
     const ring=new THREE.Mesh(new THREE.RingGeometry(0.030,0.046,32),
@@ -442,8 +447,9 @@ function globe3d(host, owned){
     };
     const cents=feats.map(centroid);
     const claimed=new Set();
-    owned.forEach(c=>{
-      const q=GEO[c.code]; if(!q) return;
+    const claimBorders=!pack || !pack.globe || pack.globe.claimBorders!==false;
+    if(claimBorders) owned.forEach(c=>{
+      const q=posOf(c); if(!q) return;
       let best=-1,bd=1e9;
       cents.forEach((ct,i)=>{
         if(claimed.has(i)) return;
@@ -483,7 +489,7 @@ function globe3d(host, owned){
   const labels=tips.map(t=>{
     const d=document.createElement('div');
     d.className='glabel';
-    d.innerHTML=esc(cname(t.c))+'<span class="pv">'+fmtPop(t.c.pop)+'</span>';
+    d.innerHTML=esc(cname(t.c))+'<span class="pv">'+pack.metric.format(t.c.value)+'</span>';
     host.appendChild(d);
     return {d, v:t.v};
   });
@@ -491,7 +497,7 @@ function globe3d(host, owned){
   /* ---- camera + controls ---- */
   let lon=0, lat=18, dist=2.62, drag=null, auto=true, raf=null, resume=0;
   let sx=0, sy=0;
-  owned.forEach(c=>{ const q=GEO[c.code]; if(!q) return; const r=q[1]*Math.PI/180; sx+=Math.cos(r); sy+=Math.sin(r); });
+  owned.forEach(c=>{ const q=posOf(c); if(!q) return; const r=q[1]*Math.PI/180; sx+=Math.cos(r); sy+=Math.sin(r); });
   if(sx||sy) lon = -Math.atan2(sy,sx)*180/Math.PI - 90;
 
   const el=renderer.domElement;
@@ -591,10 +597,11 @@ function globe3d(host, owned){
   };
 }
 
-function globe(host, owned){
+function globe(host, owned, pack){
+  owned=owned.filter(Engine.hasCoords);
   if(window.THREE && !window.__noThree){
-    try{ return globe3d(host, owned); }catch(e){ console.warn('3D globe failed, using flat map', e); }
+    try{ return globe3d(host, owned, pack); }catch(e){ console.warn('3D globe failed, using flat map', e); }
   }
   host.innerHTML='<canvas></canvas>';
-  return globe2d(host, owned);
+  return globe2d(host, owned, pack);
 }
