@@ -72,9 +72,9 @@ I could not render San Francisco in my environment (Linux). The stack is
 
 ## 5. Appearance
 
-- [ ] Phone set to Dark: Nocturne. Set to Light: Daylight. Tap the half-circle
-      button on the menu: Automatic → Light → Dark. Quit and reopen: the forced
-      choice is remembered; "Automatic" follows the phone again.
+- [ ] The app opens **dark** even if the phone is set to Light. Tap the half-circle
+      button on the menu: Dark ↔ Light. Quit and reopen: Light is remembered; going
+      back to Dark is the default again.
 - [ ] Both themes: every word readable, gold labels, grey hints, the red
       Drop out, the black seat (shown dark slate) vs the others.
 - [ ] Safari's status bar / the home-screen app's status bar looks right in both.
@@ -122,15 +122,13 @@ SOLD screen and tell me any that look wrong.
       stored (picking States stores nothing).
 - [ ] Offline: after one visit, States works in airplane mode (the pack is cached).
 
-## 8. US States pack — look, map, zoom, sound (PR B)
+## 8. US States pack — look, map, sound (PR B)
 
-Assumed, not verified on a device: GPU smoothness of the flag layer and the zoom on an older
+Assumed, not verified on a device: GPU smoothness of the flag layer on an older
 iPhone/iPad; how the synthesised eagle cry actually *sounds*; the satellite imagery is a
 Natural Earth stand-in (NASA Blue Marble was unreachable from my environment).
 
-- [ ] Menu: tap **US States** — the globe zooms toward North America and the US map grows
-      in (about half a second); tap **Countries** — it zooms back out. Tap during the zoom: it
-      finishes at once. Reduce Motion ON: they swap with no motion.
+- [ ] Menu: the **US States** tile shows a US flag when selected (no map on the menu; the globe stays).
 - [ ] A dimmed, stylised US flag sits behind the menu, setup, auction and results while States
       is selected; Countries stays plain. Dark and Light: all text easy to read.
 - [ ] Results (States): the map shows your/the winner's states in gold with markers and short
@@ -142,4 +140,4 @@ Natural Earth stand-in (NASA Blue Marble was unreachable from my environment).
       for a properly licensed recording (see `NOTICE.md`).
 - [ ] Privacy → **Credits & licences** opens in all five languages and names Census, Natural
       Earth, NASA, three.js (MIT) and the hawk note.
-- [ ] Offline (airplane mode): the map, flag and zoom all work after one visit.
+- [ ] Offline (airplane mode): the results map and the flag work after one visit.

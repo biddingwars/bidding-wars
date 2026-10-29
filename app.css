@@ -12,7 +12,7 @@
 
 /* ---------- tokens: Nocturne (dark) ---------- */
 :root{
-  color-scheme:dark light;
+  color-scheme:dark;
   --font:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --round:ui-rounded,"SF Pro Rounded",-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
@@ -42,6 +42,7 @@
 
 /* ---------- tokens: Daylight (light) ---------- */
 :root[data-theme=light]{
+  color-scheme:light;
   --bg1:#EEF0FF; --bg2:#FFF1E0; --blob1:rgba(255,170,60,.38); --blob2:rgba(120,130,255,.30);
   --ink:#14152B; --ink2:#4A4C66; --ink3:#52546E;
   --glass:rgba(255,255,255,.62); --glass2:rgba(255,255,255,.85); --stroke:rgba(255,255,255,.9); --hi:#fff;
@@ -54,22 +55,6 @@
   --sheet1:#FFFFFF; --sheet2:#F4F2FF; --scrim:rgba(246,243,255,.9); --backdrop:rgba(30,30,70,.32);
   --flag-red:#E0808A; --flag-white:#FFFFFF; --flag-blue:#8A8BD0; --flag-star:#FFFFFF; --flag-op:.12;
   --map-dim:rgba(238,240,255,.62); --map-line:rgba(20,21,43,.45); --map-win:rgba(231,190,98,.42); --map-glow:rgba(201,149,60,.6); --map-pin:#C9953C; --map-pin-ring:#FFFFFF;
-}
-@media (prefers-color-scheme: light){
-  :root:not([data-theme=dark]){
-    --bg1:#EEF0FF; --bg2:#FFF1E0; --blob1:rgba(255,170,60,.38); --blob2:rgba(120,130,255,.30);
-    --ink:#14152B; --ink2:#4A4C66; --ink3:#52546E;
-    --glass:rgba(255,255,255,.62); --glass2:rgba(255,255,255,.85); --stroke:rgba(255,255,255,.9); --hi:#fff;
-    --field:rgba(255,255,255,.75);
-    --gold1:#E7BE62; --gold2:#C9953C; --goldink:#684608; --on-gold:#2B1E06; --brass:#B8862B;
-    --goldglow:rgba(184,134,43,.4); --goldtint:rgba(184,134,43,.14);
-    --danger:#8F1727; --danger-accent:#BE2338; --on-danger:#FFFFFF; --track:rgba(20,21,43,.10);
-    --seat0:#D93A31; --seat1:#4E5778; --seat2:#2F6AE0; --seat3:#0E7F5B;
-    --shadow:0 18px 44px rgba(70,60,140,.20);
-    --sheet1:#FFFFFF; --sheet2:#F4F2FF; --scrim:rgba(246,243,255,.9); --backdrop:rgba(30,30,70,.32);
-    --flag-red:#E0808A; --flag-white:#FFFFFF; --flag-blue:#8A8BD0; --flag-star:#FFFFFF; --flag-op:.12;
-    --map-dim:rgba(238,240,255,.62); --map-line:rgba(20,21,43,.45); --map-win:rgba(231,190,98,.42); --map-glow:rgba(201,149,60,.6); --map-pin:#C9953C; --map-pin-ring:#FFFFFF;
-  }
 }
 
 /* ---------- base ---------- */
@@ -155,9 +140,6 @@ body.pk-states::after{width:60vmax;height:42.54vmax;background:var(--flag-star);
 .packs{order:2}.recpill{order:3}.modes{order:4}.dockbar{order:5}.foot{order:9}
 .nav,.packs,.recpill,.modes,.dockbar{position:relative;z-index:2}
 .hero img.globe{position:absolute;right:-120px;top:-52px;width:280px;height:280px;opacity:.92;z-index:0;filter:drop-shadow(0 0 60px rgba(120,150,255,.5));pointer-events:none}
-.hero img.usm-h{position:absolute;right:-40px;top:0;width:250px;height:auto;aspect-ratio:1200/740;border-radius:0 20px 20px 0;opacity:.9;z-index:0;pointer-events:none;filter:saturate(.85) brightness(.82);-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 44%);mask-image:linear-gradient(90deg,transparent 0,#000 44%)}
-.hero[data-pk=countries] img.usm-h,.hero[data-pk=states] img.globe{display:none}
-.hero.xfade img.usm-h,.hero.xfade img.globe{display:block}
 h1.title{font:800 42px/.98 var(--round);letter-spacing:-.045em;position:relative}
 h1.title span{display:block}
 .tag{margin-top:10px;font-size:15px;color:var(--ink2);max-width:210px;line-height:1.35;position:relative}
@@ -167,7 +149,7 @@ h1.title span{display:block}
 .pack b{font-size:16px;font-weight:700;letter-spacing:-.02em;line-height:1.15}
 .pack span.s{font-size:12px;color:var(--ink2)}
 .pack.on{background:linear-gradient(150deg,var(--goldtint),var(--glass));border:1.5px solid var(--gold1);box-shadow:0 10px 30px var(--goldglow),inset 0 1px 0 var(--hi)}
-.pack.on[data-pack=states]::before{content:"CA  TX  NY  FL";font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--goldink);top:12px}
+.pack.on[data-pack=states]::before{content:"🇺🇸";letter-spacing:0}
 .pack.on::before{content:"🇯🇵🇧🇷🇰🇪🇲🇽";position:absolute;left:10px;top:8px;font-size:17px;letter-spacing:2px}
 .pack.off{background:var(--glass);border:1px solid var(--stroke)}
 .pack.off i{position:absolute;right:10px;top:10px;font-style:normal;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--goldink);background:var(--goldtint);padding:3px 7px;border-radius:8px}
@@ -344,8 +326,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   .mode{min-height:56px;padding:8px 14px}
   .recpill{padding:6px 14px}
   .hero img.globe{width:240px;height:240px;top:-44px}
-  .hero img.usm-h{width:220px;top:2px}
-}
+  }
 
 /* ---------- SOLD (the gavel moment) ---------- */
 .overlay{contain:paint;display:flex;position:fixed;inset:0;z-index:50;flex-direction:column;align-items:center;justify-content:center;padding:calc(var(--top) + 8px) 20px var(--bot);overflow:hidden}
@@ -452,11 +433,8 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   .menu-grid{display:grid;grid-template-columns:1fr 440px;gap:40px;flex:1;min-height:0;align-items:center}
   .m-l,.m-r{display:flex;flex-direction:column;gap:14px;position:relative}
   .hero{display:flex;flex-direction:column}
-  .hero{--gh:clamp(200px,38dvh,360px)}
-  .hero img.globe{position:relative;right:auto;top:auto;width:var(--gh);height:auto;aspect-ratio:1;margin:6px 0 0 -18px;display:block}
-  .hero img.usm-h{position:relative;right:auto;top:auto;width:var(--gh);margin:calc(6px + var(--gh) * .19) 0 calc(var(--gh) * .19) -18px;display:block}
-  .hero.xfade img.usm-h{position:absolute;left:-18px;margin:calc(6px + var(--gh) * .19) 0 0 0}
-  .packs{margin:0;padding:2px 0 4px;flex-wrap:wrap;overflow:visible}
+  .hero img.globe{position:relative;right:auto;top:auto;width:clamp(200px,38dvh,360px);height:auto;aspect-ratio:1;margin:6px 0 0 -18px;display:block}
+    .packs{margin:0;padding:2px 0 4px;flex-wrap:wrap;overflow:visible}
   .dockbar{margin-top:6px}
   .aud{display:grid;grid-template-columns:1fr 420px;gap:34px;flex:1;min-height:0;align-items:center}
   .aud-l,.aud-r{display:flex;flex-direction:column;gap:12px}
@@ -483,8 +461,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   .menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
   .m-l,.m-r{display:flex;flex-direction:column;gap:10px}
   .hero img.globe{width:150px;height:150px;right:-30px;top:-20px}
-  .hero img.usm-h{width:160px;right:-30px;top:-4px}
-  .aud{display:grid;grid-template-columns:1fr 1fr;gap:22px;flex:1;min-height:0;align-items:center}
+    .aud{display:grid;grid-template-columns:1fr 1fr;gap:22px;flex:1;min-height:0;align-items:center}
   .aud-l,.aud-r{display:flex;flex-direction:column;gap:8px;min-height:0}
   .cname{font-size:24px}
   .head .orb{--orb:36px}

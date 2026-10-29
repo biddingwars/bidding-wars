@@ -25,6 +25,7 @@ async function open(opts = {}) {
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
   page.on('console', m => { if (m.type() === 'error' && !/Failed to load resource|TUNNEL/.test(m.text())) errors.push('console: ' + m.text()); });
   page.on('request', r => requests.push(r.url().replace(/^.*\/bidding-wars\//, '')));
+  if (opts.scheme === 'light') await page.addInitScript(() => localStorage.setItem('theme:v1', 'light'));   // Daylight is a choice now; the phone's setting no longer decides
   if (opts.init) await page.addInitScript(opts.init, opts.initArg);
   await page.goto(env.url);
   await page.waitForFunction(() => document.body.classList.contains('booted'), null, { timeout: 8000 });
@@ -264,7 +265,7 @@ test('Delete all data wipes the record, the name, the language and the appearanc
   await page.click('#wipe'); await page.click('#dy');
   await page.waitForTimeout(300);
   const s = await page.evaluate(() => ({ name: localStorage.getItem('name:v1'), lang: localStorage.getItem('lang:v1'), theme: localStorage.getItem('theme:v1'), rec: localStorage.getItem('record:v1'), attr: document.documentElement.getAttribute('data-theme') }));
-  assert.equal(s.name, null); assert.equal(s.lang, null); assert.equal(s.theme, null); assert.equal(s.attr, null);
+  assert.equal(s.name, null); assert.equal(s.lang, null); assert.equal(s.theme, null); assert.equal(s.attr, 'dark', 'back to the dark default');
   assert.equal(JSON.parse(s.rec).packs.countries.played, 0);
   await ctx.close();
 });
@@ -281,20 +282,26 @@ test('only the four documented values are ever stored', { skip: SKIP }, async ()
   await ctx.close();
 });
 
-test('appearance: follows the phone, can be forced, and the choice is remembered', { skip: SKIP }, async () => {
-  const { page, ctx } = await open({ scheme: 'light' });
-  assert.equal(await page.getAttribute('html', 'data-theme'), null);
-  const bg = () => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--bg1').trim());
-  assert.equal(await bg(), '#EEF0FF', 'system light → Daylight');
-  await page.click('#theme');                              // auto → light
-  await page.click('#theme');                              // light → dark
-  assert.equal(await page.getAttribute('html', 'data-theme'), 'dark');
-  assert.equal(await bg(), '#0A0A18', 'forced dark wins over a light phone');
-  assert.equal(await page.evaluate(() => localStorage.getItem('theme:v1')), 'dark');
-  await page.click('#theme');                              // dark → auto
-  assert.equal(await page.getAttribute('html', 'data-theme'), null);
-  assert.equal(await page.evaluate(() => localStorage.getItem('theme:v1')), null);
-  await ctx.close();
+test('appearance: dark by default whatever the phone says; Daylight is a choice that is remembered', { skip: SKIP }, async () => {
+  for (const phone of ['light', 'dark']) {                  // a light phone must not turn the app white
+    const ctx = await env.browser.newContext({ viewport: { width: 402, height: 715 }, serviceWorkers: 'block', reducedMotion: 'reduce', colorScheme: phone });
+    const page = await ctx.newPage(); await page.goto(env.url);
+    await page.waitForFunction(() => document.body.classList.contains('booted'));
+    const bg = () => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--bg1').trim());
+    assert.equal(await page.getAttribute('html', 'data-theme'), 'dark', `${phone} phone → still dark`);
+    assert.equal(await bg(), '#0A0A18');
+    assert.equal(await page.evaluate(() => localStorage.getItem('theme:v1')), null, 'the default stores nothing');
+    await page.click('#theme');                              // dark → light
+    assert.equal(await page.getAttribute('html', 'data-theme'), 'light');
+    assert.equal(await bg(), '#EEF0FF');
+    assert.equal(await page.evaluate(() => localStorage.getItem('theme:v1')), 'light');
+    await page.reload(); await page.waitForFunction(() => document.body.classList.contains('booted'));
+    assert.equal(await page.getAttribute('html', 'data-theme'), 'light', 'the choice survives a reload');
+    await page.click('#theme');                              // light → dark again
+    assert.equal(await page.getAttribute('html', 'data-theme'), 'dark');
+    assert.equal(await page.evaluate(() => localStorage.getItem('theme:v1')), null, 'dark is the default, so nothing is stored');
+    await ctx.close();
+  }
 });
 
 test('the auction never scrolls: worst-case state at every size, language and seat count', { skip: SKIP }, async () => {
@@ -792,31 +799,6 @@ test('US flag backdrop: on for States (menu, setup, auction, results), off for C
     await pickPack(page, 'countries'); assert.equal(await has(), false, 'back to Countries');
     assert.deepEqual(errors, []); await ctx.close();
   }
-});
-
-test('pack switch: the globe zooms into the US map in 700 ms or less, skippable, reversible; Reduce Motion swaps at once', { skip: SKIP }, async () => {
-  const { page, errors, ctx } = await open({ motion: 'no-preference' });
-  const state = () => page.evaluate(() => ({ x: !!document.querySelector('.hero.xfade'), g: getComputedStyle(document.querySelector('.hero img.globe')).display, m: getComputedStyle(document.querySelector('.hero img.usm-h')).display, anims: document.getAnimations().filter(a => a.effect && a.effect.target && a.effect.target.closest && a.effect.target.closest('.hero')).length }));
-  const timed = id => page.evaluate(id => new Promise(res => {          // measured in the page, from the tap to the last frame
-    const t0 = performance.now(); document.querySelector(`[data-pack="${id}"]`).click();
-    let started = false;
-    const tick = () => { const x = document.querySelector('.hero.xfade'); if (x) started = true; if (started && !x) return res(performance.now() - t0); if (performance.now() - t0 > 2500) return res(9999); requestAnimationFrame(tick); };
-    tick();
-  }), id);
-  const ms = await timed('states');
-  assert.ok(ms <= 700, 'the zoom takes ' + Math.round(ms) + ' ms');
-  let s = await state(); assert.deepEqual([s.g, s.m], ['none', 'block'], 'ends on the US map');
-  const back = await timed('countries');                                    // reverse
-  assert.ok(back <= 700, 'and back in ' + Math.round(back) + ' ms');
-  s = await state(); assert.deepEqual([s.g, s.m], ['block', 'none'], 'and back to the globe');
-  await page.click('[data-pack="states"]'); await page.mouse.click(4, 4);   // skip with a tap
-  await page.waitForFunction(() => !document.querySelector('.hero.xfade'), null, { timeout: 300 });
-  assert.deepEqual(errors, []); await ctx.close();
-  const r = await open({ motion: 'reduce' });
-  await r.page.click('[data-pack="states"]');
-  assert.equal(await r.page.evaluate(() => !!document.querySelector('.hero.xfade')), false, 'no transition with Reduce Motion');
-  assert.deepEqual(await r.page.evaluate(() => [getComputedStyle(document.querySelector('.hero img.globe')).display, getComputedStyle(document.querySelector('.hero img.usm-h')).display]), ['none', 'block']);
-  await r.ctx.close();
 });
 
 test('Credits & licences: reachable from Privacy in every language and names every bundled source', { skip: SKIP }, async () => {
