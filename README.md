@@ -25,6 +25,8 @@ debugging time before.
 | `packs.js`, `pack-countries.js` | Content-pack registry/lazy loader, and the Countries pack (items, translated names, taunts, coordinates). |
 | `banter.js` | The rival's shared drop-out and win lines. |
 | `globe.js` | Results-screen 3D globe (three.js) + flat-canvas fallback. |
+| `us-view.js`, `us-map.js`, `us-*.webp` | US States results map (view, generated outlines, imagery). See `NOTICE.md`. |
+| `NOTICE.md` | Sources and licences of everything bundled. |
 | `platform.js` | Storage, haptics, iOS gesture locks, `CONFIG` flags. |
 | `app.css` | Design system: "Nocturne" (dark) and "Daylight" (light) tokens, system fonts only. |
 | `globe-hero.webp` | The menu's planet. |

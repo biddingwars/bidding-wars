@@ -43,6 +43,7 @@ const pack = `/* ===============================================================
     levels: [{ id: 'all', label: ${JSON.stringify({ en: 'All 50 states', de: 'Alle 50 Bundesstaaten', it: 'Tutti i 50 stati', es: 'Los 50 estados', fr: 'Les 50 États' })} }],
     defaultLevel: 'all',
     globe: { borders: false, claimBorders: false },
+    map: 'us',                              // results show the US map (us-view.js) instead of the globe
 
     /* Smooth pricing, no bands. Ideal = the state's share of the 50-state total x ($budgetPerLot x 50),
        so the ideals of all 50 states add up to one full round's budget and the average lot is worth

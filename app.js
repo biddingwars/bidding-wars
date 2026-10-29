@@ -88,6 +88,8 @@ function bindNav(sec) {
 }
 
 /* replace the screen. `name` marks it for the stylesheet; the auction is the one that never scrolls */
+/* the US States pack gets its dimmed flag behind everything (CSS: body.pk-states); other packs stay plain */
+function syncPackTheme() { document.body.classList.toggle('pk-states', (PACK ? PACK.id : SELPACK) === 'states'); }
 function go(h, name) {
   navTok++; closeSheets(true); stopClock();
   if (stopGlobe) { stopGlobe(); stopGlobe = null; }
@@ -95,6 +97,7 @@ function go(h, name) {
   sec.className = 'screen'; sec.dataset.screen = name || 'page'; sec.innerHTML = h;
   app.replaceChildren(sec);
   document.body.classList.toggle('playing', name === 'auction');
+  syncPackTheme();
   bindNav(sec);
   if (!FX.reduced) FX.spring(sec, 0, 1, v => ({ opacity: Math.min(1, v * 1.4), transform: `translateY(${(1 - v) * 14}px) scale(${.985 + .015 * v})` }), { k: 220, c: 20 });
   return sec;
@@ -176,6 +179,7 @@ const LANGS=[
 
 const STR={
 en:{
+ credits:'Credits & licences', creditsIntro:'Everything in this game is bundled on your device. Thank you to:', creditsPop:'<b>US population</b> — U.S. Census Bureau, Vintage 2025 estimates (NST-EST2025-POP). Public domain.', creditsMap:'<b>US state outlines</b> — U.S. Census Bureau cartographic boundary files, packaged by us-atlas. Public domain data.', creditsImg:'<b>US map imagery</b> — Natural Earth shaded relief (naturalearthdata.com). Public domain.', creditsWorld:'<b>World borders</b> — Natural Earth. Public domain.', creditsGlobe:'<b>Globe texture</b> — NASA-derived satellite imagery. Public domain.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. MIT licence.', creditsSound:'<b>Sound</b> — every sound is synthesised on your device; there are no recordings. The eagle-style win cry is synthesised too. In films that cry is really a red-tailed hawk, because a bald eagle’s own voice is a thin chirp.', creditsFacts:'<b>US States fun facts</b> — written for this game. They have not been independently verified yet.',
  lotsAll:'All {n}', funFacts:'Fun facts', factsIntro:'Every state in this round.',
  tagline:'Use your knowledge to beat your rivals',
  solo:'Solo', soloDesc:'One rival, the bot. It has a price in mind for every country and walks away the moment you beat it. Works offline.',
@@ -276,6 +280,7 @@ en:{
  smartestU:'<b>{name}</b> shopped smartest at {v} {unit}.'
 },
 de:{
+ credits:'Quellen & Lizenzen', creditsIntro:'Alles in diesem Spiel liegt auf deinem Gerät. Danke an:', creditsPop:'<b>US-Einwohnerzahlen</b> — U.S. Census Bureau, Schätzung Vintage 2025 (NST-EST2025-POP). Gemeinfrei.', creditsMap:'<b>Umrisse der US-Bundesstaaten</b> — Kartografische Grenzdateien des U.S. Census Bureau, aufbereitet von us-atlas. Gemeinfreie Daten.', creditsImg:'<b>Bilder der US-Karte</b> — Natural Earth, Reliefkarte (naturalearthdata.com). Gemeinfrei.', creditsWorld:'<b>Weltgrenzen</b> — Natural Earth. Gemeinfrei.', creditsGlobe:'<b>Globus-Textur</b> — Satellitenbilder auf NASA-Basis. Gemeinfrei.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. MIT-Lizenz.', creditsSound:'<b>Klang</b> — alle Töne werden auf deinem Gerät erzeugt, es gibt keine Aufnahmen. Auch der adlerartige Siegesruf ist erzeugt. In Filmen ist dieser Ruf in Wirklichkeit ein Rotschwanzbussard, denn die Stimme eines Weißkopfseeadlers ist ein dünnes Zwitschern.', creditsFacts:'<b>Wissenswertes zu den US-Staaten</b> — für dieses Spiel geschrieben und noch nicht unabhängig überprüft.',
  lotsAll:'Alle {n}', funFacts:'Wissenswertes', factsIntro:'Alle Bundesstaaten dieser Runde.',
  tagline:'Nutze dein Wissen und schlag deine Rivalen',
  solo:'Solo', soloDesc:'Ein Gegner, der Bot. Er hat für jedes Land einen Preis im Kopf und steigt aus, sobald du ihn überbietest. Läuft offline.',
@@ -376,6 +381,7 @@ de:{
  smartestU:'<b>{name}</b> hat am klügsten eingekauft: {v} {unit}.'
 },
 it:{
+ credits:'Crediti e licenze', creditsIntro:'Tutto in questo gioco è sul tuo dispositivo. Grazie a:', creditsPop:'<b>Popolazione USA</b> — U.S. Census Bureau, stime Vintage 2025 (NST-EST2025-POP). Pubblico dominio.', creditsMap:'<b>Contorni degli stati USA</b> — file cartografici di confine del U.S. Census Bureau, a cura di us-atlas. Dati di pubblico dominio.', creditsImg:'<b>Immagini della mappa USA</b> — Natural Earth, rilievo ombreggiato (naturalearthdata.com). Pubblico dominio.', creditsWorld:'<b>Confini del mondo</b> — Natural Earth. Pubblico dominio.', creditsGlobe:'<b>Texture del globo</b> — immagini satellitari derivate dalla NASA. Pubblico dominio.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. Licenza MIT.', creditsSound:'<b>Suono</b> — ogni suono è sintetizzato sul tuo dispositivo, senza registrazioni. Anche il grido di vittoria da aquila è sintetizzato. Nei film quel grido è in realtà di una poiana codarossa, perché la voce dell’aquila di mare testabianca è un sottile cinguettio.', creditsFacts:'<b>Curiosità sugli stati USA</b> — scritte per questo gioco e non ancora verificate in modo indipendente.',
  lotsAll:'Tutti {n}', funFacts:'Curiosità', factsIntro:'Tutti gli stati di questa partita.',
  tagline:'Usa le tue conoscenze per battere i rivali',
  solo:'Solo', soloDesc:'Un rivale, il bot. Ha un prezzo in mente per ogni paese e si ritira appena lo superi. Funziona offline.',
@@ -476,6 +482,7 @@ it:{
  smartestU:'<b>{name}</b> ha comprato nel modo più furbo: {v} {unit}.'
 },
 es:{
+ credits:'Créditos y licencias', creditsIntro:'Todo en este juego está en tu dispositivo. Gracias a:', creditsPop:'<b>Población de EE. UU.</b> — U.S. Census Bureau, estimaciones Vintage 2025 (NST-EST2025-POP). Dominio público.', creditsMap:'<b>Contornos de los estados</b> — archivos cartográficos de límites del U.S. Census Bureau, empaquetados por us-atlas. Datos de dominio público.', creditsImg:'<b>Imágenes del mapa de EE. UU.</b> — Natural Earth, relieve sombreado (naturalearthdata.com). Dominio público.', creditsWorld:'<b>Fronteras del mundo</b> — Natural Earth. Dominio público.', creditsGlobe:'<b>Textura del globo</b> — imágenes de satélite derivadas de la NASA. Dominio público.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. Licencia MIT.', creditsSound:'<b>Sonido</b> — todos los sonidos se sintetizan en tu dispositivo; no hay grabaciones. El grito de victoria de águila también es sintético. En las películas ese grito es en realidad de un ratonero de cola roja, porque la voz del águila calva es un trino fino.', creditsFacts:'<b>Curiosidades de los estados</b> — escritas para este juego y aún sin verificar de forma independiente.',
  lotsAll:'Todos {n}', funFacts:'Curiosidades', factsIntro:'Todos los estados de esta partida.',
  tagline:'Usa tus conocimientos para vencer a tus rivales',
  solo:'Solo', soloDesc:'Un rival, el bot. Tiene un precio en mente para cada país y se retira en cuanto lo superas. Funciona sin conexión.',
@@ -576,6 +583,7 @@ es:{
  smartestU:'<b>{name}</b> compró de la forma más lista: {v} {unit}.'
 },
 fr:{
+ credits:'Crédits et licences', creditsIntro:'Tout dans ce jeu est sur ton appareil. Merci à :', creditsPop:'<b>Population des États-Unis</b> — U.S. Census Bureau, estimations Vintage 2025 (NST-EST2025-POP). Domaine public.', creditsMap:'<b>Contours des États</b> — fichiers cartographiques de limites du U.S. Census Bureau, mis en forme par us-atlas. Données du domaine public.', creditsImg:'<b>Images de la carte des États-Unis</b> — Natural Earth, relief ombré (naturalearthdata.com). Domaine public.', creditsWorld:'<b>Frontières du monde</b> — Natural Earth. Domaine public.', creditsGlobe:'<b>Texture du globe</b> — imagerie satellite dérivée de la NASA. Domaine public.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. Licence MIT.', creditsSound:'<b>Son</b> — tous les sons sont synthétisés sur ton appareil, sans enregistrement. Le cri de victoire d’aigle est lui aussi synthétisé. Au cinéma ce cri est en réalité celui d’une buse à queue rousse, car la voix du pygargue à tête blanche est un mince pépiement.', creditsFacts:'<b>Le saviez-vous sur les États</b> — écrits pour ce jeu et pas encore vérifiés de façon indépendante.',
  lotsAll:'Tous {n}', funFacts:'Le saviez-vous ?', factsIntro:'Tous les États de cette partie.',
  tagline:'Utilise tes connaissances pour battre tes rivaux',
  solo:'Solo', soloDesc:'Un rival, le bot. Il a un prix en tête pour chaque pays et se retire dès que tu le dépasses. Fonctionne hors ligne.',
@@ -685,31 +693,31 @@ const STRP={ states:{
   rulesP5:'The bot values every state by population and rolls a fresh walk-away limit for each lot, so you can never quite read it. That limit is absolute: beat it by a single dollar and the lot is yours.',
   rulesP6:'Every state is equally likely to come up, and a state never comes up twice in the same round. Pick 5 to 40 lots, or play all 50 states.',
   rulesP7:'Efficiency is scored too: dollars per million people. Lower is better.',
-  footer:'No accounts · No tracking · {n} states' },
+  footer:'No accounts · No tracking · {n} states', worldTitle:'The map', world:'{name}’s states, lit in gold' },
  de:{ rivalDesc:'Der <b>Bot</b> bewertet jeden Bundesstaat nach Einwohnerzahl und würfelt pro Los eine neue Schmerzgrenze, ist also nie ganz berechenbar. Überbiete diese Grenze um einen Dollar und das Los gehört dir. Er geht nie darüber hinaus.',
   rulesP1:'Nacheinander kommen zufällige Bundesstaaten auf den Tisch, jeder höchstens einmal pro Runde. <b>1 Punkt = 1 Million Einwohner</b>, und die Einwohnerzahl bleibt bis ganz zum Schluss geschwärzt.',
   rulesP5:'Der Bot bewertet jeden Bundesstaat nach Einwohnerzahl und würfelt pro Los eine neue Schmerzgrenze, du kannst ihn also nie ganz durchschauen. Diese Grenze ist absolut: Überbiete sie um einen Dollar und das Los gehört dir.',
   rulesP6:'Jeder Bundesstaat kommt mit der gleichen Wahrscheinlichkeit dran, und keiner kommt in derselben Runde zweimal vor. Wähle 5 bis 40 Lose oder spiel alle 50 Bundesstaaten.',
   rulesP7:'Auch die Effizienz wird gewertet: Dollar pro Million Einwohner. Weniger ist besser.',
-  footer:'Keine Konten · Kein Tracking · {n} Bundesstaaten' },
+  footer:'Keine Konten · Kein Tracking · {n} Bundesstaaten', worldTitle:'Die Karte', world:'Die Staaten von {name}, golden markiert' },
  it:{ rivalDesc:'Il <b>bot</b> valuta ogni stato in base alla popolazione e tira un nuovo limite di rinuncia per ogni lotto, quindi non è mai del tutto prevedibile. Supera quel limite di un dollaro e il lotto è tuo. Non va mai oltre.',
   rulesP1:'Escono stati a caso, uno alla volta e al massimo una volta per partita. <b>1 punto = 1 milione di abitanti</b>, e la popolazione resta oscurata fino alla fine.',
   rulesP5:'Il bot valuta ogni stato in base alla popolazione e tira un nuovo limite di rinuncia per ogni lotto, quindi non riesci mai a leggerlo. Quel limite è assoluto: superalo di un solo dollaro e il lotto è tuo.',
   rulesP6:'Ogni stato ha la stessa probabilità di uscire e nessuno esce due volte nella stessa partita. Scegli da 5 a 40 lotti oppure gioca tutti i 50 stati.',
   rulesP7:'Si valuta anche l’efficienza: dollari per milione di abitanti. Meno è meglio.',
-  footer:'Nessun account · Nessun tracciamento · {n} stati' },
+  footer:'Nessun account · Nessun tracciamento · {n} stati', worldTitle:'La mappa', world:'Gli stati di {name}, evidenziati in oro' },
  es:{ rivalDesc:'El <b>bot</b> valora cada estado por su población y saca un nuevo límite de retirada para cada lote, así que nunca es del todo predecible. Supera ese límite por un dólar y el lote es tuyo. Nunca lo sobrepasa.',
   rulesP1:'Salen estados al azar, uno a uno y como máximo una vez por partida. <b>1 punto = 1 millón de habitantes</b>, y la población permanece tachada hasta el final.',
   rulesP5:'El bot valora cada estado por su población y saca un nuevo límite de retirada para cada lote, así que nunca puedes leerlo del todo. Ese límite es absoluto: supéralo por un solo dólar y el lote es tuyo.',
   rulesP6:'Todos los estados tienen la misma probabilidad de salir y ninguno sale dos veces en la misma partida. Elige de 5 a 40 lotes o juega los 50 estados.',
   rulesP7:'También se puntúa la eficiencia: dólares por millón de habitantes. Cuanto menos, mejor.',
-  footer:'Sin cuentas · Sin rastreo · {n} estados' },
+  footer:'Sin cuentas · Sin rastreo · {n} estados', worldTitle:'El mapa', world:'Los estados de {name}, en dorado' },
  fr:{ rivalDesc:'Le <b>bot</b> évalue chaque État selon sa population et tire une nouvelle limite d’abandon à chaque lot, il n’est donc jamais tout à fait prévisible. Dépasse cette limite d’un dollar et le lot est à toi. Il ne la dépasse jamais.',
   rulesP1:'Des États tombent au hasard, un par un et au plus une fois par partie. <b>1 point = 1 million d’habitants</b>, et la population reste masquée jusqu’à la fin.',
   rulesP5:'Le bot évalue chaque État selon sa population et tire une nouvelle limite d’abandon à chaque lot, impossible donc de le lire complètement. Cette limite est absolue : dépasse-la d’un seul dollar et le lot est à toi.',
   rulesP6:'Chaque État a autant de chances de sortir, et aucun ne sort deux fois dans la même partie. Choisis de 5 à 40 lots ou joue les 50 États.',
   rulesP7:'L’efficacité compte aussi : dollars par million d’habitants. Moins, c’est mieux.',
-  footer:'Aucun compte · Aucun suivi · {n} États' }
+  footer:'Aucun compte · Aucun suivi · {n} États', worldTitle:'La carte', world:'Les États de {name}, en or' }
 }};
 
 let LANG='en';
@@ -754,7 +762,7 @@ async function recordGame(you, bot, level){
 }
 
 /* ============ HOME ============ */
-function home() {
+function home(from) {
   stopPoll(); S = {}; PACK = null;
   $$('.overlay', layer).forEach(o => o.remove()); rootEl.classList.remove('soldOpen', 'celebrating');
   try { speechSynthesis.cancel(); } catch (e) {}
@@ -764,7 +772,7 @@ function home() {
     <div class="nav"><span></span>${navBtns()}</div>
     <div class="menu-grid">
       <div class="m-l">
-        <div class="hero"><img class="globe" src="globe-hero.webp" alt="" width="280" height="280" decoding="async">
+        <div class="hero" data-pk="${SELPACK}"><img class="globe" src="globe-hero.webp" alt="" width="280" height="280" decoding="async"><img class="usm-h" src="us-map.webp" alt="" width="280" height="173" decoding="async">
           <h1 class="title"><span>Bidding</span><span class="goldtext">Wars</span></h1>
           <p class="tag">${esc(t('tagline'))}</p></div>
         <button class="glass recpill" id="mrec" aria-label="${esc(t('aRecord'))}">
@@ -799,9 +807,27 @@ function home() {
   $$('[data-soon]', sec).forEach(b => b.onclick = () => { Snd.ui(); toast(t('packSoonBody')); });
   $$('[data-pack]', sec).forEach(b => b.onclick = () => {
     if (b.dataset.pack === SELPACK) return;
-    Snd.ui(); Haptics.light(); SELPACK = b.dataset.pack; home();
+    Snd.ui(); Haptics.light(); const from = SELPACK; SELPACK = b.dataset.pack; home(from);
     (window.requestIdleCallback || (f => setTimeout(f, 200)))(() => Packs.load(SELPACK).catch(() => {}));   // warm it up so Setup opens instantly
   });
+  heroSwap(sec, from);
+}
+
+/* Switching pack on the menu: the globe zooms in on North America while the US map grows in (and the other way round
+   going back). 560 ms, a tap anywhere finishes it at once, and with Reduce Motion the pictures simply swap. */
+function heroSwap(sec, from) {
+  const hero = $('.hero', sec), g = hero && $('img.globe', hero), m = hero && $('img.usm-h', hero);
+  if (!g || !m || !from || from === SELPACK || FX.reduced || !hero.animate) return;
+  const toUS = SELPACK === 'states';
+  hero.classList.add('xfade');
+  g.style.transformOrigin = '38% 36%';
+  const opt = { duration: 560, easing: 'cubic-bezier(.22,.8,.24,1)', fill: 'both', direction: toUS ? 'normal' : 'reverse' };
+  const gA = g.animate([{ transform: 'scale(1)', opacity: .92 }, { opacity: .92, offset: .4 }, { transform: 'scale(2.6)', opacity: 0 }], opt);
+  const mA = m.animate([{ transform: 'scale(.42)', opacity: 0 }, { opacity: 0, offset: .3 }, { transform: 'scale(1)', opacity: .9 }], opt);
+  const done = () => { document.removeEventListener('pointerdown', skip, true); gA.cancel(); mA.cancel(); hero.classList.remove('xfade'); };
+  const skip = () => { gA.finish(); mA.finish(); };
+  document.addEventListener('pointerdown', skip, true);
+  Promise.all([gA.finished, mA.finished]).then(done, done);
 }
 
 function langSheet() {
@@ -831,12 +857,20 @@ async function recordScreen() {
 
 function privacy() {
   const h = sheet({ title: t('privacy'), foot: `<button class="btn ghost" id="wipe">${esc(t('wipe'))}</button><button class="btn gold" id="pd">${esc(t('done'))}</button>`,
-    body: `<p>${esc(t('privP1'))}</p><p>${esc(t('privP2'))}</p><p>${esc(t('privP3'))}</p><p class="sm">${esc(t('privP4'))}</p>` });
+    body: `<p>${esc(t('privP1'))}</p><p>${esc(t('privP2'))}</p><p>${esc(t('privP3'))}</p><p class="sm">${esc(t('privP4'))}</p><button class="btn glassb wide" id="cr">${esc(t('credits'))}</button>` });
   on('pd', () => { Snd.ui(); h.close(); });
+  on('cr', () => { Snd.ui(); credits(); });
   on('wipe', () => { Snd.ui(); ask(t('wipeTitle'), t('wipeBody'), t('wipe'), async () => {
     await clearRec(); await Store.remove('lang:v1'); await Store.remove('name:v1'); await Store.remove('theme:v1');
     THEME = 'auto'; applyTheme(); toast(t('wiped')); home();
   }, null, t('cancel')); });
+}
+
+/* sources and licences for everything bundled (the full text lives in NOTICE.md) */
+function credits() {
+  const h = sheet({ title: t('credits'), foot: `<button class="btn gold" id="cd">${esc(t('done'))}</button>`,
+    body: `<p>${esc(t('creditsIntro'))}</p>` + ['creditsPop', 'creditsMap', 'creditsImg', 'creditsWorld', 'creditsGlobe', 'creditsThree', 'creditsSound', 'creditsFacts'].map(k => `<p class="sm">${t(k)}</p>`).join('') });
+  on('cd', () => { Snd.ui(); h.close(); });
 }
 
 function rules() {
@@ -1213,12 +1247,13 @@ async function reveal(sec, rows, best, bestEff, REC) {
     const n = $('.pts .v', v); if (n) FX.roll(n, 0, +n.dataset.n, 700, x => x.toFixed(1));
   });
   step(260, () => {
-    if (win) { Snd.fanfare(); Haptics.success(); if (single || !best.p.ai) FX.confetti(sec, 22); } else { Snd.sting(); Haptics.warning(); }
+    if (win) { S.pack.map === 'us' ? Snd.eagle() : Snd.fanfare(); Haptics.success(); if (single || !best.p.ai) FX.confetti(sec, 22); } else { Snd.sting(); Haptics.warning(); }
   });
   /* the card with the world and the record */
   const ex = $('#extra', sec);
   const recHtml = outcome ? `<div class="glass recpill" style="padding:8px 14px;order:0"><div class="big num" style="font-size:24px">${REC.won}<i>–</i>${REC.lost}${REC.drawn ? `<i>–</i>${REC.drawn}` : ''}</div><div class="m"><b>${esc(outcome.record ? t('newRecord') : t('record'))}</b><br>${REC.played} ${esc(t('games'))}${REC.streak ? ` · ${esc(t('streak'))} ${REC.streak > 0 ? '+' : ''}${REC.streak}` : ''}</div></div>` : '';
-  ex.innerHTML = `${lots.length ? `<div class="glass gl"><div class="globe" id="gl"><img class="gph" src="globe-hero.webp" alt="" decoding="async"></div>
+  const usMode = S.pack.map === 'us' && window.USView;                  // States: the map of the US instead of the globe
+  ex.innerHTML = `${lots.length ? `<div class="glass gl${usMode ? ' gl-us' : ''}">${usMode ? `<div class="usm" id="gl"><img class="gph" src="us-map.webp" alt="" decoding="async"></div>` : `<div class="globe" id="gl"><img class="gph" src="globe-hero.webp" alt="" decoding="async"></div>`}
       <div class="cap"><b>${esc(t('worldTitle'))}</b>${t('world', { name: esc(best.p.name) })}</div>
       <div class="chips">${lots.map(b => `<span class="chip"><span aria-hidden="true">${icon(b)}</span> ${esc(cname(b))}</span>`).join('')}</div></div>` : ''}${recHtml}`;
   step(520, () => {
@@ -1228,6 +1263,12 @@ async function reveal(sec, rows, best, bestEff, REC) {
   step(2400, () => {
     rootEl.classList.remove('celebrating');
     const host = $('#gl', sec); if (!host) return;
+    if (usMode) {
+      USView.render(host, lots, { reduced: FX.reduced, label: b => b.abbr || b.id, value: b => fmtVal(b.value), aria: t('worldTitle') + ': ' + lots.map(cname).join(', ') })
+        .then(() => { if (tok !== navTok) return; if (!FX.reduced) host.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 400, easing: 'ease-out' }); })
+        .catch(() => {});                                                // the placeholder map stays if the outlines are missing
+      return;
+    }
     const mount = () => {
       if (tok !== navTok) return;
       const ph = $('.gph', host); if (ph) ph.remove();

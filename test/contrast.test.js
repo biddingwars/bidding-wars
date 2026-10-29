@@ -51,6 +51,16 @@ for (const [name, T] of [['Nocturne (dark)', dark], ['Daylight (light)', light]]
   test(name + ': white initials reach 4.5:1 on all four seat colours', () => {
     for (const k of ['seat0', 'seat1', 'seat2', 'seat3']) assert.ok(ratio([255, 255, 255, 1], parse(T[k])) >= 4.5, `${k} ${ratio([255, 255, 255, 1], parse(T[k])).toFixed(2)}`);
   });
+  test(name + ': the US States flag behind everything never drops text below 4.5:1 (every flag colour, at full strength)', () => {
+    const op = Number(T['flag-op']); assert.ok(op > 0 && op <= .5, 'flag-op ' + op);
+    const flagSurfaces = ['flag-red', 'flag-white', 'flag-blue', 'flag-star'].flatMap(k => {
+      const c = parse(T[k]), f = [c[0], c[1], c[2], op];
+      return bases.flatMap(b => { const s = over(f, b); return [s, over(parse(T.glass), s), over(parse(T.glass2), s)]; });
+    });
+    for (const k of ['ink', 'ink2', 'ink3', 'goldink']) assert.ok(worst(parse(T[k]), flagSurfaces) >= 4.5, `${k} on the flag ${worst(parse(T[k]), flagSurfaces).toFixed(2)}`);
+    const tinted = flagSurfaces.map(s => over(parse(T.goldtint), s));
+    assert.ok(worst(parse(T.goldink), tinted) >= 4.5, 'goldink on tint over the flag ' + worst(parse(T.goldink), tinted).toFixed(2));
+  });
   test(name + ': sheet text and the seconds badge', () => {
     const sheets = [parse(T.sheet1), parse(T.sheet2)];
     for (const k of ['ink', 'ink2', 'ink3', 'goldink']) assert.ok(worst(parse(T[k]), sheets) >= 4.5, `${k} on sheet ${worst(parse(T[k]), sheets).toFixed(2)}`);
