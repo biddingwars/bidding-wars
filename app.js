@@ -228,7 +228,7 @@ en:{
  youTag:'you', hostTag:'HOST',
  privacy:'Privacy', soon:'Soon', soonBody:'Online play is not switched on yet. Everything else works without a connection.',
  privP1:'This game has no accounts, no sign-in and no analytics. Nothing you do here is sent anywhere.',
- privP2:'Four things are saved, and only on this device: the language you picked, the appearance you chose, your record against the bot, and the name you last entered. Deleting the app deletes all four.',
+ privP2:'Four things are saved, and only on this device: the language you picked, the appearance you chose, your record against the bot (with the game you last picked), and the name you last entered. Deleting the app deletes all four.',
  privP3:'Nicknames are optional. They label the players on screen during a round; only your own is remembered on this device, so you do not have to type it again.',
  privP4:'No advertising, no tracking, no third-party software development kits.',
  wipe:'Delete all data', wipeTitle:'Delete everything?', wipeBody:'Your record, your saved name, your language and your appearance choice will be removed from this device.', wiped:'Deleted.',
@@ -328,7 +328,7 @@ de:{
  youTag:'du', hostTag:'GASTGEBER',
  privacy:'Datenschutz', soon:'Bald', soonBody:'Online-Spiel ist noch nicht freigeschaltet. Alles andere läuft ohne Verbindung.',
  privP1:'Dieses Spiel hat keine Konten, keine Anmeldung und keine Analyse. Nichts, was du hier tust, wird irgendwohin gesendet.',
- privP2:'Vier Dinge werden gespeichert, und nur auf diesem Gerät: deine Sprache, die gewählte Darstellung, deine Bilanz gegen den Bot und der zuletzt eingegebene Name. Beim Löschen der App verschwinden alle vier.',
+ privP2:'Vier Dinge werden gespeichert, und nur auf diesem Gerät: deine Sprache, die gewählte Darstellung, deine Bilanz gegen den Bot (samt dem zuletzt gewählten Spiel) und der zuletzt eingegebene Name. Beim Löschen der App verschwinden alle vier.',
  privP3:'Spitznamen sind freiwillig. Sie beschriften die Spieler während einer Runde; nur dein eigener wird auf diesem Gerät gemerkt, damit du ihn nicht neu eintippen musst.',
  privP4:'Keine Werbung, kein Tracking, keine Fremd-Bausteine.',
  wipe:'Alle Daten löschen', wipeTitle:'Alles löschen?', wipeBody:'Deine Bilanz, dein gespeicherter Name, deine Sprache und deine Darstellung werden von diesem Gerät entfernt.', wiped:'Gelöscht.',
@@ -428,7 +428,7 @@ it:{
  youTag:'tu', hostTag:'HOST',
  privacy:'Privacy', soon:'Presto', soonBody:'Il gioco online non è ancora attivo. Tutto il resto funziona senza connessione.',
  privP1:'Questo gioco non ha account, né accessi, né analisi. Nulla di ciò che fai qui viene inviato da qualche parte.',
- privP2:'Vengono salvate quattro cose, e solo su questo dispositivo: la lingua scelta, l’aspetto scelto, il tuo bilancio contro il bot e l’ultimo nome inserito. Disinstallando l’app spariscono tutte e quattro.',
+ privP2:'Vengono salvate quattro cose, e solo su questo dispositivo: la lingua scelta, l’aspetto scelto, il tuo bilancio contro il bot (con l’ultimo gioco scelto) e l’ultimo nome inserito. Disinstallando l’app spariscono tutte e quattro.',
  privP3:'I soprannomi sono facoltativi. Servono a identificare i giocatori durante una partita; solo il tuo viene ricordato su questo dispositivo, così non devi riscriverlo.',
  privP4:'Nessuna pubblicità, nessun tracciamento, nessun componente di terze parti.',
  wipe:'Cancella tutti i dati', wipeTitle:'Cancellare tutto?', wipeBody:'Il tuo bilancio, il nome salvato, la lingua e l’aspetto scelti verranno rimossi da questo dispositivo.', wiped:'Cancellato.',
@@ -528,7 +528,7 @@ es:{
  youTag:'tú', hostTag:'ANFITRIÓN',
  privacy:'Privacidad', soon:'Pronto', soonBody:'El juego en línea aún no está activado. Todo lo demás funciona sin conexión.',
  privP1:'Este juego no tiene cuentas, ni inicio de sesión, ni analíticas. Nada de lo que haces aquí se envía a ningún sitio.',
- privP2:'Se guardan cuatro cosas, y solo en este dispositivo: el idioma que elegiste, la apariencia elegida, tu balance contra el bot y el último nombre introducido. Al borrar la app desaparecen las cuatro.',
+ privP2:'Se guardan cuatro cosas, y solo en este dispositivo: el idioma que elegiste, la apariencia elegida, tu balance contra el bot (con el último juego elegido) y el último nombre introducido. Al borrar la app desaparecen las cuatro.',
  privP3:'Los apodos son opcionales. Sirven para identificar a los jugadores durante una partida; solo el tuyo se recuerda en este dispositivo, para que no tengas que escribirlo otra vez.',
  privP4:'Sin publicidad, sin rastreo, sin componentes de terceros.',
  wipe:'Borrar todos los datos', wipeTitle:'¿Borrar todo?', wipeBody:'Tu balance, tu nombre guardado, tu idioma y tu apariencia se eliminarán de este dispositivo.', wiped:'Borrado.',
@@ -628,7 +628,7 @@ fr:{
  youTag:'toi', hostTag:'HÔTE',
  privacy:'Confidentialité', soon:'Bientôt', soonBody:'Le jeu en ligne n’est pas encore activé. Tout le reste fonctionne sans connexion.',
  privP1:'Ce jeu n’a ni compte, ni connexion, ni analyse. Rien de ce que tu fais ici n’est envoyé où que ce soit.',
- privP2:'Quatre choses sont enregistrées, uniquement sur cet appareil : la langue choisie, l’apparence choisie, ton bilan face au bot et le dernier prénom saisi. Supprimer l’app supprime les quatre.',
+ privP2:'Quatre choses sont enregistrées, uniquement sur cet appareil : la langue choisie, l’apparence choisie, ton bilan face au bot (avec le dernier jeu choisi) et le dernier prénom saisi. Supprimer l’app supprime les quatre.',
  privP3:'Les pseudos sont facultatifs. Ils servent à identifier les joueurs pendant une partie ; seul le tien est mémorisé sur cet appareil, pour que tu n’aies pas à le retaper.',
  privP4:'Aucune publicité, aucun suivi, aucun composant tiers.',
  wipe:'Effacer toutes les données', wipeTitle:'Tout effacer ?', wipeBody:'Ton bilan, ton prénom enregistré, ta langue et ton apparence seront retirés de cet appareil.', wiped:'Effacé.',
@@ -741,7 +741,7 @@ async function setLang(id){
 let RECS = Engine.parseRecords(null, Packs.ids());
 const recFor = id => RECS.packs[id] || (RECS.packs[id] = Engine.blankPackRecord());
 
-async function loadRec(){ RECS = Engine.parseRecords(await Store.get(Engine.REC_KEY), Packs.ids()); }
+async function loadRec(){ RECS = Engine.parseRecords(await Store.get(Engine.REC_KEY), Packs.ids()); if (RECS.last) SELPACK = RECS.last; }   // reopen on the pack you last picked
 async function saveRec(){ await Store.set(Engine.REC_KEY, Engine.stringifyRecords(RECS)); }
 async function clearRec(){ RECS = Engine.parseRecords(null, Packs.ids()); await saveRec(); }
 
@@ -763,7 +763,7 @@ function home() {
     <div class="nav"><span></span>${navBtns()}</div>
     <div class="menu-grid">
       <div class="m-l">
-        <div class="hero"><img class="globe" src="globe-hero.webp" alt="" width="280" height="280" decoding="async">
+        <div class="hero" data-pk="${SELPACK}"><img class="globe" src="globe-hero.webp" alt="" width="280" height="280" decoding="async">
           <h1 class="title"><span>Bidding</span><span class="goldtext">Wars</span></h1>
           <p class="tag">${esc(t('tagline'))}</p></div>
         <button class="glass recpill" id="mrec" aria-label="${esc(t('aRecord'))}">
@@ -798,7 +798,7 @@ function home() {
   $$('[data-soon]', sec).forEach(b => b.onclick = () => { Snd.ui(); toast(t('packSoonBody')); });
   $$('[data-pack]', sec).forEach(b => b.onclick = () => {
     if (b.dataset.pack === SELPACK) return;
-    Snd.ui(); Haptics.light(); SELPACK = b.dataset.pack; home();
+    Snd.ui(); Haptics.light(); SELPACK = b.dataset.pack; RECS.last = SELPACK; saveRec(); home();
     (window.requestIdleCallback || (f => setTimeout(f, 200)))(() => Packs.load(SELPACK).catch(() => {}));   // warm it up so Setup opens instantly
   });
 }

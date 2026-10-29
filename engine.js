@@ -420,14 +420,15 @@
   function parseRecords(raw, ids) {
     let v = null;
     try { v = raw ? JSON.parse(raw) : null; } catch (e) { v = null; }
-    const out = { v: 2, packs: {} };
+    const out = { v: 2, packs: {}, last: null };
     if (isObj(v) && isObj(v.packs)) Object.keys(v.packs).forEach(id => { out.packs[id] = v.packs[id]; });
     else if (isObj(v) && 'played' in v) out.packs.countries = v;           // v1 → v2
     (ids || []).forEach(id => { if (!(id in out.packs)) out.packs[id] = null; });
+    if (isObj(v) && typeof v.last === 'string' && (ids || []).includes(v.last)) out.last = v.last;   // the pack picked last, so the menu reopens on it
     Object.keys(out.packs).forEach(id => { out.packs[id] = sanitizePackRecord(out.packs[id]); });
     return out;
   }
-  const stringifyRecords = recs => JSON.stringify({ v: 2, packs: recs.packs });
+  const stringifyRecords = recs => JSON.stringify(recs.last ? { v: 2, packs: recs.packs, last: recs.last } : { v: 2, packs: recs.packs });
 
   /* you/bot: scoreboard rows. Mutates `rec` (one pack's record); returns what changed. */
   function applyGame(rec, you, bot, level) {

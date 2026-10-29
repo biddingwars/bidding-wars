@@ -401,3 +401,15 @@ test('SIMULATION: the same seed reproduces the same game exactly', () => {
     return JSON.stringify(g.S.players.map(p => p.bought.map(b => [b.id, b.price]))); };
   assert.equal(run(), run());
 });
+
+test('records remember which pack was picked last (inside the same record value) and ignore junk', () => {
+  const ids = ['countries', 'states'];
+  const r = Engine.parseRecords(null, ids); assert.equal(r.last, null);
+  assert.deepEqual(JSON.parse(Engine.stringifyRecords(r)), { v: 2, packs: r.packs }, 'nothing extra stored until a pack is picked');
+  r.last = 'states';
+  const again = Engine.parseRecords(Engine.stringifyRecords(r), ids);
+  assert.equal(again.last, 'states'); assert.deepEqual(Object.keys(JSON.parse(Engine.stringifyRecords(again))).sort(), ['last', 'packs', 'v']);
+  assert.equal(Engine.parseRecords(JSON.stringify({ v: 2, packs: {}, last: 'nope' }), ids).last, null, 'unknown pack ignored');
+  assert.equal(Engine.parseRecords(JSON.stringify({ v: 2, packs: {}, last: 42 }), ids).last, null, 'wrong type ignored');
+  assert.equal(Engine.parseRecords(JSON.stringify({ played: 3, won: 1, lost: 2 }), ids).last, null, 'the old flat record still migrates');
+});
