@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v23';   // increment this, every time
+const CACHE = 'bidding-wars-v24';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -200,6 +200,16 @@ The decision clock (`startClock`) is a smooth ring that waits while a sheet is
 open and ignores a frame gap over 250 ms (a locked phone) so a background never
 costs a lot. Hot-seat games ignore taps for 260 ms after a turn passes so a
 double tap can't land on the next player.
+
+Lessons from the first iPad test (keep them): the document is locked
+(`html,body{position:fixed}`; iOS Safari ignores `overflow:hidden` on body);
+the sold overlay has no full-screen blur (it stalled iPad GPUs) and **Next lot
+is revealed by a class and a CSS transition, never by an animation that could
+leave it invisible**, with a 2.6 s watchdog that finalises the moment; the
+globe's `.glabel`/`.gload` rules live in `app.css` (they were lost once, which
+stacked the country names down the page); a plain wheel/scroll over the globe
+belongs to the page (only ctrl+wheel/pinch zooms); the results screen must fit
+iPad landscape without scrolling.
 
 ## Engine, packs and tests
 

@@ -438,7 +438,7 @@ test('sold moment: skippable by tap, Next is reachable, reduce-motion lands inst
   assert.equal(await page.$eval('#sold', e => e.classList.contains('final')), false);
   await page.mouse.click(200, 300);                        // a tap anywhere skips to the end state
   await page.waitForSelector('#sold.final');
-  assert.equal(await page.$eval('#n', e => +getComputedStyle(e).opacity), 1);
+  await page.waitForFunction(() => +getComputedStyle(document.getElementById('n')).opacity === 1, null, { timeout: 2000 });
   await page.click('#n');
   await page.waitForSelector('#sold', { state: 'detached' });
   assert.deepEqual(errors, []);
@@ -513,5 +513,47 @@ test('missing optional assets (three.js, textures, borders, hero image) never br
   await page.waitForTimeout(3500);                         // the globe falls back to the flat map
   assert.ok(await page.textContent('#verdict'));
   assert.deepEqual(errors.filter(e => !/Failed to load|net::ERR|THREE|three/i.test(e)), []);
+  await ctx.close();
+});
+
+test('sold moment: Next lot always appears by itself within 1.5 s, with full motion, and stays', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open({ motion: 'no-preference', viewport: { width: 1194, height: 834 } });
+  await startSolo(page, 5, 0);
+  await page.evaluate(() => { window.think = () => Promise.resolve(); });
+  for (let round = 0; round < 3; round++) {
+    await page.waitForSelector('#pass:not(:disabled)'); await page.click('#pass');
+    await page.waitForSelector('#sold');
+    await page.waitForSelector('#sold.ready', { timeout: 1500 });
+    await page.waitForTimeout(1500);                       // it must not vanish again
+    assert.equal(await page.$eval('#n', e => +getComputedStyle(e).opacity), 1, 'Next lot stays visible');
+    assert.equal(await page.$eval('#n', e => getComputedStyle(e).pointerEvents), 'auto');
+    await page.click('#n'); await page.waitForSelector('#sold', { state: 'detached' });
+  }
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('the page itself never moves: document is locked, no scrollbars, even with a long result', { skip: SKIP }, async () => {
+  const { page, ctx } = await open({ viewport: { width: 1194, height: 834 } });
+  assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).position), 'fixed');
+  await startSolo(page, 5, 0);
+  await page.mouse.wheel(0, 400);
+  assert.equal(await page.evaluate(() => [scrollX, scrollY].join()), '0,0');
+  await ctx.close();
+});
+
+test('results on iPad landscape: everything on one screen, globe labelled, a plain scroll is not stolen', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open({ viewport: { width: 1194, height: 834 } });
+  await startSolo(page, 5, 0, 'expert');
+  await autoplay(page); await reveal(page);
+  await page.waitForSelector('#gl canvas', { timeout: 8000 });
+  await page.waitForTimeout(600);
+  const r = await page.evaluate(() => { const sc = document.querySelector('.screen'); const l = document.querySelector('.glabel'); return { over: sc.scrollHeight - sc.clientHeight, labelPos: l ? getComputedStyle(l).position : 'none-found', nav: document.querySelector('#nb').getBoundingClientRect().top >= 0 }; });
+  assert.ok(r.over <= 1, 'results screen scrolls by ' + r.over);
+  assert.equal(r.labelPos, 'absolute', 'country labels are positioned on the globe, not stacked in the page');
+  assert.ok(r.nav, 'Menu button visible');
+  const prevented = await page.evaluate(() => { const cv = document.querySelector('#gl canvas'); const e = new WheelEvent('wheel', { deltaY: 120, cancelable: true, bubbles: true }); cv.dispatchEvent(e); return e.defaultPrevented; });
+  assert.equal(prevented, false, 'a plain wheel / two-finger scroll is left to the page');
+  assert.deepEqual(errors, []);
   await ctx.close();
 });
