@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v25';   // increment this, every time
+const CACHE = 'bidding-wars-v27';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -73,8 +73,8 @@ third-party SDKs of any kind. Exactly four things are stored, locally on
 device only, via the `Store` helper in `platform.js`:
 
 - `lang:v1` — chosen language
-- `theme:v1` — appearance, only when forced (`light` or `dark`); absent means
-  "follow the phone". Removed again when set back to automatic.
+- `theme:v1` — appearance: only `light` is ever stored. The app is **dark by default,
+  whatever the phone is set to**; absent means dark. Removed again when set back to dark.
 - `record:v1` — record vs the bot. One value, one record per pack:
   `{ v:2, packs:{ countries:{…}, … } }` (`Engine.REC_KEY`; the original flat
   record migrates into `packs.countries` on first read). Adding a pack adds
@@ -146,10 +146,10 @@ fails if the States screens contain `€`, "euro" or "country" in any language.
 
 Dark glass with brass gold is the default; "Daylight" is the light twin. The
 whole look is **design tokens** at the top of `app.css` (`:root` = dark,
-`:root[data-theme=light]` and a `prefers-color-scheme: light` mirror = light).
+`:root[data-theme=light]` = light; `<html data-theme="dark">` is set in `index.html` so the first paint is already dark).
 Every theme difference is a token — never write a rule for one theme only, and
-never hardcode a colour in a component. The theme follows the phone; the
-toggle (`#theme`) cycles automatic → light → dark and stores `theme:v1`.
+never hardcode a colour in a component. The theme does **not** follow the phone: it is dark unless the
+toggle (`#theme`, dark ↔ light) chose Daylight, which is stored in `theme:v1`.
 
 - **Brass gold** is the one accent: `--gold1`/`--gold2` (gradient), `--goldink`
   (gold *text*, darker in light mode), `--on-gold` (text on gold buttons).
@@ -257,13 +257,11 @@ Census-boundary centroids, taunts, fun facts).
   - *Results map* (`us-view.js`, data in `us-map.js`): the contiguous US on satellite-style
     imagery registered to Census outlines (Albers equal-area conic), the winner's states in gold with
     pins and abbreviation pills, the crowded Northeast as callouts in a right margin, and Alaska /
-    Hawaii insets **only when the winner owns them**. Labels that cannot fit without overlapping are
+    Hawaii insets **only when the winner owns them**. (The menu shows the globe for every pack; the US flag emoji marks the States tile.) Labels that cannot fit without overlapping are
     dropped (the pin stays). The pack opts in with `map: 'us'`; other packs keep the globe.
     **Regenerate** with `test/build-us-map.js` (dev-only, needs `us-atlas topojson-client d3-geo sharp`);
     it takes any equirectangular world image — the imagery in the repo is a Natural Earth stand-in, to be
     replaced by NASA Blue Marble (see `NOTICE.md`).
-  - *Pack-switch zoom* (`heroSwap()` in `app.js`): on the menu the globe zooms toward North America
-    while the US map grows in, and back. 560 ms, a tap finishes it, Reduce Motion swaps instantly.
   - *Win sound*: `Snd.eagle()` (synthesised raptor cry) replaces the fanfare on a States win; a loss
     keeps the sting. It is not a recording — in films the "eagle" cry is a red-tailed hawk.
   - *Credits*: Privacy → "Credits & licences" (`credits()`, 5 languages) and `NOTICE.md`. Add every

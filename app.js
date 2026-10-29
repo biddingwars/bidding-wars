@@ -54,24 +54,20 @@ let stopGlobe = null;
 function on(id, fn) { const e = document.getElementById(id); if (e) e.onclick = fn; }
 function val(id) { const e = document.getElementById(id); return e ? e.value.trim() : ''; }
 
-/* ---- appearance: follows the phone (Nocturne at night, Daylight by day) unless forced ---- */
-const THEMES = ['auto', 'light', 'dark'];
-let THEME = 'auto';
+/* ---- appearance: dark (Nocturne) by default, whatever the phone is set to; the toggle switches to Daylight and back ---- */
+const THEMES = ['dark', 'light'];
+let THEME = 'dark';
 const THEME_COLOR = { dark: '#0A0A18', light: '#EEF0FF' };
 function applyTheme() {
-  const r = document.documentElement;
-  if (THEME === 'auto') r.removeAttribute('data-theme'); else r.setAttribute('data-theme', THEME);
-  $$('meta[name=theme-color]').forEach(m => {
-    const dark = /dark/.test(m.getAttribute('media') || '');
-    m.setAttribute('content', THEME === 'auto' ? THEME_COLOR[dark ? 'dark' : 'light'] : THEME_COLOR[THEME]);
-  });
+  document.documentElement.setAttribute('data-theme', THEME);
+  $$('meta[name=theme-color]').forEach(m => m.setAttribute('content', THEME_COLOR[THEME]));
 }
-async function loadTheme() { const v = await Store.get('theme:v1'); THEME = THEMES.includes(v) ? v : 'auto'; applyTheme(); }
+async function loadTheme() { const v = await Store.get('theme:v1'); THEME = v === 'light' ? 'light' : 'dark'; applyTheme(); }
 async function setTheme(v) {
-  THEME = THEMES.includes(v) ? v : 'auto'; applyTheme();
-  if (THEME === 'auto') await Store.remove('theme:v1'); else await Store.set('theme:v1', THEME);
+  THEME = v === 'light' ? 'light' : 'dark'; applyTheme();
+  if (THEME === 'dark') await Store.remove('theme:v1'); else await Store.set('theme:v1', 'light');     // only a forced Daylight is stored
 }
-const themeLabel = () => t(THEME === 'light' ? 'themeLight' : THEME === 'dark' ? 'themeDark' : 'themeAuto');
+const themeLabel = () => t(THEME === 'light' ? 'themeLight' : 'themeDark');
 
 /* the buttons every screen carries in its top bar */
 const navBtns = (withTheme = true) => `<span class="navr">${withTheme ? `<button class="ibtn" id="theme" aria-label="${esc(themeLabel())}">${IC('theme')}</button>` : ''}<button class="ibtn${Snd.muted ? ' off' : ''}" id="mute" aria-label="${esc(t('aSound'))}" aria-pressed="${Snd.muted}">${IC(Snd.muted ? 'mute' : 'note')}</button></span>`;
@@ -246,7 +242,6 @@ en:{
  packSoonBody:'More packs are on the way. Countries is the one to play today.',
  footer:'No accounts · No tracking · {n} countries',
  appearance:'Appearance',
- themeAuto:'Appearance: automatic',
  themeLight:'Appearance: light',
  themeDark:'Appearance: dark',
  holds:'Top bid · {name}',
@@ -347,7 +342,6 @@ de:{
  packSoonBody:'Weitere Pakete sind unterwegs. Heute spielst du Länder.',
  footer:'Keine Konten · Kein Tracking · {n} Länder',
  appearance:'Darstellung',
- themeAuto:'Darstellung: automatisch',
  themeLight:'Darstellung: hell',
  themeDark:'Darstellung: dunkel',
  holds:'Höchstgebot · {name}',
@@ -448,7 +442,6 @@ it:{
  packSoonBody:'Altri pacchetti stanno arrivando. Oggi si gioca con i Paesi.',
  footer:'Nessun account · Nessun tracciamento · {n} paesi',
  appearance:'Aspetto',
- themeAuto:'Aspetto: automatico',
  themeLight:'Aspetto: chiaro',
  themeDark:'Aspetto: scuro',
  holds:'Offerta più alta · {name}',
@@ -549,7 +542,6 @@ es:{
  packSoonBody:'Vienen más paquetes en camino. Hoy se juega con Países.',
  footer:'Sin cuentas · Sin rastreo · {n} países',
  appearance:'Apariencia',
- themeAuto:'Apariencia: automática',
  themeLight:'Apariencia: clara',
  themeDark:'Apariencia: oscura',
  holds:'Puja más alta · {name}',
@@ -650,7 +642,6 @@ fr:{
  packSoonBody:'D’autres packs arrivent. Aujourd’hui, on joue avec les Pays.',
  footer:'Aucun compte · Aucun suivi · {n} pays',
  appearance:'Apparence',
- themeAuto:'Apparence : automatique',
  themeLight:'Apparence : clair',
  themeDark:'Apparence : sombre',
  holds:'Meilleure enchère · {name}',
@@ -762,7 +753,7 @@ async function recordGame(you, bot, level){
 }
 
 /* ============ HOME ============ */
-function home(from) {
+function home() {
   stopPoll(); S = {}; PACK = null;
   $$('.overlay', layer).forEach(o => o.remove()); rootEl.classList.remove('soldOpen', 'celebrating');
   try { speechSynthesis.cancel(); } catch (e) {}
@@ -772,7 +763,7 @@ function home(from) {
     <div class="nav"><span></span>${navBtns()}</div>
     <div class="menu-grid">
       <div class="m-l">
-        <div class="hero" data-pk="${SELPACK}"><img class="globe" src="globe-hero.webp" alt="" width="280" height="280" decoding="async"><img class="usm-h" src="us-map.webp" alt="" width="280" height="173" decoding="async">
+        <div class="hero"><img class="globe" src="globe-hero.webp" alt="" width="280" height="280" decoding="async">
           <h1 class="title"><span>Bidding</span><span class="goldtext">Wars</span></h1>
           <p class="tag">${esc(t('tagline'))}</p></div>
         <button class="glass recpill" id="mrec" aria-label="${esc(t('aRecord'))}">
@@ -807,27 +798,9 @@ function home(from) {
   $$('[data-soon]', sec).forEach(b => b.onclick = () => { Snd.ui(); toast(t('packSoonBody')); });
   $$('[data-pack]', sec).forEach(b => b.onclick = () => {
     if (b.dataset.pack === SELPACK) return;
-    Snd.ui(); Haptics.light(); const from = SELPACK; SELPACK = b.dataset.pack; home(from);
+    Snd.ui(); Haptics.light(); SELPACK = b.dataset.pack; home();
     (window.requestIdleCallback || (f => setTimeout(f, 200)))(() => Packs.load(SELPACK).catch(() => {}));   // warm it up so Setup opens instantly
   });
-  heroSwap(sec, from);
-}
-
-/* Switching pack on the menu: the globe zooms in on North America while the US map grows in (and the other way round
-   going back). 560 ms, a tap anywhere finishes it at once, and with Reduce Motion the pictures simply swap. */
-function heroSwap(sec, from) {
-  const hero = $('.hero', sec), g = hero && $('img.globe', hero), m = hero && $('img.usm-h', hero);
-  if (!g || !m || !from || from === SELPACK || FX.reduced || !hero.animate) return;
-  const toUS = SELPACK === 'states';
-  hero.classList.add('xfade');
-  g.style.transformOrigin = '38% 36%';
-  const opt = { duration: 560, easing: 'cubic-bezier(.22,.8,.24,1)', fill: 'both', direction: toUS ? 'normal' : 'reverse' };
-  const gA = g.animate([{ transform: 'scale(1)', opacity: .92 }, { opacity: .92, offset: .4 }, { transform: 'scale(2.6)', opacity: 0 }], opt);
-  const mA = m.animate([{ transform: 'scale(.42)', opacity: 0 }, { opacity: 0, offset: .3 }, { transform: 'scale(1)', opacity: .9 }], opt);
-  const done = () => { document.removeEventListener('pointerdown', skip, true); gA.cancel(); mA.cancel(); hero.classList.remove('xfade'); };
-  const skip = () => { gA.finish(); mA.finish(); };
-  document.addEventListener('pointerdown', skip, true);
-  Promise.all([gA.finished, mA.finished]).then(done, done);
 }
 
 function langSheet() {
@@ -862,7 +835,7 @@ function privacy() {
   on('cr', () => { Snd.ui(); credits(); });
   on('wipe', () => { Snd.ui(); ask(t('wipeTitle'), t('wipeBody'), t('wipe'), async () => {
     await clearRec(); await Store.remove('lang:v1'); await Store.remove('name:v1'); await Store.remove('theme:v1');
-    THEME = 'auto'; applyTheme(); toast(t('wiped')); home();
+    THEME = 'dark'; applyTheme(); toast(t('wiped')); home();
   }, null, t('cancel')); });
 }
 
