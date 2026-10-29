@@ -857,6 +857,7 @@ async function setup(kind, packId = DEFAULT_PACK) {
 /* ============ THE LOT — ascending auction from €1 ============ */
 let holdClock = 0;                                   // >0 while a sheet is open: the decision clock waits
 let lockUntil = 0;                                   // hot-seat: the previous player's second tap must not land on the next player
+let lockMs = 260;
 
 function lot() {
   S._taunt = ''; S._raises = 0;
@@ -927,9 +928,9 @@ function refresh() {
     if (prev !== p.budget) FX.roll(bd, prev, p.budget, 320, v => cur() + Math.round(v)); else bd.textContent = money(p.budget);
     bd.dataset.v = p.budget;
     $('.now', tile).textContent = p.ai ? t('thinking') : t('nowBidding');
-    const status = isTop ? t('topBid') : out ? t('tagOut') : p.bought.length + ' ×';
+    const status = isTop ? money(L.price) : out ? t('tagOut') : p.bought.length + ' ×';
     $('.rl', tile).textContent = status;
-    tile.setAttribute('aria-label', `${p.name}, ${money(p.budget)}, ${status}${turnNow ? ', ' + (p.ai ? t('thinking') : t('nowBidding')) : ''}`);
+    tile.setAttribute('aria-label', `${p.name}, ${money(p.budget)}, ${isTop ? t('topBid') + ' ' : ''}${status}${turnNow ? ', ' + (p.ai ? t('thinking') : t('nowBidding')) : ''}`);
   });
   $('#hn').textContent = t('holds', { name: holder.name });
   $('#hd').className = 'dot s' + (L.holder % 4);
@@ -1014,7 +1015,7 @@ function raise(amount) {
   /* the bot bids on its own, unprompted, several times a lot: a quieter, softer tone keeps that from grating */
   S._raises = (S._raises || 0) + 1;
   if (actor.ai) Snd.bot(); else { Snd.raise(S._raises); Haptics.light(); }
-  if (S.players.filter(p => !p.ai).length > 1) lockUntil = performance.now() + 260;
+  if (S.players.filter(p => !p.ai).length > 1) lockUntil = performance.now() + lockMs;
   refresh(); showPrice(prev); if (actor.ai) showTaunt(S._taunt);
   if (r.next === 'award') return award();
   turn();
@@ -1027,7 +1028,7 @@ function pass(timedOut) {
   if (r.error) return;
   stopClock();
   Snd.drop(); Haptics.medium();
-  if (S.players.filter(p => !p.ai).length > 1) lockUntil = performance.now() + 260;
+  if (S.players.filter(p => !p.ai).length > 1) lockUntil = performance.now() + lockMs;
   refresh();
   if (actor.ai) showTaunt(S._taunt); else live(`${actor.name}: ${t('dropOut')}`);
   if (r.next === 'award') return award();
@@ -1071,7 +1072,7 @@ async function award() {
   wrap.innerHTML = `<p class="sr" role="status">${esc(t('soldTo', { item: cname(c), name: w.name, n: L.price }))}</p>
     <div class="scrim"></div><div class="rays"></div><div class="flash"></div>
     <div class="plate slab"><b>${esc(t('sold'))}</b><small>${esc(t(q === 'bargain' ? 'qBargain' : q === 'fair' ? 'qFair' : 'qOver'))}</small></div>
-    ${FX.gavelMarkup()}
+    <div class="gvwrap">${FX.gavelMarkup()}</div>
     <div class="soldline"><div class="who"><span class="orb" aria-hidden="true">${icon(c)}</span><span>${esc(cname(c))} · <span class="num">${money(L.price)}</span> · ${esc(mine && S.players.filter(p => !p.ai).length === 1 ? t('you') : w.name)}</span></div>
       <div class="deal q-${q}">${esc(dealTxt)}</div></div>
     <div class="glass tray"><span class="lbl">${esc(mine && S.players.filter(p => !p.ai).length === 1 ? t('collectionYours') : t('collectionOf', { name: w.name }))}</span>${prior.map(b => `<span class="mini" aria-hidden="true">${icon(b)}</span>`).join('')}<span class="mini new" aria-hidden="true"></span></div>

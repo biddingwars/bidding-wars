@@ -18,13 +18,16 @@ debugging time before.
 | File | What it is |
 |---|---|
 | `index.html` | Shell (`<base href="/bidding-wars/">` for GitHub Pages). |
-| `app.js` | The view: all screens, i18n, sound. Calls the engine; contains no game rules. |
+| `app.js` | The view: all screens and sheets, i18n. Calls the engine; contains no game rules. |
+| `fx.js` | Motion: springs, rolling numbers, the gavel moment, confetti. |
+| `sound.js` | The soundscape, synthesised with Web Audio (no audio files). |
 | `engine.js` | Pure game engine (pricing, bot, auction rules, scoring, records). No DOM; unit-tested. |
 | `packs.js`, `pack-countries.js` | Content-pack registry/lazy loader, and the Countries pack (items, translated names, taunts, coordinates). |
 | `banter.js` | The rival's shared drop-out and win lines. |
 | `globe.js` | Results-screen 3D globe (three.js) + flat-canvas fallback. |
 | `platform.js` | Storage, haptics, iOS gesture locks, `CONFIG` flags. |
-| `app.css` / `fonts.css` | Design system. |
+| `app.css` | Design system: "Nocturne" (dark) and "Daylight" (light) tokens, system fonts only. |
+| `globe-hero.webp` | The menu's planet. |
 | `sw.js` | Service worker — offline caching. |
 | `countries-110m.json` | Natural Earth borders. |
 
@@ -34,7 +37,7 @@ debugging time before.
 bumped:
 
 ```js
-const CACHE = 'bidding-wars-v9';   // increment this on every deploy
+const CACHE = 'bidding-wars-v23';   // increment this on every deploy
 ```
 
 After bumping, the user must close *all* tabs and reopen — a reload isn't
@@ -46,10 +49,11 @@ commit again.
 
 ## House rules
 
-- **No network at runtime** for anything essential. Fonts, three.js, borders —
-  all must work bundled, since Apple tests in airplane mode.
-- **No accounts, no analytics, no tracking.** Only two things are stored on
-  device: chosen language, and record vs the bot.
+- **No network at runtime** for anything essential. three.js, borders, the
+  globe texture — all must work bundled, since Apple tests in airplane mode.
+- **No accounts, no analytics, no tracking.** Only four things are stored on
+  device: chosen language, appearance (if forced), record vs the bot, and the
+  last name entered.
 - **No ad SDK.**
 - Five languages: en, de, it, es, fr. Every user-facing string goes through
   `t('key')`; country names go through `cname(c)`.

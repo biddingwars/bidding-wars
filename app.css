@@ -243,7 +243,7 @@ button.row{width:100%;text-align:left}
 /* the stage is a size container that soaks up whatever height the nav, players and dock leave, and the ring
    takes what is left of it after the name row, holder chip and taunt line (~120px) — so no screen height
    needs a hand-tuned magic number */
-.ringwrap{--ring:clamp(104px,min(calc(100cqw - 32px),calc(100cqh - 124px)),228px);position:relative;width:var(--ring);height:var(--ring);margin:6px auto 0;flex:none}
+.ringwrap{--ring:clamp(104px,min(calc(100cqw - 32px),calc(100cqh - 124px)),268px);position:relative;width:var(--ring);height:var(--ring);margin:6px auto 0;flex:none}
 .ringwrap svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
 .ringwrap .prog{stroke-dasharray:578.05;stroke-dashoffset:calc(578.05px * (1 - var(--p,1)));filter:drop-shadow(0 0 8px var(--goldglow))}
 .ringwrap.idle .prog{opacity:.3}
@@ -267,7 +267,7 @@ button.row{width:100%;text-align:left}
 .po .bd{font:800 14px/1.2 var(--round);letter-spacing:-.02em}
 .po .rl{font-size:11px;color:var(--ink2);font-weight:600;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .po.active .o{border-color:var(--gold1);box-shadow:0 0 0 4px var(--goldtint),0 0 28px var(--goldglow),inset 0 2px 0 rgba(255,255,255,.35)}
-.po .now{display:none;position:absolute;top:-19px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--on-gold);background:linear-gradient(180deg,var(--gold1),var(--gold2));padding:3px 8px;border-radius:9px;box-shadow:0 4px 12px var(--goldglow);max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.po .now{display:none;position:absolute;top:-19px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--on-gold);background:linear-gradient(180deg,var(--gold1),var(--gold2));padding:3px 8px;border-radius:9px;box-shadow:0 4px 12px var(--goldglow)}
 .po.active .now{display:block}
 .po .now::after{content:"";position:absolute;left:50%;bottom:-4px;margin-left:-4px;border:4px solid transparent;border-top-color:var(--gold2);border-bottom:0}
 .po .crown{position:absolute;top:-6px;right:calc(50% - 38px);font-size:15px;display:none}
@@ -304,6 +304,17 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   .ringwrap{--ring:clamp(96px,min(calc(100cqw - 32px),calc(100cqh - 100px)),228px)}
 }
 
+@media (max-height:640px){
+  .slab{padding:6px 24px 8px}
+  .slab b{font-size:clamp(30px,10vw,42px)}
+  .gvwrap{min-height:64px}
+  .slab small{margin-top:0}
+  .soldline .who{font-size:18px}
+  .deal{margin-top:6px;padding:5px 12px}
+  .tray{margin-top:8px;padding:6px 12px}
+  .nextbtn{margin-top:8px}
+  .skiphint{display:none}
+}
 @media (max-height:700px){
   h1.title{font-size:36px}
   .tag{margin-top:6px;font-size:14px}
@@ -314,7 +325,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 }
 
 /* ---------- SOLD (the gavel moment) ---------- */
-.overlay{display:flex;position:fixed;inset:0;z-index:50;flex-direction:column;align-items:center;justify-content:center;padding:var(--top) 20px var(--bot);overflow:hidden}
+.overlay{display:flex;position:fixed;inset:0;z-index:50;flex-direction:column;align-items:center;justify-content:center;padding:calc(var(--top) + 8px) 20px var(--bot);overflow:hidden}
 .scrim{position:absolute;inset:0;z-index:-2;background:radial-gradient(60% 46% at 50% 38%,var(--goldglow),transparent 72%),linear-gradient(var(--scrim),var(--scrim));-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px)}
 .rays{position:absolute;left:50%;top:38%;width:900px;height:900px;margin:-450px 0 0 -450px;z-index:-1;will-change:transform,opacity;
   background:repeating-conic-gradient(from 7deg,rgba(227,179,90,.22) 0 4deg,transparent 4deg 18deg);
@@ -327,7 +338,9 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 [data-q=overpay] .slab{background:linear-gradient(180deg,#D5D8E8,#A9AFC8);box-shadow:0 4px 0 #6C7396,0 14px 30px rgba(0,0,0,.35)}
 [data-q=overpay] .slab small{color:#2A2E4A}
 [data-q=overpay] .flash{display:none}
-.gv{position:relative;aspect-ratio:520/370;width:min(360px,82vw,calc((100dvh - 310px) * 1.405));flex:none;transform:translateX(7%);margin-top:-6px}
+/* the gavel takes whatever height the rest of the moment leaves, so SOLD and Next are never clipped */
+.gvwrap{flex:1 1 0;min-height:96px;width:100%;container-type:size;display:grid;place-items:center;margin-top:-6px;max-height:300px}
+.gv{position:relative;aspect-ratio:520/370;width:min(360px,82vw,calc(100cqh * 1.405));flex:none;transform:translateX(7%)}
 .gvl{position:absolute;inset:0}
 .gvl svg{width:100%;height:100%;display:block;overflow:visible}
 .gvfx{position:absolute;inset:0;pointer-events:none}
@@ -417,7 +430,8 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   .dock{margin:0;border-radius:28px;border:1px solid var(--stroke);padding:16px}
   .stage{flex:none;container-type:normal}
   .ringwrap{--ring:clamp(170px,calc(100dvh - 420px),280px)}
-  .gv{width:430px}
+  .gvwrap{max-height:340px}
+  .gv{width:min(430px,calc(100cqh * 1.405))}
   .res2{display:grid;grid-template-columns:1fr 1fr;gap:18px;flex:1;min-height:0;align-items:center}
   .r-l,.r-r{display:flex;flex-direction:column;gap:12px;min-height:0}
   .gl{min-height:300px}
@@ -446,6 +460,12 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   .res2{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
   .r-l,.r-r{display:flex;flex-direction:column;gap:10px}
   .sheetbox{max-height:96%}
-  .gv{width:min(240px,40vh)}
+  .gvwrap{max-height:none;min-height:0;height:100%}
+  .overlay{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr auto;column-gap:20px;align-content:center;justify-items:center;align-items:center;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+  .plate{grid-column:1;grid-row:1}
+  .gvwrap{grid-column:1;grid-row:2}
+  .soldline{grid-column:2;grid-row:1}
+  .tray{grid-column:2;grid-row:2;margin:6px 0}
+  .nextbtn{grid-column:2;grid-row:3;margin:6px 0 0}
   .slab b{font-size:40px}
 }

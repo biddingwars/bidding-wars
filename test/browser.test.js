@@ -484,3 +484,34 @@ test('mute silences sound and is reflected in the UI', { skip: SKIP }, async () 
   assert.deepEqual(errors, []);
   await ctx.close();
 });
+
+test('the sold moment fits every screen: SOLD at the top, Next at the bottom, nothing clipped', { skip: SKIP }, async () => {
+  for (const [w, h] of [[402, 720], [375, 560], [320, 568], [834, 1194], [1194, 834], [844, 390], [667, 375]]) {
+    const { page, errors, ctx } = await open({ viewport: { width: w, height: h }, init: () => localStorage.setItem('lang:v1', 'de') });
+    await startSolo(page, 5, 0);
+    await page.evaluate(() => { window.think = () => Promise.resolve(); S.players[0].name = 'Wolfeschlegelstein'; });
+    await page.waitForSelector('#pass:not(:disabled)'); await page.click('#pass');
+    await page.waitForSelector('#sold.final');
+    const r = await page.evaluate(() => { const q = s => document.querySelector(s).getBoundingClientRect(); const p = q('.plate'), n = q('#n'), t = q('.tray'), l = q('.soldline'); return { plateTop: p.top, nextBottom: n.bottom, nextRight: n.right, trayBottom: t.bottom, soldRight: l.right, vh: innerHeight, vw: innerWidth }; });
+    assert.ok(r.plateTop >= 0, `${w}x${h} SOLD plate clipped at the top (${r.plateTop})`);
+    assert.ok(r.nextBottom <= h + 0.5 && r.nextRight <= w + 0.5, `${w}x${h} Next lot clipped (${JSON.stringify(r)})`);
+    assert.ok(r.trayBottom <= h && r.soldRight <= w + 0.5, `${w}x${h} collection/line clipped`);
+    assert.deepEqual(errors, []);
+    await ctx.close();
+  }
+});
+
+test('missing optional assets (three.js, textures, borders, hero image) never break a game', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open();
+  for (const f of ['three.min.js', 'earth.jpg', 'countries-110m.json', 'globe-hero.webp']) await ctx.route('**/' + f, r => r.abort());
+  await page.route('https://**', r => r.abort());
+  await page.reload();
+  await page.waitForFunction(() => document.body.classList.contains('booted'));
+  await startSolo(page, 5, 0);
+  await autoplay(page);
+  await reveal(page);
+  await page.waitForTimeout(3500);                         // the globe falls back to the flat map
+  assert.ok(await page.textContent('#verdict'));
+  assert.deepEqual(errors.filter(e => !/Failed to load|net::ERR|THREE|three/i.test(e)), []);
+  await ctx.close();
+});

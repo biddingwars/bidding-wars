@@ -530,8 +530,23 @@ function globe3d(host, owned, pack){
   el.addEventListener('touchend',release);
   el.addEventListener('touchcancel',release);
 
+  /* Keep the frame rate on slow phones: if frames keep taking longer than ~30 ms the render
+     resolution steps down (device ratio → 1 → 0.75), and nothing is drawn while the globe is
+     off screen or the page is in the background. */
+  let pr=Math.min(devicePixelRatio||1,2), slow=0, lastT=performance.now(), visible=true;
+  const fitSize=()=>{
+    const w=Math.min(host.clientWidth||360,560), h=Math.round(w*0.98);
+    renderer.setPixelRatio(pr); renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix();
+  };
+  let io=null;
+  if(typeof IntersectionObserver!=='undefined'){ io=new IntersectionObserver(es=>{ visible=es[es.length-1].isIntersecting; }); io.observe(host); }
+
   const tmp=new THREE.Vector3();
   function frame(){
+    const now=performance.now(), dt=now-lastT; lastT=now;
+    if(document.hidden || !visible){ raf=requestAnimationFrame(frame); return; }
+    if(dt>30 && dt<500) slow++; else slow=Math.max(0,slow-1);
+    if(slow>24 && pr>0.75){ pr = pr>1 ? 1 : 0.75; slow=0; fitSize(); }
     if(!auto && resume && performance.now()>resume){ auto=true; resume=0; }
     if(auto) lon-=0.13;
     const a=lat*Math.PI/180, b=lon*Math.PI/180;
@@ -563,9 +578,8 @@ function globe3d(host, owned, pack){
   let resizeRaf=0;
   const applyResize=()=>{
     resizeRaf=0;
-    const w=Math.min(host.clientWidth||360,560), h=Math.round(w*0.98);
-    renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
-    renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix();
+    pr=Math.min(pr, Math.min(devicePixelRatio||1,2));
+    fitSize();
   };
   let ro=null;
   if(typeof ResizeObserver!=='undefined'){
@@ -579,6 +593,7 @@ function globe3d(host, owned, pack){
     if(raf) cancelAnimationFrame(raf);
     if(resizeRaf) cancelAnimationFrame(resizeRaf);
     if(ro) ro.disconnect(); else window.removeEventListener('resize',applyResize);
+    if(io) io.disconnect();
     window.removeEventListener('mousemove',onMouseMove);
     window.removeEventListener('mouseup',release);
     try{ renderer.dispose(); }catch(e){}

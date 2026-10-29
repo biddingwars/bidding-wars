@@ -117,8 +117,10 @@ const FX = (() => {
 
     const leave = () => {
       if (wrap._gone) return; wrap._gone = true; Snd.ui();
-      const f = wrap.animate([{ opacity: 1 }, { opacity: 0 }], { duration: reduced ? 1 : 180, fill: 'both' });
-      f.finished.then(() => { wrap.remove(); resolveDone(); });
+      /* the fade-out is cosmetic: a page that is not being rendered (a background tab) must still move on */
+      let over = false; const fin = () => { if (over) return; over = true; wrap.remove(); resolveDone(); };
+      wrap.animate([{ opacity: 1 }, { opacity: 0 }], { duration: reduced ? 1 : 180, fill: 'both' }).finished.then(fin, fin);
+      setTimeout(fin, reduced ? 30 : 300);
     };
     if (next) next.onclick = e => { e.stopPropagation(); leave(); };
     wrap.addEventListener('pointerdown', () => { if (!done && !(ready && !reduced)) finalize(); });
