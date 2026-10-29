@@ -131,7 +131,7 @@ const FX = (() => {
       anims.forEach(a => { try { a.cancel(); } catch (e) {} });
       fx.innerHTML = ''; $$('.confetti', wrap).forEach(x => x.remove());
       if (fly) fly.style.visibility = 'hidden';
-      if (slot) { slot.textContent = o.flag; slot.classList.remove('new'); }
+      if (slot) { slot.innerHTML = o.flag; slot.classList.remove('new'); }
       if (hint) hint.hidden = true;
       ready = true; wrap.classList.add('ready', 'final');
       if (next) { try { next.focus({ preventScroll: true }); } catch (e) {} }
@@ -205,7 +205,7 @@ const FX = (() => {
       A(spring(fly, 0, 1, v => ({ opacity: Math.min(1, v * 3), transform: `translate(${sx + (ex - sx) * v}px,${sy + (ey - sy) * v - Math.sin(Math.min(1, v) * Math.PI) * 46}px) scale(${1.15 + (sc - 1.15) * v}) rotate(${(1 - v) * -14}deg)` }), { k: 150, c: 15 }));
       later(430, () => {
         if (done) return;
-        fly.style.visibility = 'hidden'; slot.textContent = o.flag; slot.classList.remove('new');
+        fly.style.visibility = 'hidden'; slot.innerHTML = o.flag; slot.classList.remove('new');
         A(slot.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.3)', offset: .4 }, { transform: 'scale(1)' }], { duration: 340, easing: 'cubic-bezier(.3,1.5,.5,1)' }));
         Snd.chime();
       });

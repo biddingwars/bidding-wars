@@ -146,6 +146,7 @@ h1.title span{display:block}
 .pack b{font-size:16px;font-weight:700;letter-spacing:-.02em;line-height:1.15}
 .pack span.s{font-size:12px;color:var(--ink2)}
 .pack.on{background:linear-gradient(150deg,var(--goldtint),var(--glass));border:1.5px solid var(--gold1);box-shadow:0 10px 30px var(--goldglow),inset 0 1px 0 var(--hi)}
+.pack.on[data-pack=states]::before{content:"CA  TX  NY  FL";font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--goldink);top:12px}
 .pack.on::before{content:"🇯🇵🇧🇷🇰🇪🇲🇽";position:absolute;left:10px;top:8px;font-size:17px;letter-spacing:2px}
 .pack.off{background:var(--glass);border:1px solid var(--stroke)}
 .pack.off i{position:absolute;right:10px;top:10px;font-style:normal;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--goldink);background:var(--goldtint);padding:3px 7px;border-radius:8px}
@@ -351,11 +352,13 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 .soldline .who{display:flex;align-items:center;gap:10px;justify-content:center;font-size:21px;font-weight:800;letter-spacing:-.03em;flex-wrap:wrap}
 .soldline .who .orb{--orb:40px}
 .deal{display:inline-flex;gap:8px;align-items:center;margin-top:10px;font-size:13px;font-weight:800;color:var(--on-gold);background:linear-gradient(180deg,var(--gold1),var(--gold2));padding:7px 14px;border-radius:16px;box-shadow:0 8px 24px var(--goldglow);max-width:100%;text-align:center}
+.soldline .fact{font-size:13px;line-height:1.35;color:var(--ink2);max-width:min(34ch,86vw);margin:8px auto 0;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;overflow:hidden}
 .deal.q-fair{background:var(--glass2);color:var(--ink);box-shadow:none;border:1px solid var(--stroke)}
 .deal.q-overpay{background:#5F688D;color:#fff;box-shadow:none}
 .tray{margin-top:16px;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:22px;max-width:100%;flex-wrap:wrap;justify-content:center}
 .tray .lbl{font-size:12px;font-weight:700;color:var(--ink2);margin-right:4px}
 .mini{width:40px;height:40px;border-radius:50%;background:var(--glass2);border:1px solid var(--stroke);display:grid;place-items:center;font-size:22px}
+.mini .ibadge{font-size:.5em}
 .mini.new{display:grid;border:1.5px dashed var(--gold1);background:var(--goldtint)}
 .fly{position:absolute;left:50%;top:36%;margin:-31px 0 0 -31px;width:62px;height:62px;border-radius:50%;background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.4),rgba(255,255,255,.1));border:2px solid var(--gold1);display:grid;place-items:center;font-size:36px;box-shadow:0 0 30px var(--wood-glow);z-index:5;visibility:hidden;will-change:transform}
 .nextbtn{position:relative;min-width:220px;margin-top:16px;opacity:0;pointer-events:none;transform:translateY(18px) scale(.94);transition:opacity .22s ease-out,transform .32s cubic-bezier(.2,.9,.3,1)}
@@ -441,7 +444,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   .res2{display:grid;grid-template-columns:1fr 1fr;gap:18px;flex:1;min-height:0;align-items:center}
   .r-l,.r-r{display:flex;flex-direction:column;gap:12px;min-height:0}
   .gl{min-height:0}
-  .gl .globe{flex:none;width:min(100%,calc(100dvh - 470px));min-width:220px;margin:0 auto}
+  .gl .globe{flex:none;width:min(100%,calc(100dvh - 500px));min-width:220px;margin:0 auto}
   .sheetbox{border-radius:30px;margin-bottom:5vh;border-bottom:1px solid var(--stroke)}
   .sheetwrap{align-items:flex-end}
 }

@@ -66,6 +66,22 @@
   }
   const hasCoords = item => Number.isFinite(item.lat) && Number.isFinite(item.lon);
 
+  /* The fun fact for an item in a language; other languages fall back to English; '' when a pack has none. */
+  function factFor(pack, item, lang) {
+    const f = pack && pack.facts && pack.facts[item.id];
+    return f ? (f[lang] || f.en || '') : '';
+  }
+  /* "$1,234" for packs that give a currency locale (US States), plain "€12" for the rest (Countries). */
+  const numFmt = new Map();
+  function formatMoney(pack, n) {
+    const c = pack ? pack.currency : { symbol: '€' };
+    if (c.locale) {
+      let f = numFmt.get(c.locale); if (!f) numFmt.set(c.locale, f = new Intl.NumberFormat(c.locale, { maximumFractionDigits: 0 }));
+      return c.symbol + f.format(n);
+    }
+    return c.symbol + n;
+  }
+
   /* ----------------------------------------------------------- pack validation */
   const isObj = v => v && typeof v === 'object' && !Array.isArray(v);
   const isLoc = v => isObj(v) && typeof v.en === 'string' && v.en.length > 0;
@@ -107,10 +123,32 @@
       if (typeof s !== 'string' || !s) e('metric.format must return a non-empty string');
     }
     if (!isObj(pack.currency) || typeof pack.currency.symbol !== 'string' || !pack.currency.symbol) e('currency.symbol is required');
+    if (pack.metric && pack.metric.effLabel !== undefined && !isLoc(pack.metric.effLabel)) e('metric.effLabel must be a localised object with "en"');
+    if (pack.facts !== undefined) {
+      if (!isObj(pack.facts)) e('facts must be an object keyed by item id');
+      else if (Array.isArray(pack.items)) pack.items.forEach(it => { const f = pack.facts[it.id]; if (!isLoc(f) || f.en.length > 160) e('facts needs a localised fact (en, up to 160 characters) for ' + it.id); });
+    }
     if (!isPosInt(pack.budgetPerLot)) e('budgetPerLot must be a positive integer');
     if (!isObj(pack.lots) || !Array.isArray(pack.lots.options) || !pack.lots.options.length || !pack.lots.options.every(isPosInt) || !pack.lots.options.includes(pack.lots.default)) e('lots needs { options: [positive ints], default: one of them }');
 
-    if (!Array.isArray(pack.bands) || !pack.bands.length) e('bands must be a non-empty array');
+    if (pack.lots && pack.lots.all !== undefined && !(isObj(pack.lots) && Array.isArray(pack.lots.options) && pack.lots.options.includes(pack.lots.all))) e('lots.all must be one of lots.options');
+    if (typeof pack.priceTable === 'function') {
+      if (pack.bands !== undefined) e('give either bands or priceTable, not both');
+      else if (Array.isArray(pack.items) && pack.items.length) {
+        let tbl = null;
+        try { tbl = pack.priceTable(pack.items); } catch (err) { e('priceTable threw: ' + err.message); }
+        if (tbl && typeof tbl.get === 'function') {
+          const rows = [];
+          pack.items.forEach(it => {
+            const c = tbl.get(it.id);
+            if (!c || !isPosInt(c.ideal) || !isPosInt(c.max) || c.max < c.ideal) e('priceTable needs positive whole-number { ideal, max } with max >= ideal for ' + it.id);
+            else rows.push({ v: it.value, ideal: c.ideal, max: c.max });
+          });
+          rows.sort((a, b) => a.v - b.v);
+          for (let i = 1; i < rows.length; i++) if (rows[i].ideal < rows[i - 1].ideal || rows[i].max < rows[i - 1].max) { e('priceTable must never get cheaper as value grows'); break; }
+        } else e('priceTable must return a Map keyed by item id');
+      }
+    } else if (!Array.isArray(pack.bands) || !pack.bands.length) e('bands must be a non-empty array (or give a priceTable function)');
     else {
       let prev = 0;
       pack.bands.forEach((b, i) => {
@@ -179,8 +217,12 @@
     const n = pack.items.length;
     const order = pack.items.map((it, i) => i).sort((a, b) => pack.items[a].value - pack.items[b].value);
     t = new Map();
+    /* A pack prices either by percentile `bands` (Countries) or with its own smooth
+       `priceTable(items) → Map(id → { ideal, max })` (US States). Same output either way. */
+    const custom = typeof pack.priceTable === 'function' ? pack.priceTable(pack.items) : null;
     order.forEach((idx, pos) => {
       const item = pack.items[idx], rank = pos + 1, pct = rank / n;
+      if (custom) { const c = custom.get(item.id); t.set(item.id, { rank, pct, ideal: c.ideal, max: c.max }); return; }
       const band = pack.bands.find(b => pct <= b.upTo) || pack.bands[pack.bands.length - 1];
       const ideal = Math.max(1, Math.round(item.value * band.ideal));
       t.set(item.id, { rank, pct, ideal, max: Math.max(ideal, Math.round(item.value * band.max)) });
@@ -408,7 +450,7 @@
   return {
     LANGS, REC_KEY,
     cryptoRng, seededRng, defaultRng, pick,
-    itemName, itemIcon, hasCoords,
+    itemName, itemIcon, hasCoords, factFor, formatMoney,
     validatePack, levelPool, draw, priceTable, priceOf, botCeiling,
     tierOf, tauntFor, passLine, winLine,
     budgetFor, newAuction, startLot, raise, pass, award, advance, nextAfter, botDecision, scoreboard,

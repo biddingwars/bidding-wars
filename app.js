@@ -20,8 +20,9 @@ function icon(it) {
   return ic.flag ? flag(ic.flag) : ic.emoji ? esc(ic.emoji) : `<span class="ibadge">${esc(ic.badge)}</span>`;
 }
 const fmtVal = v => PACK.metric.format(v);
-const cur = () => (PACK ? PACK.currency.symbol : '€');
-const money = n => cur() + n;
+let SELPACK = DEFAULT_PACK;                         // the pack picked on the menu (memory only; nothing about it is stored)
+const cur = () => (PACK ? PACK.currency.symbol : ((Packs.meta(SELPACK) || {}).sym || '€'));
+const money = n => (PACK ? Engine.formatMoney(PACK, n) : cur() + n);   // "$1,234" for US States, "€12" for Countries
 const ini = n => (Array.from(String(n || '?').trim())[0] || '?').toUpperCase();
 const IC = (id, cls) => `<svg class="i ${cls || ''}" aria-hidden="true" focusable="false"><use href="#i-${id}"/></svg>`;
 const isOnline = () => navigator.onLine !== false;
@@ -175,6 +176,7 @@ const LANGS=[
 
 const STR={
 en:{
+ lotsAll:'All {n}', funFacts:'Fun facts', factsIntro:'Every state in this round.',
  tagline:'Use your knowledge to beat your rivals',
  solo:'Solo', soloDesc:'One rival, the bot. It has a price in mind for every country and walks away the moment you beat it. Works offline.',
  multi:'Multiplayer', multiDesc:'2 to 4 players sharing one phone. Two-player is the default. Works offline.',
@@ -233,7 +235,7 @@ en:{
  packFail:'Could not load the game data. Check your connection and try again.',
  loadingBorders:'loading borders…',
  packCountries:'Countries',
- packStates:'States',
+ packStates:'US States',
  packCapitals:'Capitals',
  packWorld:'World',
  popLabel:'Population',
@@ -274,6 +276,7 @@ en:{
  smartestU:'<b>{name}</b> shopped smartest at {v} {unit}.'
 },
 de:{
+ lotsAll:'Alle {n}', funFacts:'Wissenswertes', factsIntro:'Alle Bundesstaaten dieser Runde.',
  tagline:'Nutze dein Wissen und schlag deine Rivalen',
  solo:'Solo', soloDesc:'Ein Gegner, der Bot. Er hat für jedes Land einen Preis im Kopf und steigt aus, sobald du ihn überbietest. Läuft offline.',
  multi:'Mehrspieler', multiDesc:'2 bis 4 Spieler an einem Handy. Zwei Spieler sind der Normalfall. Läuft offline.',
@@ -332,7 +335,7 @@ de:{
  packFail:'Die Spieldaten konnten nicht geladen werden. Prüfe deine Verbindung und versuch es noch einmal.',
  loadingBorders:'Grenzen werden geladen…',
  packCountries:'Länder',
- packStates:'Bundesstaaten',
+ packStates:'US-Staaten',
  packCapitals:'Hauptstädte',
  packWorld:'Welt',
  popLabel:'Einwohner',
@@ -373,6 +376,7 @@ de:{
  smartestU:'<b>{name}</b> hat am klügsten eingekauft: {v} {unit}.'
 },
 it:{
+ lotsAll:'Tutti {n}', funFacts:'Curiosità', factsIntro:'Tutti gli stati di questa partita.',
  tagline:'Usa le tue conoscenze per battere i rivali',
  solo:'Solo', soloDesc:'Un rivale, il bot. Ha un prezzo in mente per ogni paese e si ritira appena lo superi. Funziona offline.',
  multi:'Multigiocatore', multiDesc:'Da 2 a 4 giocatori su un solo telefono. Due giocatori è il caso normale. Funziona offline.',
@@ -431,7 +435,7 @@ it:{
  packFail:'Impossibile caricare i dati di gioco. Controlla la connessione e riprova.',
  loadingBorders:'caricamento confini…',
  packCountries:'Paesi',
- packStates:'Stati',
+ packStates:'Stati USA',
  packCapitals:'Capitali',
  packWorld:'Mondo',
  popLabel:'Popolazione',
@@ -472,6 +476,7 @@ it:{
  smartestU:'<b>{name}</b> ha comprato nel modo più furbo: {v} {unit}.'
 },
 es:{
+ lotsAll:'Todos {n}', funFacts:'Curiosidades', factsIntro:'Todos los estados de esta partida.',
  tagline:'Usa tus conocimientos para vencer a tus rivales',
  solo:'Solo', soloDesc:'Un rival, el bot. Tiene un precio en mente para cada país y se retira en cuanto lo superas. Funciona sin conexión.',
  multi:'Multijugador', multiDesc:'De 2 a 4 jugadores en un mismo móvil. Dos jugadores es lo normal. Funciona sin conexión.',
@@ -530,7 +535,7 @@ es:{
  packFail:'No se pudieron cargar los datos del juego. Comprueba tu conexión e inténtalo de nuevo.',
  loadingBorders:'cargando fronteras…',
  packCountries:'Países',
- packStates:'Estados',
+ packStates:'Estados EE. UU.',
  packCapitals:'Capitales',
  packWorld:'Mundo',
  popLabel:'Población',
@@ -571,6 +576,7 @@ es:{
  smartestU:'<b>{name}</b> compró de la forma más lista: {v} {unit}.'
 },
 fr:{
+ lotsAll:'Tous {n}', funFacts:'Le saviez-vous ?', factsIntro:'Tous les États de cette partie.',
  tagline:'Utilise tes connaissances pour battre tes rivaux',
  solo:'Solo', soloDesc:'Un rival, le bot. Il a un prix en tête pour chaque pays et se retire dès que tu le dépasses. Fonctionne hors ligne.',
  multi:'Multijoueur', multiDesc:'2 à 4 joueurs sur un même téléphone. Deux joueurs, c’est le cas normal. Fonctionne hors ligne.',
@@ -629,7 +635,7 @@ fr:{
  packFail:'Impossible de charger les données du jeu. Vérifie ta connexion et réessaie.',
  loadingBorders:'chargement des frontières…',
  packCountries:'Pays',
- packStates:'États',
+ packStates:'États américains',
  packCapitals:'Capitales',
  packWorld:'Monde',
  popLabel:'Population',
@@ -671,11 +677,49 @@ fr:{
 }
 };
 
+/* Pack-specific wording: only the lines that talk about countries are replaced for US States
+   (every other string is shared). t() looks here first for the pack on screen. */
+const STRP={ states:{
+ en:{ rivalDesc:'The <b>bot</b> prices every state by population and rolls a fresh walk-away limit for each lot, so it is never quite predictable. Beat that limit by one dollar and the lot is yours. It never chases past it.',
+  rulesP1:'Random states come up one at a time, each one at most once per round. <b>1 point = 1 million people</b>, and the population stays blacked out until the very end.',
+  rulesP5:'The bot values every state by population and rolls a fresh walk-away limit for each lot, so you can never quite read it. That limit is absolute: beat it by a single dollar and the lot is yours.',
+  rulesP6:'Every state is equally likely to come up, and a state never comes up twice in the same round. Pick 5 to 40 lots, or play all 50 states.',
+  rulesP7:'Efficiency is scored too: dollars per million people. Lower is better.',
+  footer:'No accounts · No tracking · {n} states' },
+ de:{ rivalDesc:'Der <b>Bot</b> bewertet jeden Bundesstaat nach Einwohnerzahl und würfelt pro Los eine neue Schmerzgrenze, ist also nie ganz berechenbar. Überbiete diese Grenze um einen Dollar und das Los gehört dir. Er geht nie darüber hinaus.',
+  rulesP1:'Nacheinander kommen zufällige Bundesstaaten auf den Tisch, jeder höchstens einmal pro Runde. <b>1 Punkt = 1 Million Einwohner</b>, und die Einwohnerzahl bleibt bis ganz zum Schluss geschwärzt.',
+  rulesP5:'Der Bot bewertet jeden Bundesstaat nach Einwohnerzahl und würfelt pro Los eine neue Schmerzgrenze, du kannst ihn also nie ganz durchschauen. Diese Grenze ist absolut: Überbiete sie um einen Dollar und das Los gehört dir.',
+  rulesP6:'Jeder Bundesstaat kommt mit der gleichen Wahrscheinlichkeit dran, und keiner kommt in derselben Runde zweimal vor. Wähle 5 bis 40 Lose oder spiel alle 50 Bundesstaaten.',
+  rulesP7:'Auch die Effizienz wird gewertet: Dollar pro Million Einwohner. Weniger ist besser.',
+  footer:'Keine Konten · Kein Tracking · {n} Bundesstaaten' },
+ it:{ rivalDesc:'Il <b>bot</b> valuta ogni stato in base alla popolazione e tira un nuovo limite di rinuncia per ogni lotto, quindi non è mai del tutto prevedibile. Supera quel limite di un dollaro e il lotto è tuo. Non va mai oltre.',
+  rulesP1:'Escono stati a caso, uno alla volta e al massimo una volta per partita. <b>1 punto = 1 milione di abitanti</b>, e la popolazione resta oscurata fino alla fine.',
+  rulesP5:'Il bot valuta ogni stato in base alla popolazione e tira un nuovo limite di rinuncia per ogni lotto, quindi non riesci mai a leggerlo. Quel limite è assoluto: superalo di un solo dollaro e il lotto è tuo.',
+  rulesP6:'Ogni stato ha la stessa probabilità di uscire e nessuno esce due volte nella stessa partita. Scegli da 5 a 40 lotti oppure gioca tutti i 50 stati.',
+  rulesP7:'Si valuta anche l’efficienza: dollari per milione di abitanti. Meno è meglio.',
+  footer:'Nessun account · Nessun tracciamento · {n} stati' },
+ es:{ rivalDesc:'El <b>bot</b> valora cada estado por su población y saca un nuevo límite de retirada para cada lote, así que nunca es del todo predecible. Supera ese límite por un dólar y el lote es tuyo. Nunca lo sobrepasa.',
+  rulesP1:'Salen estados al azar, uno a uno y como máximo una vez por partida. <b>1 punto = 1 millón de habitantes</b>, y la población permanece tachada hasta el final.',
+  rulesP5:'El bot valora cada estado por su población y saca un nuevo límite de retirada para cada lote, así que nunca puedes leerlo del todo. Ese límite es absoluto: supéralo por un solo dólar y el lote es tuyo.',
+  rulesP6:'Todos los estados tienen la misma probabilidad de salir y ninguno sale dos veces en la misma partida. Elige de 5 a 40 lotes o juega los 50 estados.',
+  rulesP7:'También se puntúa la eficiencia: dólares por millón de habitantes. Cuanto menos, mejor.',
+  footer:'Sin cuentas · Sin rastreo · {n} estados' },
+ fr:{ rivalDesc:'Le <b>bot</b> évalue chaque État selon sa population et tire une nouvelle limite d’abandon à chaque lot, il n’est donc jamais tout à fait prévisible. Dépasse cette limite d’un dollar et le lot est à toi. Il ne la dépasse jamais.',
+  rulesP1:'Des États tombent au hasard, un par un et au plus une fois par partie. <b>1 point = 1 million d’habitants</b>, et la population reste masquée jusqu’à la fin.',
+  rulesP5:'Le bot évalue chaque État selon sa population et tire une nouvelle limite d’abandon à chaque lot, impossible donc de le lire complètement. Cette limite est absolue : dépasse-la d’un seul dollar et le lot est à toi.',
+  rulesP6:'Chaque État a autant de chances de sortir, et aucun ne sort deux fois dans la même partie. Choisis de 5 à 40 lots ou joue les 50 États.',
+  rulesP7:'L’efficacité compte aussi : dollars par million d’habitants. Moins, c’est mieux.',
+  footer:'Aucun compte · Aucun suivi · {n} États' }
+}};
+
 let LANG='en';
 function t(key, vars){
-  let v=(STR[LANG]&&STR[LANG][key]) || STR.en[key] || key;
+  const po=STRP[PACK ? PACK.id : SELPACK];
+  let v=(po&&((po[LANG]&&po[LANG][key])||(po.en&&po.en[key]))) || (STR[LANG]&&STR[LANG][key]) || STR.en[key] || key;
   vars=Object.assign({cur:cur()}, vars);
   Object.keys(vars).forEach(k=>{ v=v.split('{'+k+'}').join(vars[k]); });
+  /* a pack in dollars (US States) says "$" in every language: "€10", "10 €" and "100 €" all become "$10", "$100" */
+  if(cur()!=='€') v=v.replace(/€\s?(\d[\d.,]*)/g,(m,n)=>cur()+n).replace(/(\d[\d.,]*)\s?€/g,(m,n)=>cur()+n);
   return v;
 }
 async function loadLang(){
@@ -711,10 +755,10 @@ async function recordGame(you, bot, level){
 
 /* ============ HOME ============ */
 function home() {
-  stopPoll(); S = {};
+  stopPoll(); S = {}; PACK = null;
   $$('.overlay', layer).forEach(o => o.remove()); rootEl.classList.remove('soldOpen', 'celebrating');
   try { speechSynthesis.cancel(); } catch (e) {}
-  const REC = recFor(DEFAULT_PACK), net = isOnline(), count = Packs.meta(DEFAULT_PACK).count;
+  const REC = recFor(SELPACK), net = isOnline(), count = Packs.meta(SELPACK).count;
   const lang = LANGS.find(l => l.id === LANG) || LANGS[0], has = REC.played > 0;
   const sec = go(`
     <div class="nav"><span></span>${navBtns()}</div>
@@ -731,8 +775,8 @@ function home() {
       </div>
       <div class="m-r">
         <div class="packs" role="list">
-          <div class="pack on glass2" role="listitem" aria-current="true"><b>${esc(t('packCountries'))}</b><span class="s">${count} · ${esc(t('popLabel'))}</span></div>
-          ${['packStates', 'packCapitals', 'packWorld'].map(k => `<button class="pack off" data-soon="1" role="listitem" aria-disabled="true"><i>${esc(t('soon'))}</i><b>${esc(t(k))}</b><span class="s">${esc(t('popLabel'))}</span></button>`).join('')}
+          ${[['countries', 'packCountries'], ['states', 'packStates']].map(([id, k]) => { const pm = Packs.meta(id), sel = id === SELPACK; return `<button class="pack ${sel ? 'on glass2' : 'off'}" data-pack="${id}" role="listitem" ${sel ? 'aria-current="true"' : ''}><b>${esc(t(k))}</b><span class="s">${pm.count} · ${esc(t('popLabel'))}</span></button>`; }).join('')}
+          ${['packCapitals', 'packWorld'].map(k => `<button class="pack off" data-soon="1" role="listitem" aria-disabled="true"><i>${esc(t('soon'))}</i><b>${esc(t(k))}</b><span class="s">${esc(t('popLabel'))}</span></button>`).join('')}
         </div>
         <div class="modes">
           <button class="glass mode" id="m1"><span class="ic">${IC('person')}</span><span class="t"><b>${esc(t('solo'))}</b><span class="d">${esc(t('soloShort'))}</span></span><span class="go">${IC('chev', 'sm')}</span></button>
@@ -753,6 +797,11 @@ function home() {
   tap('m3', () => { if (!Net.available) return toast(t('soonBody')); if (!isOnline()) return toast(t('needsNet')); online(); });
   tap('mr', rules); tap('mp', privacy); tap('mrec', recordScreen); tap('ml', langSheet);
   $$('[data-soon]', sec).forEach(b => b.onclick = () => { Snd.ui(); toast(t('packSoonBody')); });
+  $$('[data-pack]', sec).forEach(b => b.onclick = () => {
+    if (b.dataset.pack === SELPACK) return;
+    Snd.ui(); Haptics.light(); SELPACK = b.dataset.pack; home();
+    (window.requestIdleCallback || (f => setTimeout(f, 200)))(() => Packs.load(SELPACK).catch(() => {}));   // warm it up so Setup opens instantly
+  });
 }
 
 function langSheet() {
@@ -763,19 +812,19 @@ function langSheet() {
 }
 
 async function recordScreen() {
-  const REC = recFor(DEFAULT_PACK);
-  let pack = Packs.get(DEFAULT_PACK);
-  if (!pack) { try { pack = await Packs.load(DEFAULT_PACK); } catch (e) {} }   // only needed for the level names
+  const REC = recFor(SELPACK);
+  let pack = Packs.get(SELPACK);
+  if (!pack) { try { pack = await Packs.load(SELPACK); } catch (e) {} }   // only needed for the level names
   const pct = REC.played ? Math.round(REC.won / REC.played * 100) : 0;
   const avg = REC.played ? (REC.pts / REC.played) : 0, avgBot = REC.played ? (REC.botPts / REC.played) : 0;
   const lvlName = k => { const l = pack && pack.levels.find(x => x.id === k); return l ? (l.label[LANG] || l.label.en).split(' — ')[0] : k; };
   const row = (l, v) => `<div class="row"><span class="t">${esc(l)}</span><span class="val num">${v}</span></div>`;
   const h = sheet({ title: t('record'), foot: `${REC.played ? `<button class="btn ghost" id="rs">${esc(t('reset'))}</button>` : ''}<button class="btn gold" id="rd">${esc(t('done'))}</button>`,
-    body: REC.played ? `
+    body: `<p class="label">${esc(pack ? (pack.title[LANG] || pack.title.en) : '')}</p>` + (REC.played ? `
       <div class="rec3"><div class="w"><div class="rn num">${REC.won}</div><div class="rl">${esc(t('wins'))}</div></div><div><div class="rn num">${REC.lost}</div><div class="rl">${esc(t('losses'))}</div></div><div><div class="rn num">${REC.drawn}</div><div class="rl">${esc(t('draws'))}</div></div></div>
       <div class="group">${row(t('games'), REC.played)}${row(t('winRate'), pct + '%')}${row(t('streak'), REC.streak > 0 ? '+' + REC.streak : REC.streak)}${row(t('bestStreak'), '+' + REC.best)}${row(t('avgPts'), avg.toFixed(1) + ' — ' + avgBot.toFixed(1))}${REC.bestGame ? row(t('bestGame'), REC.bestGame.pts) : ''}</div>
-      ${Object.keys(REC.byLevel).filter(k => REC.byLevel[k].played).length ? `<div class="group">${Object.keys(REC.byLevel).filter(k => REC.byLevel[k].played).map(k => row(lvlName(k), REC.byLevel[k].won + '/' + REC.byLevel[k].played)).join('')}</div>` : ''}
-      <p class="sm">${esc(t('recordNote'))}</p>` : `<p>${esc(t('noGames'))}</p>` });
+      ${(pack && pack.levels.length > 1) && Object.keys(REC.byLevel).filter(k => REC.byLevel[k].played).length ? `<div class="group">${Object.keys(REC.byLevel).filter(k => REC.byLevel[k].played).map(k => row(lvlName(k), REC.byLevel[k].won + '/' + REC.byLevel[k].played)).join('')}</div>` : ''}
+      <p class="sm">${esc(t('recordNote'))}</p>` : `<p>${esc(t('noGames'))}</p>`) });
   on('rd', () => { Snd.ui(); h.close(); });
   on('rs', () => { Snd.ui(); ask(t('resetTitle'), t('resetBody'), t('reset'), async () => { await clearRec(); home(); }, null, t('cancel')); });
 }
@@ -800,7 +849,7 @@ function rules() {
 let LASTCFG = null;                                  // this session only: "Play again" opens the sheet as you left it
 const seg = (g, label, items, def) => `<div class="sg" role="radiogroup" aria-label="${esc(label)}" data-g="${g}">${items.map(([v, l]) => `<button type="button" role="radio" data-v="${v}" aria-checked="${String(v) === String(def)}">${esc(l)}</button>`).join('')}</div>`;
 
-async function setup(kind, packId = DEFAULT_PACK) {
+async function setup(kind, packId = SELPACK) {
   const tok = navTok;
   const h = sheet({ title: kind === 'solo' ? t('solo') : t('multi'), body: `<p style="text-align:center"><span class="spin"></span></p>`, foot: '' });
   let pack = Packs.get(packId);
@@ -810,7 +859,6 @@ async function setup(kind, packId = DEFAULT_PACK) {
     if (tok !== navTok || !h.alive) return;          // the player already went elsewhere
   }
   PACK = pack;
-  const cur = pack.currency.symbol;
   const c0 = LASTCFG && LASTCFG.packId === pack.id && LASTCFG.kind === kind ? LASTCFG : {};
   const lots = pack.lots.options.includes(c0.lots) ? c0.lots : pack.lots.default;
   const level = pack.levels.some(l => l.id === c0.level) ? c0.level : pack.defaultLevel;
@@ -819,9 +867,9 @@ async function setup(kind, packId = DEFAULT_PACK) {
   const lvl = l => (l.label[LANG] || l.label.en), lvlParts = l => { const p = lvl(l).split(' — '); return [p[0], p[1] || '']; };
   h.set(`
     ${kind === 'solo' ? `<p class="sm">${t('rivalDesc')}</p>` : `<p class="sm">${esc(t('multiDesc'))}</p>`}
-    <div class="fld"><span class="label">${esc(t('lots'))}</span>${seg('lots', t('lots'), pack.lots.options.map(n => [n, n]), lots)}</div>
-    <div class="budget"><span><span class="label">${esc(t('budget'))}</span><small>${esc(t('budgetNote'))}</small></span><b class="num" id="bud">${cur}100</b></div>
-    <div class="fld"><span class="label">${esc(t('difficulty'))}</span><div class="lvls" role="radiogroup" aria-label="${esc(t('difficulty'))}" data-g="level">${pack.levels.map(l => { const [a, b] = lvlParts(l); return `<button type="button" class="lvl" role="radio" data-v="${l.id}" aria-checked="${l.id === level}"><span class="tt">${esc(a)}${b ? `<small>${esc(b)}</small>` : ''}</span><span class="ck" aria-hidden="true"></span></button>`; }).join('')}</div></div>
+    <div class="fld"><span class="label">${esc(t('lots'))}</span>${seg('lots', t('lots'), pack.lots.options.map(n => [n, n === pack.lots.all ? t('lotsAll', { n }) : n]), lots)}</div>
+    <div class="budget"><span><span class="label">${esc(t('budget'))}</span><small>${esc(t('budgetNote'))}</small></span><b class="num" id="bud">${Engine.formatMoney(pack, Engine.budgetFor(pack, lots))}</b></div>
+    ${pack.levels.length > 1 ? `<div class="fld"><span class="label">${esc(t('difficulty'))}</span><div class="lvls" role="radiogroup" aria-label="${esc(t('difficulty'))}" data-g="level">${pack.levels.map(l => { const [a, b] = lvlParts(l); return `<button type="button" class="lvl" role="radio" data-v="${l.id}" aria-checked="${l.id === level}"><span class="tt">${esc(a)}${b ? `<small>${esc(b)}</small>` : ''}</span><span class="ck" aria-hidden="true"></span></button>`; }).join('')}</div></div>` : ''}
     <div class="fld"><span class="label">${esc(t('seconds'))}</span>${seg('clock', t('seconds'), [[10, '10'], [15, '15'], [20, '20'], [30, '30'], [0, t('noClock')]], clock)}</div>
     ${kind === 'multi' ? `<div class="fld"><span class="label">${esc(t('playersN'))}</span>${seg('players', t('playersN'), [[2, '2'], [3, '3'], [4, '4']], nPl)}</div>` : ''}
     <div class="fld"><span class="label">${esc(kind === 'solo' ? t('nickOne') : t('nickMany'))}</span>
@@ -829,7 +877,7 @@ async function setup(kind, packId = DEFAULT_PACK) {
     `<button class="btn gold big" id="start">${esc(t('open'))}</button><button class="btn ghost" id="back">${esc(t('back'))}</button>`);
   const box = h.wrap;
   const pick = g => { const b = $(`[data-g="${g}"] [aria-checked="true"]`, box); return b ? b.dataset.v : null; };
-  const sync = () => { $('#bud', box).textContent = cur + Engine.budgetFor(pack, +pick('lots') || pack.lots.default); };
+  const sync = () => { $('#bud', box).textContent = Engine.formatMoney(pack, Engine.budgetFor(pack, +pick('lots') || pack.lots.default)); };
   $$('[data-g]', box).forEach(grp => $$('[role=radio]', grp).forEach(b => b.onclick = () => {
     $$('[role=radio]', grp).forEach(x => x.setAttribute('aria-checked', 'false')); b.setAttribute('aria-checked', 'true');
     Snd.ui(); Haptics.light();
@@ -925,7 +973,7 @@ function refresh() {
     const i = +tile.dataset.i, p = S.players[i], turnNow = L.turn === i && !L.awarded, isTop = L.holder === i, out = !L.active.includes(i);
     tile.classList.toggle('active', turnNow); tile.classList.toggle('top', isTop); tile.classList.toggle('out', out);
     const bd = $('.bd', tile), prev = +(bd.dataset.v == null ? p.budget : bd.dataset.v);
-    if (prev !== p.budget) FX.roll(bd, prev, p.budget, 320, v => cur() + Math.round(v)); else bd.textContent = money(p.budget);
+    if (prev !== p.budget) FX.roll(bd, prev, p.budget, 320, v => money(Math.round(v))); else bd.textContent = money(p.budget);
     bd.dataset.v = p.budget;
     $('.now', tile).textContent = p.ai ? t('thinking') : t('nowBidding');
     const status = isTop ? money(L.price) : out ? t('tagOut') : p.bought.length + ' ×';
@@ -1066,15 +1114,16 @@ async function award() {
   controls0(); refresh();
   const { I, q } = dealQuality(a), last = S.i >= S.items.length - 1;
   const prior = w.bought.slice(0, -1).slice(-3);
+  const fact = Engine.factFor(S.pack, c, LANG);
   const dealTxt = t(q === 'bargain' ? 'dealBargain' : q === 'fair' ? 'dealFair' : 'dealOver', { n: I });
   const wrap = document.createElement('div');
   wrap.className = 'overlay'; wrap.id = 'sold'; wrap.dataset.q = q; wrap.setAttribute('role', 'dialog'); wrap.setAttribute('aria-modal', 'true'); wrap.setAttribute('aria-label', t('sold'));
-  wrap.innerHTML = `<p class="sr" role="status">${esc(t('soldTo', { item: cname(c), name: w.name, n: L.price }))}</p>
+  wrap.innerHTML = `<p class="sr" role="status">${esc(t('soldTo', { item: cname(c), name: w.name, n: L.price }))} ${esc(fact)}</p>
     <div class="scrim"></div><div class="rays"></div><div class="flash"></div>
     <div class="plate slab"><b>${esc(t('sold'))}</b><small>${esc(t(q === 'bargain' ? 'qBargain' : q === 'fair' ? 'qFair' : 'qOver'))}</small></div>
     <div class="gvwrap">${FX.gavelMarkup()}</div>
     <div class="soldline"><div class="who"><span class="orb" aria-hidden="true">${icon(c)}</span><span>${esc(cname(c))} · <span class="num">${money(L.price)}</span> · ${esc(mine && S.players.filter(p => !p.ai).length === 1 ? t('you') : w.name)}</span></div>
-      <div class="deal q-${q}">${esc(dealTxt)}</div></div>
+      <div class="deal q-${q}">${esc(dealTxt)}</div>${fact ? `<p class="fact">${esc(fact)}</p>` : ''}</div>
     <div class="glass tray"><span class="lbl">${esc(mine && S.players.filter(p => !p.ai).length === 1 ? t('collectionYours') : t('collectionOf', { name: w.name }))}</span>${prior.map(b => `<span class="mini" aria-hidden="true">${icon(b)}</span>`).join('')}<span class="mini new" aria-hidden="true"></span></div>
     <div class="fly" aria-hidden="true">${icon(c)}</div>
     <button class="btn gold nextbtn" id="n">${esc(last ? t('seeResult') : t('nextLot'))}</button><p class="skiphint" aria-hidden="true">${esc(t('tapSkip'))}</p>`;
@@ -1151,10 +1200,11 @@ async function reveal(sec, rows, best, bestEff, REC) {
     <div class="pts goldtext num" aria-hidden="true"><span class="v" data-n="${best.pts}">${FX.reduced ? best.pts.toFixed(1) : '0.0'}</span><small>${esc(t('points'))}</small></div>
     <p class="sr">${best.pts.toFixed(1)} ${esc(t('points'))}</p>
     <p>${rows.filter(r => r !== best).map(r => `<b>${esc(r.p.name)}</b> ${r.pts.toFixed(1)}`).join(' · ')}</p>
-    ${bestEff.eff !== Infinity ? `<p>${PACK.metric.effUnit === '€/M' ? t('smartest', { name: esc(bestEff.p.name), v: bestEff.eff.toFixed(2) }) : t('smartestU', { name: esc(bestEff.p.name), v: bestEff.eff.toFixed(2), unit: esc(PACK.metric.effUnit) })}</p>` : ''}`;
+    ${bestEff.eff !== Infinity ? `<p>${PACK.metric.effUnit === cur() + '/M' ? t('smartest', { name: esc(bestEff.p.name), v: bestEff.eff.toFixed(2) }) : t('smartestU', { name: esc(bestEff.p.name), v: bestEff.eff.toFixed(2), unit: esc((PACK.metric.effLabel && (PACK.metric.effLabel[LANG] || PACK.metric.effLabel.en)) || PACK.metric.effUnit) })}</p>` : ''}`;
   if (!FX.reduced) FX.spring(v, 0, 1, x => ({ transform: `scale(${.96 + .04 * x})`, opacity: Math.min(1, x * 1.6) }), { k: 220, c: 14 });
-  $('#acts', sec).innerHTML = `<button class="btn glassb" id="again">${esc(t('playAgain'))}</button><button class="btn gold" id="menu">${esc(t('menu'))}</button>`;
-  on('again', () => { Snd.ui(); S.kind === 'net' ? online() : setup(S.kind || 'multi'); });
+  $('#acts', sec).innerHTML = `<button class="btn glassb" id="again">${esc(t('playAgain'))}</button><button class="btn gold" id="menu">${esc(t('menu'))}</button>${PACK.facts ? `<button class="btn glassb wide" id="facts">${esc(t('funFacts'))}</button>` : ''}`;
+  on('again', () => { Snd.ui(); S.kind === 'net' ? online() : setup(S.kind || 'multi', S.pack.id); });
+  on('facts', () => { Snd.ui(); factsSheet(); });
   on('menu', () => { Snd.ui(); home(); });
   live(`${t('takesIt', { name: best.p.name })} — ${best.pts.toFixed(1)} ${t('points')}`);
 
@@ -1188,6 +1238,15 @@ async function reveal(sec, rows, best, bestEff, REC) {
     (window.requestIdleCallback || (f => setTimeout(f, 60)))(mount, { timeout: 700 });
   });
   if (FX.reduced) rootEl.classList.remove('celebrating');
+}
+
+/* every state of the round with its fun fact (shown after the reveal, so no population is given away early) */
+function factsSheet() {
+  const seen = new Set(), list = [];
+  S.players.forEach(p => p.bought.forEach(b => { if (!seen.has(b.id)) { seen.add(b.id); list.push(b); } }));
+  const h = sheet({ title: t('funFacts'), foot: `<button class="btn gold" id="fd">${esc(t('done'))}</button>`,
+    body: `<p class="sm">${esc(t('factsIntro'))}</p><div class="group">${list.map(b => `<div class="row"><span class="orb" style="--orb:34px" aria-hidden="true">${icon(b)}</span><span class="t"><b>${esc(cname(b))}</b><br><span class="sm">${esc(Engine.factFor(PACK, b, LANG))}</span></span></div>`).join('')}</div>` });
+  on('fd', () => { Snd.ui(); h.close(); });
 }
 
 /* ============ ONLINE ROOMS — random handles, no personal data ============ */

@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v24';   // increment this, every time
+const CACHE = 'bidding-wars-v25';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -97,11 +97,19 @@ but watch for it happening again with any future locally-stored value).
 not the raw English name, since each pack item carries a localised `name`
 object (`Engine.itemName`).
 
+A pack with a non-euro currency (US States: `$`) says so in **every** language:
+`t()` rewrites `€` amounts to the pack's symbol and `STRP` in `app.js` overrides
+the few lines that talk about countries/euros for that pack (`rivalDesc`,
+`rulesP1/P5/P6/P7`, `footer`). Money on screen goes through `money()` →
+`Engine.formatMoney` (US States: `$1,234`, Intl grouping). `test/browser.test.js`
+fails if the States screens contain `€`, "euro" or "country" in any language.
+
 ## How the game works
 
 - Bidding opens at €1 on every lot. Players alternate: raise, or drop out.
 - Drop out and whoever holds the top bid buys it at that price.
-- Budget scales at €10 per lot (10 lots = €100 each).
+- Budget scales at €10 per lot (10 lots = €100 each). US States: $10 per lot,
+  so the "All 50 states" round gives $500 each.
 - Default 10 seconds per decision; timeout = automatic drop out.
 - The opening €1 bid rotates seat by seat each lot.
 - Seat colours are fixed for the whole auction: seat 1 red, 2 black, 3 blue,
@@ -112,7 +120,11 @@ object (`Engine.itemName`).
 
 ## How the bot works
 
-- Prices each item from the pack's percentile `bands` (`pack-countries.js`;
+- A pack may replace the bands with its own smooth curve by defining
+  `priceTable(items) → Map(id → {ideal, max})` (US States does; see below).
+  Everything after pricing — `botCeiling`, the reserve, the +1 rule, the random
+  raise step — is identical for every pack.
+- Otherwise it prices each item from the pack's percentile `bands` (`pack-countries.js`;
   logic in `engine.js` `priceTable`). Items are ranked 1 (smallest value) to N
   (largest); the band is chosen by `rank / N`, and each band sets an `ideal`
   and a `max` rate per unit of value (€/million people for countries).
@@ -211,6 +223,50 @@ stacked the country names down the page); a plain wheel/scroll over the globe
 belongs to the page (only ctrl+wheel/pinch zooms); the results screen must fit
 iPad landscape without scrolling.
 
+## US States pack
+
+`pack-states.js` is **generated** by `test/make-pack-states.js` from two committed
+inputs — edit those, never the pack: `test/census-nst-est2025.json` (official
+Census Bureau Vintage 2025 resident population, 50 states only, no DC/territories;
+source/vintage/release/licence are fields in the file and in the pack header) and
+`test/states-content.json` (names incl. de/it/es/fr exonyms, USPS codes,
+Census-boundary centroids, taunts, fun facts).
+
+- **Drawing.** Lots are drawn *without replacement*, every state equally likely;
+  lot options 5/10/15/20/30/40 and 50 ("All 50 states", `lots.all`), where every
+  state comes up exactly once, shuffled. No difficulty levels (`levels` has one
+  entry and the setup hides the section when there is only one).
+- **Pricing.** Ideal = the state's share of the 50-state total × (`budgetPerLot` ×
+  50), in whole dollars (floor $1); a scale factor `k` makes the whole-dollar
+  ideals sum to exactly one full round's budget, so a round's ideals add up to
+  one player's budget at any lot count. `max` = ideal × a multiplier that eases
+  from about 2.0 (smallest) to 1.35 (largest). Both are non-decreasing in
+  population. `test/golden-states.json` pins all 50; `test/states.test.js` checks
+  the targets (CA $45–60, TX $35–48, FL $26–35, NY $22–30, smallest $1–2).
+- **Currency.** USD in every language (see "Five languages").
+- **Fun facts.** `pack.facts[id] = { en }`, one per state, shown on the SOLD screen
+  and in the results "Fun facts" sheet; must not hint at population or rank;
+  other languages fall back to English. `FACTS-SOURCES.md` lists every fact with
+  where to verify it — **the facts are currently marked unverified**; do not
+  remove that label until they have been checked.
+- **Selection.** The pack picked on the menu is held in memory (`SELPACK`) — it is
+  *not* stored (privacy: exactly four keys). The record is per pack inside
+  `record:v1`.
+
+### What a Capitals pack would need (not built — do not guess its valuation)
+
+A capital's score is not a population the same way a state's is, so before
+building it decide, with the owner: (1) what `value` is — metro or city
+proper population, and which official source/vintage (cities have two
+incompatible definitions); (2) whether lots are drawn with or without
+replacement and what the "all" option is; (3) a `priceTable` or `bands`
+calibrated against the game's feel and pinned in a golden file, with the
+bot-vs-human comparability numbers shown first (see the States PR for the
+method); (4) `lat`/`lon` for every capital with `globe.claimBorders:false`;
+(5) which countries/territories count (196? only capitals with a seat of
+government?); (6) localised capital names in 5 languages. Then follow
+"Adding a pack" below.
+
 ## Engine, packs and tests
 
 **Layering.** `engine.js` is the pure game engine — no DOM, storage, timers or
@@ -261,6 +317,12 @@ known at startup.
      `generic:{ <lang>:{ <tierId>:[lines with {n} for the item name] } }`.
      Languages without an entry fall back to `en`. Rival drop-out/win lines are
      shared (`banter.js`).
+   - Optional: `priceTable(items) → Map(id → {ideal, max})` instead of `bands`
+     (`Engine.validatePack` checks it is non-decreasing in `value`);
+     `currency: { symbol, code, locale }` (anything but `€` renames the money
+     everywhere); `lots.all` (the option that means "every item once");
+     `metric.effLabel`; `facts: { <id>: { en, … } }` for the SOLD screen and
+     results.
    - `globe: { borders, claimBorders }` — `claimBorders` is for country-shaped
      items only (it lights up the nearest border outline); leave it `false` for
      points such as capitals.
@@ -271,7 +333,8 @@ known at startup.
    simulation in `test/engine.test.js`. `test/fixture-pack.js` shows the
    minimum a pack with no flags/coordinates needs; it is test-only and never
    listed in `META` or `sw.js`.
-5. Strings that are specific to countries in the UI copy ("196 countries", the
+5. If the pack needs its own wording, add it to `STRP` in `app.js` (all 5 languages).
+   Strings that are specific to countries in the UI copy ("196 countries", the
    rules text, "Random countries come up…") are not generated from the pack yet
    — check every language when the menu offers a second pack.
 
@@ -283,6 +346,11 @@ counters inside the single `record:v1` value.
 - `node --test test/engine.test.js` — engine, golden prices, bot equivalence
   against a verbatim copy of the pre-refactor bot, pack validation, registry,
   records, 4,000 seeded simulated games. No dependencies.
+- `node --test test/states.test.js` — the US States pack: Census data (50
+  states, no DC), 100,000 draws uniform within 4.5σ and chi-square, zero
+  duplicates in a round, "All 50" exactly once and shuffled, golden prices, price
+  targets, round-sum ≈ one budget, USD/US-spelling, taunts, facts, a 1,200-game
+  simulation.
 - `node --test test/contrast.test.js` — WCAG contrast of the real design tokens
   in both themes. No dependencies.
 - `node --test test/browser.test.js` — headless Chromium (Playwright; skipped
