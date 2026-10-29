@@ -9,31 +9,32 @@ Live: https://biddingwars.github.io/bidding-wars/
 Everything lives flat at the repo root. No `js/`, `css/`, `data/`, `img/`,
 `fonts/`, or `vendor/` subfolders — `index.html`, `app.css`, `app.js`,
 `engine.js`, `packs.js`, `banter.js`, `pack-countries.js`, `globe.js`,
-`platform.js`, `fonts.css`, `sw.js`, `manifest.json`, every icon, every font,
-`three.min.js`, `earth.jpg`, `countries-110m.json`, `privacy.html`,
-`support.html` all sit at the root, referenced by plain
+`platform.js`, `sound.js`, `fx.js`, `sw.js`, `manifest.json`, every icon,
+`globe-hero.webp`, `three.min.js`, `earth.jpg`, `countries-110m.json`,
+`privacy.html`, `support.html` all sit at the root, referenced by plain
 relative paths (`"app.css"`, not `"css/app.css"`).
 
-This has broken things more than once: `sw.js`, `manifest.json`, and
-`fonts.css` have all separately shipped with `css/`/`js/`/`img/`/`fonts/`
+This has broken things more than once: `sw.js`, `manifest.json`, and a font
+stylesheet have all separately shipped with `css/`/`js/`/`img/`/`fonts/`
 prefixed paths copy-pasted from an unrelated iOS-project layout, silently
-breaking caching/icons/fonts because the files were never actually there.
+breaking caching/icons because the files were never actually there.
 If you add a new asset or reference a path anywhere, keep it flat and
 double-check it against the real file list at the repo root.
 
 The one exception is `test/` — dev-only (unit tests, the fixture pack, a tiny
-static server). The game never references it and `sw.js` never caches it.
+static server, the contrast and UI-simulation scripts). The game never
+references it and `sw.js` never caches it.
 
 ## `sw.js` — bump `CACHE` on every deploy that touches a cached file
 
 `sw.js` serves cache-first. Any change to `app.css`, `app.js`, `index.html`,
-`globe.js`, `platform.js`, `engine.js`, `packs.js`, `banter.js`, any
-`pack-*.js`, fonts, `three.min.js`, `earth.jpg`, or
+`globe.js`, `platform.js`, `sound.js`, `fx.js`, `engine.js`, `packs.js`,
+`banter.js`, any `pack-*.js`, `globe-hero.webp`, `three.min.js`, `earth.jpg`, or
 `manifest.json` is **invisible** to anyone with the site already loaded
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v21';   // increment this, every time
+const CACHE = 'bidding-wars-v23';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -53,7 +54,9 @@ asset the game needs to actually play is bundled locally:
 - every content pack (`pack-*.js`) — they load lazily, but must be in `sw.js`'s `SHELL` so they are cached for offline
 - `earth.jpg` (the globe's satellite texture — same file whether online or offline)
 - `countries-110m.json` (map borders)
-- The 4 fonts in `fonts.css` (Archivo Black, Space Grotesk Regular/Bold, Space Mono Bold)
+- `globe-hero.webp` (the menu's planet, also the results card's placeholder)
+- sound is synthesised in `sound.js` with Web Audio — there are no audio files
+- **no web fonts**: the UI uses the system stack only (see "Look and feel")
 
 CDN URLs still exist in a few places (`globe.js`'s `BORDER_FALLBACK`,
 `EARTH_TEXTURES`, `index.html`'s `loadThreeFallback()`) but only as a
@@ -66,21 +69,23 @@ and fails is an App Store rejection under Guideline 2.1.
 ## Privacy
 
 No accounts, no sign-in, no analytics, no tracking, no ad SDK, no
-third-party SDKs of any kind. Exactly three things are stored, locally on
+third-party SDKs of any kind. Exactly four things are stored, locally on
 device only, via the `Store` helper in `platform.js`:
 
 - `lang:v1` — chosen language
+- `theme:v1` — appearance, only when forced (`light` or `dark`); absent means
+  "follow the phone". Removed again when set back to automatic.
 - `record:v1` — record vs the bot. One value, one record per pack:
   `{ v:2, packs:{ countries:{…}, … } }` (`Engine.REC_KEY`; the original flat
   record migrates into `packs.countries` on first read). Adding a pack adds
   nothing to what is stored beyond its own counters inside this one value.
 - `name:v1` — the last-entered player name
 
-All three are described in `privacy.html`, `support.html`, and the in-app
+All four are described in `privacy.html`, `support.html`, and the in-app
 privacy screen (`privacy()` in `app.js`, `privP1`–`privP4` strings, in all
-5 languages) — these three must always agree with each other and with what
+5 languages) — these must always agree with each other and with what
 the code actually stores. The "Delete all data" button (also in
-`privacy()`) must clear all three; this has drifted out of sync before
+`privacy()`) must clear all four; this has drifted out of sync before
 (name persistence shipped without updating the wipe flow or the copy — fixed,
 but watch for it happening again with any future locally-stored value).
 
@@ -125,47 +130,76 @@ object (`Engine.itemName`).
   fixed `price × 0.18`, which made its drop-out point learnable after
   enough games — keep it randomized if you touch this again.
 
-## Responsive layout
+## Look and feel — "Nocturne"
 
-`.wrap` (the centered content column in `app.css`) is a CSS query
-container (`container-type:inline-size;container-name:page`) with three
-width tiers set via `@media`: base (`<640px`, unchanged 620px cap), medium
-(`≥640px`, 760px — covers iPhone Duo's inner screen and phone landscape),
-wide (`≥980px`, 1040px — iPad landscape and up). Component-level
-adaptations (player-strip columns, the results-screen 2-column split) use `@container page (min-width:...)`
-against those same two breakpoints, not separate ones. Pick new breakpoints
-the same way: by real content widths (checked against actual device
-logical-point sizes), never by sniffing device/user-agent.
+Dark glass with brass gold is the default; "Daylight" is the light twin. The
+whole look is **design tokens** at the top of `app.css` (`:root` = dark,
+`:root[data-theme=light]` and a `prefers-color-scheme: light` mirror = light).
+Every theme difference is a token — never write a rule for one theme only, and
+never hardcode a colour in a component. The theme follows the phone; the
+toggle (`#theme`) cycles automatic → light → dark and stores `theme:v1`.
 
-The live-auction screen must fit on one screen with no scrolling, on every
-target device, portrait and landscape — a hard product requirement, not a
-nice-to-have. `paint()`/`award()` wrap their content in
-`.lot-wrap > .lot-main + .lot-side`, which carry `display:contents` at every
-width — they generate no boxes, so everything inside is a direct flex child of
-`#app`. There is deliberately NO iPad-landscape split: an earlier one left a
-huge empty middle; the compact single column fits in well under 600pt, so
-iPad (≥640px) simply centres that one column (auto margins on the first
-`.stage` and last `.dock`, which never go negative, so a too-short screen
-degrades to the top-aligned scroll-lock fallback) and scales every auction size with `dvh` when
-`min-height:741px` (floors = the compact phone values; 11" iPad landscape and
-iPad mini stay compact). On phones `#act`/the "Next lot" button carry `.dock`,
-which gets `margin-top:auto` inside a
-`body.playing #app{display:flex;flex-direction:column}` wrapper, pinning
-bid controls to the bottom of the screen within thumb reach. Keep
-new auction-screen content inside this budget: the `.turnbar` "Now bidding"
-bar was removed entirely (the `.pl2.turn` active-tile highlight already
-says whose turn it is) and the taunt bubble is a fixed-height, single-line,
-ellipsis-truncated caption (`.taunt`, 29px, always, never more) specifically
-so it can never push the layout — don't reintroduce an unbounded block
-there.
+- **Brass gold** is the one accent: `--gold1`/`--gold2` (gradient), `--goldink`
+  (gold *text*, darker in light mode), `--on-gold` (text on gold buttons).
+  Seats: 1 red, 2 black (drawn as dark slate so it reads on dark), 3 blue,
+  4 green (`--seat0..3`, white initials on all of them).
+- **Readable text is enforced**: `test/contrast.test.js` reads the real tokens
+  from `app.css` and fails if any text token drops below 4.5:1 on any surface it
+  can sit on (page, its blobs, glass, bright glass, tints, sheets). Change a
+  colour → run `node --test test/contrast.test.js`.
+- **System fonts only.** `--font` is `-apple-system … system-ui …`; titles and
+  numerals use `--round` (`ui-rounded` first). Do not bundle or hotlink fonts
+  (SF is not redistributable) and do not add a `fonts.css`. Numerals use
+  `tabular-nums`. Text sizes are rem-based so the browser's text-size setting
+  scales them; auction geometry is not.
+- **Secondary screens are sheets** (`sheet()` in `app.js`: record, privacy, how
+  to play, language, setup, confirmations via `ask()`). A sheet traps focus,
+  closes on Escape/backdrop, makes `#app` `inert`, and pauses the decision clock
+  (`holdClock`).
+- **Layouts.** Phone portrait is the base; `@media (min-width:760px) and
+  (min-height:520px)` is the iPad layout (two columns on menu/auction/results);
+  `@media (orientation:landscape) and (max-height:519px)` is a phone on its
+  side. Pick new breakpoints by real content size, never by sniffing devices.
+  The structure is `.menu-grid`, `.aud > .aud-l + .aud-r`, `.res2 > .r-l + .r-r`;
+  they are `display:contents` on phones, so a second *layout option* (the
+  proposal's "Galerie") can be added by restyling the same DOM instead of
+  rewriting `app.js`.
 
-Menu, setup, how-to and results pages (everything that is not `body.playing`)
-cap `#app` — not `.wrap` — at 622px (medium tier) / 860px (wide tier), about
-15% narrower than the tier caps, so a 13" iPad isn't filled edge to edge. It
-has to be `#app`: the `@container page` breakpoints above measure `.wrap`, and
-shrinking `.wrap` itself would silently switch the wide-tier rules off. The
-auction screen is capped the same way: `body.playing #app` at `clamp(586px,80dvh,680px)` for
-every width ≥640px.
+**The auction fits one screen, no scrolling, on every device, portrait and
+landscape.** This is a hard product requirement. On phones `.stage` is a size
+container (`container-type:size`) that takes whatever height the nav, players and
+dock leave, and the ring sizes itself from `cqh`/`cqw` — there is no magic
+"minus 520px" number. Short screens (`max-height:640px`) get a compact tier.
+Country names are clamped to two lines and scaled by length (`.n1/.n2/.n3`); the
+taunt is a one-line ellipsis caption. Keep new content inside that budget and
+re-run the fit check: `test/browser.test.js` ("the auction never scrolls") sets
+the worst case (long names, 4 seats, 3-digit price, long taunt) at nine sizes.
+
+**Motion** lives in `fx.js`: springs sampled into WAAPI keyframes, only
+`transform`/`opacity`, `Reduce Motion` makes everything land instantly, and a tap
+skips the gavel moment. The gavel timeline is ~1.1 s: wind-up 200 ms, swing
+140 ms, impact at 420 ms (sound scheduled on the audio clock, picture on the
+first frame at/after it, haptic with it), SOLD plate, rings/sparks/dust, the card
+flies to the winner's collection, Next appears. Deal quality scales it:
+below the bot's ideal price = gold burst, fair = lighter, overpaid = subdued.
+**The results reveal is staged on purpose** (`reveal()` in `app.js`): verdict
+spring → points count-up → sound + confetti → globe card → the live globe is
+built last, after the confetti, because doing all of it in the same frames made
+the old end screen stutter. Blur on glass is dropped while confetti falls
+(`.celebrating`). Don't merge those beats back together.
+
+**Sound** is `sound.js`: a layered Web Audio synth (knock, whoosh, ticks, raise
+that climbs a whole tone per raise, drop thud, chime, fanfare, sting) through one
+master gain + compressor. `test/browser.test.js` renders every voice offline and
+fails on clipping, NaN, silence or a loudness spread over 40x. Audio starts on the
+first touch and resumes after an iOS interruption; mute (`Snd.setMuted`) also
+gates haptics. iPhone Safari has no web haptics API — `Haptics` fires only on
+Android web or a native shell.
+
+The decision clock (`startClock`) is a smooth ring that waits while a sheet is
+open and ignores a frame gap over 250 ms (a locked phone) so a background never
+costs a lot. Hot-seat games ignore taps for 260 ms after a turn passes so a
+double tap can't land on the next player.
 
 ## Engine, packs and tests
 
@@ -239,7 +273,16 @@ counters inside the single `record:v1` value.
 - `node --test test/engine.test.js` — engine, golden prices, bot equivalence
   against a verbatim copy of the pre-refactor bot, pack validation, registry,
   records, 4,000 seeded simulated games. No dependencies.
+- `node --test test/contrast.test.js` — WCAG contrast of the real design tokens
+  in both themes. No dependencies.
 - `node --test test/browser.test.js` — headless Chromium (Playwright; skipped
-  if not installed): lazy loading, load-failure recovery, a whole game through
-  the real UI, the fixture pack in the real UI, corrupted storage.
-
+  if not installed): lazy loading, load-failure recovery, whole games through the
+  real UI, the fixture pack, corrupted storage, offline, no web fonts, theme,
+  the zero-scroll check at nine sizes, rotate/resize mid-auction, clock pause,
+  double-tap safety, sheet focus/inert, accessible names, redaction not in the
+  DOM, the skippable gavel, offline audio rendering.
+- `node test/ui-sim.js [games] [parallel]` — not part of `node --test` (it takes
+  minutes): plays hundreds of games *through the UI* across every mode,
+  difficulty, language, 2–4 seats, junk input, leaving and "play again", and
+  checks for exceptions, `NaN` on screen, negative budgets, double-sold lots,
+  money conservation, and that results match the engine's scoreboard.
