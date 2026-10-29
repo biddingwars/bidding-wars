@@ -152,3 +152,9 @@ cap `#app` — not `.wrap` — at 622px (medium tier) / 860px (wide tier), about
 has to be `#app`: the `@container page` breakpoints above measure `.wrap`, and
 shrinking `.wrap` itself would silently switch the wide-tier rules off. The
 auction screen keeps the full width for its landscape split.
+
+The auction screen is capped the same way (`body.playing #app`: 586px medium,
+810px wide — ~20% narrower than the tier caps). It must stay on `#app` for the
+same reason: the landscape 2-column split is a `@container page
+(min-width:980px)` rule, and narrowing `.wrap` would switch it off.
+

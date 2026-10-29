@@ -49,6 +49,10 @@ body{
    screen (body.playing) keeps the full width for its landscape split. */
 @media (min-width:640px){ body:not(.playing) #app{max-width:622px;margin-left:auto;margin-right:auto} }
 @media (min-width:980px){ body:not(.playing) #app{max-width:860px} }
+/* bidding screen on iPad: ~20% narrower than the tier cap, same #app trick, so
+   the wide tier (and its landscape 2-column split) still triggers. */
+@media (min-width:640px){ body.playing #app{max-width:586px;margin-left:auto;margin-right:auto;width:100%} }
+@media (min-width:980px){ body.playing #app{max-width:810px} }
 
 /* anti-stretch: at the wider tiers, scale padding/type with the container
    instead of just spreading phone-sized chrome across more empty space.
@@ -211,6 +215,7 @@ body.playing .dock{margin-top:auto}
   .lot-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:1;min-height:0}
   .lot-main{display:flex;flex-direction:column}
   .lot-side{display:flex;flex-direction:column}
+  .lot-side .pl2{flex-basis:46%}
 }
 
 /* in-page dialogs — sandboxed frames block native alert/confirm */
