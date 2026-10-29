@@ -120,7 +120,7 @@ function globe2d(host, owned, pack){
 
 /* ============ THE WINNER'S GLOBE — WebGL ============
    Lit sphere, atmosphere, starfield, real country outlines pulled from a public
-   TopoJSON, population pillars and travelling arcs. Falls back to the flat canvas
+   TopoJSON and population pillars. Falls back to the flat canvas
    version if WebGL or three.js is unavailable. */
 
 /* Borders are a bundled asset. Nothing here touches the network — an app that
@@ -411,18 +411,6 @@ function globe3d(host, owned, pack){
 
     tips.push({c, v:dir.clone().multiplyScalar(1+h)});
   });
-
-  /* arcs, drawn in the order the lots were won */
-  for(let i=0;i<tips.length-1;i++){
-    const a=tips[i].v.clone().normalize(), b=tips[i+1].v.clone().normalize();
-    const lift=1+0.22+a.distanceTo(b)*0.28;
-    const mid=a.clone().add(b).normalize().multiplyScalar(lift);
-    const curve=new THREE.QuadraticBezierCurve3(a.clone().multiplyScalar(1.01), mid, b.clone().multiplyScalar(1.01));
-    rig.add(new THREE.Mesh(
-      new THREE.TubeGeometry(curve, 48, 0.0055, 8, false),
-      new THREE.MeshBasicMaterial({color:0xFF7A00, transparent:true, opacity:.62, blending:THREE.AdditiveBlending, depthWrite:false})
-    ));
-  }
 
   /* ---- real country outlines, if the border file is reachable ---- */
   let bordersOn=false;
