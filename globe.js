@@ -483,7 +483,7 @@ function globe3d(host, owned, pack){
   });
 
   /* ---- camera + controls ---- */
-  let lon=0, lat=18, dist=2.62, drag=null, auto=true, raf=null, resume=0;
+  let lon=0, lat=18, dist=3.5, drag=null, auto=true, raf=null, resume=0;
   let sx=0, sy=0;
   owned.forEach(c=>{ const q=posOf(c); if(!q) return; const r=q[1]*Math.PI/180; sx+=Math.cos(r); sy+=Math.sin(r); });
   if(sx||sy) lon = -Math.atan2(sy,sx)*180/Math.PI - 90;
@@ -507,7 +507,8 @@ function globe3d(host, owned, pack){
   el.addEventListener('mousedown',e=>{ e.preventDefault(); down(e.clientX,e.clientY); });
   window.addEventListener('mousemove',onMouseMove);
   window.addEventListener('mouseup',release);
-  el.addEventListener('wheel',e=>{ e.preventDefault(); zoom(dist+e.deltaY*0.0016); },{passive:false});
+  /* a plain wheel or two-finger scroll belongs to the page; only a pinch (ctrl + wheel) zooms the globe */
+  el.addEventListener('wheel',e=>{ if(!e.ctrlKey) return; e.preventDefault(); zoom(dist+e.deltaY*0.0016); },{passive:false});
 
   /* touch — every move on the globe is swallowed here so the page underneath stays put */
   el.addEventListener('touchstart',e=>{

@@ -133,7 +133,8 @@ const FX = (() => {
       if (fly) fly.style.visibility = 'hidden';
       if (slot) { slot.textContent = o.flag; slot.classList.remove('new'); }
       if (hint) hint.hidden = true;
-      ready = true; wrap.classList.add('final');
+      ready = true; wrap.classList.add('ready', 'final');
+      if (next) { try { next.focus({ preventScroll: true }); } catch (e) {} }
     }
 
     if (reduced) {
@@ -146,8 +147,9 @@ const FX = (() => {
     A(sw.animate([{ transform: 'rotate(54deg)' }, { transform: 'rotate(68deg)' }], { duration: TWIND, delay: GAP, easing: 'cubic-bezier(.2,.8,.3,1)', fill: 'both' }));
     A(sw.animate([{ transform: 'rotate(68deg)' }, { transform: 'rotate(0deg)' }], { duration: TSWING, delay: GAP + TWIND, easing: 'cubic-bezier(.6,0,1,.55)', fill: 'both' }));
     const hold = (el, ms) => { if (el) A(el.animate([{ opacity: 0 }, { opacity: 0 }], { duration: ms, fill: 'both' })); };
-    hold(plate, TIMP + 20); hold(line, TIMP + 180); hold(tray, TIMP + 120); hold(fly, TIMP + 440); hold(next, TIMP + 690); hold(flash, TIMP); hold(rays, TIMP + 2);
+    hold(plate, TIMP + 20); hold(line, TIMP + 180); hold(tray, TIMP + 120); hold(fly, TIMP + 440); hold(flash, TIMP); hold(rays, TIMP + 2);
 
+    later(2600, () => { if (!ready) finalize(); });          // watchdog: whatever happens, the way on appears
     const lat = Math.min(.04, Snd.latency());
     Snd.whoosh((GAP + TWIND - 40) / 1000, (TSWING + 40) / 1000);
     Snd.knock(TIMP / 1000 - lat, power);
@@ -209,11 +211,11 @@ const FX = (() => {
       });
       later(300, showNext);
     }
+    /* Next is revealed by a class and a CSS transition, never by an animation that could leave it
+       invisible: it is the one control the player cannot do without. */
     function showNext() {
       if (done) return;
-      if (next) A(spring(next, 0, 1, v => ({ opacity: Math.min(1, v * 2), transform: `translateY(${(1 - v) * 22}px) scale(${.94 + .06 * v})` }), { k: 240, c: 17 }));
-      if (hint) hint.hidden = true;
-      ready = true;
+      wrap.classList.add('ready'); if (hint) hint.hidden = true; ready = true;
     }
     return result;
   }
