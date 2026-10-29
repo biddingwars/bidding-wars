@@ -133,8 +133,9 @@ width — they generate no boxes, so everything inside is a direct flex child of
 huge empty middle; the compact single column fits in well under 600pt, so
 iPad (≥640px) simply centres that one column (auto margins on the first
 `.stage` and last `.dock`, which never go negative, so a too-short screen
-degrades to the top-aligned scroll-lock fallback) and enlarges a few sizes
-when `min-height:760px`. On phones `#act`/the "Next lot" button carry `.dock`,
+degrades to the top-aligned scroll-lock fallback) and scales every auction size with `dvh` when
+`min-height:741px` (floors = the compact phone values; 11" iPad landscape and
+iPad mini stay compact). On phones `#act`/the "Next lot" button carry `.dock`,
 which gets `margin-top:auto` inside a
 `body.playing #app{display:flex;flex-direction:column}` wrapper, pinning
 bid controls to the bottom of the screen within thumb reach. Keep
@@ -150,5 +151,5 @@ cap `#app` — not `.wrap` — at 622px (medium tier) / 860px (wide tier), about
 15% narrower than the tier caps, so a 13" iPad isn't filled edge to edge. It
 has to be `#app`: the `@container page` breakpoints above measure `.wrap`, and
 shrinking `.wrap` itself would silently switch the wide-tier rules off. The
-auction screen is capped the same way: `body.playing #app` at 586px for every
-width ≥640px.
+auction screen is capped the same way: `body.playing #app` at `clamp(586px,80dvh,680px)` for
+every width ≥640px.
