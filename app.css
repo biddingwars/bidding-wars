@@ -292,6 +292,22 @@ body.playing .dock{margin-top:auto}
 .pl2 .b{font-family:'Space Mono','SF Mono',Menlo,Consolas,monospace;font-size:15px;font-weight:700;margin-top:2px}
 .pl2 .c{font-family:'Space Mono','SF Mono',Menlo,Consolas,monospace;font-size:9.5px;letter-spacing:.1em;opacity:.75}
 
+/* short screens (iPhone SE-class in Safari, ~560-640pt usable): player tiles
+   collapse to one row — name left, budget right; the role line is dropped
+   (the price card and the turn ring already say who holds the bid / whose
+   turn it is) — and the price card and bid panel tighten up. Taller phones
+   and iPads are untouched. */
+@media (max-height:640px){
+  body.playing .wrap{padding-top:calc(52px + env(safe-area-inset-top))}
+  .pl2{display:flex;align-items:baseline;justify-content:space-between;gap:6px;padding:4px 7px}
+  .pl2 .role{display:none}
+  .pl2 .b{margin-top:0;flex:none}
+  .price{padding:5px 10px 4px}
+  .price .pv{font-size:36px}
+  .card.tight{padding:7px 10px}
+  .btn.xs{padding:4px 8px}
+}
+
 /* gavel */
 .gavel{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:60}
 .gavel .ring{position:absolute;width:60px;height:60px;border:8px solid var(--amber);border-radius:50%;animation:ring .5s ease-out forwards}
