@@ -113,10 +113,10 @@ const Shell = {
       if (kb && kb.setResizeMode) await kb.setResizeMode({ mode: 'none' });
     } catch (e) {}
 
-    /* light content on the dark red chrome */
+    /* the status bar follows the phone's light or dark appearance, as the page itself does */
     try {
       const sb = Native.plugin('StatusBar');
-      if (sb) { await sb.setStyle({ style: 'LIGHT' }); if (sb.setBackgroundColor) await sb.setBackgroundColor({ color: '#D6161F' }); }
+      if (sb) await sb.setStyle({ style: 'DEFAULT' });
     } catch (e) {}
 
     /* hand-off from the launch screen only once the UI has painted */
@@ -128,10 +128,11 @@ const Shell = {
 };
 
 /* Web Audio and speech both need one real user gesture on iOS before they
-   will ever produce sound. Arm them on the first touch, then get out of the way. */
+   will ever produce sound. Arm them on the first touch, then get out of the way.
+   (sound.js keeps its own listeners to resume after an interruption.) */
 (function unlockAudio() {
   const once = () => {
-    try { if (typeof actx === 'function') actx(); } catch (e) {}
+    try { if (typeof Snd === 'object') Snd.unlock(); } catch (e) {}
     try {
       if ('speechSynthesis' in window) {
         const u = new SpeechSynthesisUtterance(' ');
@@ -158,11 +159,8 @@ const Shell = {
   document.addEventListener('gesturestart', e => e.preventDefault());
 })();
 
-/* Pause the clock when the app goes to the background — an auction timer that
-   keeps running while the phone is locked feels broken and loses lots. */
+/* The decision clock pauses while the page is in the background (app.js: a frame gap
+   over 250 ms is not counted), so a locked phone never costs a lot. Speech just stops. */
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) {
-    try { if (typeof clearTimer === 'function') clearTimer(); } catch (e) {}
-    try { speechSynthesis.cancel(); } catch (e) {}
-  }
+  if (document.hidden) { try { speechSynthesis.cancel(); } catch (e) {} }
 });

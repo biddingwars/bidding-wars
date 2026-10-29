@@ -1,15 +1,16 @@
 /* Service worker — the whole game is cached on first visit, then served from
    cache. After that it runs with no connection at all, which is the point. */
 
-const CACHE = 'bidding-wars-v22';
+const CACHE = 'bidding-wars-v23';
 
 const SHELL = [
   './',
   './index.html',
   './manifest.json',
   './app.css',
-  './fonts.css',
   './platform.js',
+  './sound.js',
+  './fx.js',
   './engine.js',
   './packs.js',
   './banter.js',
@@ -19,10 +20,7 @@ const SHELL = [
   './three.min.js',
   './countries-110m.json',
   './earth.jpg',
-  './ArchivoBlack-Regular.woff2',
-  './SpaceGrotesk-Regular.woff2',
-  './SpaceGrotesk-Bold.woff2',
-  './SpaceMono-Bold.woff2',
+  './globe-hero.webp',
   './icon-192.png',
   './icon-512.png',
   './icon-512-maskable.png',
@@ -31,8 +29,7 @@ const SHELL = [
   './support.html'
 ];
 
-/* Missing optional files (fonts you have not dropped in yet) must not abort the
-   whole install, so each one is cached on its own and allowed to fail. */
+/* A missing optional file must not abort the whole install, so each one is cached on its own and allowed to fail. */
 self.addEventListener('install', e => {
   e.waitUntil((async () => {
     const c = await caches.open(CACHE);

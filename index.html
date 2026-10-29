@@ -4,8 +4,9 @@
 <meta charset="utf-8">
 <base href="/bidding-wars/">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="color-scheme" content="light">
-<meta name="theme-color" content="#D6161F">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0A0A18" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#EEF0FF" media="(prefers-color-scheme: light)">
 <meta name="format-detection" content="telephone=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -15,26 +16,31 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-180.png">
-<link rel="stylesheet" href="fonts.css">
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+ <symbol id="i-note" viewBox="0 0 24 24"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></symbol>
+ <symbol id="i-mute" viewBox="0 0 24 24"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/><path d="M3 3l18 18"/></symbol>
+ <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></symbol>
+ <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c.8-3.6 3.6-5.4 7-5.4s6.2 1.8 7 5.4"/></symbol>
+ <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.2"/><circle cx="17" cy="9.5" r="2.5"/><path d="M3 19.5c.7-3.2 3-4.8 6-4.8s5.3 1.6 6 4.8M16 15c2.6 0 4.4 1.4 5 4"/></symbol>
+ <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.4 3.8 5.2 3.8 8.5S14.6 18.1 12 20.5C9.4 18.1 8.2 15.3 8.2 12S9.4 5.9 12 3.5z"/></symbol>
+ <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+ <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 5.5C7.5 4.5 10 4.7 12 6c2-1.3 4.5-1.5 7-.5V19c-2.5-1-5-.8-7 .5-2-1.3-4.5-1.5-7-.5z"/><path d="M12 6v13.5"/></symbol>
+ <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="9.5" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 017 0v2.5"/></symbol>
+ <symbol id="i-theme" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17a8.5 8.5 0 000-17z" fill="currentColor"/></symbol>
+</defs></svg>
+
 <div id="curtain" aria-hidden="true">
-  <div class="curtain-mark">Bidding<br>Wars</div>
+  <div class="curtain-mark">Bidding<span>Wars</span></div>
 </div>
 
-<button class="mute" id="mute" aria-label="Sound on or off">♪</button>
-<button class="homebtn" id="hb" aria-label="Back to main menu">☰ Menu</button>
-
-<div class="wrap">
-  <div class="mast">
-    <h1>Bidding<br>Wars</h1>
-    <div class="sub">Use your knowledge to beat your rivals</div>
-  </div>
+<div id="root">
   <main id="app"></main>
-  <div class="foot">NO ACCOUNTS · NO TRACKING · <span id="cc">0</span> COUNTRIES</div>
 </div>
+<div id="layer"></div>
 
 <script>
   function loadThreeFallback(){
@@ -47,16 +53,15 @@
 <script src="three.min.js" onerror="loadThreeFallback()"></script>
 
 <script src="platform.js"></script>
+<script src="sound.js"></script>
+<script src="fx.js"></script>
 <script src="engine.js"></script>
 <script src="packs.js"></script>
 <script src="banter.js"></script>
 <script src="app.js"></script>
 <script src="globe.js"></script>
 <script>
-  Promise.all([loadLang(), loadRec()]).then(function () {
-    var sub = document.querySelector('.mast .sub');
-    if (sub) sub.textContent = t('tagline');
-    document.getElementById('cc').textContent = Packs.meta('countries').count;
+  Promise.all([loadLang(), loadRec(), loadTheme()]).then(function () {
     home();
     Shell.ready();
     var c = document.getElementById('curtain');

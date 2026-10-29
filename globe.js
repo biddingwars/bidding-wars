@@ -41,7 +41,7 @@ function globe2d(host, owned, pack){
     g.addColorStop(0,'#20304A'); g.addColorStop(0.62,'#141C2C'); g.addColorStop(1,'#0A0D15');
     ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,R,0,7); ctx.fill();
 
-    ctx.strokeStyle='rgba(255,196,0,.13)'; ctx.lineWidth=1;
+    ctx.strokeStyle='rgba(231,190,98,.13)'; ctx.lineWidth=1;
     for(let lat=-60;lat<=60;lat+=30){
       ctx.beginPath(); let on=false;
       for(let lon=-180;lon<=180;lon+=4){
@@ -79,22 +79,22 @@ function globe2d(host, owned, pack){
       const X=cx+p.x*R, Y=cy-p.y*R, fade=Math.min(1,p.z*1.6+0.1);
       const r=W*(0.010+0.026*Math.sqrt(c.value/big));
       const halo=ctx.createRadialGradient(X,Y,0,X,Y,r*3);
-      halo.addColorStop(0,'rgba(255,122,0,'+(0.55*fade)+')');
-      halo.addColorStop(1,'rgba(255,122,0,0)');
+      halo.addColorStop(0,'rgba(201,149,60,'+(0.55*fade)+')');
+      halo.addColorStop(1,'rgba(201,149,60,0)');
       ctx.fillStyle=halo; ctx.beginPath(); ctx.arc(X,Y,r*3,0,7); ctx.fill();
-      ctx.fillStyle='rgba(255,196,0,'+fade+')';
+      ctx.fillStyle='rgba(231,190,98,'+fade+')';
       ctx.beginPath(); ctx.arc(X,Y,r,0,7); ctx.fill();
       ctx.strokeStyle='rgba(20,15,12,'+fade+')'; ctx.lineWidth=2;
       ctx.stroke();
       if(p.z>0.72){
-        ctx.font='700 '+(W*0.032)+'px "Space Mono", monospace';
+        ctx.font='700 '+(W*0.032)+'px -apple-system, system-ui, sans-serif';
         ctx.fillStyle='rgba(255,243,224,'+((p.z-0.72)/0.28)+')';
         ctx.textAlign='center';
         ctx.fillText(cname(c).toUpperCase(), X, Y-r-W*0.018);
       }
     });
 
-    ctx.strokeStyle='rgba(255,196,0,.35)'; ctx.lineWidth=2;
+    ctx.strokeStyle='rgba(231,190,98,.35)'; ctx.lineWidth=2;
     ctx.beginPath(); ctx.arc(cx,cy,R,0,7); ctx.stroke();
 
     if(auto) spin+=0.0032;
@@ -280,7 +280,7 @@ function earthTexture(feats, ownedSet){
        border on top. Painted into the texture so the lines actually have width. */
     feats.forEach((f,i)=>{
       const owned = ownedSet && ownedSet.has(i);
-      x.fillStyle   = owned ? '#FFC42E' : '#6FB37A';
+      x.fillStyle   = owned ? '#EDC66F' : '#6FB37A';
       x.strokeStyle = owned ? '#7A4E00' : '#2E6B4A';
       x.lineWidth   = owned ? 2.2 : 0.9;
       f.rings.forEach(ring=>{
@@ -308,7 +308,7 @@ function earthTexture(feats, ownedSet){
   x.strokeStyle='rgba(120,190,255,.10)'; x.lineWidth=2;
   for(let lat=-75;lat<=75;lat+=15){ const y=(90-lat)/180*H; x.beginPath(); x.moveTo(0,y); x.lineTo(W,y); x.stroke(); }
   for(let lon=-180;lon<180;lon+=15){ const px=(lon+180)/360*W; x.beginPath(); x.moveTo(px,0); x.lineTo(px,H); x.stroke(); }
-  x.strokeStyle='rgba(255,196,0,.22)'; x.lineWidth=3;
+  x.strokeStyle='rgba(231,190,98,.22)'; x.lineWidth=3;
   x.beginPath(); x.moveTo(0,H/2); x.lineTo(W,H/2); x.stroke();
 
   const t=new THREE.CanvasTexture(c);
@@ -381,7 +381,7 @@ function globe3d(host, owned, pack){
 
   scene.add(new THREE.AmbientLight(0x9FB4D0, 1.15));
   const key=new THREE.DirectionalLight(0xfff6e8, 1.35); key.position.set(-3,2.2,3.4); scene.add(key);
-  const rim=new THREE.DirectionalLight(0xff9126, 0.45); rim.position.set(3.5,-1.5,-2.5); scene.add(rim);
+  const rim=new THREE.DirectionalLight(0xC9953C, 0.45); rim.position.set(3.5,-1.5,-2.5); scene.add(rim);
 
   /* ---- the winner's lots: pillars + glow ---- */
   const big=Math.max(...owned.map(c=>c.value), 1);
@@ -392,7 +392,7 @@ function globe3d(host, owned, pack){
     const dir=toVec(q[0],q[1],1).normalize();
     const pillar=new THREE.Mesh(
       new THREE.CylinderGeometry(0.011,0.019,h,14),
-      new THREE.MeshBasicMaterial({color:0xFFC400})
+      new THREE.MeshBasicMaterial({color:0xEDC66F})
     );
     pillar.position.copy(dir.clone().multiplyScalar(1+h/2));
     pillar.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir);
@@ -404,7 +404,7 @@ function globe3d(host, owned, pack){
     rig.add(s);
 
     const ring=new THREE.Mesh(new THREE.RingGeometry(0.030,0.046,32),
-      new THREE.MeshBasicMaterial({color:0xFF7A00, side:THREE.DoubleSide, transparent:true, opacity:.85}));
+      new THREE.MeshBasicMaterial({color:0xC9953C, side:THREE.DoubleSide, transparent:true, opacity:.85}));
     ring.position.copy(dir.clone().multiplyScalar(1.004));
     ring.lookAt(dir.clone().multiplyScalar(2));
     rig.add(ring);
@@ -469,7 +469,7 @@ function globe3d(host, owned, pack){
     if(mine.length){
       const g=new THREE.BufferGeometry();
       g.setAttribute('position', new THREE.Float32BufferAttribute(mine,3));
-      rig.add(new THREE.LineSegments(g, new THREE.LineBasicMaterial({color:0xFFE680, transparent:true, opacity:0.95})));
+      rig.add(new THREE.LineSegments(g, new THREE.LineBasicMaterial({color:0xF4DC9A, transparent:true, opacity:0.95})));
     }
   });
 
