@@ -119,10 +119,36 @@ container (`container-type:inline-size;container-name:page`) with three
 width tiers set via `@media`: base (`<640px`, unchanged 620px cap), medium
 (`≥640px`, 760px — covers iPhone Duo's inner screen and phone landscape),
 wide (`≥980px`, 1040px — iPad landscape and up). Component-level
-adaptations (player-strip columns, the results-screen 2-column split) use
-`@container page (min-width:...)` against those same two breakpoints, not
-separate ones. The live-auction screen (`paint()`/`humanTurn()`/`aiTurn()`)
-deliberately gets no structural changes at any tier — only a wider
-container — so a layout change can never break mid-auction state. Pick new
-breakpoints the same way: by real content widths (checked against actual
-device logical-point sizes), never by sniffing device/user-agent.
+adaptations (player-strip columns, the results-screen 2-column split, the
+auction screen's own split below) use `@container page (min-width:...)`
+against those same two breakpoints, not separate ones. Pick new breakpoints
+the same way: by real content widths (checked against actual device
+logical-point sizes), never by sniffing device/user-agent.
+
+The live-auction screen must fit on one screen with no scrolling, on every
+target device, portrait and landscape — a hard product requirement, not a
+nice-to-have. `paint()`/`award()` wrap their content in
+`.lot-wrap > .lot-main + .lot-side`. Below the wide tier, all three carry
+`display:contents` — they generate no boxes at all, so the markup behaves
+exactly as if those wrapper divs didn't exist, which is what keeps
+phone/medium layout pixel-identical despite them being there. At `≥980px`
+(iPad landscape) `.lot-wrap` becomes a real 2-column grid: lot/price/taunt/
+timer on one side, players and bid controls on the other. `#act`/the "Next
+lot" button carry `.dock`, which gets `margin-top:auto` inside a
+`body.playing #app{display:flex;flex-direction:column}` wrapper, pinning
+bid controls to the bottom of the screen — and degrading gracefully if
+content ever does overflow (the auto margin just resolves to 0 and falls
+back to `.wrap`'s existing `overflow-y:auto` scroll-lock fallback). Keep
+new auction-screen content inside this budget: the `.turnbar` "Now bidding"
+bar was removed entirely (the `.pl2.turn` active-tile highlight already
+says whose turn it is) and the taunt bubble is a fixed-height, single-line,
+ellipsis-truncated caption (`.taunt`, 29px, always, never more) specifically
+so it can never push the layout — don't reintroduce an unbounded block
+there.
+
+Menu, setup, how-to and results pages (everything that is not `body.playing`)
+cap `#app` — not `.wrap` — at 622px (medium tier) / 860px (wide tier), about
+15% narrower than the tier caps, so a 13" iPad isn't filled edge to edge. It
+has to be `#app`: the `@container page` breakpoints above measure `.wrap`, and
+shrinking `.wrap` itself would silently switch the wide-tier rules off. The
+auction screen keeps the full width for its landscape split.
