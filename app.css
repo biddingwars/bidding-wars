@@ -49,10 +49,10 @@ body{
    screen (body.playing) keeps the full width for its landscape split. */
 @media (min-width:640px){ body:not(.playing) #app{max-width:622px;margin-left:auto;margin-right:auto} }
 @media (min-width:980px){ body:not(.playing) #app{max-width:860px} }
-/* bidding screen on iPad: ~20% narrower than the tier cap, same #app trick, so
-   the wide tier (and its landscape 2-column split) still triggers. */
+/* bidding screen on iPad (portrait and landscape alike): one centered column,
+   586px — the compact auction layout fits in well under 600pt of height, so no
+   landscape split is needed. */
 @media (min-width:640px){ body.playing #app{max-width:586px;margin-left:auto;margin-right:auto;width:100%} }
-@media (min-width:980px){ body.playing #app{max-width:810px} }
 
 /* anti-stretch: at the wider tiers, scale padding/type with the container
    instead of just spreading phone-sized chrome across more empty space.
@@ -205,17 +205,29 @@ body.playing .wrap{height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch}
    after the previous element, falling back to the scroll-lock above. */
 body.playing #app{display:flex;flex-direction:column;min-height:100%}
 body.playing .dock{margin-top:auto}
-/* iPad landscape (reuses the existing wide tier, no new breakpoint): lot
-   info on one side, players + bid controls on the other. display:contents
-   below this tier means .lot-wrap/.lot-main/.lot-side generate no boxes at
-   all, so phone/medium layout is exactly as if these wrapper divs weren't
-   there. */
+/* .lot-wrap/.lot-main/.lot-side are structural wrappers only: display:contents
+   means they generate no boxes, so the lot/price/taunt/timer/strip/#act are
+   direct flex children of #app. */
 .lot-wrap,.lot-main,.lot-side{display:contents}
-@container page (min-width:980px){
-  .lot-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:1;min-height:0}
-  .lot-main{display:flex;flex-direction:column}
-  .lot-side{display:flex;flex-direction:column}
-  .lot-side .pl2{flex-basis:46%}
+/* iPad (>=640px): rather than pinning the controls to the far bottom edge with
+   a big empty gap above them, centre the whole auction as one cohesive block,
+   and give it a bit more presence when there is height to spare. The auto
+   margins on the first/last element never go negative, so on a screen that is
+   too short this degrades to the same top-aligned scroll-lock fallback. */
+@container page (min-width:640px){
+  body.playing .stage{margin-top:auto}
+  body.playing .dock{margin-top:0;margin-bottom:auto}
+}
+@media (min-width:640px) and (min-height:760px){
+  .price .pv{font-size:56px}
+  .price{padding:10px 12px 9px}
+  .flag{font-size:34px}
+  .cname{font-size:clamp(22px,5.4cqi,30px)}
+  .taunt{font-size:12.5px}
+  .btn.xs{font-size:16px;padding:9px 10px}
+  .pl2 .n{font-size:15px}
+  .pl2 .b{font-size:17px}
+  .stage,.price,.timer,.strip,.taunt{margin-bottom:10px}
 }
 
 /* in-page dialogs — sandboxed frames block native alert/confirm */
