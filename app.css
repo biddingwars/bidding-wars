@@ -49,6 +49,10 @@ body{
    screen (body.playing) keeps the full width for its landscape split. */
 @media (min-width:640px){ body:not(.playing) #app{max-width:622px;margin-left:auto;margin-right:auto} }
 @media (min-width:980px){ body:not(.playing) #app{max-width:860px} }
+/* bidding screen on iPad (portrait and landscape alike): one centered column,
+   586px (growing to 680px with screen height) — the compact auction layout fits in well under 600pt of height, so no
+   landscape split is needed. */
+@media (min-width:640px){ body.playing #app{max-width:clamp(586px,80dvh,680px);margin-left:auto;margin-right:auto;width:100%} }
 
 /* anti-stretch: at the wider tiers, scale padding/type with the container
    instead of just spreading phone-sized chrome across more empty space.
@@ -201,16 +205,46 @@ body.playing .wrap{height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch}
    after the previous element, falling back to the scroll-lock above. */
 body.playing #app{display:flex;flex-direction:column;min-height:100%}
 body.playing .dock{margin-top:auto}
-/* iPad landscape (reuses the existing wide tier, no new breakpoint): lot
-   info on one side, players + bid controls on the other. display:contents
-   below this tier means .lot-wrap/.lot-main/.lot-side generate no boxes at
-   all, so phone/medium layout is exactly as if these wrapper divs weren't
-   there. */
+/* .lot-wrap/.lot-main/.lot-side are structural wrappers only: display:contents
+   means they generate no boxes, so the lot/price/taunt/timer/strip/#act are
+   direct flex children of #app. */
 .lot-wrap,.lot-main,.lot-side{display:contents}
-@container page (min-width:980px){
-  .lot-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:1;min-height:0}
-  .lot-main{display:flex;flex-direction:column}
-  .lot-side{display:flex;flex-direction:column}
+/* iPad (>=640px): rather than pinning the controls to the far bottom edge with
+   a big empty gap above them, centre the whole auction as one cohesive block,
+   and give it a bit more presence when there is height to spare. The auto
+   margins on the first/last element never go negative, so on a screen that is
+   too short this degrades to the same top-aligned scroll-lock fallback. */
+@container page (min-width:640px){
+  body.playing .stage{margin-top:auto}
+  body.playing .dock{margin-top:0;margin-bottom:auto}
+}
+/* iPad: use the height that is there. Every auction size scales with the
+   dynamic viewport height (dvh tracks Safari's toolbars, vh does not); each
+   clamp() floor is the compact phone value, so short screens are unchanged.
+   Gated at >=741px tall so 11" iPad landscape (~700pt in Safari) and iPad mini landscape (~600pt) keep the
+   compact layout. */
+@media (min-width:640px) and (min-height:741px){
+  body.playing .stage{padding:clamp(6px,1.2dvh,16px) clamp(10px,1.8dvh,22px)}
+  body.playing .stage,body.playing .price,body.playing .timer,body.playing .strip,body.playing .taunt{margin-bottom:clamp(7px,1.4dvh,18px)}
+  body.playing .flag{font-size:clamp(26px,5dvh,56px)}
+  body.playing .cname{font-size:clamp(22px,4.2dvh,40px)}
+  body.playing .lot{font-size:clamp(10px,1.7dvh,16px);padding:clamp(3px,.6dvh,7px) clamp(8px,1.2dvh,14px)}
+  body.playing .price{padding:clamp(7px,1.6dvh,22px) 12px clamp(6px,1.4dvh,20px)}
+  body.playing .price .pl{font-size:clamp(10px,1.6dvh,16px)}
+  body.playing .price .pv{font-size:clamp(42px,9dvh,100px)}
+  body.playing .hold{font-size:clamp(10.5px,1.8dvh,17px)}
+  body.playing .taunt{height:clamp(22px,4dvh,44px);line-height:clamp(22px,4dvh,44px);font-size:clamp(11px,1.9dvh,18px)}
+  body.playing .timer{height:clamp(13px,2.2dvh,26px)}
+  body.playing .strip{gap:clamp(5px,.9dvh,12px)}
+  body.playing .pl2{padding:clamp(5px,1.3dvh,16px) clamp(7px,1.3dvh,16px)}
+  body.playing .pl2 .n{font-size:clamp(13px,2.2dvh,24px)}
+  body.playing .pl2 .b{font-size:clamp(15px,2.6dvh,28px)}
+  body.playing .pl2 .role{font-size:clamp(8.5px,1.5dvh,14px)}
+  body.playing .card.tight{padding:clamp(9px,1.6dvh,22px) clamp(11px,1.8dvh,24px)}
+  body.playing .card.tight .label{font-size:clamp(10px,1.5dvh,15px)}
+  body.playing .btn.xs{font-size:clamp(14px,2.5dvh,26px);padding:clamp(6px,1.8dvh,22px) clamp(8px,1.4dvh,16px)}
+  body.playing .card.tight input{padding:clamp(11px,1.7dvh,22px)}
+  body.playing .grid5{gap:clamp(6px,1dvh,14px)}
 }
 
 /* in-page dialogs — sandboxed frames block native alert/confirm */

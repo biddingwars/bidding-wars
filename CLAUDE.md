@@ -119,8 +119,7 @@ container (`container-type:inline-size;container-name:page`) with three
 width tiers set via `@media`: base (`<640px`, unchanged 620px cap), medium
 (`≥640px`, 760px — covers iPhone Duo's inner screen and phone landscape),
 wide (`≥980px`, 1040px — iPad landscape and up). Component-level
-adaptations (player-strip columns, the results-screen 2-column split, the
-auction screen's own split below) use `@container page (min-width:...)`
+adaptations (player-strip columns, the results-screen 2-column split) use `@container page (min-width:...)`
 against those same two breakpoints, not separate ones. Pick new breakpoints
 the same way: by real content widths (checked against actual device
 logical-point sizes), never by sniffing device/user-agent.
@@ -128,17 +127,18 @@ logical-point sizes), never by sniffing device/user-agent.
 The live-auction screen must fit on one screen with no scrolling, on every
 target device, portrait and landscape — a hard product requirement, not a
 nice-to-have. `paint()`/`award()` wrap their content in
-`.lot-wrap > .lot-main + .lot-side`. Below the wide tier, all three carry
-`display:contents` — they generate no boxes at all, so the markup behaves
-exactly as if those wrapper divs didn't exist, which is what keeps
-phone/medium layout pixel-identical despite them being there. At `≥980px`
-(iPad landscape) `.lot-wrap` becomes a real 2-column grid: lot/price/taunt/
-timer on one side, players and bid controls on the other. `#act`/the "Next
-lot" button carry `.dock`, which gets `margin-top:auto` inside a
+`.lot-wrap > .lot-main + .lot-side`, which carry `display:contents` at every
+width — they generate no boxes, so everything inside is a direct flex child of
+`#app`. There is deliberately NO iPad-landscape split: an earlier one left a
+huge empty middle; the compact single column fits in well under 600pt, so
+iPad (≥640px) simply centres that one column (auto margins on the first
+`.stage` and last `.dock`, which never go negative, so a too-short screen
+degrades to the top-aligned scroll-lock fallback) and scales every auction size with `dvh` when
+`min-height:741px` (floors = the compact phone values; 11" iPad landscape and
+iPad mini stay compact). On phones `#act`/the "Next lot" button carry `.dock`,
+which gets `margin-top:auto` inside a
 `body.playing #app{display:flex;flex-direction:column}` wrapper, pinning
-bid controls to the bottom of the screen — and degrading gracefully if
-content ever does overflow (the auto margin just resolves to 0 and falls
-back to `.wrap`'s existing `overflow-y:auto` scroll-lock fallback). Keep
+bid controls to the bottom of the screen within thumb reach. Keep
 new auction-screen content inside this budget: the `.turnbar` "Now bidding"
 bar was removed entirely (the `.pl2.turn` active-tile highlight already
 says whose turn it is) and the taunt bubble is a fixed-height, single-line,
@@ -151,4 +151,5 @@ cap `#app` — not `.wrap` — at 622px (medium tier) / 860px (wide tier), about
 15% narrower than the tier caps, so a 13" iPad isn't filled edge to edge. It
 has to be `#app`: the `@container page` breakpoints above measure `.wrap`, and
 shrinking `.wrap` itself would silently switch the wide-tier rules off. The
-auction screen keeps the full width for its landscape split.
+auction screen is capped the same way: `body.playing #app` at `clamp(586px,80dvh,680px)` for
+every width ≥640px.
