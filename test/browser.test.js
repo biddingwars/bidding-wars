@@ -564,6 +564,12 @@ test('results on iPad landscape: everything on one screen, globe labelled, a pla
 });
 
 /* ---------------------------------------------------------------- US States pack */
+/* the first lot may already be sold when the bot cannot beat the opening $1 on a tiny state: pass only if it is still open */
+const toSold = async page => {
+  await page.waitForSelector('#pass:not(:disabled), #sold.final', { timeout: 8000 });
+  if (!(await page.$('#sold.final'))) await page.click('#pass').catch(() => {});
+  await page.waitForSelector('#sold.final');
+};
 const pickPack = async (page, id) => { await page.click(`[data-pack="${id}"]`); await page.waitForSelector(`[data-pack="${id}"][aria-current="true"]`); };
 const bodyText = page => page.evaluate(() => document.body.innerText);
 
@@ -582,8 +588,7 @@ test('US STATES: pick it on the menu, setup has All 50 and no difficulty, play, 
   assert.ok(requests.includes('pack-states.js'), 'pack file loaded lazily');
   assert.ok(!/€/.test(await bodyText(page)), 'no euro sign in the auction');
   await page.evaluate(() => { window.think = () => Promise.resolve(); });
-  await page.waitForSelector('#pass:not(:disabled)'); await page.click('#pass');
-  await page.waitForSelector('#sold.final');
+  await toSold(page);
   const fact = await page.textContent('#sold .fact');
   assert.ok(fact && fact.length > 20 && fact.length <= 140, 'fun fact on the SOLD screen: ' + fact);
   assert.ok(!/€/.test(await bodyText(page)), 'no euro sign on SOLD');
@@ -665,8 +670,7 @@ test('US STATES: the sold moment fits every screen with the longest fun fact', {
       const longest = Object.values(S.pack.facts).map(f => f.en).sort((a, b) => b.length - a.length)[0];
       S.pack.facts[S.items[S.i].id] = { en: longest };
     });
-    await page.waitForSelector('#pass:not(:disabled)'); await page.click('#pass');
-    await page.waitForSelector('#sold.final');
+    await toSold(page);
     const r = await page.evaluate(() => { const q = s => document.querySelector(s).getBoundingClientRect(); const p = q('.plate'), n = q('#n'), t = q('.tray'), l = q('.soldline'), f = q('.fact'); return { plateTop: p.top, nextBottom: n.bottom, nextRight: n.right, trayBottom: t.bottom, soldRight: l.right, factBottom: f.bottom, factTop: f.top, trayTop: t.top, vh: innerHeight, vw: innerWidth }; });
     assert.ok(r.plateTop >= 0, `${w}x${h} SOLD plate clipped (${r.plateTop})`);
     assert.ok(r.nextBottom <= h + 0.5 && r.nextRight <= w + 0.5, `${w}x${h} Next lot clipped (${JSON.stringify(r)})`);
