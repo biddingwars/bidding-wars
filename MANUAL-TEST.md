@@ -121,3 +121,25 @@ SOLD screen and tell me any that look wrong.
 - [ ] Privacy → Delete all data still resets everything; only four values are ever
       stored (picking States stores nothing).
 - [ ] Offline: after one visit, States works in airplane mode (the pack is cached).
+
+## 8. US States pack — look, map, zoom, sound (PR B)
+
+Assumed, not verified on a device: GPU smoothness of the flag layer and the zoom on an older
+iPhone/iPad; how the synthesised eagle cry actually *sounds*; the satellite imagery is a
+Natural Earth stand-in (NASA Blue Marble was unreachable from my environment).
+
+- [ ] Menu: tap **US States** — the globe zooms toward North America and the US map grows
+      in (about half a second); tap **Countries** — it zooms back out. Tap during the zoom: it
+      finishes at once. Reduce Motion ON: they swap with no motion.
+- [ ] A dimmed, stylised US flag sits behind the menu, setup, auction and results while States
+      is selected; Countries stays plain. Dark and Light: all text easy to read.
+- [ ] Results (States): the map shows your/the winner's states in gold with markers and short
+      labels; the crowded Northeast uses callouts on the right. Win a game with **Alaska** and
+      **Hawaii** — each appears as an inset only when owned; mainland-only shows neither.
+- [ ] Results fit without scrolling on iPad landscape; on iPhone the map card sits below the score.
+- [ ] Win a solo game vs the bot: you hear the eagle-style cry (not the Countries fanfare). Lose:
+      the short sting. Mute silences it. Tell me how it sounds — it can be re-tuned, or swapped
+      for a properly licensed recording (see `NOTICE.md`).
+- [ ] Privacy → **Credits & licences** opens in all five languages and names Census, Natural
+      Earth, NASA, three.js (MIT) and the hawk note.
+- [ ] Offline (airplane mode): the map, flag and zoom all work after one visit.

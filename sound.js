@@ -112,6 +112,39 @@ const Snd = (() => {
       [[392, .8, 1.3, .09], [494, .8, 1.3, .08], [587, .8, 1.3, .08], [784, .82, 1.2, .09], [988, .86, 1.1, .05]].forEach(([f, a, d, v]) => n(f, a, d, v));
       [1568, 1976, 2349, 2637].forEach((f, i) => osc('sine', f, null, t + 1 + i * .09, .6, .04, .004));
     },
+    /* The win call of the US States pack: a raptor's scream, synthesised (no recording, so nothing to license).
+       It is the call film makers dub over eagles — in real life that is a red-tailed hawk; a bald eagle's own
+       voice is a thin chirp. A rasping saw through a formant sweep, glide up then down, a second shorter cry. */
+    eagle() {
+      if (!ok()) return;
+      const t = now();
+      const cry = (at, dur, f0, f1, f2, peak) => {
+        const o = ctx.createOscillator(), g = ctx.createGain(), lp = ctx.createBiquadFilter(), bp = ctx.createBiquadFilter(), tr = ctx.createGain(), lfo = ctx.createOscillator(), lg = ctx.createGain();
+        o.type = 'sawtooth';
+        o.frequency.setValueAtTime(f0, t + at);
+        o.frequency.exponentialRampToValueAtTime(f1, t + at + dur * .16);   // the cry leaps up…
+        o.frequency.exponentialRampToValueAtTime(f2, t + at + dur);         // …and slides down
+        lfo.frequency.value = 31; lg.gain.value = .22; lfo.connect(lg).connect(tr.gain); tr.gain.value = .78;   // the rasp
+        bp.type = 'bandpass'; bp.Q.value = 1.1; bp.frequency.setValueAtTime(f0 * 1.5, t + at); bp.frequency.exponentialRampToValueAtTime(f2 * 1.9, t + at + dur);
+        lp.type = 'lowpass'; lp.frequency.value = 6200;
+        const hold = (gn, pk) => {                                        // quick attack, held, then a fall (env() alone dies too fast for a scream)
+          gn.gain.cancelScheduledValues(t + at); gn.gain.setValueAtTime(.0001, t + at);
+          gn.gain.exponentialRampToValueAtTime(pk, t + at + .035);
+          gn.gain.linearRampToValueAtTime(pk * .8, t + at + dur * .68);
+          gn.gain.exponentialRampToValueAtTime(.0001, t + at + dur);
+        };
+        hold(g, peak);
+        o.connect(bp).connect(lp).connect(tr).connect(g).connect(master);
+        o.start(t + at); lfo.start(t + at); o.stop(t + at + dur + .08); lfo.stop(t + at + dur + .08);
+        const ns = ctx.createBufferSource(), nb = ctx.createBiquadFilter(), ng = ctx.createGain();
+        ns.buffer = noiseBuf; ns.loop = true; nb.type = 'bandpass'; nb.Q.value = 1.4;
+        nb.frequency.setValueAtTime(f1 * 1.6, t + at); nb.frequency.exponentialRampToValueAtTime(f2 * 1.6, t + at + dur);
+        hold(ng, peak * .5);
+        ns.connect(nb).connect(ng).connect(master); ns.start(t + at, Math.random() * .5); ns.stop(t + at + dur + .06);
+      };
+      cry(0, 1.25, 1700, 2650, 1250, .16);
+      cry(1.45, .7, 1850, 2400, 1500, .1);
+    },
     sting() {
       if (!ok()) return;
       const t = now();

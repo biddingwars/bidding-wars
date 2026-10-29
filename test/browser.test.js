@@ -220,7 +220,7 @@ test('offline: after one visit the whole game, including the lazy pack, works wi
   await page.evaluate(() => navigator.serviceWorker.ready);
   await page.waitForFunction(async () => (await caches.keys()).length > 0 && (await (await caches.open((await caches.keys())[0])).keys()).length >= 20, null, { timeout: 15000 });
   const cached = await page.evaluate(async () => (await (await caches.open((await caches.keys())[0])).keys()).map(r => r.url.replace(/^.*\/bidding-wars\//, '')));
-  for (const f of ['engine.js', 'packs.js', 'banter.js', 'pack-countries.js', 'pack-states.js', 'app.js', 'globe.js', 'sound.js', 'fx.js', 'app.css', 'globe-hero.webp']) assert.ok(cached.includes(f), f + ' is in the offline cache');
+  for (const f of ['engine.js', 'packs.js', 'banter.js', 'pack-countries.js', 'pack-states.js', 'app.js', 'globe.js', 'us-view.js', 'us-map.js', 'us-map.webp', 'us-ak.webp', 'us-hi.webp', 'sound.js', 'fx.js', 'app.css', 'globe-hero.webp']) assert.ok(cached.includes(f), f + ' is in the offline cache');
   assert.ok(!cached.some(f => /fonts\.css|\.woff2/.test(f)), 'no font files are cached any more');
   await ctx.setOffline(true);
   await page.reload();
@@ -461,7 +461,7 @@ test('sound: every voice renders cleanly offline — no clipping, no NaN, balanc
   const { page, errors, ctx } = await open();
   const res = await page.evaluate(async () => {
     const out = {};
-    const voices = { knock: () => Snd.knock(0, 1), whoosh: () => Snd.whoosh(0, .2), tick: () => Snd.tick(true), ui: () => Snd.ui(), raise: () => Snd.raise(3), bot: () => Snd.bot(), drop: () => Snd.drop(), chime: () => Snd.chime(), fanfare: () => Snd.fanfare(), sting: () => Snd.sting() };
+    const voices = { knock: () => Snd.knock(0, 1), whoosh: () => Snd.whoosh(0, .2), tick: () => Snd.tick(true), ui: () => Snd.ui(), raise: () => Snd.raise(3), bot: () => Snd.bot(), drop: () => Snd.drop(), chime: () => Snd.chime(), fanfare: () => Snd.fanfare(), eagle: () => Snd.eagle(), sting: () => Snd.sting() };
     for (const [name, fn] of Object.entries(voices)) {
       const oc = new OfflineAudioContext(1, 44100 * 4, 44100);
       Snd._attach(oc); fn();
@@ -710,5 +710,123 @@ test('US STATES: how to play, setup and record say states and dollars in every l
     assert.ok(!bad.test(t2), `${lang} setup: ` + t2.match(bad));
     assert.deepEqual(errors, [], lang);
     await ctx.close();
+  }
+});
+
+/* ---------------------------------------------------------------- US States pack: visuals (PR B) */
+/* start a States solo game, hand the human a chosen set of states, and jump to the sealed results */
+async function statesResults(page, ids, { reveal: doReveal = true } = {}) {
+  await pickPack(page, 'states');
+  await startSolo(page, 5, 0);
+  await page.evaluate(ids => { S.players[0].bought = ids.map(id => ({ ...S.pack.items.find(i => i.id === id), price: 1 })); S.players[1].bought = []; finish(); }, ids);
+  if (doReveal) { await reveal(page); await page.waitForSelector('#gl svg', { timeout: 9000 }); }
+}
+const mapInfo = page => page.evaluate(() => {
+  const h = document.querySelector('#gl'), q = s => [...h.querySelectorAll(s)];
+  const imgs = q('svg image').map(i => i.getAttribute('href'));
+  const rect = e => { const r = e.getBoundingClientRect(); return { l: r.left, t: r.top, r: r.right, b: r.bottom }; };
+  const hr = rect(h);
+  return { imgs, wins: q('.um-wins > g').length, labels: q('.um-l').map(e => ({ txt: e.textContent, ...rect(e) })), host: hr, callouts: q('.um-lead').length, aria: h.querySelector('svg').getAttribute('aria-label') };
+});
+
+test('US map results: mainland only → no Alaska/Hawaii inset; gold states, markers and labels', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open({ viewport: { width: 393, height: 852 } });
+  await statesResults(page, ['CA', 'TX', 'MT']);
+  const m = await mapInfo(page);
+  assert.deepEqual(m.imgs, ['us-map.webp'], 'only the mainland image');
+  assert.equal(m.wins, 3); assert.deepEqual(m.labels.map(l => l.txt).sort(), ['CA', 'MT', 'TX']);
+  assert.match(m.aria, /California.*Texas.*Montana|Texas|California/);
+  assert.equal(await page.$('#gl canvas'), null, 'no globe on the States results');
+  assert.deepEqual(errors, []); await ctx.close();
+});
+
+test('US map results: Alaska inset only when owned, Hawaii only when owned, both when both', { skip: SKIP }, async () => {
+  for (const [ids, want] of [[['AK', 'WA'], ['us-map.webp', 'us-ak.webp']], [['HI', 'NV'], ['us-map.webp', 'us-hi.webp']], [['AK', 'HI', 'TX'], ['us-map.webp', 'us-ak.webp', 'us-hi.webp']]]) {
+    const { page, errors, ctx } = await open({ viewport: { width: 393, height: 852 } });
+    await statesResults(page, ids);
+    const m = await mapInfo(page);
+    assert.deepEqual(m.imgs, want, ids.join());
+    assert.equal(m.wins, ids.length);
+    for (const l of m.labels) assert.ok(l.l >= m.host.l - 1 && l.r <= m.host.r + 1 && l.t >= m.host.t - 1 && l.b <= m.host.b + 1, `label ${l.txt} sits inside the map`);
+    assert.deepEqual(errors, []); await ctx.close();
+  }
+});
+
+test('US map results: the crowded Northeast gets callouts, no two labels overlap, all stay inside the card', { skip: SKIP }, async () => {
+  for (const [w, h] of [[393, 852], [1194, 834], [375, 667]]) {
+    const { page, errors, ctx } = await open({ viewport: { width: w, height: h } });
+    await statesResults(page, ['NJ', 'MA', 'CT', 'RI', 'NH', 'VT', 'MD', 'DE', 'NY', 'PA', 'OH', 'VA', 'WV']);
+    const m = await mapInfo(page);
+    assert.ok(m.callouts >= 8, 'a leader line per crowded state: ' + m.callouts);
+    const L = m.labels;
+    for (const l of L) assert.ok(l.l >= m.host.l - 1 && l.r <= m.host.r + 1 && l.t >= m.host.t - 1 && l.b <= m.host.b + 1, `${w}x${h} label ${l.txt} clipped`);
+    for (let i = 0; i < L.length; i++) for (let j = i + 1; j < L.length; j++) {
+      const a = L[i], b = L[j], ox = Math.min(a.r, b.r) - Math.max(a.l, b.l), oy = Math.min(a.b, b.b) - Math.max(a.t, b.t);
+      assert.ok(!(ox > 2 && oy > 2), `${w}x${h} labels ${a.txt} and ${b.txt} overlap`);
+    }
+    assert.deepEqual(errors, []); await ctx.close();
+  }
+});
+
+test('US map results fit iPad landscape / portrait without scrolling, even with Alaska, Hawaii and the Northeast', { skip: SKIP }, async () => {
+  for (const [w, h] of [[1194, 834], [1024, 768], [834, 1194]]) for (const scheme of ['dark', 'light']) {
+    const { page, errors, ctx } = await open({ viewport: { width: w, height: h }, scheme });
+    await statesResults(page, ['AK', 'HI', 'NJ', 'MA', 'CT', 'RI', 'NH', 'VT', 'MD', 'DE', 'TX', 'CA', 'FL', 'NY']);
+    await page.waitForTimeout(500);
+    const r = await page.evaluate(() => { const sc = document.querySelector('.screen'); return { over: sc.scrollHeight - sc.clientHeight, nav: !!document.querySelector('#nb') }; });
+    assert.ok(r.over <= 1, `${w}x${h} ${scheme} results scroll by ${r.over}`);
+    assert.deepEqual(errors, []); await ctx.close();
+  }
+});
+
+test('US flag backdrop: on for States (menu, setup, auction, results), off for Countries, both themes', { skip: SKIP }, async () => {
+  for (const scheme of ['dark', 'light']) {
+    const { page, errors, ctx } = await open({ scheme });
+    const has = () => page.evaluate(() => document.body.classList.contains('pk-states'));
+    assert.equal(await has(), false, 'Countries is plain');
+    await pickPack(page, 'states'); assert.equal(await has(), true, 'menu with States selected');
+    const flag = await page.evaluate(() => { const cs = getComputedStyle(document.body, '::before'); return { content: cs.content, op: +cs.opacity, pos: cs.position }; });
+    assert.equal(flag.pos, 'fixed'); assert.ok(flag.op > 0 && flag.op <= .5, 'flag is dimmed: ' + flag.op);
+    await startSolo(page, 5, 0); assert.equal(await has(), true, 'auction');
+    await page.click('#nb'); await page.click('#dy').catch(() => {}); await page.waitForSelector('#m1');
+    await pickPack(page, 'countries'); assert.equal(await has(), false, 'back to Countries');
+    assert.deepEqual(errors, []); await ctx.close();
+  }
+});
+
+test('pack switch: the globe zooms into the US map in 700 ms or less, skippable, reversible; Reduce Motion swaps at once', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open({ motion: 'no-preference' });
+  const state = () => page.evaluate(() => ({ x: !!document.querySelector('.hero.xfade'), g: getComputedStyle(document.querySelector('.hero img.globe')).display, m: getComputedStyle(document.querySelector('.hero img.usm-h')).display, anims: document.getAnimations().filter(a => a.effect && a.effect.target && a.effect.target.closest && a.effect.target.closest('.hero')).length }));
+  const timed = id => page.evaluate(id => new Promise(res => {          // measured in the page, from the tap to the last frame
+    const t0 = performance.now(); document.querySelector(`[data-pack="${id}"]`).click();
+    let started = false;
+    const tick = () => { const x = document.querySelector('.hero.xfade'); if (x) started = true; if (started && !x) return res(performance.now() - t0); if (performance.now() - t0 > 2500) return res(9999); requestAnimationFrame(tick); };
+    tick();
+  }), id);
+  const ms = await timed('states');
+  assert.ok(ms <= 700, 'the zoom takes ' + Math.round(ms) + ' ms');
+  let s = await state(); assert.deepEqual([s.g, s.m], ['none', 'block'], 'ends on the US map');
+  const back = await timed('countries');                                    // reverse
+  assert.ok(back <= 700, 'and back in ' + Math.round(back) + ' ms');
+  s = await state(); assert.deepEqual([s.g, s.m], ['block', 'none'], 'and back to the globe');
+  await page.click('[data-pack="states"]'); await page.mouse.click(4, 4);   // skip with a tap
+  await page.waitForFunction(() => !document.querySelector('.hero.xfade'), null, { timeout: 300 });
+  assert.deepEqual(errors, []); await ctx.close();
+  const r = await open({ motion: 'reduce' });
+  await r.page.click('[data-pack="states"]');
+  assert.equal(await r.page.evaluate(() => !!document.querySelector('.hero.xfade')), false, 'no transition with Reduce Motion');
+  assert.deepEqual(await r.page.evaluate(() => [getComputedStyle(document.querySelector('.hero img.globe')).display, getComputedStyle(document.querySelector('.hero img.usm-h')).display]), ['none', 'block']);
+  await r.ctx.close();
+});
+
+test('Credits & licences: reachable from Privacy in every language and names every bundled source', { skip: SKIP }, async () => {
+  for (const lang of ['en', 'de', 'it', 'es', 'fr']) {
+    const { page, errors, ctx } = await open({ init: l => localStorage.setItem('lang:v1', l), initArg: lang });
+    await page.click('#mp'); await page.waitForSelector('#cr'); await page.click('#cr');
+    await page.waitForFunction(() => document.querySelector('.sheetbox .sh-title') && document.querySelector('#cd'));
+    const txt = await page.textContent('.sheetbox');
+    for (const w of ['Census', 'Natural Earth', 'three.js', 'MIT', 'NASA', 'NST-EST2025-POP']) assert.ok(txt.includes(w), `${lang} credits mention ${w}`);
+    assert.match(txt, /red-tailed|Rotschwanz|codarossa|cola roja|queue rousse/, lang + ' credits the hawk honestly');
+    assert.deepEqual(errors, [], lang); await ctx.close();
   }
 });

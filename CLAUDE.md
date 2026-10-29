@@ -8,7 +8,7 @@ Live: https://biddingwars.github.io/bidding-wars/
 
 Everything lives flat at the repo root. No `js/`, `css/`, `data/`, `img/`,
 `fonts/`, or `vendor/` subfolders — `index.html`, `app.css`, `app.js`,
-`engine.js`, `packs.js`, `banter.js`, `pack-countries.js`, `globe.js`,
+`engine.js`, `packs.js`, `banter.js`, `pack-countries.js`, `globe.js`, `us-view.js`, `us-map.js`, `us-map.webp`, `us-ak.webp`, `us-hi.webp`, `NOTICE.md`,
 `platform.js`, `sound.js`, `fx.js`, `sw.js`, `manifest.json`, every icon,
 `globe-hero.webp`, `three.min.js`, `earth.jpg`, `countries-110m.json`,
 `privacy.html`, `support.html` all sit at the root, referenced by plain
@@ -28,7 +28,7 @@ references it and `sw.js` never caches it.
 ## `sw.js` — bump `CACHE` on every deploy that touches a cached file
 
 `sw.js` serves cache-first. Any change to `app.css`, `app.js`, `index.html`,
-`globe.js`, `platform.js`, `sound.js`, `fx.js`, `engine.js`, `packs.js`,
+`globe.js`, `us-view.js`, `us-map.js`, `us-*.webp`, `platform.js`, `sound.js`, `fx.js`, `engine.js`, `packs.js`,
 `banter.js`, any `pack-*.js`, `globe-hero.webp`, `three.min.js`, `earth.jpg`, or
 `manifest.json` is **invisible** to anyone with the site already loaded
 until `CACHE` is bumped:
@@ -249,6 +249,25 @@ Census-boundary centroids, taunts, fun facts).
   other languages fall back to English. `FACTS-SOURCES.md` lists every fact with
   where to verify it — **the facts are currently marked unverified**; do not
   remove that label until they have been checked.
+- **Look (only while States is the pack on screen).**
+  - *Flag backdrop*: `body.pk-states` (set by `syncPackTheme()` in `go()`) turns on two
+    fixed pseudo-element layers in `app.css` — stripes + canton, and the stars as a mask —
+    tokens `--flag-red/-white/-blue/-star` and `--flag-op`. `test/contrast.test.js` checks all text
+    tokens at full flag strength in both themes; retune the flag → run it.
+  - *Results map* (`us-view.js`, data in `us-map.js`): the contiguous US on satellite-style
+    imagery registered to Census outlines (Albers equal-area conic), the winner's states in gold with
+    pins and abbreviation pills, the crowded Northeast as callouts in a right margin, and Alaska /
+    Hawaii insets **only when the winner owns them**. Labels that cannot fit without overlapping are
+    dropped (the pin stays). The pack opts in with `map: 'us'`; other packs keep the globe.
+    **Regenerate** with `test/build-us-map.js` (dev-only, needs `us-atlas topojson-client d3-geo sharp`);
+    it takes any equirectangular world image — the imagery in the repo is a Natural Earth stand-in, to be
+    replaced by NASA Blue Marble (see `NOTICE.md`).
+  - *Pack-switch zoom* (`heroSwap()` in `app.js`): on the menu the globe zooms toward North America
+    while the US map grows in, and back. 560 ms, a tap finishes it, Reduce Motion swaps instantly.
+  - *Win sound*: `Snd.eagle()` (synthesised raptor cry) replaces the fanfare on a States win; a loss
+    keeps the sting. It is not a recording — in films the "eagle" cry is a red-tailed hawk.
+  - *Credits*: Privacy → "Credits & licences" (`credits()`, 5 languages) and `NOTICE.md`. Add every
+    new asset to both.
 - **Selection.** The pack picked on the menu is held in memory (`SELPACK`) — it is
   *not* stored (privacy: exactly four keys). The record is per pack inside
   `record:v1`.
@@ -351,6 +370,8 @@ counters inside the single `record:v1` value.
   duplicates in a round, "All 50" exactly once and shuffled, golden prices, price
   targets, round-sum ≈ one budget, USD/US-spelling, taunts, facts, a 1,200-game
   simulation.
+- `node --test test/usmap.test.js` — the generated US map data (48 + AK + HI), the files being in
+  the offline cache, and the label layout (no overlaps, callouts inside the map).
 - `node --test test/contrast.test.js` — WCAG contrast of the real design tokens
   in both themes. No dependencies.
 - `node --test test/browser.test.js` — headless Chromium (Playwright; skipped
