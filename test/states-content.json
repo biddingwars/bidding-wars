@@ -1,0 +1,747 @@
+{
+ "abbr": {
+  "Alabama": "AL",
+  "Alaska": "AK",
+  "Arizona": "AZ",
+  "Arkansas": "AR",
+  "California": "CA",
+  "Colorado": "CO",
+  "Connecticut": "CT",
+  "Delaware": "DE",
+  "Florida": "FL",
+  "Georgia": "GA",
+  "Hawaii": "HI",
+  "Idaho": "ID",
+  "Illinois": "IL",
+  "Indiana": "IN",
+  "Iowa": "IA",
+  "Kansas": "KS",
+  "Kentucky": "KY",
+  "Louisiana": "LA",
+  "Maine": "ME",
+  "Maryland": "MD",
+  "Massachusetts": "MA",
+  "Michigan": "MI",
+  "Minnesota": "MN",
+  "Mississippi": "MS",
+  "Missouri": "MO",
+  "Montana": "MT",
+  "Nebraska": "NE",
+  "Nevada": "NV",
+  "New Hampshire": "NH",
+  "New Jersey": "NJ",
+  "New Mexico": "NM",
+  "New York": "NY",
+  "North Carolina": "NC",
+  "North Dakota": "ND",
+  "Ohio": "OH",
+  "Oklahoma": "OK",
+  "Oregon": "OR",
+  "Pennsylvania": "PA",
+  "Rhode Island": "RI",
+  "South Carolina": "SC",
+  "South Dakota": "SD",
+  "Tennessee": "TN",
+  "Texas": "TX",
+  "Utah": "UT",
+  "Vermont": "VT",
+  "Virginia": "VA",
+  "Washington": "WA",
+  "West Virginia": "WV",
+  "Wisconsin": "WI",
+  "Wyoming": "WY"
+ },
+ "names": {
+  "California": {
+   "de": "Kalifornien",
+   "fr": "Californie"
+  },
+  "Florida": {
+   "fr": "Floride"
+  },
+  "Georgia": {
+   "fr": "Géorgie"
+  },
+  "Hawaii": {
+   "es": "Hawái",
+   "fr": "Hawaï"
+  },
+  "Louisiana": {
+   "es": "Luisiana",
+   "fr": "Louisiane"
+  },
+  "New Hampshire": {
+   "es": "Nuevo Hampshire"
+  },
+  "New Jersey": {
+   "es": "Nueva Jersey"
+  },
+  "New Mexico": {
+   "it": "Nuovo Messico",
+   "es": "Nuevo México",
+   "fr": "Nouveau-Mexique"
+  },
+  "New York": {
+   "es": "Nueva York"
+  },
+  "North Carolina": {
+   "it": "Carolina del Nord",
+   "es": "Carolina del Norte",
+   "fr": "Caroline du Nord"
+  },
+  "South Carolina": {
+   "it": "Carolina del Sud",
+   "es": "Carolina del Sur",
+   "fr": "Caroline du Sud"
+  },
+  "North Dakota": {
+   "it": "Dakota del Nord",
+   "es": "Dakota del Norte",
+   "fr": "Dakota du Nord"
+  },
+  "South Dakota": {
+   "it": "Dakota del Sud",
+   "es": "Dakota del Sur",
+   "fr": "Dakota du Sud"
+  },
+  "Pennsylvania": {
+   "es": "Pensilvania",
+   "fr": "Pennsylvanie"
+  },
+  "Virginia": {
+   "fr": "Virginie"
+  },
+  "West Virginia": {
+   "it": "Virginia Occidentale",
+   "es": "Virginia Occidental",
+   "fr": "Virginie-Occidentale"
+  },
+  "Mississippi": {
+   "es": "Misisipi"
+  },
+  "Missouri": {
+   "es": "Misuri"
+  },
+  "Oregon": {
+   "es": "Oregón"
+  }
+ },
+ "unsure": [
+  "Spanish: Nuevo Hampshire, Nueva Jersey, Misisipi, Misuri, Oregón, Pensilvania, Hawái (RAE spellings vary by source)",
+  "German: North/South Carolina, North/South Dakota, New Mexico, Georgia and Pennsylvania are left as in English (German sources use both forms)",
+  "French: Hawaï vs Hawaii, and \"New Hampshire\" (kept in English)",
+  "Italian: Georgia, Hawaii and Pennsylvania left as in English"
+ ],
+ "facts": {
+  "Alabama": "The Wright brothers ran a flying school near Montgomery, Alabama, in 1910.",
+  "Alaska": "Denali in Alaska is the tallest mountain in North America, at 20,310 feet.",
+  "Arizona": "The Grand Canyon in Arizona is about 277 miles long and more than a mile deep.",
+  "Arkansas": "At Crater of Diamonds State Park in Arkansas, visitors can keep any diamonds they find.",
+  "California": "Giant sequoia trees in California can live for more than 3,000 years.",
+  "Colorado": "Mesa Verde in Colorado protects cliff homes built by Ancestral Puebloans about 800 years ago.",
+  "Connecticut": "The Connecticut River is the longest river in New England, at about 410 miles.",
+  "Delaware": "Delaware was the first state to approve the U.S. Constitution, on December 7, 1787.",
+  "Florida": "Rockets and space shuttles have launched from Kennedy Space Center in Florida.",
+  "Georgia": "Coca-Cola was invented in Atlanta, Georgia, in 1886.",
+  "Hawaii": "Measured from the sea floor, Mauna Kea in Hawaii is taller than Mount Everest.",
+  "Idaho": "Shoshone Falls in Idaho is taller than Niagara Falls.",
+  "Illinois": "Chicago dyes its river bright green every St. Patrick's Day.",
+  "Indiana": "The Indianapolis 500, a famous car race, is held in Indiana every May.",
+  "Iowa": "The baseball field from the movie \"Field of Dreams\" is real, and you can visit it in Iowa.",
+  "Kansas": "A monument near Lebanon, Kansas, marks the center of the 48 contiguous states.",
+  "Kentucky": "Mammoth Cave in Kentucky is the longest known cave system in the world.",
+  "Louisiana": "Jazz music got its start in New Orleans, Louisiana.",
+  "Maine": "Maine is the only state that borders just one other state: New Hampshire.",
+  "Maryland": "\"The Star-Spangled Banner\" was written after a battle at Fort McHenry in Baltimore, Maryland.",
+  "Massachusetts": "Basketball was invented in Springfield, Massachusetts, in 1891.",
+  "Michigan": "Michigan touches four of the five Great Lakes.",
+  "Minnesota": "Minnesota is the Land of 10,000 Lakes, and it actually has even more than that.",
+  "Mississippi": "The name Mississippi comes from an Ojibwe word meaning \"great river.\"",
+  "Missouri": "The Gateway Arch in St. Louis, Missouri, is 630 feet tall, the tallest arch in the world.",
+  "Montana": "Montana's Glacier National Park joins Canada's Waterton Lakes to form an International Peace Park.",
+  "Nebraska": "Chimney Rock in Nebraska was a famous landmark for pioneers on the Oregon Trail.",
+  "Nevada": "Great Basin National Park in Nevada has bristlecone pine trees that are thousands of years old.",
+  "New Hampshire": "Mount Washington in New Hampshire once recorded a wind gust of 231 miles per hour.",
+  "New Jersey": "The first organized baseball game is said to have been played in Hoboken, New Jersey, in 1846.",
+  "New Mexico": "Bats stream out of Carlsbad Caverns in New Mexico at dusk, and the cave has a huge room called the Big Room.",
+  "New York": "The Statue of Liberty, a gift from France, stands in New York Harbor.",
+  "North Carolina": "The Wright brothers made the first powered airplane flight at Kitty Hawk, North Carolina, in 1903.",
+  "North Dakota": "Theodore Roosevelt National Park in North Dakota is home to wild bison and prairie dogs.",
+  "Ohio": "Ohio's state flag is the only one in the country that is not a rectangle.",
+  "Oklahoma": "Oklahoma's state song is \"Oklahoma!\" from the famous musical.",
+  "Oregon": "Crater Lake in Oregon is the deepest lake in the United States, at 1,943 feet.",
+  "Pennsylvania": "The Liberty Bell is on display in Philadelphia, Pennsylvania.",
+  "Rhode Island": "Rhode Island is the smallest U.S. state by area, at about 1,200 square miles.",
+  "South Carolina": "South Carolina's official state beverage is milk.",
+  "South Dakota": "Mount Rushmore in South Dakota shows four U.S. presidents carved into granite.",
+  "Tennessee": "Nashville, Tennessee, is nicknamed Music City and is home to the Grand Ole Opry.",
+  "Texas": "Mission Control for NASA spaceflights is at the Johnson Space Center in Houston, Texas.",
+  "Utah": "The Great Salt Lake in Utah is saltier than the ocean.",
+  "Vermont": "Vermont makes more maple syrup than any other state.",
+  "Virginia": "Eight U.S. presidents were born in Virginia.",
+  "Washington": "Mount Rainier in Washington is an active volcano covered in glaciers.",
+  "West Virginia": "The New River Gorge Bridge in West Virginia is one of the longest steel arch bridges in the world.",
+  "Wisconsin": "Wisconsin is nicknamed \"America's Dairyland\" and is famous for its cheese.",
+  "Wyoming": "Yellowstone, mostly in Wyoming, became America's first national park in 1872."
+ },
+ "factSources": {
+  "Alabama": "Alabama Dept. of Archives & History / National Park Service (Wright Flying School, Montgomery)",
+  "Alaska": "National Park Service, Denali National Park",
+  "Arizona": "National Park Service, Grand Canyon NP \"Facts\"",
+  "Arkansas": "Arkansas State Parks, Crater of Diamonds",
+  "California": "National Park Service, Sequoia & Kings Canyon NP",
+  "Colorado": "National Park Service, Mesa Verde NP",
+  "Connecticut": "Connecticut DEEP / USGS (Connecticut River length)",
+  "Delaware": "Delaware Public Archives / National Archives (ratification, Dec. 7, 1787)",
+  "Florida": "NASA, Kennedy Space Center",
+  "Georgia": "The Coca-Cola Company history / Georgia Historical Society (1886)",
+  "Hawaii": "USGS Hawaiian Volcano Observatory / NOAA (Mauna Kea height from base)",
+  "Idaho": "Idaho Dept. of Parks and Recreation / Visit Idaho (Shoshone Falls 212 ft vs Niagara Horseshoe 167 ft)",
+  "Illinois": "City of Chicago / Chicago Journeymen Plumbers Local 130 (river dyeing since 1962)",
+  "Indiana": "Indianapolis Motor Speedway",
+  "Iowa": "Iowa Tourism Office / Field of Dreams Movie Site",
+  "Kansas": "Kansas Historical Society (Geographic Center of the U.S. monument, Lebanon)",
+  "Kentucky": "National Park Service, Mammoth Cave NP",
+  "Louisiana": "National Park Service, New Orleans Jazz NHP",
+  "Maine": "Maine State Library / U.S. Census Bureau state boundaries (borders NH only)",
+  "Maryland": "National Park Service, Fort McHenry",
+  "Massachusetts": "Basketball Hall of Fame / Springfield College (1891)",
+  "Michigan": "Michigan Sea Grant / EPA Great Lakes",
+  "Minnesota": "Minnesota DNR (11,842 lakes of 10+ acres)",
+  "Mississippi": "Mississippi Dept. of Archives & History (Ojibwe misi-ziibi)",
+  "Missouri": "National Park Service, Gateway Arch NP",
+  "Montana": "National Park Service, Waterton-Glacier International Peace Park",
+  "Nebraska": "National Park Service, Scotts Bluff NM / Oregon Trail",
+  "Nevada": "National Park Service, Great Basin NP",
+  "New Hampshire": "Mount Washington Observatory (231 mph, April 12, 1934)",
+  "New Jersey": "Hoboken Historical Museum / Baseball Hall of Fame (Elysian Fields, 1846)",
+  "New Mexico": "National Park Service, Carlsbad Caverns NP",
+  "New York": "National Park Service, Statue of Liberty NM",
+  "North Carolina": "National Park Service, Wright Brothers NM",
+  "North Dakota": "National Park Service, Theodore Roosevelt NP",
+  "Ohio": "Ohio Revised Code 5.01 / Ohio History Connection (burgee flag)",
+  "Oklahoma": "Oklahoma Historical Society (state song, 1953)",
+  "Oregon": "National Park Service, Crater Lake NP (1,943 ft)",
+  "Pennsylvania": "National Park Service, Independence NHP",
+  "Rhode Island": "U.S. Census Bureau / State of Rhode Island (about 1,214 sq mi)",
+  "South Carolina": "South Carolina Legislature, state beverage (milk, 1984)",
+  "South Dakota": "National Park Service, Mount Rushmore",
+  "Tennessee": "Grand Ole Opry / Nashville Convention & Visitors Corp",
+  "Texas": "NASA, Johnson Space Center",
+  "Utah": "Utah Geological Survey (Great Salt Lake salinity)",
+  "Vermont": "USDA NASS / Vermont Maple Sugar Makers (largest producer)",
+  "Virginia": "Virginia Museum of History & Culture / White House Historical Association (eight presidents)",
+  "Washington": "USGS Cascades Volcano Observatory / National Park Service, Mount Rainier NP",
+  "West Virginia": "National Park Service, New River Gorge NPP",
+  "Wisconsin": "Wisconsin Dept. of Agriculture, Trade and Consumer Protection",
+  "Wyoming": "National Park Service, Yellowstone (est. March 1, 1872)"
+ },
+ "centroids": {
+  "Alabama": [
+   32.78,
+   -86.83
+  ],
+  "Alaska": [
+   63.92,
+   -152.38
+  ],
+  "Arizona": [
+   34.27,
+   -111.66
+  ],
+  "Colorado": [
+   39.0,
+   -105.55
+  ],
+  "Florida": [
+   28.61,
+   -82.45
+  ],
+  "Georgia": [
+   32.64,
+   -83.44
+  ],
+  "Indiana": [
+   39.89,
+   -86.28
+  ],
+  "Kansas": [
+   38.49,
+   -98.38
+  ],
+  "Maine": [
+   45.35,
+   -69.24
+  ],
+  "Massachusetts": [
+   42.25,
+   -71.79
+  ],
+  "Minnesota": [
+   46.28,
+   -94.31
+  ],
+  "New Jersey": [
+   40.18,
+   -74.66
+  ],
+  "North Carolina": [
+   35.55,
+   -79.36
+  ],
+  "North Dakota": [
+   47.45,
+   -100.47
+  ],
+  "Oklahoma": [
+   35.59,
+   -97.49
+  ],
+  "Pennsylvania": [
+   40.88,
+   -77.8
+  ],
+  "South Dakota": [
+   44.44,
+   -100.23
+  ],
+  "Texas": [
+   31.46,
+   -99.32
+  ],
+  "Wyoming": [
+   43.0,
+   -107.55
+  ],
+  "Connecticut": [
+   41.62,
+   -72.73
+  ],
+  "Missouri": [
+   38.36,
+   -92.46
+  ],
+  "West Virginia": [
+   38.64,
+   -80.63
+  ],
+  "Illinois": [
+   40.04,
+   -89.2
+  ],
+  "New Mexico": [
+   34.41,
+   -106.11
+  ],
+  "Arkansas": [
+   34.89,
+   -92.44
+  ],
+  "California": [
+   37.18,
+   -119.47
+  ],
+  "Delaware": [
+   38.99,
+   -75.5
+  ],
+  "Hawaii": [
+   20.25,
+   -156.34
+  ],
+  "Iowa": [
+   42.08,
+   -93.5
+  ],
+  "Kentucky": [
+   37.54,
+   -85.3
+  ],
+  "Maryland": [
+   39.03,
+   -76.76
+  ],
+  "Michigan": [
+   44.32,
+   -85.38
+  ],
+  "Mississippi": [
+   32.73,
+   -89.67
+  ],
+  "Montana": [
+   47.05,
+   -109.63
+  ],
+  "New Hampshire": [
+   43.68,
+   -71.58
+  ],
+  "New York": [
+   42.94,
+   -75.51
+  ],
+  "Ohio": [
+   40.29,
+   -82.79
+  ],
+  "Oregon": [
+   43.93,
+   -120.56
+  ],
+  "Tennessee": [
+   35.86,
+   -86.35
+  ],
+  "Utah": [
+   39.31,
+   -111.67
+  ],
+  "Virginia": [
+   37.52,
+   -78.82
+  ],
+  "Washington": [
+   47.38,
+   -120.46
+  ],
+  "Wisconsin": [
+   44.63,
+   -89.99
+  ],
+  "Nebraska": [
+   41.54,
+   -99.79
+  ],
+  "South Carolina": [
+   33.91,
+   -80.89
+  ],
+  "Idaho": [
+   44.35,
+   -114.61
+  ],
+  "Nevada": [
+   39.33,
+   -116.63
+  ],
+  "Vermont": [
+   44.07,
+   -72.67
+  ],
+  "Louisiana": [
+   31.04,
+   -91.96
+  ],
+  "Rhode Island": [
+   41.68,
+   -71.55
+  ]
+ },
+ "tiers": [
+  {
+   "id": "mega",
+   "min": 20
+  },
+  {
+   "id": "large",
+   "min": 10
+  },
+  {
+   "id": "mid",
+   "min": 5
+  },
+  {
+   "id": "small",
+   "min": 2
+  },
+  {
+   "id": "micro",
+   "min": 0
+  }
+ ],
+ "generic": {
+  "en": {
+   "mega": [
+    "{n} is a heavyweight. Sit down and watch me bid.",
+    "Everything is bigger in {n}. So is my bid.",
+    "You're bidding on {n}? Bold. Pricey. Mine.",
+    "{n} is the main event, and I'm not sharing the spotlight."
+   ],
+   "large": [
+    "{n} is a big one. Luckily, I'm bigger.",
+    "I've had my eye on {n} all night.",
+    "Go ahead, raise for {n}. I enjoy a challenge.",
+    "{n} has plenty of room for me and none for you."
+   ],
+   "mid": [
+    "{n} is a solid pick, and it's about to be mine.",
+    "A good state for a good bidder. That's me, in case you were wondering.",
+    "You want {n}? Get in line. At the back.",
+    "{n} will look great in my collection."
+   ],
+   "small": [
+    "{n} is small but mighty. Mostly mighty.",
+    "I'll bid on {n}, and I'll be gracious about it.",
+    "Don't overpay for {n}. Actually, please do.",
+    "{n} isn't flashy, and neither is how I'm about to beat you."
+   ],
+   "micro": [
+    "{n} is tiny, and I want it anyway.",
+    "I could fit {n} in my pocket. Let me try.",
+    "Small state, big opinions about who should own it. Me.",
+    "{n}? Cute. Cheap. Mine."
+   ]
+  },
+  "de": {
+   "mega": [
+    "{n} ist ein Schwergewicht. Setz dich hin und schau zu.",
+    "{n}? Alles ist größer, auch mein Gebot.",
+    "Du bietest auf {n}? Mutig. Teuer. Meins.",
+    "{n} ist das Hauptereignis, und ich teile die Bühne nicht."
+   ],
+   "large": [
+    "{n} ist ein großer Brocken. Zum Glück bin ich größer.",
+    "Ich habe den ganzen Abend ein Auge auf {n} geworfen.",
+    "Erhöh ruhig für {n}. Ich mag Herausforderungen.",
+    "{n} hat Platz für mich und keinen für dich."
+   ],
+   "mid": [
+    "{n} ist eine solide Wahl, und gleich gehört es mir.",
+    "Ein guter Staat für einen guten Bieter. Das bin ich, falls du dich fragst.",
+    "Du willst {n}? Stell dich hinten an. Ganz hinten.",
+    "{n} macht sich gut in meiner Sammlung."
+   ],
+   "small": [
+    "{n} ist klein, aber oho. Hauptsächlich oho.",
+    "Ich biete auf {n} und bleibe dabei freundlich.",
+    "Zahl bloß nicht zu viel für {n}. Doch, bitte tu es.",
+    "{n} ist nicht auffällig, und mein Sieg über dich wird es auch nicht sein."
+   ],
+   "micro": [
+    "{n} ist winzig, und ich will es trotzdem.",
+    "{n} passt in meine Hosentasche. Ich probiere es aus.",
+    "Kleiner Staat, große Meinung darüber, wem er gehört. Mir.",
+    "{n}? Niedlich. Günstig. Meins."
+   ]
+  },
+  "it": {
+   "mega": [
+    "{n} è un peso massimo. Siediti e guardami offrire.",
+    "{n}? Tutto in grande, anche la mia offerta.",
+    "Offri per {n}? Audace. Costoso. Mio.",
+    "{n} è l'evento principale e non divido i riflettori."
+   ],
+   "large": [
+    "{n} è uno grosso. Per fortuna io sono più grosso.",
+    "Ho puntato {n} per tutta la sera.",
+    "Rilancia pure per {n}. Adoro le sfide.",
+    "{n} ha posto per me e nessuno per te."
+   ],
+   "mid": [
+    "{n} è una scelta solida e sta per diventare mia.",
+    "Un bello stato per un bravo offerente. Cioè io, nel caso te lo chiedessi.",
+    "Vuoi {n}? Mettiti in fila. In fondo.",
+    "{n} starà benissimo nella mia collezione."
+   ],
+   "small": [
+    "{n} è piccolo ma tosto. Soprattutto tosto.",
+    "Offro per {n} e lo faccio con eleganza.",
+    "Non pagare troppo {n}. Anzi, fallo pure.",
+    "{n} non è appariscente, e nemmeno la mia vittoria su di te lo sarà."
+   ],
+   "micro": [
+    "{n} è minuscolo, e lo voglio lo stesso.",
+    "{n} mi entra in tasca. Provo.",
+    "Stato piccolo, grandi idee su chi dovrebbe averlo. Io.",
+    "{n}? Carino. Economico. Mio."
+   ]
+  },
+  "es": {
+   "mega": [
+    "{n} es un peso pesado. Siéntate y mira cómo pujo.",
+    "{n}: todo a lo grande, y mi puja también.",
+    "¿Pujas por {n}? Atrevido. Caro. Mío.",
+    "{n} es el evento principal y no comparto el foco."
+   ],
+   "large": [
+    "{n} es grande. Por suerte, yo soy más grande.",
+    "Llevo toda la noche con la vista puesta en {n}.",
+    "Sube por {n}. Me encantan los retos.",
+    "{n} tiene sitio para mí y ninguno para ti."
+   ],
+   "mid": [
+    "{n} es una apuesta sólida y pronto será mío.",
+    "Un buen estado para un buen postor. Es decir, yo, por si te lo preguntabas.",
+    "¿Quieres {n}? Haz cola. Al final.",
+    "{n} lucirá genial en mi colección."
+   ],
+   "small": [
+    "{n} es pequeño pero poderoso. Sobre todo poderoso.",
+    "Voy a pujar por {n} y lo haré con elegancia.",
+    "No pagues de más por {n}. Bueno, hazlo.",
+    "{n} no es llamativo, y mi victoria sobre ti tampoco lo será."
+   ],
+   "micro": [
+    "{n} es diminuto y lo quiero igualmente.",
+    "{n} me cabe en el bolsillo. Voy a probar.",
+    "Estado pequeño, grandes ideas sobre quién debe quedárselo. Yo.",
+    "¿{n}? Mono. Barato. Mío."
+   ]
+  },
+  "fr": {
+   "mega": [
+    "{n} est un poids lourd. Assieds-toi et regarde-moi enchérir.",
+    "{n}, c'est du lourd. Mon enchère aussi.",
+    "Tu enchéris sur {n} ? Audacieux. Cher. À moi.",
+    "{n} est l'événement principal et je ne partage pas la vedette."
+   ],
+   "large": [
+    "{n} est un gros morceau. Heureusement, je suis plus gros.",
+    "Je guette {n} depuis le début de la soirée.",
+    "Surenchéris pour {n}. J'adore les défis.",
+    "{n} a de la place pour moi, et aucune pour toi."
+   ],
+   "mid": [
+    "{n} est un choix solide, et il va bientôt être à moi.",
+    "Un bel État pour un bon enchérisseur. C'est moi, au cas où tu te poserais la question.",
+    "Tu veux {n} ? Mets-toi dans la file. Tout au bout.",
+    "{n} sera superbe dans ma collection."
+   ],
+   "small": [
+    "{n} est petit mais costaud. Surtout costaud.",
+    "J'enchéris sur {n}, et avec élégance.",
+    "Ne paie pas {n} trop cher. Enfin si, fais-le.",
+    "{n} n'est pas tape-à-l'œil, et ma victoire sur toi ne le sera pas non plus."
+   ],
+   "micro": [
+    "{n} est minuscule, et je le veux quand même.",
+    "{n} tient dans ma poche. Je vais essayer.",
+    "Petit État, grandes idées sur son propriétaire. Moi.",
+    "{n} ? Mignon. Pas cher. À moi."
+   ]
+  }
+ },
+ "items": {
+  "CA": [
+   "California. Sunshine, redwoods, and a price tag to match.",
+   "I'll take California and the whole Pacific coastline with it.",
+   "Bid on California if you enjoy expensive sunsets.",
+   "One state, one giant coastline, one clear winner. Me."
+  ],
+  "TX": [
+   "Texas is big, and so is my bid. Yours looks a little small.",
+   "Everything's bigger in Texas, including how badly I'm about to beat you.",
+   "I'll take Texas, and I'll take it with a smile.",
+   "Texas is a lot of state. You're going to need a lot of money."
+  ],
+  "FL": [
+   "Florida: beaches, rockets, and a bidding war I intend to win.",
+   "I'm taking Florida. Sunscreen is on you.",
+   "Florida isn't going anywhere, except into my collection.",
+   "You can bid on Florida all night. I'll still be the one packing."
+  ],
+  "NY": [
+   "New York. The bidding never sleeps, and neither do I.",
+   "If you can bid on it there, you can bid on it anywhere. Back off.",
+   "New York is mine. I'll send a postcard.",
+   "One more raise for New York and I'll start hearing the skyline cheer."
+  ],
+  "PA": [
+   "Pennsylvania is a keystone, and I'm building my collection around it.",
+   "I'm ringing the Liberty Bell for Pennsylvania. That's me winning.",
+   "Pennsylvania: history, hills, and now, my property.",
+   "You want Pennsylvania? You'll have to outbid history."
+  ],
+  "IL": [
+   "Illinois: deep dish, big lake, bigger bid. Mine.",
+   "I'll take Illinois and the skyline with it.",
+   "Illinois is a main-street kind of state. I'm the main street.",
+   "Windy city, windy bidding. I'm still winning Illinois."
+  ],
+  "OH": [
+   "Ohio is round on the edges and mine in the middle.",
+   "I'm buying Ohio. Mark it on the map. Then mark it mine.",
+   "Ohio is where the lots turn. I turn them toward me.",
+   "Raise for Ohio if you like. I like a good heartland win."
+  ],
+  "GA": [
+   "Georgia is on my mind. And in my collection soon.",
+   "Sweet as a peach, and I'm taking it.",
+   "Georgia? I'll bid until the peaches stop falling.",
+   "I'm bidding on Georgia. You're welcome to watch."
+  ],
+  "NC": [
+   "North Carolina: mountains, beaches, and my winning bid.",
+   "I'm taking North Carolina to new heights.",
+   "North Carolina takes flight, and I'm the pilot.",
+   "Go ahead, raise for North Carolina. I'm just getting started."
+  ],
+  "MI": [
+   "Michigan is a mitten, and I'm holding it tight.",
+   "Michigan has lakes on all sides. I'll take them all.",
+   "I'm taking Michigan, handshake included.",
+   "Michigan? I'll wear it like a glove. A very expensive glove."
+  ],
+  "WY": [
+   "Wyoming has more bison than bidders. Today that's me.",
+   "Wyoming: wide open and wide open to my bid.",
+   "I'll take Wyoming. Yellowstone comes with it.",
+   "Wyoming is small, but the sky is big, and so is my bid."
+  ],
+  "VT": [
+   "Vermont is the maple syrup of states. Sweet. Mine.",
+   "I'll bid on Vermont until the leaves change color.",
+   "Vermont: green mountains, gold bid.",
+   "Vermont is quiet. I'm about to be quieter. And richer."
+  ],
+  "AK": [
+   "Alaska is the biggest state by land, and my bid is about to match.",
+   "I'll take Alaska. The mountains come with it.",
+   "Alaska is a frontier, and I am a pioneer with a bid.",
+   "Go on, bid on Alaska. I'll see you at the northern lights."
+  ],
+  "ND": [
+   "North Dakota is prairie, sky, and, soon, my property.",
+   "I'll bid on North Dakota with a wide-open heart.",
+   "North Dakota: bison, buttes, and a bid with my name on it.",
+   "I'm taking North Dakota. No snow shovel required."
+  ],
+  "SD": [
+   "South Dakota carved a place in history, and I'm carving out a win.",
+   "I'll take South Dakota, presidents and all.",
+   "South Dakota is a badland, and I'm a good bidder.",
+   "Go ahead and raise for South Dakota. I'll set the stone."
+  ],
+  "DE": [
+   "Delaware was first to the Constitution. I'm first to this bid.",
+   "Small wonder, big win: Delaware is mine.",
+   "Delaware: small state, first state, my state.",
+   "You'd have to move fast to catch me on Delaware."
+  ],
+  "RI": [
+   "Rhode Island is small, but I make room.",
+   "I'll bid on Rhode Island and keep the ocean view.",
+   "Rhode Island: the Ocean State and, shortly, my state.",
+   "Rhode Island fits in my pocket and my plans."
+  ],
+  "MT": [
+   "Montana: big sky, small price, mine.",
+   "I'll take Montana and the whole open sky.",
+   "Montana has room to roam, and I have room to win.",
+   "Raise for Montana if you like. I'll raise the sky."
+  ],
+  "ME": [
+   "Maine is where the road ends and my winning streak starts.",
+   "I'll take Maine, lighthouse and all.",
+   "Maine, the way life should be. And now, mine.",
+   "Maine is a quiet coast, and I'm quietly winning."
+  ],
+  "NH": [
+   "New Hampshire: live free, bid hard.",
+   "I'll take New Hampshire and its granite with it.",
+   "New Hampshire has mountains and I have a bid. Case closed.",
+   "Mount Washington is windy, and so is my win."
+  ]
+ }
+}

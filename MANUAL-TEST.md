@@ -11,7 +11,7 @@ games — is covered by tests, listed in the PR description.
 2. **Fully close every tab** of the site (not reload), reopen.
 3. To be sure the new service worker is in charge: Settings → Safari → Advanced
    → Website Data → remove `biddingwars.github.io`, then load the site once.
-   (`CACHE` is `bidding-wars-v23`; the fonts are gone from the cache list.)
+   (`CACHE` is `bidding-wars-v25`.)
 
 ## 1. System fonts (the biggest "assumed" item)
 
@@ -88,9 +88,36 @@ I could not render San Francisco in my environment (Linux). The stack is
 - [ ] Double-tap **Drop out** very fast: sold once, charged once.
 - [ ] Multiplayer, 3 and 4 players: the opening bid rotates seat by seat; a
       double tap after your turn does not act for the next player.
-- [ ] The "Soon" tiles (States, Capitals, World) and Online 1 vs 1 show a
+- [ ] The "Soon" tiles (Capitals, World) and Online 1 vs 1 show a
       friendly message and open nothing.
 - [ ] Each of the 5 languages: menu, setup, auction, sold, results.
 - [ ] VoiceOver: menu buttons, the setup choices, "Raise by 5", Drop out, the
       price and top bid being announced as the auction moves, the sealed
       results (values must **not** be read before you lift a bar).
+
+## 7. US States pack (PR A: data, engine, pricing, currency)
+
+Fun facts are **unverified** (see `FACTS-SOURCES.md`) — read a handful on the
+SOLD screen and tell me any that look wrong.
+
+- [ ] Menu: tap **US States** (it highlights, the footer says "50 states", the
+      record pill shows States' own record). Tap **Countries** again: nothing
+      about Countries changed (levels, €, 196).
+- [ ] Setup for States: lots 5 / 10 / 15 / 20 / 30 / 40 / **All 50**, no
+      difficulty section, budget **$100** at 10 lots and **$500** at All 50.
+- [ ] Play an **All 50** game (clock off): every state comes up once, none twice.
+- [ ] Every screen is in **dollars** (`$1,234`) in all five languages — no `€`,
+      no "euro", no "countries" anywhere (menu, setup, How to play, auction,
+      SOLD, results, Record).
+- [ ] SOLD screen: a short fun fact under the price chip; nothing overlaps the
+      collection tray, on iPhone SE, a Pro Max and iPad; the Next lot button is
+      always reachable.
+- [ ] Results: "shopped smartest at $0.00 per million", the **Fun facts** button
+      opens a sheet with one fact per state of the round, the globe shows the
+      winner's states.
+- [ ] Bot feel: it should feel like the Countries bot — beatable by a patient
+      player, not a pushover. The big states (CA, TX, FL, NY) are the expensive
+      lots (roughly $45–60, $35–48, $26–35, $22–30 ideal), the smallest about $1–2.
+- [ ] Privacy → Delete all data still resets everything; only four values are ever
+      stored (picking States stores nothing).
+- [ ] Offline: after one visit, States works in airplane mode (the pack is cached).

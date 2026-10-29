@@ -29,7 +29,8 @@
   /* id → file, plus the few facts the menus need before the data is loaded.
      `count` is checked against the real pack by the tests so it cannot drift. */
   const META = meta || [
-    { id: 'countries', file: 'pack-countries.js', count: 196 }
+    { id: 'countries', file: 'pack-countries.js', count: 196, sym: '€' },
+    { id: 'states', file: 'pack-states.js', count: 50, sym: '$' }
   ];
 
   const loaded = new Map(), pending = new Map();

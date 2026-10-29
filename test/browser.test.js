@@ -220,12 +220,17 @@ test('offline: after one visit the whole game, including the lazy pack, works wi
   await page.evaluate(() => navigator.serviceWorker.ready);
   await page.waitForFunction(async () => (await caches.keys()).length > 0 && (await (await caches.open((await caches.keys())[0])).keys()).length >= 20, null, { timeout: 15000 });
   const cached = await page.evaluate(async () => (await (await caches.open((await caches.keys())[0])).keys()).map(r => r.url.replace(/^.*\/bidding-wars\//, '')));
-  for (const f of ['engine.js', 'packs.js', 'banter.js', 'pack-countries.js', 'app.js', 'globe.js', 'sound.js', 'fx.js', 'app.css', 'globe-hero.webp']) assert.ok(cached.includes(f), f + ' is in the offline cache');
+  for (const f of ['engine.js', 'packs.js', 'banter.js', 'pack-countries.js', 'pack-states.js', 'app.js', 'globe.js', 'sound.js', 'fx.js', 'app.css', 'globe-hero.webp']) assert.ok(cached.includes(f), f + ' is in the offline cache');
   assert.ok(!cached.some(f => /fonts\.css|\.woff2/.test(f)), 'no font files are cached any more');
   await ctx.setOffline(true);
   await page.reload();
   await page.waitForFunction(() => document.body.classList.contains('booted'));
   await startSolo(page);                                       // the pack comes from the cache
+  await autoplay(page);
+  await reveal(page);
+  await page.click('#menu'); await page.waitForSelector('#m1');       // …and so does the States pack, offline
+  await pickPack(page, 'states');
+  await startSolo(page, 5, 0);
   await autoplay(page);
   await reveal(page);
   assert.deepEqual(errors, []);
@@ -556,4 +561,150 @@ test('results on iPad landscape: everything on one screen, globe labelled, a pla
   assert.equal(prevented, false, 'a plain wheel / two-finger scroll is left to the page');
   assert.deepEqual(errors, []);
   await ctx.close();
+});
+
+/* ---------------------------------------------------------------- US States pack */
+const pickPack = async (page, id) => { await page.click(`[data-pack="${id}"]`); await page.waitForSelector(`[data-pack="${id}"][aria-current="true"]`); };
+const bodyText = page => page.evaluate(() => document.body.innerText);
+
+test('US STATES: pick it on the menu, setup has All 50 and no difficulty, play, fun fact on SOLD, dollars only, own record', { skip: SKIP }, async () => {
+  const { page, errors, ctx, requests } = await open();
+  await pickPack(page, 'states');
+  assert.ok(!/€/.test(await bodyText(page)), 'no euro sign on the States menu');
+  await page.click('#m1'); await page.waitForSelector('#start');
+  assert.deepEqual(await page.$$eval('[data-g="lots"] [data-v]', e => e.map(x => x.dataset.v)), ['5', '10', '15', '20', '30', '40', '50']);
+  assert.match(await page.textContent('[data-g="lots"] [data-v="50"]'), /All 50/);
+  assert.equal(await page.$('[data-g="level"]'), null, 'no difficulty filter for States');
+  assert.equal((await page.textContent('#bud')).trim(), '$100');
+  await pick(page, 'lots', 50); assert.equal((await page.textContent('#bud')).trim(), '$500');
+  await pick(page, 'lots', 5); await pick(page, 'clock', 0);
+  await page.click('#start'); await page.waitForSelector('#ctrl');
+  assert.ok(requests.includes('pack-states.js'), 'pack file loaded lazily');
+  assert.ok(!/€/.test(await bodyText(page)), 'no euro sign in the auction');
+  await page.evaluate(() => { window.think = () => Promise.resolve(); });
+  await page.waitForSelector('#pass:not(:disabled)'); await page.click('#pass');
+  await page.waitForSelector('#sold.final');
+  const fact = await page.textContent('#sold .fact');
+  assert.ok(fact && fact.length > 20 && fact.length <= 140, 'fun fact on the SOLD screen: ' + fact);
+  assert.ok(!/€/.test(await bodyText(page)), 'no euro sign on SOLD');
+  assert.match(await page.textContent('#sold .soldline .num'), /^\$[\d,]+$/);
+  await autoplay(page); await reveal(page);
+  const resText = await bodyText(page);
+  assert.ok(!/€/.test(resText), 'no euro sign on results');
+  assert.match(resText, /shopped smartest at \$\d+\.\d\d per million/, 'efficiency reads $0.00 per million');
+  await page.waitForSelector('#facts'); await page.click('#facts'); await page.waitForSelector('.sheetbox .row');
+  assert.equal(await page.$$eval('.sheetbox .row', e => e.length), 5, 'one fun fact per state of the round');
+  const rec = JSON.parse(await page.evaluate(() => localStorage.getItem('record:v1')));
+  assert.equal(rec.packs.states.played, 1); assert.ok(!rec.packs.countries || !rec.packs.countries.played);
+  const keys = await page.evaluate(() => Object.keys(localStorage).sort());
+  assert.ok(keys.every(k => ['lang:v1', 'theme:v1', 'record:v1', 'name:v1'].includes(k)), 'only the four documented keys: ' + keys);
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('US STATES: all 50 states, each exactly once, through the real UI', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open();
+  await pickPack(page, 'states');
+  await startSolo(page, 50, 0);
+  await autoplay(page, { maxSteps: 2500 });
+  const r = await page.evaluate(() => ({ seen: S.items.map(i => i.id), bought: S.players.flatMap(p => p.bought.map(b => b.id)) }));
+  assert.equal(r.seen.length, 50); assert.equal(new Set(r.seen).size, 50, 'every state once');
+  assert.equal(r.bought.length, 50); assert.equal(new Set(r.bought).size, 50, 'sold exactly once');
+  await reveal(page);
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('US STATES: 2 to 4 players in every language, light and dark, never a euro sign', { skip: SKIP }, async () => {
+  for (const [lang, n, scheme] of [['en', 4, 'dark'], ['de', 3, 'light'], ['it', 2, 'dark'], ['es', 4, 'light'], ['fr', 3, 'dark']]) {
+    const { page, errors, ctx } = await open({ scheme, init: l => localStorage.setItem('lang:v1', l), initArg: lang });
+    await pickPack(page, 'states');
+    await page.click('#m2'); await page.waitForSelector('#start');
+    await pick(page, 'lots', 5); await pick(page, 'clock', 0); await pick(page, 'players', n);
+    await page.click('#start'); await page.waitForSelector('#ctrl');
+    assert.ok(!/€/.test(await bodyText(page)), lang + ' auction has no €');
+    await autoplay(page); await reveal(page);
+    assert.ok(!/€/.test(await bodyText(page)), lang + ' results have no €');
+    assert.deepEqual(errors, [], lang);
+    await ctx.close();
+  }
+});
+
+test('US STATES: the auction never scrolls with the longest names, 4 seats, a 3-digit price and a long taunt', { skip: SKIP }, async () => {
+  const sizes = [[402, 720], [375, 560], [393, 700], [375, 667], [430, 932], [834, 1194], [1194, 834], [507, 1024], [844, 390]];
+  for (const [w, h] of sizes) for (const lang of ['de', 'fr']) for (const np of [2, 4]) {
+    const { page, errors, ctx } = await open({ viewport: { width: w, height: h }, init: l => localStorage.setItem('lang:v1', l), initArg: lang });
+    await page.evaluate(() => { window.think = () => new Promise(() => {}); });
+    await page.evaluate(async np => {
+      const pack = await Packs.load('states'); PACK = pack;
+      const names = ['Maximiliane-Sophie', 'Bartholomäus-Jan', 'Wolfeschlegelstein', 'Ägidius-Konstantin'];
+      S = Engine.newAuction({ pack, kind: np === 2 ? 'solo' : 'multi', level: 'all', lots: 50, clock: 30, players: np === 2 ? [{ name: names[0] }, { name: 'Bot', ai: true }] : names.map(n => ({ name: n })), rng: rnd });
+      Engine.startLot(S);
+      S.items[S.i] = pack.items.find(i => i.id === 'NC');
+      S.players.forEach((p, i) => { p.budget = 500 - i; p.bought = new Array(20).fill({}); });
+      S.L.price = 289; S.L.holder = np - 1; S.L.turn = 0;
+      S._taunt = 'Empires are built on lots like this one. Yours is built on islands of regret and spreadsheets.';
+      paintLot(); showTaunt(S._taunt); controls();
+    }, np);
+    const r = await page.evaluate(() => { const sc = document.querySelector('.screen'); return { y: sc.scrollHeight - sc.clientHeight, x: sc.scrollWidth - sc.clientWidth, page: document.documentElement.scrollHeight - innerHeight }; });
+    assert.ok(r.y <= 1 && r.x <= 1 && r.page <= 1, `${w}x${h} ${lang} ${np}p scrolls: ${JSON.stringify(r)}`);
+    const dockBottom = await page.$eval('#ctrl', e => e.getBoundingClientRect().bottom);
+    assert.ok(dockBottom <= h + 0.5, `${w}x${h} dock fits (${dockBottom})`);
+    assert.deepEqual(errors, []);
+    await ctx.close();
+  }
+});
+
+test('US STATES: the sold moment fits every screen with the longest fun fact', { skip: SKIP }, async () => {
+  for (const [w, h] of [[402, 720], [375, 560], [320, 568], [834, 1194], [1194, 834], [844, 390], [667, 375]]) for (const lang of ['de', 'en']) {
+    const { page, errors, ctx } = await open({ viewport: { width: w, height: h }, init: l => localStorage.setItem('lang:v1', l), initArg: lang });
+    await pickPack(page, 'states');
+    await startSolo(page, 5, 0);
+    await page.evaluate(() => {
+      window.think = () => Promise.resolve(); S.players[0].name = 'Wolfeschlegelstein';
+      const longest = Object.values(S.pack.facts).map(f => f.en).sort((a, b) => b.length - a.length)[0];
+      S.pack.facts[S.items[S.i].id] = { en: longest };
+    });
+    await page.waitForSelector('#pass:not(:disabled)'); await page.click('#pass');
+    await page.waitForSelector('#sold.final');
+    const r = await page.evaluate(() => { const q = s => document.querySelector(s).getBoundingClientRect(); const p = q('.plate'), n = q('#n'), t = q('.tray'), l = q('.soldline'), f = q('.fact'); return { plateTop: p.top, nextBottom: n.bottom, nextRight: n.right, trayBottom: t.bottom, soldRight: l.right, factBottom: f.bottom, factTop: f.top, trayTop: t.top, vh: innerHeight, vw: innerWidth }; });
+    assert.ok(r.plateTop >= 0, `${w}x${h} SOLD plate clipped (${r.plateTop})`);
+    assert.ok(r.nextBottom <= h + 0.5 && r.nextRight <= w + 0.5, `${w}x${h} Next lot clipped (${JSON.stringify(r)})`);
+    assert.ok(r.trayBottom <= h && r.soldRight <= w + 0.5, `${w}x${h} collection/line clipped`);
+    assert.ok(r.factBottom <= r.trayTop + 1 && r.factBottom <= h, `${w}x${h} fact overlaps the tray (${JSON.stringify(r)})`);
+    assert.deepEqual(errors, []);
+    await ctx.close();
+  }
+});
+
+test('Countries is unchanged when States is picked and then Countries again', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open();
+  await pickPack(page, 'states'); await pickPack(page, 'countries');
+  await page.click('#m1'); await page.waitForSelector('#start');
+  assert.equal((await page.textContent('#bud')).trim(), '€100');
+  assert.ok(await page.$('[data-g="level"]'), 'Countries keeps its difficulty levels');
+  assert.equal(await page.$('[data-g="lots"] [data-v="50"]'), null);
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('US STATES: how to play, setup and record say states and dollars in every language — no countries, no euros', { skip: SKIP }, async () => {
+  const bad = /€|\beuros?\b|\bcountr|\bLänder\b|\bLand\b|\bpaesi?\b|\bpaíses\b|\bpaís\b|\bpays\b|\bEuropa\b|\bEurope\b|\bEuropei?\b/i;
+  for (const lang of ['en', 'de', 'it', 'es', 'fr']) {
+    const { page, errors, ctx } = await open({ init: l => localStorage.setItem('lang:v1', l), initArg: lang });
+    await pickPack(page, 'states');
+    const menuTxt = await page.evaluate(() => { const c = document.body.cloneNode(true); c.querySelectorAll('.pack, script, style').forEach(e => e.remove()); return c.textContent; });
+    assert.ok(!bad.test(menuTxt), `${lang} menu: ` + menuTxt.match(bad));
+    await page.click('#mr');
+    await page.waitForSelector('.sheetbox');
+    const t1 = await page.textContent('.sheetbox');
+    assert.ok(!bad.test(t1), `${lang} how-to-play: ` + t1.match(bad));
+    assert.match(t1, /\$/, lang + ' how-to-play shows dollars');
+    await page.keyboard.press('Escape');
+    await page.click('#m1'); await page.waitForSelector('#start');
+    const t2 = await page.textContent('.sheetbox');
+    assert.ok(!bad.test(t2), `${lang} setup: ` + t2.match(bad));
+    assert.deepEqual(errors, [], lang);
+    await ctx.close();
+  }
 });

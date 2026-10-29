@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const Engine = require('../engine.js');
 const createRegistry = require('../packs.js');
 const countries = require('../pack-countries.js');
+const statesPack = require('../pack-states.js');
 const banter = require('../banter.js');
 const fixture = require('./fixture-pack.js');
 const golden = require('./golden-countries.json');
@@ -372,11 +373,11 @@ test('records: applyGame keeps streaks, best game and per-level counts, per pack
 });
 
 /* ================================================================ SIMULATION */
-test('SIMULATION: 4,000 seeded games, all packs, modes, levels, player counts, policies — no exception, NaN or stuck state', () => {
+test('SIMULATION: 4,000 seeded games, all three packs, modes, levels, player counts, policies — no exception, NaN or stuck state', () => {
   const rng = Engine.seededRng(2024);
   const stats = { games: 0, walkovers: 0, broke: 0, byPack: {}, lots: 0 };
   for (let k = 0; k < 4000; k++) {
-    const pack = rng(2) ? countries : fixture;
+    const pack = [countries, fixture, statesPack][rng(3)];
     const level = pack.levels[rng(pack.levels.length)].id;
     const kind = rng(2) ? 'solo' : 'multi';
     const n = kind === 'solo' ? 2 : 2 + rng(3);
@@ -390,7 +391,7 @@ test('SIMULATION: 4,000 seeded games, all packs, modes, levels, player counts, p
     if (g.reason === 'walkover') stats.walkovers++;
     if (g.reason === 'broke') stats.broke++;
   }
-  assert.ok(stats.byPack.countries > 1500 && stats.byPack.fixture > 1500);
+  assert.ok(stats.byPack.countries > 1000 && stats.byPack.fixture > 1000 && stats.byPack.states > 1000);
   assert.ok(stats.walkovers > 0 && stats.broke >= 0, 'edge endings were exercised: ' + JSON.stringify(stats));
   console.log('   simulated', JSON.stringify(stats));
 });

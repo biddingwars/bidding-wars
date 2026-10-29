@@ -1,0 +1,260 @@
+{
+ "source": "U.S. Census Bureau, Population Division",
+ "table": "Annual Estimates of the Resident Population for the United States, Regions, States, District of Columbia, and Puerto Rico: April 1, 2020 to July 1, 2025 (NST-EST2025-POP)",
+ "vintage": "Vintage 2025 (population estimate as of July 1, 2025)",
+ "release": "January 2026",
+ "license": "U.S. Government work, public domain",
+ "note": "The 50 states only. District of Columbia and Puerto Rico are left out on purpose.",
+ "states": [
+  {
+   "name": "Alabama",
+   "fips": "01",
+   "pop": 5193088
+  },
+  {
+   "name": "Alaska",
+   "fips": "02",
+   "pop": 737270
+  },
+  {
+   "name": "Arizona",
+   "fips": "04",
+   "pop": 7623818
+  },
+  {
+   "name": "Arkansas",
+   "fips": "05",
+   "pop": 3114791
+  },
+  {
+   "name": "California",
+   "fips": "06",
+   "pop": 39355309
+  },
+  {
+   "name": "Colorado",
+   "fips": "08",
+   "pop": 6012561
+  },
+  {
+   "name": "Connecticut",
+   "fips": "09",
+   "pop": 3688496
+  },
+  {
+   "name": "Delaware",
+   "fips": "10",
+   "pop": 1059952
+  },
+  {
+   "name": "Florida",
+   "fips": "12",
+   "pop": 23462518
+  },
+  {
+   "name": "Georgia",
+   "fips": "13",
+   "pop": 11302748
+  },
+  {
+   "name": "Hawaii",
+   "fips": "15",
+   "pop": 1432820
+  },
+  {
+   "name": "Idaho",
+   "fips": "16",
+   "pop": 2029733
+  },
+  {
+   "name": "Illinois",
+   "fips": "17",
+   "pop": 12719141
+  },
+  {
+   "name": "Indiana",
+   "fips": "18",
+   "pop": 6973333
+  },
+  {
+   "name": "Iowa",
+   "fips": "19",
+   "pop": 3238387
+  },
+  {
+   "name": "Kansas",
+   "fips": "20",
+   "pop": 2977220
+  },
+  {
+   "name": "Kentucky",
+   "fips": "21",
+   "pop": 4606864
+  },
+  {
+   "name": "Louisiana",
+   "fips": "22",
+   "pop": 4618189
+  },
+  {
+   "name": "Maine",
+   "fips": "23",
+   "pop": 1414874
+  },
+  {
+   "name": "Maryland",
+   "fips": "24",
+   "pop": 6265347
+  },
+  {
+   "name": "Massachusetts",
+   "fips": "25",
+   "pop": 7154084
+  },
+  {
+   "name": "Michigan",
+   "fips": "26",
+   "pop": 10127884
+  },
+  {
+   "name": "Minnesota",
+   "fips": "27",
+   "pop": 5830405
+  },
+  {
+   "name": "Mississippi",
+   "fips": "28",
+   "pop": 2954160
+  },
+  {
+   "name": "Missouri",
+   "fips": "29",
+   "pop": 6270541
+  },
+  {
+   "name": "Montana",
+   "fips": "30",
+   "pop": 1144694
+  },
+  {
+   "name": "Nebraska",
+   "fips": "31",
+   "pop": 2018006
+  },
+  {
+   "name": "Nevada",
+   "fips": "32",
+   "pop": 3282188
+  },
+  {
+   "name": "New Hampshire",
+   "fips": "33",
+   "pop": 1415342
+  },
+  {
+   "name": "New Jersey",
+   "fips": "34",
+   "pop": 9548215
+  },
+  {
+   "name": "New Mexico",
+   "fips": "35",
+   "pop": 2125498
+  },
+  {
+   "name": "New York",
+   "fips": "36",
+   "pop": 20002427
+  },
+  {
+   "name": "North Carolina",
+   "fips": "37",
+   "pop": 11197968
+  },
+  {
+   "name": "North Dakota",
+   "fips": "38",
+   "pop": 799358
+  },
+  {
+   "name": "Ohio",
+   "fips": "39",
+   "pop": 11900510
+  },
+  {
+   "name": "Oklahoma",
+   "fips": "40",
+   "pop": 4123288
+  },
+  {
+   "name": "Oregon",
+   "fips": "41",
+   "pop": 4273586
+  },
+  {
+   "name": "Pennsylvania",
+   "fips": "42",
+   "pop": 13059432
+  },
+  {
+   "name": "Rhode Island",
+   "fips": "44",
+   "pop": 1114521
+  },
+  {
+   "name": "South Carolina",
+   "fips": "45",
+   "pop": 5570274
+  },
+  {
+   "name": "South Dakota",
+   "fips": "46",
+   "pop": 935094
+  },
+  {
+   "name": "Tennessee",
+   "fips": "47",
+   "pop": 7315076
+  },
+  {
+   "name": "Texas",
+   "fips": "48",
+   "pop": 31709821
+  },
+  {
+   "name": "Utah",
+   "fips": "49",
+   "pop": 3538904
+  },
+  {
+   "name": "Vermont",
+   "fips": "50",
+   "pop": 644663
+  },
+  {
+   "name": "Virginia",
+   "fips": "51",
+   "pop": 8880107
+  },
+  {
+   "name": "Washington",
+   "fips": "53",
+   "pop": 8001020
+  },
+  {
+   "name": "West Virginia",
+   "fips": "54",
+   "pop": 1766147
+  },
+  {
+   "name": "Wisconsin",
+   "fips": "55",
+   "pop": 5972787
+  },
+  {
+   "name": "Wyoming",
+   "fips": "56",
+   "pop": 588753
+  }
+ ]
+}
