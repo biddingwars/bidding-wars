@@ -141,3 +141,10 @@ Natural Earth stand-in (NASA Blue Marble was unreachable from my environment).
 - [ ] Privacy → **Credits & licences** opens in all five languages and names Census, Natural
       Earth, NASA, three.js (MIT) and the hawk note.
 - [ ] Offline (airplane mode): the results map and the flag work after one visit.
+
+## 9. Menu follow-ups (flag, record)
+
+- [ ] Pick **US States**, play a game, switch to another app for a while, come back: the menu
+      reopens on **US States** with its record (it used to fall back to Countries and look empty).
+- [ ] With States selected the menu shows only the straight (untilted) flag backdrop — no globe, no map.
+- [ ] Privacy → Delete all data: back to Countries, all records cleared.

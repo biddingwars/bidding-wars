@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v27';   // increment this, every time
+const CACHE = 'bidding-wars-v28';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -76,8 +76,10 @@ device only, via the `Store` helper in `platform.js`:
 - `theme:v1` — appearance: only `light` is ever stored. The app is **dark by default,
   whatever the phone is set to**; absent means dark. Removed again when set back to dark.
 - `record:v1` — record vs the bot. One value, one record per pack:
-  `{ v:2, packs:{ countries:{…}, … } }` (`Engine.REC_KEY`; the original flat
-  record migrates into `packs.countries` on first read). Adding a pack adds
+  `{ v:2, packs:{ countries:{…}, … }, last:'states' }` (`Engine.REC_KEY`; the original flat
+  record migrates into `packs.countries` on first read). `last` is the pack picked last, so the
+  menu reopens on it (iOS discards the page when you switch apps; without this the menu fell back
+  to Countries and looked as if the States record had vanished). It is absent until a pack is picked. Adding a pack adds
   nothing to what is stored beyond its own counters inside this one value.
 - `name:v1` — the last-entered player name
 
@@ -251,13 +253,13 @@ Census-boundary centroids, taunts, fun facts).
   remove that label until they have been checked.
 - **Look (only while States is the pack on screen).**
   - *Flag backdrop*: `body.pk-states` (set by `syncPackTheme()` in `go()`) turns on two
-    fixed pseudo-element layers in `app.css` — stripes + canton, and the stars as a mask —
+    fixed pseudo-element layers in `app.css` — stripes + canton, and the stars as a mask; straight (never tilted), sized from `--fw` so it covers the screen width —
     tokens `--flag-red/-white/-blue/-star` and `--flag-op`. `test/contrast.test.js` checks all text
     tokens at full flag strength in both themes; retune the flag → run it.
   - *Results map* (`us-view.js`, data in `us-map.js`): the contiguous US on satellite-style
     imagery registered to Census outlines (Albers equal-area conic), the winner's states in gold with
     pins and abbreviation pills, the crowded Northeast as callouts in a right margin, and Alaska /
-    Hawaii insets **only when the winner owns them**. (The menu shows the globe for every pack; the US flag emoji marks the States tile.) Labels that cannot fit without overlapping are
+    Hawaii insets **only when the winner owns them**. (On the menu the world globe is shown only for Countries; with States selected the flag backdrop stands alone, and a US flag emoji marks the tile.) Labels that cannot fit without overlapping are
     dropped (the pin stays). The pack opts in with `map: 'us'`; other packs keep the globe.
     **Regenerate** with `test/build-us-map.js` (dev-only, needs `us-atlas topojson-client d3-geo sharp`);
     it takes any equirectangular world image — the imagery in the repo is a Natural Earth stand-in, to be
@@ -266,8 +268,8 @@ Census-boundary centroids, taunts, fun facts).
     keeps the sting. It is not a recording — in films the "eagle" cry is a red-tailed hawk.
   - *Credits*: Privacy → "Credits & licences" (`credits()`, 5 languages) and `NOTICE.md`. Add every
     new asset to both.
-- **Selection.** The pack picked on the menu is held in memory (`SELPACK`) — it is
-  *not* stored (privacy: exactly four keys). The record is per pack inside
+- **Selection.** The pack picked on the menu is `SELPACK`; it is remembered as `last` inside
+  the one `record:v1` value (privacy: still exactly four keys, and the copy says so). The record is per pack inside
   `record:v1`.
 
 ### What a Capitals pack would need (not built — do not guess its valuation)

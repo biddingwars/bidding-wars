@@ -812,3 +812,33 @@ test('Credits & licences: reachable from Privacy in every language and names eve
     assert.deepEqual(errors, [], lang); await ctx.close();
   }
 });
+
+test('the menu reopens on the pack you last picked, with that pack\'s record; Delete all data resets it', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open({ init: () => { if (!localStorage.getItem('seeded')) { localStorage.setItem('seeded', '1'); localStorage.setItem('record:v1', JSON.stringify({ v: 2, packs: { countries: { played: 4, won: 3, lost: 1 }, states: { played: 2, won: 1, lost: 1 } } })); } } });
+  const pill = () => page.evaluate(() => document.querySelector('#mrec .big').textContent);
+  assert.equal(await pill(), '3–1', 'starts on Countries');
+  await pickPack(page, 'states'); assert.equal(await pill(), '1–1');
+  assert.equal(await page.evaluate(() => getComputedStyle(document.querySelector('.hero img.globe')).display), 'none', 'States: no world globe on the menu');
+  assert.equal(await page.$('.hero .usm-h'), null, 'and no map either');
+  await page.reload(); await page.waitForFunction(() => document.body.classList.contains('booted'));
+  await page.waitForSelector('[data-pack="states"][aria-current="true"]');
+  assert.equal(await pill(), '1–1', 'reopens on States with its record');
+  assert.equal(JSON.parse(await page.evaluate(() => localStorage.getItem('record:v1'))).packs.countries.played, 4, 'Countries record untouched');
+  const keys = await page.evaluate(() => Object.keys(localStorage).filter(k => k !== 'seeded').sort());
+  assert.ok(keys.every(k => ['lang:v1', 'theme:v1', 'record:v1', 'name:v1'].includes(k)), 'still only the four keys: ' + keys);
+  await page.evaluate(() => privacy()); await page.click('#wipe'); await page.click('#dy'); await page.waitForTimeout(300);
+  await page.reload(); await page.waitForFunction(() => document.body.classList.contains('booted'));
+  assert.equal(await page.evaluate(() => document.querySelector('[data-pack][aria-current="true"]').dataset.pack), 'countries', 'wiped: back to the default');
+  assert.deepEqual(errors, []); await ctx.close();
+});
+
+test('US flag backdrop is straight (not tilted) and covers the screen width', { skip: SKIP }, async () => {
+  for (const [w, h] of [[393, 852], [1194, 834]]) {
+    const { page, ctx } = await open({ viewport: { width: w, height: h } });
+    await pickPack(page, 'states');
+    const f = await page.evaluate(() => { const g = p => getComputedStyle(document.body, p); return { t1: g('::before').transform, t2: g('::after').transform, w: parseFloat(g('::before').width), left: parseFloat(g('::before').left), top: parseFloat(g('::before').top) }; });
+    assert.equal(f.t1, 'none'); assert.equal(f.t2, 'none');
+    assert.ok(f.w >= w - 1 && f.left === 0 && f.top === 0, `${w}x${h} flag covers the width from the corner: ${JSON.stringify(f)}`);
+    await ctx.close();
+  }
+});
