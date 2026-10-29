@@ -466,3 +466,6 @@ body.playing .dock{margin-top:auto}
 }
 body:not(.booted) .wrap{opacity:0}
 .wrap{transition:opacity .3s ease}
+
+/* text badge standing in for a flag on packs that have none (capitals, states, ...) */
+.ibadge{display:inline-block;font-family:'Space Mono','SF Mono',Menlo,Consolas,monospace;font-weight:700;font-size:.52em;letter-spacing:.04em;line-height:1;padding:.42em .5em;border:2px solid var(--ink);background:var(--amber);color:var(--ink);vertical-align:middle}

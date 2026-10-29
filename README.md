@@ -18,8 +18,10 @@ debugging time before.
 | File | What it is |
 |---|---|
 | `index.html` | Shell (`<base href="/bidding-wars/">` for GitHub Pages). |
-| `app.js` | Game logic, auction engine, i18n, all screens. |
-| `data.js` | Countries, translated names, bot taunts, coordinates. |
+| `app.js` | The view: all screens, i18n, sound. Calls the engine; contains no game rules. |
+| `engine.js` | Pure game engine (pricing, bot, auction rules, scoring, records). No DOM; unit-tested. |
+| `packs.js`, `pack-countries.js` | Content-pack registry/lazy loader, and the Countries pack (items, translated names, taunts, coordinates). |
+| `banter.js` | The rival's shared drop-out and win lines. |
 | `globe.js` | Results-screen 3D globe (three.js) + flat-canvas fallback. |
 | `platform.js` | Storage, haptics, iOS gesture locks, `CONFIG` flags. |
 | `app.css` / `fonts.css` | Design system. |

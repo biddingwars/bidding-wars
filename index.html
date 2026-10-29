@@ -47,17 +47,24 @@
 <script src="three.min.js" onerror="loadThreeFallback()"></script>
 
 <script src="platform.js"></script>
-<script src="data.js"></script>
+<script src="engine.js"></script>
+<script src="packs.js"></script>
+<script src="banter.js"></script>
 <script src="app.js"></script>
 <script src="globe.js"></script>
 <script>
   Promise.all([loadLang(), loadRec()]).then(function () {
     var sub = document.querySelector('.mast .sub');
     if (sub) sub.textContent = t('tagline');
+    document.getElementById('cc').textContent = Packs.meta('countries').count;
     home();
     Shell.ready();
     var c = document.getElementById('curtain');
     if (c) { c.classList.add('gone'); setTimeout(function(){ c.remove(); }, 420); }
+    /* the pack data is lazy: warm it up once the menu is on screen, so Setup opens instantly */
+    (window.requestIdleCallback || function (f) { setTimeout(f, 400); })(function () {
+      Packs.load('countries').catch(function () {});
+    });
     if ('serviceWorker' in navigator && !Native.is && location.protocol !== 'file:') {
       navigator.serviceWorker.register('sw.js').catch(function(){});
     }
