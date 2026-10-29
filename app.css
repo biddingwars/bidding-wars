@@ -43,6 +43,12 @@ body{
    tier, not wide — a 2-column split there would cram each column too tight. */
 @media (min-width:640px){ .wrap{max-width:760px} }
 @media (min-width:980px){ .wrap{max-width:1040px} }
+/* menu / setup / how-to / results text pages: ~15% narrower than the tier cap on
+   iPad (the column needn't fill a 13" screen). Capped on #app, not .wrap, so
+   the container-query tiers above keep seeing the full width; the auction
+   screen (body.playing) keeps the full width for its landscape split. */
+@media (min-width:640px){ body:not(.playing) #app{max-width:622px;margin-left:auto;margin-right:auto} }
+@media (min-width:980px){ body:not(.playing) #app{max-width:860px} }
 
 /* anti-stretch: at the wider tiers, scale padding/type with the container
    instead of just spreading phone-sized chrome across more empty space.

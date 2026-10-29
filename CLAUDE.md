@@ -145,3 +145,10 @@ says whose turn it is) and the taunt bubble is a fixed-height, single-line,
 ellipsis-truncated caption (`.taunt`, 29px, always, never more) specifically
 so it can never push the layout — don't reintroduce an unbounded block
 there.
+
+Menu, setup, how-to and results pages (everything that is not `body.playing`)
+cap `#app` — not `.wrap` — at 622px (medium tier) / 860px (wide tier), about
+15% narrower than the tier caps, so a 13" iPad isn't filled edge to edge. It
+has to be `#app`: the `@container page` breakpoints above measure `.wrap`, and
+shrinking `.wrap` itself would silently switch the wide-tier rules off. The
+auction screen keeps the full width for its landscape split.
