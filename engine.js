@@ -159,6 +159,42 @@
       if (pack.bands[pack.bands.length - 1].upTo !== 1) e('the last band must end at upTo: 1');
     }
 
+    if (pack.economy !== undefined) {
+      const ec = pack.economy, opts = pack.lots && Array.isArray(pack.lots.options) ? pack.lots.options : [];
+      if (!isObj(ec)) e('economy must be an object');
+      else {
+        if (!isObj(ec.budgets) || !opts.every(n => isPosInt(ec.budgets[n]))) e('economy.budgets needs a positive whole-number budget for every lots option');
+        if (ec.endgame !== undefined && !(isObj(ec.endgame) && ec.endgame.rule === 'house' && ec.endgame.price > 0 && ec.endgame.price <= 1)) e('economy.endgame must be { rule: "house", price: 0 < share <= 1 }');
+        if (ec.sampling !== undefined && ec.sampling !== 'systematic') e('economy.sampling must be "systematic" when given');
+        if (ec.bidSteps !== undefined && !(Array.isArray(ec.bidSteps) && ec.bidSteps.length && ec.bidSteps.every((r, i) => Array.isArray(r) && Array.isArray(r[1]) && r[1].length === 5 && r[1].every(isPosInt) && r[1].every((v, k) => !k || v > r[1][k - 1]) && (i === ec.bidSteps.length - 1 ? r[0] == null : isPosInt(r[0]) && (!i || r[0] > ec.bidSteps[i - 1][0])))))
+          e('economy.bidSteps must be [[upTo, [5 ascending steps]], …, [null, [5 ascending steps]]] with increasing upTo');
+        if (ec.typingBonus !== undefined && !(ec.typingBonus >= 0 && ec.typingBonus <= 10)) e('economy.typingBonus must be 0..10 seconds');
+        if (isObj(ec.budgets) && pack.lots && isPosInt(pack.lots.all) && isPosInt(ec.budgets[pack.lots.all]) && pack.bot && pack.bot.premium && Array.isArray(pack.items) && pack.items.length && typeof pack.priceTable === 'function') {
+          /* the money must stay scarce at the top: the "all items" budget is at most 80% of the expected price of the biggest items,
+             counting the bot's average walk-away (midpoint of ideal and max) including its premium */
+          const t = priceTable(pack), top = pack.items.slice().sort((a, b) => b.value - a.value).slice(0, pack.bot.premium.top);
+          const expected = top.reduce((a, it) => { const p = t.get(it.id); return a + (p.ideal + p.max) / 2 * (1 + pack.bot.premium.pct); }, 0);
+          if (ec.budgets[pack.lots.all] > 0.8 * expected) e('economy.budgets[' + pack.lots.all + '] must be at most 80% of the expected price of the ' + pack.bot.premium.top + ' biggest items (' + Math.round(0.8 * expected) + ')');
+        }
+      }
+    }
+    if (pack.bot !== undefined) {
+      const b = pack.bot, opts = pack.lots && Array.isArray(pack.lots.options) ? pack.lots.options : [];
+      if (!isObj(b)) e('bot must be an object');
+      else {
+        if (b.limitMul !== undefined && !(isObj(b.limitMul) && opts.every(n => b.limitMul[n] > 0))) e('bot.limitMul needs a positive multiplier for every lots option');
+        if (b.premium !== undefined && !(isPosInt(b.premium.top) && b.premium.pct >= 0)) e('bot.premium needs { top: positive int, pct >= 0 }');
+        if (b.pacing !== undefined && !(b.pacing.gamma >= 0 && b.pacing.lo > 0 && b.pacing.hi >= b.pacing.lo)) e('bot.pacing needs { gamma >= 0, 0 < lo <= hi }');
+        if (b.knockout !== undefined && !(b.knockout.kappa > 0)) e('bot.knockout needs { kappa > 0 }');
+        if (b.mood !== undefined && !(b.mood.k >= 0 && b.mood.up >= 0 && b.mood.down >= 0)) e('bot.mood needs { k, up, down } >= 0');
+        if (b.temperaments !== undefined) {
+          const t = b.temperaments;
+          if (!(isObj(t) && Array.isArray(t.weights) && t.weights.length === 3 && t.weights.every(isPosInt) && isObj(t.spread) && opts.every(n => t.spread[n] >= 0 && t.spread[n] < 0.5) && isPosInt(t.bigRank))) e('bot.temperaments needs { weights: [3 positive ints], spread: by lots option (0..0.5), bigRank }');
+        }
+      }
+      if (!pack.economy) e('bot needs the economy block (budget table) — it paces against the opening budget ratio');
+    }
+
     if (!Array.isArray(pack.levels) || !pack.levels.length) e('levels must be a non-empty array');
     else {
       const ids = new Set();
@@ -198,10 +234,23 @@
     return pack.items.filter(it => inLevel(level, it));
   }
   /* True randomness, no bias toward small items: Fisher-Yates over the level's pool. */
+  function shuffle(a, rng) { for (let i = a.length - 1; i > 0; i--) { const j = rng(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+  /* Systematic sampling (packs with economy.sampling 'systematic'): sort the pool by value, take a random start inside the
+     first interval and then every (N / n)-th item, and shuffle the presentation order. Every item still has exactly the
+     chance n / N, but a round can no longer be all giants or all dwarfs, so its total value swings far less. */
+  function drawSystematic(pool, n, rng) {
+    const N = pool.length;
+    if (n >= N) return shuffle(pool, rng);
+    pool.sort((a, b) => a.value - b.value);
+    const step = N / n, u = rng(1000000) / 1000000 * step, out = [];
+    for (let k = 0; k < n; k++) out.push(pool[Math.min(N - 1, Math.floor(u + k * step))]);
+    return shuffle(out, rng);
+  }
   function draw(pack, n, levelId, rng) {
     rng = rng || defaultRng;
     const pool = levelPool(pack, levelId);
-    for (let i = pool.length - 1; i > 0; i--) { const j = rng(i + 1); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+    if (pack.economy && pack.economy.sampling === 'systematic') return drawSystematic(pool, n, rng);
+    shuffle(pool, rng);
     return pool.slice(0, Math.min(n, pool.length));
   }
 
@@ -259,14 +308,33 @@
   const winLine = (banter, lang, avoid, rng) => pick(((banter[lang] || banter.en) || {}).win, avoid, rng);
 
   /* ------------------------------------------------------------------- auction */
-  const budgetFor = (pack, lots) => lots * pack.budgetPerLot;
+  /* A per-lot-count table ({5:…, 10:…}) or a plain number; a count that is not listed uses the nearest listed one below it. */
+  function byLots(tbl, n) {
+    if (typeof tbl === 'number') return tbl;
+    if (tbl[n] != null) return tbl[n];
+    const ks = Object.keys(tbl).map(Number).sort((a, b) => a - b);
+    let k = ks[0]; ks.forEach(x => { if (x <= n) k = x; });
+    return tbl[k];
+  }
+  /* US States: the budget is a table by lot count (economy.budgets, in dollars); Countries: lots x budgetPerLot. */
+  const budgetFor = (pack, lots) => (pack.economy && pack.economy.budgets) ? byLots(pack.economy.budgets, lots) : lots * pack.budgetPerLot;
+  /* The five raise buttons. Countries: always +1 +2 +5 +10 +25. A pack with economy.bidSteps scales them with the CURRENT PRICE
+     (never with the item's fair price, which would leak its size): [[upTo, [5 steps]], …, [null, [5 steps]]]. */
+  const DEFAULT_STEPS = [1, 2, 5, 10, 25];
+  function bidSteps(pack, price) {
+    const t = pack && pack.economy && pack.economy.bidSteps;
+    if (!t) return DEFAULT_STEPS;
+    for (const row of t) if (row[0] == null || price < row[0]) return row[1];
+    return t[t.length - 1][1];
+  }
+  const avgIdeal = pack => { const t = priceTable(pack); let a = 0; t.forEach(v => { a += v.ideal; }); return a / t.size; };
 
   /* players: [{ name, ai }]. Returns the single mutable state object the view
      renders. Field names are stable on purpose. */
   function newAuction(opts) {
     const pack = opts.pack, rng = opts.rng || defaultRng;
     const lots = opts.lots, budget = budgetFor(pack, lots);
-    return {
+    const S = {
       pack, rng,
       kind: opts.kind, mode: opts.kind === 'solo' ? 'bot' : 'table',
       i: 0, clock: opts.clock || 0, level: opts.level || pack.defaultLevel,
@@ -274,6 +342,11 @@
       players: opts.players.map(p => ({ name: p.name, budget, bought: [], ai: !!p.ai })),
       L: null, _ceil: null, _ceilLot: -1
     };
+    if (pack.economy) S.unsold = [];                              // lots nobody could pay for (house-price endgame)
+    if (pack.bot) {                                               // the bot rolls its temperament once, from the injected rng; never shown
+      S.bot = { temper: pickTemper(pack.bot, lots, opts.temper || null, rng), paceTarget: budget / (S.items.length * avgIdeal(pack)) };
+    }
+    return S;
   }
 
   function nextAfter(S, idx) {
@@ -288,8 +361,20 @@
     if (S.i >= S.items.length) return { state: 'done', reason: 'end' };
     const eligible = S.players.map((p, i) => i).filter(i => S.players[i].budget >= 1);
     if (eligible.length === 0) {                         // nobody can pay for anything anymore
+      if (S.unsold) S.items.slice(S.i).forEach(it => S.unsold.push(it));
       S.i = S.items.length;
       return { state: 'done', reason: 'broke' };
+    }
+    if (eligible.length === 1 && S.players.length > 1 && S.pack.economy && S.pack.economy.endgame && S.pack.economy.endgame.rule === 'house') {
+      /* House price: the last player with money may buy each remaining lot at a fixed share of its fair price while
+         the money lasts; lots they cannot pay for stay unsold. Nobody gets a free sweep for $1. */
+      const w = S.players[eligible[0]], share = S.pack.economy.endgame.price;
+      while (S.i < S.items.length) {
+        const it = S.items[S.i], price = Math.max(1, Math.round(share * priceOf(S.pack, it).ideal));
+        if (w.budget >= price) { w.budget -= price; w.bought.push({ ...it, price }); } else S.unsold.push(it);
+        S.i++;
+      }
+      return { state: 'done', reason: 'house' };
     }
     if (eligible.length === 1 && S.players.length > 1) { // walkover: the rest goes to the last solvent bidder
       const w = S.players[eligible[0]];
@@ -348,7 +433,95 @@
      Reads the table and the room, never the screen. The random draws happen in a
      fixed order (walk-away roll once per lot, then the raise step), so a seeded
      rng reproduces a game exactly. */
+  const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+
+  /* ----------------------------------------------------- the bot, pack-configured (US States)
+     A pack with a `bot` block gets the extended bot below; Countries has none and keeps the original bot byte for byte.
+       limitMul      calibration by lot count, scales every walk-away roll
+       premium       { top, pct }: the `top` biggest items get `pct` more on the walk-away roll
+       pacing        { gamma, lo, hi }: walk-away x (budget / value left ÷ the opening ratio)^gamma, clamped, so the
+                     bot spends its budget evenly across the round
+       knockout      { kappa }: K = the rival's remaining budget (the price it can no longer top); the bot jumps to K
+                     (sweep: it can pay K on every lot left; otherwise on the most valuable lots it can afford, or on a
+                     decisive lot whose K is at most kappa x its max price)
+       mood          { up, down, k }: late in the round up to +up% when behind and -down% when well ahead
+       temperaments  weights [conservative, balanced, aggressive] and per-temperament step / big-item / reserve tweaks;
+                     the walk-away spread comes from `spread` by lot count (symmetric around the balanced bot)
+     Every random choice goes through S.rng, so a seed reproduces a game exactly. */
+  function pickTemper(B, lots, forced, rng) {
+    const T = B.temperaments;
+    if (!T) return null;
+    const names = ['conservative', 'balanced', 'aggressive'];
+    let name = forced;
+    if (!name) {
+      const w = T.weights, total = w[0] + w[1] + w[2], r = rng(total);
+      name = r < w[0] ? names[0] : r < w[0] + w[1] ? names[1] : names[2];
+    }
+    const t = T[name] || {}, sign = name === 'conservative' ? -1 : name === 'aggressive' ? 1 : 0;
+    return { name, limit: 1 + sign * byLots(T.spread, lots), step: t.step == null ? 1 : t.step, big: t.big == null ? 1 : t.big, cushion: t.cushion || 0, reserveCap: t.reserveCap == null ? null : t.reserveCap };
+  }
+  const sumFrom = (S, from, f) => { let a = 0; for (let k = from; k < S.items.length; k++) a += f(S.items[k]); return a; };
+  const ptsOf = p => p.bought.reduce((a, b) => a + b.value, 0);
+
+  function botWalk(S, item, idx, roll, me, rival) {
+    const B = S.pack.bot, T = S.bot.temper, n = S.items.length, rankDesc = S.pack.items.length - priceOf(S.pack, item).rank + 1;
+    let w = roll * (B.limitMul ? byLots(B.limitMul, n) : 1);
+    if (B.premium && rankDesc <= B.premium.top) w *= 1 + B.premium.pct;
+    if (T) { w *= T.limit; if (rankDesc <= B.temperaments.bigRank) w *= T.big; }
+    if (B.pacing) w *= clamp(Math.pow(me.budget / Math.max(1, sumFrom(S, idx, i => priceOf(S.pack, i).ideal)) / S.bot.paceTarget, B.pacing.gamma), B.pacing.lo, B.pacing.hi);
+    if (B.mood && rival) {
+      const wgt = clamp((idx / n - .5) / .5, 0, 1), d = (ptsOf(rival) - ptsOf(me)) / Math.max(1e-9, sumFrom(S, idx, i => i.value));
+      w *= 1 + wgt * clamp(B.mood.k * d, -B.mood.down, B.mood.up);
+    }
+    return Math.round(w);
+  }
+
+  function botDecisionExt(S) {
+    const rng = S.rng, L = S.L, item = S.items[S.i], me = S.players[L.turn], B = S.pack.bot, T = S.bot.temper;
+    const rivalIdx = S.players.findIndex((p, i) => i !== L.turn), rival = S.players[rivalIdx];
+    const pr = priceOf(S.pack, item);
+    if (!S._ceil || S._ceilLot !== S.i) {
+      const roll = pr.ideal + rng(pr.max - pr.ideal + 1);          // same draw as botCeiling
+      S._ceil = { ideal: pr.ideal, max: pr.max, walk: botWalk(S, item, S.i, roll, me, rival) }; S._ceilLot = S.i;
+    }
+    const lotsAfter = S.items.length - S.i - 1;
+    let reserve = lotsAfter >= 3 ? lotsAfter : 0;
+    if (T && T.cushion && lotsAfter >= 3) reserve += Math.round(T.cushion * (me.budget + me.bought.reduce((a, b) => a + b.price, 0)));
+    if (T && T.reserveCap != null) reserve = Math.min(reserve, T.reserveCap);
+    let lim = S._ceil.walk, jump = null;
+    if (B.knockout && rival) {
+      const K = rival.budget, afford = me.budget - reserve;
+      if (K >= 1 && afford >= K) {
+        const sweep = afford >= K * (lotsAfter + 1);
+        const lead = ptsOf(me) - ptsOf(rival), after = lead + item.value, restPts = sumFrom(S, S.i, i => i.value) - item.value;
+        const decisive = (lead <= 0 && after > 0) || after > restPts;
+        const m = Math.floor(afford / K);
+        let rankV = 1; for (let q = S.i + 1; q < S.items.length; q++) if (S.items[q].value > item.value) rankV++;
+        if (sweep || rankV <= m || (decisive && K <= B.knockout.kappa * pr.max)) {
+          if (L.holder === rivalIdx && L.price >= Math.min(me.budget - reserve, lim)) {
+            const target = L.price < K ? K : K + 1;
+            if (target <= afford) { lim = Math.max(lim, target); jump = target; }
+          }
+        }
+      }
+    }
+    const hardCap = Math.min(me.budget - reserve, lim);
+    if (L.price < hardCap && me.budget > L.price) {
+      const rivals = L.active.filter(i => i !== L.turn);
+      const contested = rivals.some(i => S.players[i].budget > L.price + 1);
+      const stepMul = T ? T.step : 1;
+      const step = !contested ? 1
+        : L.price < 5 ? 1
+        : Math.max(1, Math.round(L.price * (0.12 + rng(15) / 100) * stepMul));
+      let amount = Math.min(me.budget, hardCap, L.price + step);
+      if (jump != null && jump <= hardCap && jump > L.price) amount = jump;
+      if (amount > L.price) return { type: 'raise', amount };
+    }
+    return { type: 'pass' };
+  }
+
   function botDecision(S) {
+    if (S.bot) return botDecisionExt(S);
     const rng = S.rng, L = S.L, item = S.items[S.i], me = S.players[L.turn];
     if (!S._ceil || S._ceilLot !== S.i) { S._ceil = botCeiling(S.pack, item, rng); S._ceilLot = S.i; }
     /* Outside the closing three lots the bot keeps a euro in hand for every lot still
@@ -454,7 +627,7 @@
     itemName, itemIcon, hasCoords, factFor, formatMoney,
     validatePack, levelPool, draw, priceTable, priceOf, botCeiling,
     tierOf, tauntFor, passLine, winLine,
-    budgetFor, newAuction, startLot, raise, pass, award, advance, nextAfter, botDecision, scoreboard,
+    budgetFor, byLots, avgIdeal, bidSteps, drawSystematic, pickTemper, newAuction, startLot, raise, pass, award, advance, nextAfter, botDecision, scoreboard,
     blankPackRecord, parseRecords, stringifyRecords, applyGame
   };
 });

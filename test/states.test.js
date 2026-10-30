@@ -107,23 +107,24 @@ test('PRICING: smooth and monotonic, $1 minimum, tension like Countries, rough t
   const rows = states.items.slice().sort((a, b) => a.value - b.value).map(i => ({ id: i.id, ...t.get(i.id) }));
   for (let i = 1; i < rows.length; i++) { assert.ok(rows[i].ideal >= rows[i - 1].ideal, 'ideal never drops as population grows at ' + rows[i].id); assert.ok(rows[i].max >= rows[i - 1].max, 'max never drops at ' + rows[i].id); }
   rows.forEach(r => { assert.ok(r.ideal >= 1 && r.max >= r.ideal && Number.isInteger(r.ideal) && Number.isInteger(r.max)); });
-  const sumIdeal = rows.reduce((a, r) => a + r.ideal, 0);
-  assert.ok(Math.abs(sumIdeal - 500) <= 5, 'all 50 ideals add up to one full budget ($500): ' + sumIdeal);
-  assert.ok(Math.abs(sumIdeal / 50 - states.budgetPerLot) < 0.15, 'the average state is worth about $10');
+  const scale = states.economy.priceScale, sumIdeal = rows.reduce((a, r) => a + r.ideal, 0);
+  assert.equal(scale, 3);
+  assert.ok(Math.abs(sumIdeal - 500 * scale) <= 5 * scale, 'all 50 ideals add up to 50 average lots ($1,500): ' + sumIdeal);
+  assert.ok(Math.abs(Engine.avgIdeal(states) - 10 * scale) < 0.3, 'the average state is worth about $30');
   const get = id => t.get(id);
-  assert.ok(get('CA').ideal >= 45 && get('CA').ideal <= 60, 'California');
-  assert.ok(get('TX').ideal >= 35 && get('TX').ideal <= 48, 'Texas');
-  assert.ok(get('FL').ideal >= 26 && get('FL').ideal <= 35, 'Florida');
-  assert.ok(get('NY').ideal >= 22 && get('NY').ideal <= 30, 'New York');
-  ['WY', 'VT', 'AK', 'ND', 'SD'].forEach(id => assert.ok(get(id).ideal >= 1 && get(id).ideal <= 2, id + ' is $1-2'));
+  assert.ok(get('CA').ideal >= 45 * scale && get('CA').ideal <= 60 * scale, 'California');
+  assert.ok(get('TX').ideal >= 35 * scale && get('TX').ideal <= 48 * scale, 'Texas');
+  assert.ok(get('FL').ideal >= 26 * scale && get('FL').ideal <= 35 * scale, 'Florida');
+  assert.ok(get('NY').ideal >= 22 * scale && get('NY').ideal <= 30 * scale, 'New York');
+  ['WY', 'VT', 'AK', 'ND', 'SD'].forEach(id => assert.ok(get(id).ideal >= 3 && get(id).ideal <= 6, id + ' is $3-6 (the small states no longer collapse to $1-2)'));
   rows.slice(-10).forEach(r => assert.ok(r.max / r.ideal <= 1.5, 'big states: max is at most 1.5x ideal (' + r.id + ')'));
   rows.slice(0, 5).forEach(r => assert.ok(r.max / r.ideal <= 2.01 && r.max / r.ideal >= 1.9, 'smallest states: about 2x'));
-  /* a round of N random states costs about one budget at every lot count, like Countries' easier levels */
+  /* systematic sampling: a round of n states is worth about n average lots (the budget is a fixed share of that, see the economy tests) */
   const rng = Engine.seededRng(99);
   for (const n of [5, 10, 20, 30, 40]) {
     let acc = 0; const R = 4000;
-    for (let r = 0; r < R; r++) acc += Engine.draw(states, n, 'all', rng).reduce((a, i) => a + get(i.id).ideal, 0) / Engine.budgetFor(states, n);
-    assert.ok(Math.abs(acc / R - 1) < 0.03, n + ' lots: ideals sum to ' + (acc / R).toFixed(3) + ' budgets');
+    for (let r = 0; r < R; r++) acc += Engine.draw(states, n, 'all', rng).reduce((a, i) => a + get(i.id).ideal, 0) / (n * Engine.avgIdeal(states));
+    assert.ok(Math.abs(acc / R - 1) < 0.03, n + ' lots: the drawn ideals sum to ' + (acc / R).toFixed(3) + ' average rounds');
   }
 });
 

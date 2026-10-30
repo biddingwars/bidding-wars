@@ -679,34 +679,54 @@ fr:{
 /* Pack-specific wording: only the lines that talk about countries are replaced for US States
    (every other string is shared). t() looks here first for the pack on screen. */
 const STRP={ states:{
- en:{ rivalDesc:'The <b>bot</b> prices every state by population and rolls a fresh walk-away limit for each lot, so it is never quite predictable. Beat that limit by one dollar and the lot is yours. It never chases past it.',
+ en:{ budgetNote:'Set by the round length — scarce on purpose.',
+  rivalDesc:'The <b>bot</b> prices every state by population, spends its money evenly across the round and rolls a fresh walk-away limit for each lot. Each game it is in a different mood — cautious, balanced or bold — and you are not told which. If you run low on money it may go all-in to knock you out.',
   rulesP1:'Random states come up one at a time, each one at most once per round. <b>1 point = 1 million people</b>, and the population stays blacked out until the very end.',
-  rulesP5:'The bot values every state by population and rolls a fresh walk-away limit for each lot, so you can never quite read it. That limit is absolute: beat it by a single dollar and the lot is yours.',
-  rulesP6:'Every state is equally likely to come up, and a state never comes up twice in the same round. Pick 5 to 40 lots, or play all 50 states.',
+  rulesP4:'Everyone starts with the same budget, set by the round length: <b>$85 for 5 states, $165 for 10, $180 for 15, $210 for 20, $315 for 30, $420 for 40 and $525 for all 50</b>. Money is scarce on purpose: even the biggest budget cannot buy the four biggest states.',
+  rulesP5:'The bot values every state by population and rolls a fresh walk-away limit for each lot, so you can never quite read it. It spends evenly, pays a little extra for the biggest states, and each game it is cautious, balanced or bold. If it has far more money than you, it bids the amount you can no longer top. Beat its limit by one dollar and the lot is yours — unless it can knock you out.',
+  rulesP6:'Every state is equally likely to come up, and a state never comes up twice in the same round. Pick 5 to 40 states, or play all 50. Short rounds are luck-heavy: with 5 or 10 states one big draw can decide the game. The longer the round, the more skill counts.',
+  rulesP8:'<b>Out of money?</b> When only one player still has money, the remaining states are sold to that player at 80% of their fair price, as long as the money lasts. States nobody can pay for stay unsold. Nobody can sweep the rest for $1.',
+  unsoldNote:'{n} states went unsold — nobody could afford them.',
   rulesP7:'Efficiency is scored too: dollars per million people. Lower is better.',
   footer:'No accounts · No tracking · {n} states', worldTitle:'The map', world:'{name}’s states, lit in gold' },
- de:{ rivalDesc:'Der <b>Bot</b> bewertet jeden Bundesstaat nach Einwohnerzahl und würfelt pro Los eine neue Schmerzgrenze, ist also nie ganz berechenbar. Überbiete diese Grenze um einen Dollar und das Los gehört dir. Er geht nie darüber hinaus.',
+ de:{ budgetNote:'Hängt von der Rundenlänge ab – mit Absicht knapp.',
+  rivalDesc:'Der <b>Bot</b> bewertet jeden Bundesstaat nach Einwohnerzahl, verteilt sein Geld gleichmäßig über die Runde und würfelt pro Los eine neue Schmerzgrenze. In jedem Spiel hat er eine andere Laune – vorsichtig, ausgewogen oder mutig – und du erfährst nicht, welche. Wird dein Geld knapp, geht er womöglich aufs Ganze, um dich auszustechen.',
   rulesP1:'Nacheinander kommen zufällige Bundesstaaten auf den Tisch, jeder höchstens einmal pro Runde. <b>1 Punkt = 1 Million Einwohner</b>, und die Einwohnerzahl bleibt bis ganz zum Schluss geschwärzt.',
-  rulesP5:'Der Bot bewertet jeden Bundesstaat nach Einwohnerzahl und würfelt pro Los eine neue Schmerzgrenze, du kannst ihn also nie ganz durchschauen. Diese Grenze ist absolut: Überbiete sie um einen Dollar und das Los gehört dir.',
-  rulesP6:'Jeder Bundesstaat kommt mit der gleichen Wahrscheinlichkeit dran, und keiner kommt in derselben Runde zweimal vor. Wähle 5 bis 40 Lose oder spiel alle 50 Bundesstaaten.',
+  rulesP4:'Alle starten mit demselben Budget, das von der Rundenlänge abhängt: <b>$85 für 5 Bundesstaaten, $165 für 10, $180 für 15, $210 für 20, $315 für 30, $420 für 40 und $525 für alle 50</b>. Das Geld ist absichtlich knapp: Selbst das größte Budget reicht nicht für die vier größten Bundesstaaten.',
+  rulesP5:'Der Bot bewertet jeden Bundesstaat nach Einwohnerzahl und würfelt pro Los eine neue Schmerzgrenze, du kannst ihn also nie ganz durchschauen. Er verteilt sein Geld gleichmäßig, zahlt für die größten Staaten etwas mehr und ist in jedem Spiel vorsichtig, ausgewogen oder mutig. Hat er viel mehr Geld als du, bietet er den Betrag, den du nicht mehr überbieten kannst. Überbiete seine Grenze um einen Dollar und das Los gehört dir – es sei denn, er kann dich ausstechen.',
+  rulesP6:'Jeder Bundesstaat kommt mit der gleichen Wahrscheinlichkeit dran, und keiner kommt in derselben Runde zweimal vor. Wähle 5 bis 40 Bundesstaaten oder spiel alle 50. Kurze Runden sind glückslastig: Bei 5 oder 10 Bundesstaaten kann ein großer Treffer das Spiel entscheiden. Je länger die Runde, desto mehr zählt Können.',
+  rulesP8:'<b>Kein Geld mehr?</b> Hat nur noch ein Spieler Geld, werden die übrigen Bundesstaaten an ihn verkauft – zu 80 % ihres fairen Preises, solange das Geld reicht. Was niemand bezahlen kann, bleibt unverkauft. Den Rest für $1 abzuräumen geht nicht mehr.',
+  unsoldNote:'{n} Bundesstaaten blieben unverkauft – niemand konnte sie bezahlen.',
   rulesP7:'Auch die Effizienz wird gewertet: Dollar pro Million Einwohner. Weniger ist besser.',
   footer:'Keine Konten · Kein Tracking · {n} Bundesstaaten', worldTitle:'Die Karte', world:'Die Staaten von {name}, golden markiert' },
- it:{ rivalDesc:'Il <b>bot</b> valuta ogni stato in base alla popolazione e tira un nuovo limite di rinuncia per ogni lotto, quindi non è mai del tutto prevedibile. Supera quel limite di un dollaro e il lotto è tuo. Non va mai oltre.',
+ it:{ budgetNote:'Dipende dalla lunghezza della partita — scarso di proposito.',
+  rivalDesc:'Il <b>bot</b> valuta ogni stato in base alla popolazione, distribuisce i soldi in modo uniforme lungo la partita e tira un nuovo limite di rinuncia per ogni lotto. Ogni partita ha un umore diverso – prudente, equilibrato o audace – e non ti dice quale. Se i tuoi soldi scarseggiano, può giocare il tutto per tutto per metterti fuori gioco.',
   rulesP1:'Escono stati a caso, uno alla volta e al massimo una volta per partita. <b>1 punto = 1 milione di abitanti</b>, e la popolazione resta oscurata fino alla fine.',
-  rulesP5:'Il bot valuta ogni stato in base alla popolazione e tira un nuovo limite di rinuncia per ogni lotto, quindi non riesci mai a leggerlo. Quel limite è assoluto: superalo di un solo dollaro e il lotto è tuo.',
-  rulesP6:'Ogni stato ha la stessa probabilità di uscire e nessuno esce due volte nella stessa partita. Scegli da 5 a 40 lotti oppure gioca tutti i 50 stati.',
+  rulesP4:'Tutti partono con lo stesso budget, deciso dalla lunghezza della partita: <b>$85 per 5 stati, $165 per 10, $180 per 15, $210 per 20, $315 per 30, $420 per 40 e $525 per tutti i 50</b>. Il denaro è scarso di proposito: nemmeno il budget più alto basta per i quattro stati più grandi.',
+  rulesP5:'Il bot valuta ogni stato in base alla popolazione e tira un nuovo limite di rinuncia per ogni lotto, quindi non riesci mai a leggerlo. Spende in modo uniforme, paga un po’ di più per gli stati più grandi ed è, partita per partita, prudente, equilibrato o audace. Se ha molti più soldi di te, offre la cifra che non puoi più superare. Supera il suo limite di un dollaro e il lotto è tuo, a meno che non possa metterti fuori gioco.',
+  rulesP6:'Ogni stato ha la stessa probabilità di uscire e nessuno esce due volte nella stessa partita. Scegli da 5 a 40 stati oppure gioca tutti i 50. Le partite corte dipendono molto dalla fortuna: con 5 o 10 stati una sola estrazione può decidere tutto. Più la partita è lunga, più conta l’abilità.',
+  rulesP8:'<b>Senza soldi?</b> Quando solo un giocatore ha ancora denaro, gli stati rimasti gli vengono venduti all’80% del loro prezzo equo, finché i soldi bastano. Quelli che nessuno può pagare restano invenduti. Non si può più portare via il resto per $1.',
+  unsoldNote:'{n} stati sono rimasti invenduti: nessuno poteva permetterseli.',
   rulesP7:'Si valuta anche l’efficienza: dollari per milione di abitanti. Meno è meglio.',
   footer:'Nessun account · Nessun tracciamento · {n} stati', worldTitle:'La mappa', world:'Gli stati di {name}, evidenziati in oro' },
- es:{ rivalDesc:'El <b>bot</b> valora cada estado por su población y saca un nuevo límite de retirada para cada lote, así que nunca es del todo predecible. Supera ese límite por un dólar y el lote es tuyo. Nunca lo sobrepasa.',
+ es:{ budgetNote:'Depende de la duración de la partida — escaso a propósito.',
+  rivalDesc:'El <b>bot</b> valora cada estado por su población, reparte su dinero de forma pareja a lo largo de la partida y saca un nuevo límite de retirada para cada lote. Cada partida tiene otro humor —prudente, equilibrado o audaz— y no te dice cuál. Si te quedas sin dinero, puede jugárselo todo para dejarte fuera.',
   rulesP1:'Salen estados al azar, uno a uno y como máximo una vez por partida. <b>1 punto = 1 millón de habitantes</b>, y la población permanece tachada hasta el final.',
-  rulesP5:'El bot valora cada estado por su población y saca un nuevo límite de retirada para cada lote, así que nunca puedes leerlo del todo. Ese límite es absoluto: supéralo por un solo dólar y el lote es tuyo.',
-  rulesP6:'Todos los estados tienen la misma probabilidad de salir y ninguno sale dos veces en la misma partida. Elige de 5 a 40 lotes o juega los 50 estados.',
+  rulesP4:'Todos empiezan con el mismo presupuesto, que depende de la duración de la partida: <b>$85 para 5 estados, $165 para 10, $180 para 15, $210 para 20, $315 para 30, $420 para 40 y $525 para los 50</b>. El dinero escasea a propósito: ni el presupuesto más grande alcanza para los cuatro estados más grandes.',
+  rulesP5:'El bot valora cada estado por su población y saca un nuevo límite de retirada para cada lote, así que nunca puedes leerlo del todo. Gasta de forma pareja, paga algo más por los estados más grandes y en cada partida es prudente, equilibrado o audaz. Si tiene mucho más dinero que tú, ofrece la cantidad que ya no puedes superar. Supera su límite por un dólar y el lote es tuyo, salvo que pueda dejarte fuera.',
+  rulesP6:'Todos los estados tienen la misma probabilidad de salir y ninguno sale dos veces en la misma partida. Elige de 5 a 40 estados o juega los 50. Las partidas cortas dependen mucho de la suerte: con 5 o 10 estados, un solo sorteo puede decidirlo todo. Cuanto más larga es la partida, más cuenta la habilidad.',
+  rulesP8:'<b>¿Sin dinero?</b> Cuando solo un jugador conserva dinero, los estados restantes se le venden al 80 % de su precio justo, mientras le alcance el dinero. Los que nadie puede pagar quedan sin vender. Ya no se puede llevar el resto por $1.',
+  unsoldNote:'{n} estados quedaron sin vender: nadie podía pagarlos.',
   rulesP7:'También se puntúa la eficiencia: dólares por millón de habitantes. Cuanto menos, mejor.',
   footer:'Sin cuentas · Sin rastreo · {n} estados', worldTitle:'El mapa', world:'Los estados de {name}, en dorado' },
- fr:{ rivalDesc:'Le <b>bot</b> évalue chaque État selon sa population et tire une nouvelle limite d’abandon à chaque lot, il n’est donc jamais tout à fait prévisible. Dépasse cette limite d’un dollar et le lot est à toi. Il ne la dépasse jamais.',
+ fr:{ budgetNote:'Dépend de la longueur de la partie — rare exprès.',
+  rivalDesc:'Le <b>bot</b> évalue chaque État selon sa population, répartit son argent régulièrement sur la partie et tire une nouvelle limite d’abandon à chaque lot. À chaque partie il est d’une humeur différente — prudent, équilibré ou audacieux — sans te dire laquelle. Si ton argent s’épuise, il peut tout jouer pour t’éliminer.',
   rulesP1:'Des États tombent au hasard, un par un et au plus une fois par partie. <b>1 point = 1 million d’habitants</b>, et la population reste masquée jusqu’à la fin.',
-  rulesP5:'Le bot évalue chaque État selon sa population et tire une nouvelle limite d’abandon à chaque lot, impossible donc de le lire complètement. Cette limite est absolue : dépasse-la d’un seul dollar et le lot est à toi.',
-  rulesP6:'Chaque État a autant de chances de sortir, et aucun ne sort deux fois dans la même partie. Choisis de 5 à 40 lots ou joue les 50 États.',
+  rulesP4:'Tout le monde commence avec le même budget, fixé par la longueur de la partie : <b>$85 pour 5 États, $165 pour 10, $180 pour 15, $210 pour 20, $315 pour 30, $420 pour 40 et $525 pour les 50</b>. L’argent est rare exprès : même le plus gros budget ne suffit pas pour les quatre plus grands États.',
+  rulesP5:'Le bot évalue chaque État selon sa population et tire une nouvelle limite d’abandon à chaque lot, impossible donc de le lire complètement. Il dépense régulièrement, paye un peu plus pour les plus grands États et, à chaque partie, est prudent, équilibré ou audacieux. S’il a bien plus d’argent que toi, il mise la somme que tu ne peux plus dépasser. Dépasse sa limite d’un dollar et le lot est à toi, sauf s’il peut t’éliminer.',
+  rulesP6:'Chaque État a autant de chances de sortir, et aucun ne sort deux fois dans la même partie. Choisis de 5 à 40 États ou joue les 50. Les parties courtes dépendent beaucoup de la chance : avec 5 ou 10 États, un seul tirage peut tout décider. Plus la partie est longue, plus l’habileté compte.',
+  rulesP8:'<b>Plus d’argent ?</b> Quand un seul joueur a encore de l’argent, les États restants lui sont vendus à 80 % de leur juste prix, tant que l’argent suffit. Ceux que personne ne peut payer restent invendus. Impossible de rafler le reste pour $1.',
+  unsoldNote:'{n} États sont restés invendus : personne ne pouvait les payer.',
   rulesP7:'L’efficacité compte aussi : dollars par million d’habitants. Moins, c’est mieux.',
   footer:'Aucun compte · Aucun suivi · {n} États', worldTitle:'La carte', world:'Les États de {name}, en or' }
 }};
@@ -848,7 +868,7 @@ function credits() {
 
 function rules() {
   const h = sheet({ title: t('how'), foot: `<button class="btn gold" id="rd">${esc(t('done'))}</button>`,
-    body: ['rulesP1', 'rulesP2', 'rulesP3', 'rulesP4', 'rulesP5', 'rulesP6'].map(k => `<p>${t(k)}</p>`).join('') + `<p class="sm">${esc(t('rulesP7'))}</p>` });
+    body: ['rulesP1', 'rulesP2', 'rulesP3', 'rulesP4', 'rulesP5', 'rulesP6'].concat(STRP[SELPACK] ? ['rulesP8'] : []).map(k => `<p>${t(k)}</p>`).join('') + `<p class="sm">${esc(t('rulesP7'))}</p>` });
   on('rd', () => { Snd.ui(); h.close(); });
 }
 
@@ -953,6 +973,7 @@ function paintLot() {
   $$('[data-s]', sec).forEach(b => b.onclick = () => { if (humanCan()) raise(S.L.price + parseInt(b.dataset.s)); });
   on('cb', () => { if (!humanCan()) return; const v = parseInt(val('cus')); if (!v || v <= S.L.price) { FX.shakeX($('#cus')); return toast(t('mustBeat', { price: S.L.price })); } raise(v); });
   $('#cus', sec).onkeydown = e => { if (e.key === 'Enter') $('#cb').click(); };
+  $('#cus', sec).onfocus = () => extendClock(((S.pack.economy && S.pack.economy.typingBonus) || 0) * 1000);   // typing a 3-digit price takes longer than a tap
   on('pass', () => { if (humanCan()) pass(); });
   on('nb', () => {
     Snd.ui(); Haptics.light();
@@ -995,7 +1016,12 @@ function controls() {
   const L = S.L, actor = S.players[L.turn], human = !actor.ai, ctrl = $('#ctrl'); if (!ctrl) return;
   ctrl.classList.toggle('bot', !human);
   const budget = actor.budget;
-  $$('[data-s]', ctrl).forEach(b => { b.disabled = !human || L.price + +b.dataset.s > budget; });
+  const steps = Engine.bidSteps(S.pack, L.price);                    // US States: the buttons follow the current price
+  $$('[data-s]', ctrl).forEach((b, i) => {
+    const n = steps[i];
+    if (+b.dataset.s !== n) { b.dataset.s = n; b.innerHTML = `<span aria-hidden="true">+</span>${n}`; b.setAttribute('aria-label', t('aRaise', { n })); }
+    b.disabled = !human || L.price + n > budget;
+  });
   const inp = $('#cus'), cb = $('#cb'), pass = $('#pass');
   inp.disabled = !human || budget <= L.price; inp.min = L.price + 1; inp.max = budget; inp.value = '';
   inp.placeholder = money(L.price + 1) + '+';
@@ -1018,13 +1044,13 @@ function setRing(frac, sec, liveNow) {
 let clk = null;
 function startClock(onOut) {
   stopClock();
-  const total = S.clock * 1000, c = clk = { t0: performance.now(), last: performance.now(), lastSec: Math.ceil(total / 1000), raf: 0 };
+  const c = clk = { t0: performance.now(), last: performance.now(), total: S.clock * 1000, ext: false, lastSec: S.clock, raf: 0 };
   setRing(1, S.clock, true);
   const loop = now => {
     if (clk !== c) return;
     const dt = now - c.last; c.last = now;
     if (holdClock > 0 || dt > 250) c.t0 += dt;       // a sheet is open, or the page was in the background: the clock waits
-    const left = total - (now - c.t0), frac = Math.max(0, left / total), sec = Math.ceil(left / 1000);
+    const left = c.total - (now - c.t0), frac = Math.min(1, Math.max(0, left / (S.clock * 1000))), sec = Math.ceil(left / 1000);
     setRing(frac, sec, true);
     if (sec !== c.lastSec) { c.lastSec = sec; if (sec <= 5 && sec > 0) { Snd.tick(sec <= 3); if (sec <= 3) Haptics.warning(); } }
     if (left <= 0) { stopClock(); return onOut(); }
@@ -1032,6 +1058,8 @@ function startClock(onOut) {
   };
   c.raf = requestAnimationFrame(loop);
 }
+/* once per turn: add time when the player starts typing a custom amount (the ring stays full, the seconds grow) */
+function extendClock(ms) { if (clk && !clk.ext && ms > 0) { clk.ext = true; clk.total += ms; } }
 function stopClock() { if (clk) { cancelAnimationFrame(clk.raf); clk = null; } }
 function clearTimer() { stopClock(); }              // platform.js and older callers
 
@@ -1161,6 +1189,7 @@ function finish() {
         <div class="glass lb" id="lb">${rows.map(r => `
           <div class="lbr"><div class="o s${seatOf(r.p)}" aria-hidden="true">${esc(ini(r.p.name))}</div><div class="n">${esc(r.p.name)}</div><div class="p">${red(r.pts.toFixed(1), t('points') + ' · ' + r.p.name)}</div></div>
           <div class="fl">${r.p.bought.length ? r.p.bought.map(b => `<span class="f1"><em aria-hidden="true">${icon(b)}</em><span class="sr">${esc(cname(b))}</span><span>${b.free ? esc(t('freeLot')) : money(b.price)}</span><s>${red(fmtVal(b.value), cname(b))}</s></span>`).join('') : `<span class="sm">${esc(t('nothing'))}</span>`}</div>`).join('')}
+          ${S.unsold && S.unsold.length ? `<p class="sm unsold">${esc(t('unsoldNote', { n: S.unsold.length }))}</p>` : ''}
         </div>
       </div>
       <div class="r-r"><div id="extra" hidden></div>

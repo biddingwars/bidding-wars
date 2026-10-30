@@ -148,3 +148,18 @@ Natural Earth stand-in (NASA Blue Marble was unreachable from my environment).
       reopens on **US States** with its record (it used to fall back to Countries and look empty).
 - [ ] With States selected the menu shows only the straight (untilted) flag backdrop — no globe, no map.
 - [ ] Privacy → Delete all data: back to Countries, all records cleared.
+
+## 10. US States economy (scarce money, house price, new bot)
+
+I could not play these on a device. The harness covers the numbers; these are the feel checks.
+
+- [ ] **All 50 states, $525 each**: bid +1 over the bot every time. You should lose most games (the creeper wins ~4%), the bot should
+      not sit on a pile of money (it ends with ~25–30% left), and you cannot afford California ($173 fair price) *and* Texas *and* Florida.
+- [ ] Run out of money early: the remaining states are no longer yours for $1 — the bot buys them at 80% of their price
+      (the results say "N states went unsold" when nobody could pay).
+- [ ] The **raise buttons grow with the price**: +1 +2 +5 +10 +25 at the start of a lot, +10 … +200 above $100. Countries is unchanged.
+- [ ] Tap the **custom amount** field with the 10-second clock on: the clock gains a few seconds (once per turn).
+- [ ] Play 3–4 games in a row: the bot should feel different (cautious / balanced / bold) without ever being obviously broken.
+- [ ] 5- and 10-state rounds feel luck-heavy; 30–50-state rounds feel like skill. The rules text says so (all five languages).
+- [ ] Setup shows the right budget for each lot count ($85 / $165 / $180 / $210 / $315 / $420 / $525).
+- [ ] No scrolling on the auction at 402×720 and 834×1194 with the big buttons (+100 / +200).

@@ -31,8 +31,38 @@ const pack = `/* ===============================================================
     title: ${JSON.stringify({ en: 'US States', de: 'US-Bundesstaaten', it: 'Stati USA', es: 'Estados de EE. UU.', fr: 'États américains' })},
     noun:  ${JSON.stringify({ en: 'state', de: 'Bundesstaat', it: 'stato', es: 'estado', fr: 'État' })},
     currency: { symbol: '$', code: 'USD', locale: 'en-US' },    // USD in every language
-    budgetPerLot: 10,                       // 10 lots = $100; all 50 states = $500
+    budgetPerLot: 10,                       // nominal only: the real budgets are the table in economy.budgets
     lots: { options: [5, 10, 15, 20, 30, 40, 50], default: 10, all: 50 },
+
+    /* ECONOMY (see CLAUDE.md "US States economy"). Prices run at 3x the old scale (an average lot is $30, the smallest
+       states $3-6) and the money is scarce: budget = f x lots x average ideal price, f = 0.30-0.45 for short rounds
+       and 0.35 from 20 lots up (all 50 states: $525, 77% of the top-4 states' expected price). 5 and 10 lots are
+       deliberately looser (f = 0.57 / 0.55): with so few lots one state decides the round, and any tighter budget makes the creeper win more. */
+    economy: {
+      priceScale: 3,
+      budgets: { 5: 85, 10: 165, 15: 180, 20: 210, 30: 315, 40: 420, 50: 525 },
+      endgame: { rule: 'house', price: 0.8 },   // when only one player has money left: the rest sells at 80% of fair price while it lasts
+      sampling: 'systematic',
+      /* the five raise buttons grow with the current price (the item's fair price would leak its size) */
+      bidSteps: [[12, [1, 2, 5, 10, 25]], [40, [2, 5, 10, 25, 50]], [100, [5, 10, 25, 50, 100]], [null, [10, 25, 50, 100, 200]]],
+      typingBonus: 4                              // seconds added once per turn when the custom-amount field is used
+    },
+    /* The bot: Big-4 premium, paced spending, knockout awareness, temperament + mood. limitMul and spread are the
+       calibration tables by lot count (test/economy.js re-measures them on the real engine). */
+    bot: {
+      limitMul: { 5: 1.0, 10: 0.925, 15: 0.9, 20: 0.975, 30: 1.075, 40: 1.125, 50: 1.135 },
+      premium: { top: 4, pct: 0.15 },
+      pacing: { gamma: 0.5, lo: 0.7, hi: 1.5 },
+      knockout: { kappa: 1.5 },
+      mood: { k: 0.25, up: 0.2, down: 0.15 },
+      temperaments: {
+        weights: [25, 50, 25],                       // conservative / balanced / aggressive
+        bigRank: 10,
+        spread: { 5: 0.06, 10: 0.06, 15: 0.05, 20: 0.04, 30: 0.04, 40: 0.04, 50: 0.035 },   // +-% on the walk-away
+        conservative: { step: 0.75, big: 0.95 },      // smaller raises, a little less for the biggest states
+        aggressive: { step: 1.25, big: 1.05, reserveCap: 3 }   // bigger raises, more for the biggest states, spends deep
+      }
+    },
     metric: {
       label: ${JSON.stringify({ en: 'Population', de: 'Einwohner', it: 'Popolazione', es: 'Población', fr: 'Population' })},
       effUnit: '$/M',                       // dollars per million people
@@ -45,13 +75,13 @@ const pack = `/* ===============================================================
     globe: { borders: false, claimBorders: false },
     map: 'us',                              // results show the US map (us-view.js) instead of the globe
 
-    /* Smooth pricing, no bands. Ideal = the state's share of the 50-state total x ($budgetPerLot x 50),
-       so the ideals of all 50 states add up to one full round's budget and the average lot is worth
-       about $10. A tiny scale factor k makes the whole-dollar ideals (floor $1) sum to exactly that.
+    /* Smooth pricing, no bands. Ideal = the state's share of the 50-state total x (10 x priceScale x 50),
+       so the ideals of all 50 states add up to 50 average lots and the average lot is worth
+       about $30 (priceScale 3). A tiny scale factor k makes the whole-dollar ideals (floor $1) sum to exactly that.
        Max = ideal x a multiplier that eases from about 2.0 (smallest state) to 1.35 (largest).
        Both never get cheaper as the population grows (checked here and in validatePack). */
     priceTable(items) {
-      const per = pack.budgetPerLot, total = items.reduce((a, i) => a + i.value, 0), target = items.length * per;
+      const per = 10 * pack.economy.priceScale, total = items.reduce((a, i) => a + i.value, 0), target = items.length * per;
       const vmin = Math.min(...items.map(i => i.value)), vmax = Math.max(...items.map(i => i.value));
       const mul = v => { const t = (Math.log(v) - Math.log(vmin)) / (Math.log(vmax) - Math.log(vmin)); return 1.35 + 0.65 * Math.pow(1 - t, 2); };
       const sumFor = k => items.reduce((a, i) => a + Math.max(1, Math.round(k * target * i.value / total)), 0);
