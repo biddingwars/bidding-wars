@@ -533,7 +533,12 @@ test('sold moment: Next lot always appears by itself within 1.5 s, with full mot
   await startSolo(page, 5, 0);
   await page.evaluate(() => { window.think = () => Promise.resolve(); });
   for (let round = 0; round < 3; round++) {
-    await page.waitForSelector('#pass:not(:disabled)'); await page.click('#pass');
+    /* a lot can already be sold when the bot will not beat the opening EUR 1 on a tiny country, so pass only if it is still open;
+       with the fully random draw the bot can also spend its whole purse on the first lots and the round then ends early (house prices, unsold): that is
+       the game working, so stop after the sold moments seen so far (at least one is required) */
+    await page.waitForSelector('#pass:not(:disabled), #sold, #rev');
+    if (await page.$('#rev')) { assert.ok(round >= 1, 'the round ended before a single sold moment was seen'); break; }
+    if (!(await page.$('#sold'))) await page.click('#pass').catch(() => {});
     await page.waitForSelector('#sold');
     await page.waitForSelector('#sold.ready', { timeout: 1500 });
     await page.waitForTimeout(1500);                       // it must not vanish again

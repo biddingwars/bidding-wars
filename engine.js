@@ -167,7 +167,7 @@
         const perLevel = isObj(ec.budgets) && lvIds.length > 0 && lvIds.every(id => isObj(ec.budgets[id]));
         if (!isObj(ec.budgets) || !(perLevel ? lvIds.every(id => opts.every(n => isPosInt(ec.budgets[id][n]))) : opts.every(n => isPosInt(ec.budgets[n])))) e('economy.budgets needs a positive whole-number budget for every lots option (or per level: { levelId: { lots: budget } })');
         if (ec.endgame !== undefined && !(isObj(ec.endgame) && ec.endgame.rule === 'house' && ec.endgame.price > 0 && ec.endgame.price <= 1)) e('economy.endgame must be { rule: "house", price: 0 < share <= 1 }');
-        if (ec.sampling !== undefined && ec.sampling !== 'systematic') e('economy.sampling must be "systematic" when given');
+        if (ec.sampling !== undefined && ec.sampling !== 'systematic' && ec.sampling !== 'random') e('economy.sampling must be "systematic" or "random" when given');
         if (ec.bidSteps !== undefined && !(Array.isArray(ec.bidSteps) && ec.bidSteps.length && ec.bidSteps.every((r, i) => Array.isArray(r) && Array.isArray(r[1]) && r[1].length === 5 && r[1].every(isPosInt) && r[1].every((v, k) => !k || v > r[1][k - 1]) && (i === ec.bidSteps.length - 1 ? r[0] == null : isPosInt(r[0]) && (!i || r[0] > ec.bidSteps[i - 1][0])))))
           e('economy.bidSteps must be [[upTo, [5 ascending steps]], …, [null, [5 ascending steps]]] with increasing upTo');
         if (ec.typingBonus !== undefined && !(ec.typingBonus >= 0 && ec.typingBonus <= 10)) e('economy.typingBonus must be 0..10 seconds');
@@ -260,6 +260,8 @@
     for (let k = 0; k < n; k++) out.push(pool[Math.min(N - 1, Math.floor(u + k * step))]);
     return shuffle(out, rng);
   }
+  /* economy.sampling: 'random' (or absent) = every lot uniformly from the items not yet used, so every item, every pair and every position is equally likely;
+     'systematic' = the variance-reduced draw above (equal chance per item, but items of similar value never share a round). One word in the pack switches between them. */
   function draw(pack, n, levelId, rng) {
     rng = rng || defaultRng;
     const pool = levelPool(pack, levelId);

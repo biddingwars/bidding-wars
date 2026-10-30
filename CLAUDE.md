@@ -359,24 +359,30 @@ bands also had hard edges (185 pairs where a bigger country was cheaper; Vietnam
     rival's money it jumps straight to the rival's whole purse (K or K+1). Consequence (accepted trade-off): on a decisive lot the price *is* a wallet, so it is not random.
   - `creeperGuard { raises: 3 }` — a rival who raised ≥ 3 times and never passed while able to pay is a +1 creeper; the efficiency factor is then floored at 1 so the creeper keeps losing.
   - Small prices: when contested at €3–11 the +1 step becomes +2 in 40% of raises (`bot.parity: false` turns it off); without it a +1 bot against a +1 rival always stops on the same parity.
-  End of round, bid buttons, typing grace and sampling are the States ones. An unknown level id falls back to the pack's default (`validLevel`; it used to give NaN budgets).
-- **Reference results** (real engine, `node test/economy.js countries 3000`, mix 25/50/25; win % of A creeper / B fair / C smart-€1):
-  Medium 5–30 lots A 28.1 / 14.5 / 11.0 / 7.8 / 4.6, B 37.3 / 39.3 / 29.3 / 23.0 / 15.6, C 37.0 / 37.5 / 28.7 / 22.6 / 15.5 (against the frozen August Medium: A +7…−9, B +2…−11, C −2…−12 — 30 lots is the most distant).
-  Beginner A 16.3 / 26.1 / 30.3 / 20.4 / 9.6, B 30 / 48 / 52 / 40 / 26 (August Beginner: A 85, B 75 at 10 lots — it was a free win). Expert A 18.8 / 18.2 / 17.6 / 13.7 / 11.6,
-  B 19 / 24 / 28 / 25 / 25. Every temperament keeps B and C between 14% and 60% (lowest Medium 30 lots aggressive 14.2, highest Beginner 15 lots aggressive 60.1); the creeper takes at most 39% of the points; the bot ends with 9–24% unspent against it.
-  The naive fair-value players (B, C) are therefore **harder** to be than they were in August; that is the price of closing the efficiency exploits below.
-- **Accepted misses** (agreed): Expert and Beginner short rounds are luck-heavy (the rules text says so); Beginner creeper 26–30% at 10–15 lots; Expert 5 lots B/C ≈ 19%
-  (−30 against the Medium reference); Medium 30 lots B/C ≈ 15.6%. Expert's pool is extremely skewed (median 9 M, India 1,451 M), so one lot decides a round.
+  End of round, bid buttons and typing grace are the States ones. An unknown level id falls back to the pack's default (`validLevel`; it used to give NaN budgets).
+- **Drawing** (`economy.sampling`): Countries uses **`'random'`** — every lot is drawn uniformly from the countries of the level's pool not yet used in the round, so every country,
+  every *pair* of countries and every lot position is equally likely (Expert: 1/196 = 0.51% for lot 1, 1/186 = 0.53% for lot 11). `'systematic'` (the sorted, fixed-interval
+  draw States still uses) gave every country the same *single* chance, but two countries of similar size never shared a round (0.000% against 0.235% for independent draws).
+  **To revert, change `sampling: 'random'` to `'systematic'` in `pack-countries.js` and bump `CACHE`/`CONFIG.version`; nothing else depends on it** (the sampling test runs both modes).
+  Cost of the random draw, measured: round value swings more (Beginner 10 lots SD 47%), so luck rises and every result moves toward 50%: Medium creeper 44 / 24 / 14 / 8 / 6% (was 28 / 15 / 11 / 8 / 5),
+  fair-value players 49–54% at 5–10 lots (was 37–39), Expert creeper 40 / 33 / 25 / 16 / 14% at 5–30 lots. The exploit search is cleaner (no cell above the limit); `limitMul` was raised for
+  Beginner 15/20 and Expert 10/15/20 (it cannot remove the short-round luck: ×1.45 on every limit moved the Medium 5-lot creeper by only 2 points).
+- **Reference results** (real engine, `node test/economy.js countries 3000`, mix 25/50/25; win % of A creeper / B fair / C smart-€1, random draw):
+  Medium 5–30 lots A 44.3 / 23.6 / 13.6 / 8.2 / 6.0, B 53.7 / 48.7 / 40.9 / 33.9 / 25.8, C 53.4 / 47.8 / 40.9 / 33.4 / 25.3.
+  Beginner A 27.9 / 30.6 / 24.3 / 18.3 / 9.6, B 31 / 48 / 46 / 39 / 28. Expert A 40.0 / 32.8 / 24.7 / 16.0 / 14.0, B 38 / 44 / 41 / 33 / 38. The bot ends with 13–24% unspent against the creeper.
+  The loose calibration test allows +17 (creeper +27 at 5 lots) against the frozen August Medium numbers for this reason. 5-lot rounds are mostly luck (the rules text says so).
+- **Accepted misses** (agreed): short rounds are luck-heavy; the creeper wins 24–44% of 5–10-lot rounds at every level; Expert's pool is extremely skewed (median 9 M, India 1,451 M),
+  so one lot decides a round — and with the random draw a mid-size country sits in a round without any giant about a third of the time, where it is decisive.
 - **Bug-test round** (dev scripts, none part of `node --test` except the small slices):
   - `node test/fuzz.js [games] [seed] [pack]` — whole auctions with junk / random / creeper / passer / all-in / fair humans, bogus levels and lot counts, 3–4 seats, forced
     temperaments; checks exceptions, termination, NaN / non-integer / negative money, money conservation, lots sold twice or lost, a bot move the engine rejects, a rejected
-    human move that changes state, reproducibility of a seed. `test/fuzz.test.js` runs a 600-game slice. Final run: **150,000 games, 0 failures** (≈850,000 during the round).
+    human move that changes state, reproducibility of a seed. `test/fuzz.test.js` runs a 600-game slice. Final runs: **150,000 games with the systematic draw and 100,000 with the random draw, 0 failures** (≈950,000 during the round).
     It found one real bug: an unknown level id gave NaN budgets (fixed by `validLevel`).
   - `node test/exploit.js [pack] [level|all] [games] [confirm]` — a family of ~40 human strategies (ratio, efficiency hunter, saver, hoarder, reader, all-in jumper, sniper, oracle,
     temperament reader); the best five are re-played on fresh seeds. Limit 60% (65% at 5 lots). August bot, same family: 70–99% for the best strategy in most cells.
-    Final confirmed best blind strategy, Beginner 5/10/15/20/30: 64.6 / 51.7 / **62.3** / **60.3** / 56.8; Medium 51.4 / 49.6 / 52.4 / 51.1 / 40.7; Expert 56.2 / **60.9** / 37.8 / 34.1 / 44.3.
-    **Three cells stay 0.3–2.3 points above the limit** (Beginner 15 and 20: "bid up to 0.8× the fair price"; Expert 10: all-in on a top-decile lot). Moving `limitMul` did not
-    close them (sweeps of ±15% only traded one strategy for another within sampling noise), so they are documented residuals, not fixed.
+    Final confirmed best blind strategy with the random draw, Beginner 5/10/15/20/30: 46.6 / 49.6 / 49.5 / 53.2 / 55.2; Medium 57.4 / 58.4 / 49.1 / 49.0 / 50.5; Expert 41.7 / 45.5 / 44.5 / 43.0 / 50.3
+    — **no cell above the limit**. (With the systematic draw three cells sat 0.3–2.3 points over it; the random draw's extra luck pulls every strategy toward 50%, so that is partly an effect of luck,
+    not of a stronger bot.) The oracle (sees the lots to come, not available to a player) reaches up to 62%.
   - `node test/ui-sim.js 300 4` — 300 games through the real UI, 0 failures.
 - **Unpredictability** (`node test/economy.js unpredictable`, `learner`; guarded in `test/countries-economy.test.js`): on one lot, same state, fresh seed, creeper rival: SD ≥ 15% of
   the ideal, no price in more than 20% of games, within ±1 of the median in at most 25% (ideal ≥ 25) / 40% (10–24), even/odd 50 ± 3 above €5 — measured on ordinary mid-size lots
@@ -490,7 +496,7 @@ counters inside the single `record:v1` value.
   knockout (a)/(b)/(c) incl. a property test, the creeper ≤ 60% per temperament, calibration bands, no knife-edge, bid steps, rules text.
   `node test/economy.js [countries|states|learner|unpredictable|baseline]` is the full report (not part of `node --test`).
 - `node --test test/countries-economy.test.js` — the Countries economy on the real engine: per-level budgets and the top-5 rule, smooth monotone prices and the
-  level averages, systematic sampling per level pool (equal chance, no duplicates), house-price endgame, knockout (a)/(b)/(c), calibration bands per level and
+  level averages, the draw per level pool (random and systematic: equal chance per country, per position and per pair, no duplicates), house-price endgame, knockout (a)/(b)/(c), calibration bands per level and
   temperament, the frozen baseline, the unpredictability tests (repeat test, parity, wallet-bound giants, the Learner), the rules text in five languages.
 - `node --test test/usmap.test.js` — the generated US map data (48 + AK + HI), the files being in
   the offline cache, and the label layout (no overlaps, callouts inside the map).

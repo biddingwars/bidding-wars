@@ -59,14 +59,14 @@
         expert:   { 5: 35, 10: 70, 15: 75, 20: 90, 30: 140 }
       },
       endgame: { rule: 'house', price: 0.8 },
-      sampling: 'systematic',
+      sampling: 'random',   /* 'systematic' restores the variance-reduced draw (items of similar size never share a round) */
       bidSteps: [[12, [1, 2, 5, 10, 25]], [40, [2, 5, 10, 25, 50]], [100, [5, 10, 25, 50, 100]], [null, [10, 25, 50, 100, 200]]],
       typingBonus: 4
     },
     /* The bot: the August walk-away roll (between ideal and max), randomised raise step and rank-based valuation, plus the shared
        States machinery. limitMul is the per-level, per-lot-count calibration (re-measured with `node test/economy.js`). */
     bot: {
-      limitMul: { beginner: { 5: 1.28, 10: 1.178, 15: 0.914, 20: 0.812, 30: 0.812 }, medium: { 5: 0.817, 10: 0.817, 15: 0.817, 20: 0.817, 30: 0.864 }, expert: { 5: 0.567, 10: 0.712, 15: 0.51, 20: 0.582, 30: 0.605 } },
+      limitMul: { beginner: { 5: 1.28, 10: 1.178, 15: 1.097, 20: 0.974, 30: 0.812 }, medium: { 5: 0.817, 10: 0.817, 15: 0.817, 20: 0.817, 30: 0.864 }, expert: { 5: 0.567, 10: 0.926, 15: 0.663, 20: 0.698, 30: 0.605 } },
       premium: { top: 5, pct: 0.15 },
       pacing: { gamma: 0.5, lo: 0.7, hi: 1.5 },
       knockout: { kappa: { beginner: 1.5, medium: 0.777, expert: 0.584 } },
