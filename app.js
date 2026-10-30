@@ -57,7 +57,7 @@ function val(id) { const e = document.getElementById(id); return e ? e.value.tri
 /* ---- appearance: dark (Nocturne) by default, whatever the phone is set to; the toggle switches to Daylight and back ---- */
 const THEMES = ['dark', 'light'];
 let THEME = 'dark';
-const THEME_COLOR = { dark: '#0A0A18', light: '#EEF0FF' };
+const THEME_COLOR = { dark: '#0E0D0B', light: '#EEF0FF' };
 function applyTheme() {
   document.documentElement.setAttribute('data-theme', THEME);
   $$('meta[name=theme-color]').forEach(m => m.setAttribute('content', THEME_COLOR[THEME]));

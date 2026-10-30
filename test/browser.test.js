@@ -289,7 +289,7 @@ test('appearance: dark by default whatever the phone says; Daylight is a choice 
     await page.waitForFunction(() => document.body.classList.contains('booted'));
     const bg = () => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--bg1').trim());
     assert.equal(await page.getAttribute('html', 'data-theme'), 'dark', `${phone} phone → still dark`);
-    assert.equal(await bg(), '#0A0A18');
+    assert.equal(await bg(), '#0E0D0B');
     assert.equal(await page.evaluate(() => localStorage.getItem('theme:v1')), null, 'the default stores nothing');
     await page.click('#theme');                              // dark → light
     assert.equal(await page.getAttribute('html', 'data-theme'), 'light');

@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v31';   // increment this, every time
+const CACHE = 'bidding-wars-v32';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v31` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v32` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -151,7 +151,7 @@ fails if the States screens contain `€`, "euro" or "country" in any language.
 
 ## Look and feel — "Nocturne"
 
-Dark glass with brass gold is the default; "Daylight" is the light twin. The
+Dark glass with brass gold is the default; its colours are design direction A's warm near-black (page `#0E0D0B`, cards `#1C1B17`/`#242320`, ivory ink `#F6F2E9`, brass `#E3B35A`) — **no blue in the dark theme** (the earlier blue-violet felt arcade-like). `ink2`/`ink3`/`danger` are a touch lighter than direction A's own so the contrast test passes; "Daylight" is the light twin. The
 whole look is **design tokens** at the top of `app.css` (`:root` = dark,
 `:root[data-theme=light]` = light; `<html data-theme="dark">` is set in `index.html` so the first paint is already dark).
 Every theme difference is a token — never write a rule for one theme only, and
