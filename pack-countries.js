@@ -66,7 +66,7 @@
     /* The bot: the August walk-away roll (between ideal and max), randomised raise step and rank-based valuation, plus the shared
        States machinery. limitMul is the per-level, per-lot-count calibration (re-measured with `node test/economy.js`). */
     bot: {
-      limitMul: { beginner: { 5: 0.75, 10: 0.775, 15: 0.875, 20: 0.95, 30: 0.95 }, medium: { 5: 0.875, 10: 0.875, 15: 0.875, 20: 0.875, 30: 0.925 }, expert: { 5: 0.75, 10: 0.725, 15: 0.625, 20: 0.7, 30: 0.775 } },
+      limitMul: { beginner: { 5: 0.75, 10: 0.775, 15: 0.875, 20: 0.95, 30: 0.95 }, medium: { 5: 0.875, 10: 0.875, 15: 0.875, 20: 0.875, 30: 0.925 }, expert: { 5: 0.75, 10: 0.725, 15: 0.675, 20: 0.77, 30: 0.8 } },
       premium: { top: 5, pct: 0.15 },
       pacing: { gamma: 0.5, lo: 0.7, hi: 1.5 },
       knockout: { kappa: 0.8 },
