@@ -52,7 +52,8 @@ const driver = async cfg => {
   check('results');
   // lots sold once, money conserved, scoreboard agrees with the screen
   const bought = S.players.flatMap(p => p.bought);
-  if (bought.length !== lotsTotal) problems.push('lots sold ' + bought.length + ' of ' + lotsTotal);
+  const unsold = S.unsold ? S.unsold.length : 0;     // the house-price endgame can leave lots unsold
+  if (bought.length + unsold !== lotsTotal) problems.push('lots sold ' + bought.length + ' + unsold ' + unsold + ' of ' + lotsTotal);
   S.players.forEach((p, i) => { const spent = p.bought.reduce((a, b) => a + (b.price || 0), 0); if (startBudgets[i] - spent !== p.budget) problems.push('money not conserved for seat ' + i); });
   const sb = Engine.scoreboard(S), shown = [...document.querySelectorAll('.lbr .p')].map(e => e.textContent.trim());
   sb.rows.forEach(r => { if (!shown.includes(r.pts.toFixed(1))) problems.push('score ' + r.pts.toFixed(1) + ' not on screen'); });

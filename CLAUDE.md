@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v28';   // increment this, every time
+const CACHE = 'bidding-wars-v29';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -110,8 +110,9 @@ fails if the States screens contain `€`, "euro" or "country" in any language.
 
 - Bidding opens at €1 on every lot. Players alternate: raise, or drop out.
 - Drop out and whoever holds the top bid buys it at that price.
-- Budget scales at €10 per lot (10 lots = €100 each). US States: $10 per lot,
-  so the "All 50 states" round gives $500 each.
+- Budget scales at €10 per lot (10 lots = €100 each). US States: a budget *table* by lot
+  count ($85 / $165 / $180 / $210 / $315 / $420 / $525 for 5 / 10 / 15 / 20 / 30 / 40 / 50 lots),
+  deliberately scarce — see "US States economy".
 - Default 10 seconds per decision; timeout = automatic drop out.
 - The opening €1 bid rotates seat by seat each lot.
 - Seat colours are fixed for the whole auction: seat 1 red, 2 black, 3 blue,
@@ -234,18 +235,22 @@ source/vintage/release/licence are fields in the file and in the pack header) an
 `test/states-content.json` (names incl. de/it/es/fr exonyms, USPS codes,
 Census-boundary centroids, taunts, fun facts).
 
-- **Drawing.** Lots are drawn *without replacement*, every state equally likely;
-  lot options 5/10/15/20/30/40 and 50 ("All 50 states", `lots.all`), where every
+- **Drawing.** Lots are drawn *without replacement*, every state equally likely, by
+  **systematic sampling** (`economy.sampling`, `Engine.drawSystematic`: sort by population,
+  random start, fixed interval, then shuffle the order) so the total value of a round
+  swings far less (10 lots: SD 18.6% instead of 31.8%); every state keeps exactly the
+  chance n/50. Lot options 5/10/15/20/30/40 and 50 ("All 50 states", `lots.all`), where every
   state comes up exactly once, shuffled. No difficulty levels (`levels` has one
   entry and the setup hides the section when there is only one).
-- **Pricing.** Ideal = the state's share of the 50-state total × (`budgetPerLot` ×
-  50), in whole dollars (floor $1); a scale factor `k` makes the whole-dollar
-  ideals sum to exactly one full round's budget, so a round's ideals add up to
-  one player's budget at any lot count. `max` = ideal × a multiplier that eases
-  from about 2.0 (smallest) to 1.35 (largest). Both are non-decreasing in
-  population. `test/golden-states.json` pins all 50; `test/states.test.js` checks
-  the targets (CA $45–60, TX $35–48, FL $26–35, NY $22–30, smallest $1–2).
+- **Pricing.** Prices run at **3× the original scale** (`economy.priceScale`; an average
+  lot is $30, CA $173, TX $139, WY $3, the smallest states $3–6 instead of $1–2).
+  Ideal = the state's share of the 50-state total × (10 × priceScale × 50), in whole dollars
+  (floor $1); a scale factor `k` makes the whole-dollar ideals sum to 50 average lots.
+  `max` = ideal × a multiplier that eases from about 2.0 (smallest) to 1.35 (largest). Both
+  are non-decreasing in population. `test/golden-states.json` pins all 50;
+  `test/states.test.js` checks the targets (×3 of CA 45–60, TX 35–48, FL 26–35, NY 22–30).
 - **Currency.** USD in every language (see "Five languages").
+- **Economy.** See the next section.
 - **Fun facts.** `pack.facts[id] = { en }`, one per state, shown on the SOLD screen
   and in the results "Fun facts" sheet; must not hint at population or rank;
   other languages fall back to English. `FACTS-SOURCES.md` lists every fact with
@@ -271,6 +276,53 @@ Census-boundary centroids, taunts, fun facts).
 - **Selection.** The pack picked on the menu is `SELPACK`; it is remembered as `last` inside
   the one `record:v1` value (privacy: still exactly four keys, and the copy says so). The record is per pack inside
   `record:v1`.
+
+### US States economy (`pack.economy`, `pack.bot`; Countries has neither and is untouched)
+
+Why: with budget = value of the pool, "+1 over the bot until it drops out" took 78% of the points,
+won 100% of 30–50-lot games and left the bot 93% unspent; cutting the budget alone flipped it to a
+knife-edge (50 lots: creeper 2% at 60% budget, 99% at 70%). Measured on the real engine with
+`node test/economy.js`.
+
+- **Budget = f × lots × average ideal price** (`economy.budgets` is the resulting table in dollars).
+  f = 0.57 (5 lots) and 0.55 (10 lots) — so few lots that one state decides the round — then 0.40 (15),
+  and **0.35 from 20 lots up** (all 50: $525). `validatePack` refuses a budget for all 50 above 80% of the
+  expected price of the four biggest states (midpoint of ideal and max, plus the bot's 15% premium): $525 vs a cap of $545.
+- **End-of-round rule** (`economy.endgame`, `startLot`): when only one player has money left the rest is
+  offered to them at **80% of the ideal price, while their money lasts**; lots they cannot pay for stay
+  unsold (`S.unsold`, shown on the results). Nobody sweeps the rest for $1. (Countries keeps the old walkover.)
+- **Bid buttons** (`economy.bidSteps`, `Engine.bidSteps(pack, price)`): the five raise buttons follow the
+  *current price* (never the item's fair price, which would leak its size): price < 12: +1 +2 +5 +10 +25;
+  < 40: +2 +5 +10 +25 +50; < 100: +5 +10 +25 +50 +100; else +10 +25 +50 +100 +200. They are relabelled when
+  it becomes the human's turn, so they never change under a thumb mid-turn. **Typing grace**
+  (`economy.typingBonus`, 4 s): focusing the custom-amount field adds seconds to the decision clock once per turn.
+- **The extended bot** (`pack.bot`, `botDecisionExt` in `engine.js`; every random choice goes through `S.rng`, so a seed
+  reproduces a game; Countries keeps the original `botDecision` path byte for byte). Parameters:
+  - `limitMul[lots]` — calibration multiplier on every walk-away roll (1.0, 0.925, 0.9, 0.975, 1.075, 1.125, 1.135 for 5…50 lots).
+  - `premium { top: 4, pct: 0.15 }` — the four biggest items get +15% on the roll.
+  - `pacing { gamma: 0.5, lo: 0.7, hi: 1.5 }` — walk-away × (budget ÷ value left ÷ the opening budget ratio)^gamma, clamped: the bot spends evenly.
+  - `knockout { kappa: 1.5 }` — K = the rival's budget, the price it can no longer top. At its own limit, with the rival holding
+    the bid and K affordable after the reserve, the bot jumps to K (K+1 if the rival holds K) when (sweep) it can pay K on every lot left,
+    or it can afford m = ⌊budget/K⌋ knockouts and this lot is among the m most valuable left, or the lot is decisive
+    (puts it ahead / the lead out of reach) and K ≤ kappa × the lot's max. A rival who folds early costs nothing extra.
+  - `mood { k: 0.25, up: 0.2, down: 0.15 }` — after half the round up to +20% when behind, −15% when well ahead.
+  - `temperaments { weights: [25, 50, 25], bigRank: 10, spread[lots], conservative, aggressive }` — drawn once per game from the seeded
+    rng and never shown. The walk-away spread is symmetric around the balanced bot: ±6% (5–10 lots), ±5% (15), ±4% (20–40), ±3.5% (50).
+    Conservative: raise steps ×0.75, ×0.95 on the 10 biggest. Aggressive: steps ×1.25, ×1.05 on the 10 biggest, reserve capped at $3 (spends deep).
+    `Engine.newAuction({ …, temper })` can force one (the harness does).
+  - `reserve` is the original one ($1 per remaining lot outside the last three).
+- **Calibration targets** (Countries *Medium*, 10 lots, is the benchmark: creeper A 9.5%, fair B 37%, smart C 39.6%, each ±10):
+  the balanced bot alone is inside the band for B and C at every lot count and for A from 10 lots; each temperament keeps B and C
+  between 15% and 75%; the 25/50/25 mix stays inside the band; the creeper takes at most 60% of the points against each
+  temperament (it gets 44–49%); ±10% budget moves no reference player by more than 15 points. **5-lot rounds cannot meet the creeper
+  target** (one state is 25–40% of the points; A ≈ 35%) — the rules text says short rounds are luck-heavy.
+- **Re-running the harness**: `node test/economy.js [games] [seed]` prints Countries' three levels and the full US States table
+  (A creeper, B fair-value, C smart with a $1.50 reserve = 5% of an average lot, D rationer, and C with $1 / $2 / $3), per
+  temperament and mixed. Change `limitMul`/`spread`/`budgets` in `test/make-pack-states.js`, regenerate, re-run, keep the targets.
+  `node --test test/economy.test.js` is the loose regression version. The calibration numbers in `limitMul`/`spread` were found with a
+  scratch copy of the loop and then re-measured on the real engine (largest difference 2.1 points).
+- **Follow-up (not fixed here, on purpose):** Countries' *Beginner* and *Expert* levels are creeper-exploitable (A wins 85% and 65% of
+  10-lot games; Medium resists: 9.5%). Only the default level was used as the benchmark.
 
 ### What a Capitals pack would need (not built — do not guess its valuation)
 
@@ -370,6 +422,10 @@ counters inside the single `record:v1` value.
   duplicates in a round, "All 50" exactly once and shuffled, golden prices, price
   targets, round-sum ≈ one budget, USD/US-spelling, taunts, facts, a 1,200-game
   simulation.
+- `node --test test/economy.test.js` — the US States economy on the real engine: budget table and the top-4 rule, systematic sampling
+  (100k draws, no duplicates, 50 = each once, smaller swings), the house-price endgame, temperaments (seeded, 25/50/25, symmetric),
+  knockout (a)/(b)/(c) incl. a property test, the creeper ≤ 60% per temperament, calibration bands, no knife-edge, bid steps, rules text.
+  `node test/economy.js` is the full report (not part of `node --test`).
 - `node --test test/usmap.test.js` — the generated US map data (48 + AK + HI), the files being in
   the offline cache, and the label layout (no overlaps, callouts inside the map).
 - `node --test test/contrast.test.js` — WCAG contrast of the real design tokens

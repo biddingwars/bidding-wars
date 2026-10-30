@@ -588,8 +588,8 @@ test('US STATES: pick it on the menu, setup has All 50 and no difficulty, play, 
   assert.deepEqual(await page.$$eval('[data-g="lots"] [data-v]', e => e.map(x => x.dataset.v)), ['5', '10', '15', '20', '30', '40', '50']);
   assert.match(await page.textContent('[data-g="lots"] [data-v="50"]'), /All 50/);
   assert.equal(await page.$('[data-g="level"]'), null, 'no difficulty filter for States');
-  assert.equal((await page.textContent('#bud')).trim(), '$100');
-  await pick(page, 'lots', 50); assert.equal((await page.textContent('#bud')).trim(), '$500');
+  assert.equal((await page.textContent('#bud')).trim(), '$165', '10 lots: the budget table, not lots x $10');
+  await pick(page, 'lots', 50); assert.equal((await page.textContent('#bud')).trim(), '$525');
   await pick(page, 'lots', 5); await pick(page, 'clock', 0);
   await page.click('#start'); await page.waitForSelector('#ctrl');
   assert.ok(requests.includes('pack-states.js'), 'pack file loaded lazily');
@@ -619,9 +619,9 @@ test('US STATES: all 50 states, each exactly once, through the real UI', { skip:
   await pickPack(page, 'states');
   await startSolo(page, 50, 0);
   await autoplay(page, { maxSteps: 2500 });
-  const r = await page.evaluate(() => ({ seen: S.items.map(i => i.id), bought: S.players.flatMap(p => p.bought.map(b => b.id)) }));
+  const r = await page.evaluate(() => ({ seen: S.items.map(i => i.id), bought: S.players.flatMap(p => p.bought.map(b => b.id)), unsold: (S.unsold || []).map(i => i.id) }));
   assert.equal(r.seen.length, 50); assert.equal(new Set(r.seen).size, 50, 'every state once');
-  assert.equal(r.bought.length, 50); assert.equal(new Set(r.bought).size, 50, 'sold exactly once');
+  assert.equal(r.bought.length + r.unsold.length, 50, 'every state is sold or (house-price endgame) unsold'); assert.equal(new Set(r.bought.concat(r.unsold)).size, 50, 'each exactly once');
   await reveal(page);
   assert.deepEqual(errors, []);
   await ctx.close();
@@ -700,7 +700,7 @@ test('Countries is unchanged when States is picked and then Countries again', { 
 });
 
 test('US STATES: how to play, setup and record say states and dollars in every language — no countries, no euros', { skip: SKIP }, async () => {
-  const bad = /€|\beuros?\b|\bcountr|\bLänder\b|\bLand\b|\bpaesi?\b|\bpaíses\b|\bpaís\b|\bpays\b|\bEuropa\b|\bEurope\b|\bEuropei?\b/i;
+  const bad = /€|\beuros?\b|\bcountr|\bLänder\b|\bLand\b|\bpaesi?\b|\bpaíses\b|\bpaís\b|\bEuropa\b|\bEurope\b|\bEuropei?\b/i, badFr = /\bpays\b/i;
   for (const lang of ['en', 'de', 'it', 'es', 'fr']) {
     const { page, errors, ctx } = await open({ init: l => localStorage.setItem('lang:v1', l), initArg: lang });
     await pickPack(page, 'states');
@@ -709,7 +709,8 @@ test('US STATES: how to play, setup and record say states and dollars in every l
     await page.click('#mr');
     await page.waitForSelector('.sheetbox');
     const t1 = await page.textContent('.sheetbox');
-    assert.ok(!bad.test(t1), `${lang} how-to-play: ` + t1.match(bad));
+    assert.ok(!bad.test(t1) && !(lang === 'fr' && badFr.test(t1)), `${lang} how-to-play: ` + (t1.match(bad) || t1.match(badFr)));
+    assert.match(t1, /\$85[^$]+\$165[^$]+\$180[^$]+\$210[^$]+\$315[^$]+\$420[^$]+\$525/, lang + ' how-to-play lists the real budgets');
     assert.match(t1, /\$/, lang + ' how-to-play shows dollars');
     await page.keyboard.press('Escape');
     await page.click('#m1'); await page.waitForSelector('#start');
@@ -841,4 +842,45 @@ test('US flag backdrop is straight (not tilted) and covers the screen width', { 
     assert.ok(f.w >= w - 1 && f.left === 0 && f.top === 0, `${w}x${h} flag covers the width from the corner: ${JSON.stringify(f)}`);
     await ctx.close();
   }
+});
+
+/* ---------------------------------------------------------------- US States economy: bid buttons and the typing grace */
+test('US STATES: the raise buttons follow the current price; Countries keeps +1 +2 +5 +10 +25', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open();
+  await pickPack(page, 'states'); await startSolo(page, 10, 0);
+  await page.evaluate(() => { window.think = () => new Promise(() => {}); });
+  const labels = async price => { await page.evaluate(p => { S.L.price = p; S.players[S.L.holder].budget = Math.max(S.players[S.L.holder].budget, p); S.L.turn = S.L.holder === 0 ? 1 : 0; S.players[0].budget = 400; S.players[1].ai = false; controls(); }, price); return page.$$eval('#ctrl [data-s]', e => e.map(x => x.dataset.s + '|' + x.textContent.trim() + '|' + x.getAttribute('aria-label'))); };
+  let l = await labels(1); assert.deepEqual(l.map(x => x.split('|')[0]), ['1', '2', '5', '10', '25']);
+  l = await labels(25); assert.deepEqual(l.map(x => x.split('|')[0]), ['2', '5', '10', '25', '50']);
+  l = await labels(60); assert.deepEqual(l.map(x => x.split('|')[0]), ['5', '10', '25', '50', '100']);
+  l = await labels(150); assert.deepEqual(l.map(x => x.split('|')[0]), ['10', '25', '50', '100', '200']);
+  assert.ok(l.every(x => x.split('|')[1] === '+' + x.split('|')[0] && /\d/.test(x.split('|')[2])), 'visible text and accessible name follow: ' + l.join(' '));
+  await page.click('#ctrl [data-s="10"]').catch(() => {});
+  assert.deepEqual(errors, []); await ctx.close();
+  const c = await open();
+  await c.page.click('#m1'); await c.page.waitForSelector('#start'); await pick(c.page, 'clock', 0); await c.page.click('#start'); await c.page.waitForSelector('#ctrl');
+  assert.deepEqual(await c.page.$$eval('#ctrl [data-s]', e => e.map(x => x.dataset.s)), ['1', '2', '5', '10', '25']);
+  await c.page.evaluate(() => { S.L.price = 150; controls(); });
+  assert.deepEqual(await c.page.$$eval('#ctrl [data-s]', e => e.map(x => x.dataset.s)), ['1', '2', '5', '10', '25'], 'Countries never rescales');
+  await c.ctx.close();
+});
+
+test('US STATES: typing a custom amount adds a few seconds once per turn (and only in this pack)', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open({ motion: 'reduce' });
+  await pickPack(page, 'states');
+  await page.click('#m1'); await page.waitForSelector('#start'); await pick(page, 'lots', 10); await pick(page, 'clock', 10); await page.click('#start'); await page.waitForSelector('#ctrl');
+  await page.evaluate(() => { window.think = () => new Promise(() => {}); S.L.turn = 0; S.L.holder = 1; controls(); startClock(() => {}); });
+  const secs = () => page.evaluate(() => parseInt(document.querySelector('#secs').textContent.split(':')[1]));
+  await page.waitForTimeout(300); assert.ok(await secs() <= 10);
+  await page.focus('#cus'); await page.waitForTimeout(250);
+  assert.ok(await secs() >= 13, 'the clock gained the typing bonus: ' + await secs());
+  await page.evaluate(() => document.querySelector('#cus').blur()); await page.focus('#cus'); await page.waitForTimeout(250);
+  assert.ok(await secs() <= 14, 'only once per turn');
+  assert.deepEqual(errors, []); await ctx.close();
+  const c = await open({ motion: 'reduce' });
+  await c.page.click('#m1'); await c.page.waitForSelector('#start'); await pick(c.page, 'clock', 10); await c.page.click('#start'); await c.page.waitForSelector('#ctrl');
+  await c.page.evaluate(() => { window.think = () => new Promise(() => {}); S.L.turn = 0; S.L.holder = 1; controls(); startClock(() => {}); });
+  await c.page.focus('#cus'); await c.page.waitForTimeout(250);
+  assert.ok(await c.page.evaluate(() => parseInt(document.querySelector('#secs').textContent.split(':')[1])) <= 10, 'Countries gets no bonus');
+  await c.ctx.close();
 });
