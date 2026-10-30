@@ -807,7 +807,7 @@ function home() {
           <button class="glass chipbtn" id="ml" aria-label="${esc(t('language'))}: ${esc(lang.label)}"><span aria-hidden="true">${flag(lang.flag)}</span> ${esc(lang.label)}</button>
           <button class="glass chipbtn sq" id="mp" aria-label="${esc(t('privacy'))}">${IC('lock', 'sm')}</button>
         </div>
-        <p class="foot">${esc(t('footer', { n: count }))}</p>
+        <p class="foot">${esc(t('footer', { n: count }))} · <span class="ver" aria-label="Version ${CONFIG.version}">v${CONFIG.version}</span></p>
       </div>
     </div>`, 'menu');
   const tap = (id, fn) => on(id, () => { Snd.ui(); Haptics.light(); fn(); });

@@ -4,6 +4,10 @@
    ========================================================================== */
 
 const CONFIG = {
+  /* The release number shown on the menu so anyone can check they have the latest build.
+     MUST equal the number in sw.js's CACHE ('bidding-wars-v30' -> 30); test/version.test.js enforces it. */
+  version: 30,
+
   /* Online 1 vs 1 needs a real backend (Firebase, Supabase, PartyKit, …).
      Leave this false until one is wired up in Net.* below — shipping a mode
      that shows an error is an App Store rejection under Guideline 2.1. */
