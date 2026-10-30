@@ -158,8 +158,9 @@ h1.title span{display:block}
 .pack b{font-size:16px;font-weight:700;letter-spacing:-.02em;line-height:1.15}
 .pack span.s{font-size:12px;color:var(--ink2)}
 .pack.on{background:linear-gradient(150deg,var(--goldtint),var(--glass));border:1.5px solid var(--gold1);box-shadow:0 10px 30px var(--goldglow),inset 0 1px 0 var(--hi)}
-.pack.on[data-pack=states]::before{content:"🇺🇸";letter-spacing:0}
-.pack.on::before{content:"🇯🇵🇧🇷🇰🇪🇲🇽";position:absolute;left:10px;top:8px;font-size:17px;letter-spacing:2px}
+.pack[data-pack]::before{position:absolute;left:10px;top:8px;font-size:17px;letter-spacing:2px}   /* a pack's flags show whether or not it is the selected one */
+.pack[data-pack=countries]::before{content:"🇯🇵🇧🇷🇰🇪🇲🇽"}
+.pack[data-pack=states]::before{content:"🇺🇸";letter-spacing:0}
 .pack.off{background:var(--glass);border:1px solid var(--stroke)}
 .pack.off i{position:absolute;right:10px;top:10px;font-style:normal;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--goldink);background:var(--goldtint);padding:3px 7px;border-radius:8px}
 .modes{display:flex;flex-direction:column;gap:10px;flex:none}
