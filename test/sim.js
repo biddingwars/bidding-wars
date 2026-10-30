@@ -41,7 +41,7 @@ function playGame(opts) {
   const players = solo ? [{ name: 'You' }, { name: 'Bot', ai: true }]
     : Array.from({ length: opts.n }, (_, i) => ({ name: 'P' + (i + 1) }));
   const S = Engine.newAuction({ pack, kind: opts.kind, level: opts.level, lots: opts.lots, players, clock: 10, rng });
-  const total = S.players.length * Engine.budgetFor(pack, opts.lots);
+  const total = S.players.length * Engine.budgetFor(pack, opts.lots, opts.level);
   const policy = POLICIES[opts.policy] || POLICIES.random;
   const log = { lots: 0, awards: 0, walkover: false, openers: [], steps: 0 };
   let r = Engine.startLot(S);

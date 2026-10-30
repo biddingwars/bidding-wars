@@ -26,7 +26,7 @@ const driver = async cfg => {
   $('#start').click();
   await wait(() => $('#ctrl'), 4000, 'auction');
   check('auction start');
-  const lotsTotal = S.items.length, startBudgets = S.players.map(() => Engine.budgetFor(S.pack, S.items.length));
+  const lotsTotal = S.items.length, startBudgets = S.players.map(() => Engine.budgetFor(S.pack, S.items.length, S.level));
   let steps = 0, soldCount = 0, leftAt = cfg.leaveAfter || 0, seen = new Set();
   while (steps++ < 4000) {
     const which = await wait(() => $('#rev') ? 'rev' : $('#n') ? 'n' : ($('#pass') && !$('#pass').disabled) ? 'turn' : null, 8000, 'next state (lot ' + (S && S.i) + ')');

@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v33';   // increment this, every time
+const CACHE = 'bidding-wars-v34';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v33` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v34` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -105,8 +105,8 @@ object (`Engine.itemName`).
 
 A pack with a non-euro currency (US States: `$`) says so in **every** language:
 `t()` rewrites `€` amounts to the pack's symbol and `STRP` in `app.js` overrides
-the few lines that talk about countries/euros for that pack (`rivalDesc`,
-`rulesP1/P5/P6/P7`, `footer`). Money on screen goes through `money()` →
+the lines that differ for that pack (`rivalDesc`, `budgetNote`, `rulesP1/P4/P5/P6/P7/P8`, `unsoldNote`, `footer`). Both packs have an entry: Countries
+keeps euros but has its own budget list (per level) and the same house-price and luck-heavy wording as States. Money on screen goes through `money()` →
 `Engine.formatMoney` (US States: `$1,234`, Intl grouping). `test/browser.test.js`
 fails if the States screens contain `€`, "euro" or "country" in any language.
 
@@ -114,9 +114,10 @@ fails if the States screens contain `€`, "euro" or "country" in any language.
 
 - Bidding opens at €1 on every lot. Players alternate: raise, or drop out.
 - Drop out and whoever holds the top bid buys it at that price.
-- Budget scales at €10 per lot (10 lots = €100 each). US States: a budget *table* by lot
-  count ($85 / $165 / $180 / $210 / $315 / $420 / $525 for 5 / 10 / 15 / 20 / 30 / 40 / 50 lots),
-  deliberately scarce — see "US States economy".
+- Budget. Countries: a table per level and lot count — Medium €10 per lot (€50 / 100 / 150 / 200 / 300 for 5 / 10 / 15 / 20 / 30 lots),
+  Beginner €25 / 50 / 55 / 65 / 100, Expert €35 / 70 / 75 / 90 / 140 (multiples of 5; see "Countries"). US States: a budget *table* by lot
+  count ($85 / $165 / $180 / $210 / $315 / $420 / $525 for 5 / 10 / 15 / 20 / 30 / 40 / 50 lots). Money is deliberately scarce in both —
+  see "Economy and bot".
 - Default 10 seconds per decision; timeout = automatic drop out.
 - The opening €1 bid rotates seat by seat each lot.
 - Seat colours are fixed for the whole auction: seat 1 red, 2 black, 3 blue,
@@ -126,6 +127,9 @@ fails if the States screens contain `€`, "euro" or "country" in any language.
 - Efficiency (€ per million people) is scored alongside raw points.
 
 ## How the bot works
+
+This is the *original* bot (engine `botDecision` for a pack without a `bot` block: the test-only August Countries pack and the fixture pack).
+US States and Countries run the extended bot in "Economy and bot" below, which keeps the walk-away roll, the randomised step, the +1 rule and rank-based valuation described here.
 
 - A pack may replace the bands with its own smooth curve by defining
   `priceTable(items) → Map(id → {ideal, max})` (US States does; see below).
@@ -281,7 +285,7 @@ Census-boundary centroids, taunts, fun facts).
   the one `record:v1` value (privacy: still exactly four keys, and the copy says so). The record is per pack inside
   `record:v1`.
 
-### US States economy (`pack.economy`, `pack.bot`; Countries has neither and is untouched)
+### Economy and bot (`pack.economy`, `pack.bot`: US States and Countries)
 
 Why: with budget = value of the pool, "+1 over the bot until it drops out" took 78% of the points,
 won 100% of 30–50-lot games and left the bot 93% unspent; cutting the budget alone flipped it to a
@@ -294,14 +298,16 @@ knife-edge (50 lots: creeper 2% at 60% budget, 99% at 70%). Measured on the real
   expected price of the four biggest states (midpoint of ideal and max, plus the bot's 15% premium): $525 vs a cap of $545.
 - **End-of-round rule** (`economy.endgame`, `startLot`): when only one player has money left the rest is
   offered to them at **80% of the ideal price, while their money lasts**; lots they cannot pay for stay
-  unsold (`S.unsold`, shown on the results). Nobody sweeps the rest for $1. (Countries keeps the old walkover.)
+  unsold (`S.unsold`, shown on the results). Nobody sweeps the rest for $1. (A pack without an `economy` block keeps the old walkover: the test-only August pack.)
 - **Bid buttons** (`economy.bidSteps`, `Engine.bidSteps(pack, price)`): the five raise buttons follow the
   *current price* (never the item's fair price, which would leak its size): price < 12: +1 +2 +5 +10 +25;
   < 40: +2 +5 +10 +25 +50; < 100: +5 +10 +25 +50 +100; else +10 +25 +50 +100 +200. They are relabelled when
   it becomes the human's turn, so they never change under a thumb mid-turn. **Typing grace**
   (`economy.typingBonus`, 4 s): focusing the custom-amount field adds seconds to the decision clock once per turn.
 - **The extended bot** (`pack.bot`, `botDecisionExt` in `engine.js`; every random choice goes through `S.rng`, so a seed
-  reproduces a game; Countries keeps the original `botDecision` path byte for byte). Parameters:
+  reproduces a game; a pack without a `bot` block keeps the original `botDecision` path byte for byte). Tables such as `economy.budgets`,
+  `limitMul` and `temperaments.spread` may be per level: `{ beginner: {5:…}, medium: {…} }` (`Engine.byLots(table, lots, level)`); "the biggest items"
+  (`premium`, `bigRank`) and the average price used for pacing (`Engine.avgIdeal(pack, level)`) are those of the level's own pool. Parameters:
   - `limitMul[lots]` — calibration multiplier on every walk-away roll (1.0, 0.925, 0.9, 0.975, 1.075, 1.125, 1.135 for 5…50 lots).
   - `premium { top: 4, pct: 0.15 }` — the four biggest items get +15% on the roll.
   - `pacing { gamma: 0.5, lo: 0.7, hi: 1.5 }` — walk-away × (budget ÷ value left ÷ the opening budget ratio)^gamma, clamped: the bot spends evenly.
@@ -315,18 +321,52 @@ knife-edge (50 lots: creeper 2% at 60% budget, 99% at 70%). Measured on the real
     Conservative: raise steps ×0.75, ×0.95 on the 10 biggest. Aggressive: steps ×1.25, ×1.05 on the 10 biggest, reserve capped at $3 (spends deep).
     `Engine.newAuction({ …, temper })` can force one (the harness does).
   - `reserve` is the original one ($1 per remaining lot outside the last three).
-- **Calibration targets** (Countries *Medium*, 10 lots, is the benchmark: creeper A 9.5%, fair B 37%, smart C 39.6%, each ±10):
+  - `wallet { lo: 0.7 }` (Countries) — when the walk-away reaches into the top of the bot's purse (above `lo` × what it can spend), the ceiling is
+    a random 70–100% of what it can spend (one roll per lot), so a giant that costs about its whole purse never ends at "wallet minus reserve" to the euro.
+  - `noise: 0.45` (Countries) — a per-lot triangular jitter of ±45% on the walk-away (SD about 18%); it is what keeps the Learner from reading the bot.
+  - Countries uses `knockout.kappa: 0.8` (States 1.5): with Countries' wider price range a larger kappa made the bot pay a rival's whole wallet for lots
+    that were not worth it, which the creeper then exploited (A 24% instead of 11% at Medium, 10 lots).
+- **Calibration targets** (the frozen August Countries *Medium*, in `test/baseline-august.json` — 10 lots: creeper A 9.5%, fair B 37%, smart C 39.6%, each ±10):
   the balanced bot alone is inside the band for B and C at every lot count and for A from 10 lots; each temperament keeps B and C
   between 15% and 75%; the 25/50/25 mix stays inside the band; the creeper takes at most 60% of the points against each
   temperament (it gets 44–49%); ±10% budget moves no reference player by more than 15 points. **5-lot rounds cannot meet the creeper
   target** (one state is 25–40% of the points; A ≈ 35%) — the rules text says short rounds are luck-heavy.
-- **Re-running the harness**: `node test/economy.js [games] [seed]` prints Countries' three levels and the full US States table
+- **Re-running the harness**: `node test/economy.js [games] [seed]` prints Countries' three levels (per temperament, against the frozen August numbers) and the full US States table
   (A creeper, B fair-value, C smart with a $1.50 reserve = 5% of an average lot, D rationer, and C with $1 / $2 / $3), per
   temperament and mixed. Change `limitMul`/`spread`/`budgets` in `test/make-pack-states.js`, regenerate, re-run, keep the targets.
   `node --test test/economy.test.js` is the loose regression version. The calibration numbers in `limitMul`/`spread` were found with a
   scratch copy of the loop and then re-measured on the real engine (largest difference 2.1 points).
-- **Follow-up (not fixed here, on purpose):** Countries' *Beginner* and *Expert* levels are creeper-exploitable (A wins 85% and 65% of
-  10-lot games; Medium resists: 9.5%). Only the default level was used as the benchmark.
+
+### Countries (`pack-countries.js`: smooth prices, per-level budgets, the extended bot)
+
+Why: only Medium resisted the "+1 over the bot" creeper (August, 10 lots, 3,000 games, frozen in `test/baseline-august.json`): creeper wins Beginner 85%,
+Medium 9.5%, Expert 65%. The reason is the ratio budget ÷ (lots × average fair price): 1.05 (Beginner), 0.38 (Medium), 0.81 (Expert). The August
+bands also had hard edges (185 pairs where a bigger country was cheaper; Vietnam 51 vs DR Congo 27, USA 86 vs China 71).
+
+- **Prices**: one smooth monotone curve (`priceTable` in the pack: monotone cubic through log-log anchors, whole euros, minimum €1); the bot's ceiling is
+  ideal × a ratio easing from 2.0 (tiny) to 1.45 (giants), forced non-decreasing. 0 inversions. Expected price per lot vs August: Beginner −2%, Medium +3.9%,
+  Expert +3.5%. Ten countries move by more than 25% (DR Congo, Philippines, Egypt, Japan, Mexico, Ethiopia, Russia up; China, India up; Trinidad and Tobago €2→€1);
+  the full old-vs-new table is `test/countries-prices-old-vs-new.md`, every price is pinned in `test/golden-countries.json` (regenerate on purpose with
+  `node test/make-golden-countries.js`). The August prices live on in `test/golden-countries-august.json`.
+- **Budgets** (`economy.budgets`, per level, multiples of 5): Medium keeps €10 per lot; Beginner and Expert get f × lots × the level's average fair price with
+  f = 0.55 (5 and 10 lots), 0.40 (15), 0.36 (20, 30). `validatePack` enforces the top-5 rule per level (budget ≤ 80% of the expected price of the level's
+  five biggest, midpoint of ideal and max plus the 15% premium: 435 / 210 / 435 against 300 / 100 / 140). Lot options stay 5 / 10 / 15 / 20 / 30 (no 40).
+- **Bot** (`pack.bot`): `premium { top: 5, pct: 0.15 }`, `kappa 0.8`, `wallet`, `noise`, per-level `limitMul`, the States pacing / mood / temperaments (25/50/25,
+  ±6% / 6 / 5 / 4 / 4% by lot count). End of round, bid buttons, typing grace and sampling are the States ones.
+- **Reference results** (real engine, `node test/economy.js countries 3000`, mix 25/50/25; win % of A creeper / B fair / C smart-€1): Medium 5–30 lots
+  A 27.5 / 11.1 / 8.2 / 7.2 / 4.9, B 49.9 / 39.5 / 30.1 / 23.4 / 22.0, C 48.4 / 38.4 / 29.4 / 22.6 / 22.4 — within ±10 of the frozen August numbers everywhere.
+  Beginner A 26.1 / 23.0 / 8.4 / 5.5 / 3.8, B and the scaled smart player 50–58. Expert within ±10 of Medium except the creeper at 10 lots (20.5 vs ≤ 19.5, accepted).
+  Every temperament keeps B and C between 15% and 75% (lowest 17.8, highest 70.1); the creeper takes at most 40% of the points; the bot ends with 14–28% unspent against it.
+- **Accepted misses** (agreed): Expert and Beginner short rounds are luck-heavy (the rules text says so); the Beginner and Expert 5- and 10-lot creeper
+  is 20–26%. Expert's pool is extremely skewed (median 9 M, India 1,451 M), so one lot decides a round.
+- **Unpredictability** (`node test/economy.js unpredictable`, `learner`; guarded in `test/countries-economy.test.js`): on one lot, same state, fresh seed,
+  creeper rival: SD ≥ 15% of the ideal and no price in more than 20% of games for ideal ≥ 10 (measured 21–33% SD, ≤ 13% top price); even/odd 50 ± 3 above €5;
+  within ±1 of the median in at most 25% (ideal ≥ 25) / 40% (10–24). **Wallet-bound giants** (India/China/Russia when the bot's purse is the limit): the final price
+  equals wallet-minus-reserve in at most 30% of games (measured ≤ 9%; 50% without the `wallet` roll) with SD ≥ 8% of the wallet (measured 9–15%).
+  The Learner E (remembers the bot's drop-outs per country over 200 games, bids just above the median; E2 never above the fair price) must not beat the smart
+  player C by more than ~8 points: Medium and Beginner −12 to −52, Expert +1.3 / +6.9 / +1.8 (10 / 20 / 30 lots).
+- **Frozen reference**: `test/pack-countries-august.js` (test only: the same items with the August bands, flat budget and the original bot) re-derives the frozen
+  numbers (`node test/economy.js baseline`, within 2 points); the States benchmark refers to the fixture, not to today's Countries.
 
 ### What a Capitals pack would need (not built — do not guess its valuation)
 
@@ -429,7 +469,10 @@ counters inside the single `record:v1` value.
 - `node --test test/economy.test.js` — the US States economy on the real engine: budget table and the top-4 rule, systematic sampling
   (100k draws, no duplicates, 50 = each once, smaller swings), the house-price endgame, temperaments (seeded, 25/50/25, symmetric),
   knockout (a)/(b)/(c) incl. a property test, the creeper ≤ 60% per temperament, calibration bands, no knife-edge, bid steps, rules text.
-  `node test/economy.js` is the full report (not part of `node --test`).
+  `node test/economy.js [countries|states|learner|unpredictable|baseline]` is the full report (not part of `node --test`).
+- `node --test test/countries-economy.test.js` — the Countries economy on the real engine: per-level budgets and the top-5 rule, smooth monotone prices and the
+  level averages, systematic sampling per level pool (equal chance, no duplicates), house-price endgame, knockout (a)/(b)/(c), calibration bands per level and
+  temperament, the frozen baseline, the unpredictability tests (repeat test, parity, wallet-bound giants, the Learner), the rules text in five languages.
 - `node --test test/usmap.test.js` — the generated US map data (48 + AK + HI), the files being in
   the offline cache, and the label layout (no overlaps, callouts inside the map).
 - `node --test test/contrast.test.js` — WCAG contrast of the real design tokens
