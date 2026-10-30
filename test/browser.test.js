@@ -884,3 +884,27 @@ test('US STATES: typing a custom amount adds a few seconds once per turn (and on
   assert.ok(await c.page.evaluate(() => parseInt(document.querySelector('#secs').textContent.split(':')[1])) <= 10, 'Countries gets no bonus');
   await c.ctx.close();
 });
+
+test('menu globe halo: it is the image\'s own gradient and ends inside the scroll box, so nothing cuts it into a hard edge', { skip: SKIP }, async () => {
+  // A filter:drop-shadow glow is cut by the .screen scroll container (and by iPad Safari at the image box): a visible straight line.
+  // The halo is now a background gradient that is 0 at its own edge; on iPad it must also start no further left than the .screen box,
+  // and on a phone the menu's scroll box must start at the very top of the page, so no line is cut across the glow.
+  for (const scheme of ['dark', 'light']) {
+    for (const [width, height] of [[1194, 834], [1000, 750], [834, 1194], [402, 720]]) {
+      const { ctx, page, errors } = await open({ viewport: { width, height }, scheme });
+      await page.waitForSelector('.hero img.globe');
+      const r = await page.evaluate(() => {
+        const img = document.querySelector('.hero img.globe'), sc = document.querySelector('.screen'), cs = getComputedStyle(img), ib = img.getBoundingClientRect(), sb = sc.getBoundingClientRect();
+        return { filter: cs.filter, bg: cs.backgroundImage, left: ib.left - sb.left, top: sb.top, tokens: ['--halo1', '--halo2', '--halo0'].map(k => getComputedStyle(document.documentElement).getPropertyValue(k).trim()) };
+      });
+      const tag = `${scheme} ${width}x${height}`;
+      assert.equal(r.filter, 'none', tag + ': no filter glow on the menu globe');
+      assert.match(r.bg, /radial-gradient/, tag + ': the halo is a radial gradient');
+      assert.ok(r.tokens.every(Boolean), tag + ': halo tokens exist in both themes');
+      if (width >= 760) assert.ok(r.left >= -0.5, `${tag}: the halo box starts inside the screen box (left ${r.left})`);
+      else assert.equal(r.top, 0, tag + ': the menu scroll box starts at the top of the page');
+      assert.deepEqual(errors, [], tag);
+      await ctx.close();
+    }
+  }
+});
