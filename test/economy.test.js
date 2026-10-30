@@ -4,7 +4,8 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const Engine = require('../engine.js');
-const states = require('../pack-states.js'), countries = require('../pack-countries.js');
+const states = require('../pack-states.js'), countries = require('../pack-countries.js'), august = require('./pack-countries-august.js');
+const baseline = require('./baseline-august.json');
 const Eco = require('./economy.js');
 
 const sd = a => { const m = a.reduce((x, y) => x + y, 0) / a.length; return Math.sqrt(a.reduce((x, y) => x + (y - m) ** 2, 0) / a.length) / m; };
@@ -24,7 +25,7 @@ test('the money is scarce and the table is sane: budget ratio, top-4 rule, no bu
   assert.ok(Engine.budgetFor(states, 50) <= 0.8 * exp, 'all-50 budget is at most 80% of the expected price of CA+TX+FL+NY incl. the premium');
   const all = [...t.values()].reduce((a, v) => a + v.ideal, 0);
   assert.ok(Engine.budgetFor(states, 50) < 0.4 * all, 'a full budget buys well under half the pool at fair prices');
-  assert.equal(Engine.budgetFor(countries, 10), 100, 'Countries is untouched: 10 lots = 100');
+  assert.equal(Engine.budgetFor(august, 10), 100, 'the August Countries pack keeps 10 lots = 100');
 });
 
 test('systematic sampling: every state keeps its exact chance, no duplicates, 50 = each once, far smaller swings', () => {
@@ -78,8 +79,8 @@ test('endgame: a broke player no longer hands over the rest for $1; the rest sel
   const rich = setup([0, 100000], 10, 5); Engine.startLot(rich);
   assert.equal(rich.unsold.length, 0, 'with enough money everything sells'); assert.equal(rich.players[1].bought.length, 10);
   const none = setup([0, 0], 10, 5), z = Engine.startLot(none); assert.equal(z.reason, 'broke'); assert.equal(none.unsold.length, 10);
-  const old = Engine.newAuction({ pack: countries, kind: 'solo', level: 'medium', lots: 10, players: [{ name: 'a' }, { name: 'b', ai: true }], rng: Engine.seededRng(1) });
-  old.players[0].budget = 0; assert.equal(Engine.startLot(old).reason, 'walkover', 'Countries keeps the old walkover rule');
+  const old = Engine.newAuction({ pack: august, kind: 'solo', level: 'medium', lots: 10, players: [{ name: 'a' }, { name: 'b', ai: true }], rng: Engine.seededRng(1) });
+  old.players[0].budget = 0; assert.equal(Engine.startLot(old).reason, 'walkover', 'a pack without an economy block keeps the old walkover rule (the legacy path)');
 });
 
 test('temperaments: seeded and reproducible, about 25 / 50 / 25, never shown, symmetric around the balanced bot', () => {
@@ -153,8 +154,8 @@ test('the creeper cannot win the round with money: at most 60% of the points, ag
   }
 });
 
-test('calibration (loose): the balanced bot is within +-14 of the Countries-Medium benchmark for B and C from 10 lots; every temperament keeps B and C between 12% and 78%', () => {
-  const bench = { B: 37, C: 39.6 };
+test('calibration (loose): the balanced bot is within +-14 of the frozen August Countries-Medium 10-lot benchmark for B and C from 10 lots; every temperament keeps B and C between 12% and 78%', () => {
+  const bench = { B: baseline.levels.medium[10].B.win, C: baseline.levels.medium[10].C.win };   // 37 / 39.6, frozen in test/baseline-august.json
   for (const n of [10, 20, 30, 50]) {
     for (const p of ['B', 'C']) assert.ok(Math.abs(Eco.run(states, n, 'all', p, 400, 50000, 'balanced').win - bench[p]) <= 14, `${n} lots balanced ${p}`);
     for (const mode of ['conservative', 'aggressive']) for (const p of ['B', 'C']) { const w = Eco.run(states, n, 'all', p, 400, 50000, mode).win; assert.ok(w >= 12 && w <= 78, `${n} lots ${mode} ${p} wins ${w}%`); }
@@ -169,8 +170,9 @@ test('no knife-edge: moving the budget by 10% moves no reference player by more 
   }
 });
 
-test('bid buttons follow the current price in US States and stay +1 +2 +5 +10 +25 in Countries', () => {
-  assert.deepEqual(Engine.bidSteps(countries, 1), [1, 2, 5, 10, 25]); assert.deepEqual(Engine.bidSteps(countries, 400), [1, 2, 5, 10, 25]);
+test('bid buttons follow the current price in both packs (the August pack keeps +1 +2 +5 +10 +25)', () => {
+  assert.deepEqual(Engine.bidSteps(august, 1), [1, 2, 5, 10, 25]); assert.deepEqual(Engine.bidSteps(august, 400), [1, 2, 5, 10, 25]);
+  assert.deepEqual(Engine.bidSteps(countries, 150), Engine.bidSteps(states, 150), 'Countries uses the States scheme');
   let last = [0, 0, 0, 0, 0];
   for (const price of [1, 11, 12, 39, 40, 99, 100, 250, 520]) {
     const s = Engine.bidSteps(states, price);

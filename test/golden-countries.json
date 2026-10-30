@@ -1,68 +1,12 @@
 {
- "generatedFrom": "app.js + data.js at commit bdc6fbb (BANDS unchanged since the first upload, c60f0fb)",
- "bands": [
-  {
-   "from": 1,
-   "to": 38,
-   "ideal": 1,
-   "max": 2
-  },
-  {
-   "from": 39,
-   "to": 62,
-   "ideal": 1,
-   "max": 1.75
-  },
-  {
-   "from": 63,
-   "to": 71,
-   "ideal": 1,
-   "max": 1.6
-  },
-  {
-   "from": 72,
-   "to": 102,
-   "ideal": 0.75,
-   "max": 1.4
-  },
-  {
-   "from": 103,
-   "to": 131,
-   "ideal": 0.75,
-   "max": 1.1
-  },
-  {
-   "from": 132,
-   "to": 166,
-   "ideal": 0.5,
-   "max": 0.75
-  },
-  {
-   "from": 167,
-   "to": 181,
-   "ideal": 0.5,
-   "max": 0.6
-  },
-  {
-   "from": 182,
-   "to": 194,
-   "ideal": 0.25,
-   "max": 0.275
-  },
-  {
-   "from": 195,
-   "to": 196,
-   "ideal": 0.05,
-   "max": 0.067
-  }
- ],
+ "generatedFrom": "pack-countries.js priceTable (smooth monotone curve, ratio 2.0 -> 1.45); the August bands are in golden-countries-august.json",
  "countries": [
   {
    "id": "AF",
    "value": 42.6,
    "rank": 161,
    "ideal": 21,
-   "max": 32,
+   "max": 33,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -72,7 +16,7 @@
    "value": 2.8,
    "rank": 56,
    "ideal": 3,
-   "max": 5,
+   "max": 6,
    "tier": "small",
    "europe": true,
    "medium": false
@@ -82,7 +26,7 @@
    "value": 46.8,
    "rank": 163,
    "ideal": 23,
-   "max": 35,
+   "max": 36,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -92,7 +36,7 @@
    "value": 0.081,
    "rank": 11,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": true,
    "medium": false
@@ -102,7 +46,7 @@
    "value": 37.9,
    "rank": 155,
    "ideal": 19,
-   "max": 28,
+   "max": 30,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -112,7 +56,7 @@
    "value": 0.093,
    "rank": 12,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -121,7 +65,7 @@
    "id": "AR",
    "value": 45.7,
    "rank": 162,
-   "ideal": 23,
+   "ideal": 22,
    "max": 34,
    "tier": "mid",
    "europe": false,
@@ -132,7 +76,7 @@
    "value": 3,
    "rank": 60,
    "ideal": 3,
-   "max": 5,
+   "max": 6,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -141,8 +85,8 @@
    "id": "AU",
    "value": 26.7,
    "rank": 142,
-   "ideal": 13,
-   "max": 20,
+   "ideal": 14,
+   "max": 23,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -152,7 +96,7 @@
    "value": 9.1,
    "rank": 98,
    "ideal": 7,
-   "max": 13,
+   "max": 12,
    "tier": "small",
    "europe": true,
    "medium": false
@@ -162,7 +106,7 @@
    "value": 10.2,
    "rank": 103,
    "ideal": 8,
-   "max": 11,
+   "max": 14,
    "tier": "mid",
    "europe": false,
    "medium": false
@@ -172,7 +116,7 @@
    "value": 0.4,
    "rank": 25,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -182,7 +126,7 @@
    "value": 1.6,
    "rank": 46,
    "ideal": 2,
-   "max": 3,
+   "max": 4,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -191,8 +135,8 @@
    "id": "BD",
    "value": 173.6,
    "rank": 189,
-   "ideal": 43,
-   "max": 48,
+   "ideal": 52,
+   "max": 76,
    "tier": "large",
    "europe": false,
    "medium": true
@@ -202,7 +146,7 @@
    "value": 0.28,
    "rank": 22,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -212,7 +156,7 @@
    "value": 9,
    "rank": 97,
    "ideal": 7,
-   "max": 13,
+   "max": 12,
    "tier": "small",
    "europe": true,
    "medium": false
@@ -222,7 +166,7 @@
    "value": 11.8,
    "rank": 114,
    "ideal": 9,
-   "max": 13,
+   "max": 16,
    "tier": "mid",
    "europe": true,
    "medium": false
@@ -232,7 +176,7 @@
    "value": 0.42,
    "rank": 26,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -241,8 +185,8 @@
    "id": "BJ",
    "value": 14.5,
    "rank": 121,
-   "ideal": 11,
-   "max": 16,
+   "ideal": 10,
+   "max": 17,
    "tier": "mid",
    "europe": false,
    "medium": false
@@ -262,7 +206,7 @@
    "value": 12.4,
    "rank": 118,
    "ideal": 9,
-   "max": 14,
+   "max": 16,
    "tier": "mid",
    "europe": false,
    "medium": false
@@ -272,7 +216,7 @@
    "value": 3.2,
    "rank": 64,
    "ideal": 3,
-   "max": 5,
+   "max": 6,
    "tier": "small",
    "europe": true,
    "medium": false
@@ -282,7 +226,7 @@
    "value": 2.5,
    "rank": 54,
    "ideal": 3,
-   "max": 4,
+   "max": 6,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -291,8 +235,8 @@
    "id": "BR",
    "value": 212.8,
    "rank": 190,
-   "ideal": 53,
-   "max": 59,
+   "ideal": 58,
+   "max": 84,
    "tier": "mega",
    "europe": false,
    "medium": true
@@ -302,7 +246,7 @@
    "value": 0.46,
    "rank": 27,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -311,8 +255,8 @@
    "id": "BG",
    "value": 6.7,
    "rank": 87,
-   "ideal": 5,
-   "max": 9,
+   "ideal": 6,
+   "max": 11,
    "tier": "small",
    "europe": true,
    "medium": false
@@ -321,8 +265,8 @@
    "id": "BF",
    "value": 23.6,
    "rank": 138,
-   "ideal": 12,
-   "max": 18,
+   "ideal": 13,
+   "max": 22,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -331,8 +275,8 @@
    "id": "BI",
    "value": 14,
    "rank": 119,
-   "ideal": 11,
-   "max": 15,
+   "ideal": 10,
+   "max": 17,
    "tier": "mid",
    "europe": false,
    "medium": false
@@ -341,7 +285,7 @@
    "id": "KH",
    "value": 17.6,
    "rank": 124,
-   "ideal": 13,
+   "ideal": 11,
    "max": 19,
    "tier": "mid",
    "europe": false,
@@ -352,7 +296,7 @@
    "value": 29.9,
    "rank": 146,
    "ideal": 15,
-   "max": 22,
+   "max": 24,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -362,7 +306,7 @@
    "value": 39.7,
    "rank": 159,
    "ideal": 20,
-   "max": 30,
+   "max": 32,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -372,7 +316,7 @@
    "value": 0.53,
    "rank": 28,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -381,8 +325,8 @@
    "id": "CF",
    "value": 5.6,
    "rank": 78,
-   "ideal": 4,
-   "max": 8,
+   "ideal": 5,
+   "max": 9,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -391,8 +335,8 @@
    "id": "TD",
    "value": 20.3,
    "rank": 132,
-   "ideal": 10,
-   "max": 15,
+   "ideal": 12,
+   "max": 20,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -401,8 +345,8 @@
    "id": "CL",
    "value": 19.8,
    "rank": 131,
-   "ideal": 15,
-   "max": 22,
+   "ideal": 12,
+   "max": 20,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -411,8 +355,8 @@
    "id": "CN",
    "value": 1416.1,
    "rank": 195,
-   "ideal": 71,
-   "max": 95,
+   "ideal": 91,
+   "max": 132,
    "tier": "mega",
    "europe": false,
    "medium": true
@@ -421,8 +365,8 @@
    "id": "CO",
    "value": 52.9,
    "rank": 169,
-   "ideal": 26,
-   "max": 32,
+   "ideal": 25,
+   "max": 39,
    "tier": "large",
    "europe": false,
    "medium": true
@@ -451,8 +395,8 @@
    "id": "CR",
    "value": 5.2,
    "rank": 72,
-   "ideal": 4,
-   "max": 7,
+   "ideal": 5,
+   "max": 9,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -462,7 +406,7 @@
    "value": 3.9,
    "rank": 69,
    "ideal": 4,
-   "max": 6,
+   "max": 8,
    "tier": "small",
    "europe": true,
    "medium": false
@@ -472,7 +416,7 @@
    "value": 10.9,
    "rank": 110,
    "ideal": 8,
-   "max": 12,
+   "max": 14,
    "tier": "mid",
    "europe": false,
    "medium": false
@@ -492,7 +436,7 @@
    "value": 10.7,
    "rank": 108,
    "ideal": 8,
-   "max": 12,
+   "max": 14,
    "tier": "mid",
    "europe": true,
    "medium": false
@@ -501,8 +445,8 @@
    "id": "CD",
    "value": 109.3,
    "rank": 182,
-   "ideal": 27,
-   "max": 30,
+   "ideal": 42,
+   "max": 62,
    "tier": "large",
    "europe": false,
    "medium": true
@@ -512,7 +456,7 @@
    "value": 6,
    "rank": 83,
    "ideal": 5,
-   "max": 8,
+   "max": 9,
    "tier": "small",
    "europe": true,
    "medium": false
@@ -532,7 +476,7 @@
    "value": 0.067,
    "rank": 10,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -541,8 +485,8 @@
    "id": "DO",
    "value": 11.4,
    "rank": 112,
-   "ideal": 9,
-   "max": 13,
+   "ideal": 8,
+   "max": 14,
    "tier": "mid",
    "europe": false,
    "medium": false
@@ -561,7 +505,7 @@
    "id": "EC",
    "value": 18.4,
    "rank": 126,
-   "ideal": 14,
+   "ideal": 12,
    "max": 20,
    "tier": "mid",
    "europe": false,
@@ -571,8 +515,8 @@
    "id": "EG",
    "value": 116.5,
    "rank": 184,
-   "ideal": 29,
-   "max": 32,
+   "ideal": 43,
+   "max": 64,
    "tier": "large",
    "europe": false,
    "medium": true
@@ -592,7 +536,7 @@
    "value": 1.8,
    "rank": 48,
    "ideal": 2,
-   "max": 3,
+   "max": 4,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -602,7 +546,7 @@
    "value": 3.7,
    "rank": 67,
    "ideal": 4,
-   "max": 6,
+   "max": 8,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -631,8 +575,8 @@
    "id": "ET",
    "value": 132.1,
    "rank": 187,
-   "ideal": 33,
-   "max": 36,
+   "ideal": 46,
+   "max": 68,
    "tier": "large",
    "europe": false,
    "medium": true
@@ -651,8 +595,8 @@
    "id": "FI",
    "value": 5.6,
    "rank": 79,
-   "ideal": 4,
-   "max": 8,
+   "ideal": 5,
+   "max": 9,
    "tier": "small",
    "europe": true,
    "medium": false
@@ -661,8 +605,8 @@
    "id": "FR",
    "value": 66.6,
    "rank": 174,
-   "ideal": 33,
-   "max": 40,
+   "ideal": 30,
+   "max": 46,
    "tier": "large",
    "europe": true,
    "medium": true
@@ -672,7 +616,7 @@
    "value": 2.5,
    "rank": 55,
    "ideal": 3,
-   "max": 4,
+   "max": 6,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -682,7 +626,7 @@
    "value": 2.8,
    "rank": 57,
    "ideal": 3,
-   "max": 5,
+   "max": 6,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -692,7 +636,7 @@
    "value": 3.8,
    "rank": 68,
    "ideal": 4,
-   "max": 6,
+   "max": 8,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -701,8 +645,8 @@
    "id": "DE",
    "value": 84.5,
    "rank": 178,
-   "ideal": 42,
-   "max": 51,
+   "ideal": 36,
+   "max": 54,
    "tier": "large",
    "europe": true,
    "medium": true
@@ -712,7 +656,7 @@
    "value": 34.6,
    "rank": 151,
    "ideal": 17,
-   "max": 26,
+   "max": 27,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -732,7 +676,7 @@
    "value": 0.11,
    "rank": 15,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -741,7 +685,7 @@
    "id": "GT",
    "value": 18.4,
    "rank": 127,
-   "ideal": 14,
+   "ideal": 12,
    "max": 20,
    "tier": "mid",
    "europe": false,
@@ -751,8 +695,8 @@
    "id": "GN",
    "value": 14.8,
    "rank": 122,
-   "ideal": 11,
-   "max": 16,
+   "ideal": 10,
+   "max": 17,
    "tier": "mid",
    "europe": false,
    "medium": false
@@ -782,7 +726,7 @@
    "value": 11.9,
    "rank": 115,
    "ideal": 9,
-   "max": 13,
+   "max": 16,
    "tier": "mid",
    "europe": false,
    "medium": false
@@ -792,7 +736,7 @@
    "value": 10.8,
    "rank": 109,
    "ideal": 8,
-   "max": 12,
+   "max": 14,
    "tier": "mid",
    "europe": false,
    "medium": false
@@ -802,7 +746,7 @@
    "value": 9.6,
    "rank": 101,
    "ideal": 7,
-   "max": 13,
+   "max": 12,
    "tier": "small",
    "europe": true,
    "medium": false
@@ -812,7 +756,7 @@
    "value": 0.39,
    "rank": 24,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": true,
    "medium": false
@@ -821,8 +765,8 @@
    "id": "IN",
    "value": 1450.9,
    "rank": 196,
-   "ideal": 73,
-   "max": 97,
+   "ideal": 92,
+   "max": 133,
    "tier": "mega",
    "europe": false,
    "medium": true
@@ -831,8 +775,8 @@
    "id": "ID",
    "value": 285.7,
    "rank": 193,
-   "ideal": 71,
-   "max": 79,
+   "ideal": 67,
+   "max": 97,
    "tier": "mega",
    "europe": false,
    "medium": true
@@ -841,8 +785,8 @@
    "id": "IR",
    "value": 92.4,
    "rank": 180,
-   "ideal": 46,
-   "max": 55,
+   "ideal": 38,
+   "max": 57,
    "tier": "large",
    "europe": false,
    "medium": true
@@ -852,7 +796,7 @@
    "value": 46.8,
    "rank": 164,
    "ideal": 23,
-   "max": 35,
+   "max": 36,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -861,8 +805,8 @@
    "id": "IE",
    "value": 5.3,
    "rank": 75,
-   "ideal": 4,
-   "max": 7,
+   "ideal": 5,
+   "max": 9,
    "tier": "small",
    "europe": true,
    "medium": false
@@ -872,7 +816,7 @@
    "value": 9.4,
    "rank": 99,
    "ideal": 7,
-   "max": 13,
+   "max": 12,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -881,8 +825,8 @@
    "id": "IT",
    "value": 59.1,
    "rank": 172,
-   "ideal": 30,
-   "max": 35,
+   "ideal": 28,
+   "max": 43,
    "tier": "large",
    "europe": true,
    "medium": true
@@ -891,8 +835,8 @@
    "id": "CI",
    "value": 32.7,
    "rank": 148,
-   "ideal": 16,
-   "max": 25,
+   "ideal": 17,
+   "max": 27,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -902,7 +846,7 @@
    "value": 2.8,
    "rank": 58,
    "ideal": 3,
-   "max": 5,
+   "max": 6,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -911,8 +855,8 @@
    "id": "JP",
    "value": 123.1,
    "rank": 185,
-   "ideal": 31,
-   "max": 34,
+   "ideal": 44,
+   "max": 65,
    "tier": "large",
    "europe": false,
    "medium": true
@@ -921,8 +865,8 @@
    "id": "JO",
    "value": 11.5,
    "rank": 113,
-   "ideal": 9,
-   "max": 13,
+   "ideal": 8,
+   "max": 14,
    "tier": "mid",
    "europe": false,
    "medium": false
@@ -931,8 +875,8 @@
    "id": "KZ",
    "value": 20.6,
    "rank": 133,
-   "ideal": 10,
-   "max": 15,
+   "ideal": 12,
+   "max": 20,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -941,8 +885,8 @@
    "id": "KE",
    "value": 56.4,
    "rank": 171,
-   "ideal": 28,
-   "max": 34,
+   "ideal": 27,
+   "max": 42,
    "tier": "large",
    "europe": false,
    "medium": true
@@ -952,7 +896,7 @@
    "value": 0.14,
    "rank": 18,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -962,7 +906,7 @@
    "value": 1.6,
    "rank": 47,
    "ideal": 2,
-   "max": 3,
+   "max": 4,
    "tier": "small",
    "europe": true,
    "medium": false
@@ -972,7 +916,7 @@
    "value": 5,
    "rank": 71,
    "ideal": 5,
-   "max": 8,
+   "max": 9,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -981,8 +925,8 @@
    "id": "KG",
    "value": 7.2,
    "rank": 91,
-   "ideal": 5,
-   "max": 10,
+   "ideal": 6,
+   "max": 11,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -1002,7 +946,7 @@
    "value": 1.9,
    "rank": 50,
    "ideal": 2,
-   "max": 3,
+   "max": 4,
    "tier": "small",
    "europe": true,
    "medium": false
@@ -1011,8 +955,8 @@
    "id": "LB",
    "value": 5.8,
    "rank": 82,
-   "ideal": 4,
-   "max": 8,
+   "ideal": 5,
+   "max": 9,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -1031,8 +975,8 @@
    "id": "LR",
    "value": 5.6,
    "rank": 80,
-   "ideal": 4,
-   "max": 8,
+   "ideal": 5,
+   "max": 9,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -1042,7 +986,7 @@
    "value": 7.4,
    "rank": 92,
    "ideal": 6,
-   "max": 10,
+   "max": 11,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -1052,7 +996,7 @@
    "value": 0.04,
    "rank": 7,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": true,
    "medium": false
@@ -1062,7 +1006,7 @@
    "value": 2.8,
    "rank": 59,
    "ideal": 3,
-   "max": 5,
+   "max": 6,
    "tier": "small",
    "europe": true,
    "medium": false
@@ -1072,7 +1016,7 @@
    "value": 0.68,
    "rank": 33,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": true,
    "medium": false
@@ -1082,7 +1026,7 @@
    "value": 32,
    "rank": 147,
    "ideal": 16,
-   "max": 24,
+   "max": 26,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -1091,8 +1035,8 @@
    "id": "MW",
    "value": 21.7,
    "rank": 135,
-   "ideal": 11,
-   "max": 16,
+   "ideal": 13,
+   "max": 22,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -1102,7 +1046,7 @@
    "value": 35.6,
    "rank": 153,
    "ideal": 18,
-   "max": 27,
+   "max": 29,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -1112,7 +1056,7 @@
    "value": 0.53,
    "rank": 29,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -1121,8 +1065,8 @@
    "id": "ML",
    "value": 24.5,
    "rank": 139,
-   "ideal": 12,
-   "max": 18,
+   "ideal": 14,
+   "max": 23,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -1132,7 +1076,7 @@
    "value": 0.57,
    "rank": 30,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": true,
    "medium": false
@@ -1142,7 +1086,7 @@
    "value": 0.04,
    "rank": 8,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -1151,8 +1095,8 @@
    "id": "MR",
    "value": 5.2,
    "rank": 73,
-   "ideal": 4,
-   "max": 7,
+   "ideal": 5,
+   "max": 9,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -1171,8 +1115,8 @@
    "id": "MX",
    "value": 130.9,
    "rank": 186,
-   "ideal": 33,
-   "max": 36,
+   "ideal": 46,
+   "max": 68,
    "tier": "large",
    "europe": false,
    "medium": true
@@ -1182,7 +1126,7 @@
    "value": 0.11,
    "rank": 16,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -1192,7 +1136,7 @@
    "value": 3,
    "rank": 61,
    "ideal": 3,
-   "max": 5,
+   "max": 6,
    "tier": "small",
    "europe": true,
    "medium": false
@@ -1202,7 +1146,7 @@
    "value": 0.038,
    "rank": 6,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": true,
    "medium": false
@@ -1212,7 +1156,7 @@
    "value": 3.5,
    "rank": 66,
    "ideal": 4,
-   "max": 6,
+   "max": 8,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -1222,7 +1166,7 @@
    "value": 0.63,
    "rank": 31,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": true,
    "medium": false
@@ -1232,7 +1176,7 @@
    "value": 38.4,
    "rank": 157,
    "ideal": 19,
-   "max": 29,
+   "max": 30,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -1242,7 +1186,7 @@
    "value": 34.6,
    "rank": 152,
    "ideal": 17,
-   "max": 26,
+   "max": 27,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -1251,8 +1195,8 @@
    "id": "MM",
    "value": 54.5,
    "rank": 170,
-   "ideal": 27,
-   "max": 33,
+   "ideal": 26,
+   "max": 40,
    "tier": "large",
    "europe": false,
    "medium": true
@@ -1262,7 +1206,7 @@
    "value": 3,
    "rank": 62,
    "ideal": 3,
-   "max": 5,
+   "max": 6,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -1272,7 +1216,7 @@
    "value": 0.012,
    "rank": 3,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -1282,7 +1226,7 @@
    "value": 29.7,
    "rank": 145,
    "ideal": 15,
-   "max": 22,
+   "max": 24,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -1291,7 +1235,7 @@
    "id": "NL",
    "value": 18.3,
    "rank": 125,
-   "ideal": 14,
+   "ideal": 12,
    "max": 20,
    "tier": "mid",
    "europe": true,
@@ -1301,8 +1245,8 @@
    "id": "NZ",
    "value": 5.2,
    "rank": 74,
-   "ideal": 4,
-   "max": 7,
+   "ideal": 5,
+   "max": 9,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -1311,8 +1255,8 @@
    "id": "NI",
    "value": 7,
    "rank": 90,
-   "ideal": 5,
-   "max": 10,
+   "ideal": 6,
+   "max": 11,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -1321,8 +1265,8 @@
    "id": "NE",
    "value": 27.2,
    "rank": 143,
-   "ideal": 14,
-   "max": 20,
+   "ideal": 15,
+   "max": 24,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -1331,8 +1275,8 @@
    "id": "NG",
    "value": 232.7,
    "rank": 191,
-   "ideal": 58,
-   "max": 64,
+   "ideal": 61,
+   "max": 89,
    "tier": "mega",
    "europe": false,
    "medium": true
@@ -1341,8 +1285,8 @@
    "id": "KP",
    "value": 26.5,
    "rank": 141,
-   "ideal": 13,
-   "max": 20,
+   "ideal": 14,
+   "max": 23,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -1352,7 +1296,7 @@
    "value": 1.8,
    "rank": 49,
    "ideal": 2,
-   "max": 3,
+   "max": 4,
    "tier": "small",
    "europe": true,
    "medium": false
@@ -1361,8 +1305,8 @@
    "id": "NO",
    "value": 5.6,
    "rank": 81,
-   "ideal": 4,
-   "max": 8,
+   "ideal": 5,
+   "max": 9,
    "tier": "small",
    "europe": true,
    "medium": false
@@ -1371,8 +1315,8 @@
    "id": "OM",
    "value": 5.3,
    "rank": 76,
-   "ideal": 4,
-   "max": 7,
+   "ideal": 5,
+   "max": 9,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -1382,7 +1326,7 @@
    "value": 251.3,
    "rank": 192,
    "ideal": 63,
-   "max": 69,
+   "max": 91,
    "tier": "mega",
    "europe": false,
    "medium": true
@@ -1392,7 +1336,7 @@
    "value": 0.018,
    "rank": 4,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -1401,8 +1345,8 @@
    "id": "PA",
    "value": 4.5,
    "rank": 70,
-   "ideal": 5,
-   "max": 7,
+   "ideal": 4,
+   "max": 8,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -1412,7 +1356,7 @@
    "value": 10.6,
    "rank": 105,
    "ideal": 8,
-   "max": 12,
+   "max": 14,
    "tier": "mid",
    "europe": false,
    "medium": false
@@ -1421,8 +1365,8 @@
    "id": "PY",
    "value": 6.9,
    "rank": 89,
-   "ideal": 5,
-   "max": 10,
+   "ideal": 6,
+   "max": 11,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -1432,7 +1376,7 @@
    "value": 34.5,
    "rank": 150,
    "ideal": 17,
-   "max": 26,
+   "max": 27,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -1441,8 +1385,8 @@
    "id": "PH",
    "value": 115.8,
    "rank": 183,
-   "ideal": 29,
-   "max": 32,
+   "ideal": 43,
+   "max": 64,
    "tier": "large",
    "europe": false,
    "medium": true
@@ -1452,7 +1396,7 @@
    "value": 38.5,
    "rank": 158,
    "ideal": 19,
-   "max": 29,
+   "max": 30,
    "tier": "mid",
    "europe": true,
    "medium": true
@@ -1462,7 +1406,7 @@
    "value": 10.4,
    "rank": 104,
    "ideal": 8,
-   "max": 11,
+   "max": 14,
    "tier": "mid",
    "europe": true,
    "medium": false
@@ -1472,7 +1416,7 @@
    "value": 3.1,
    "rank": 63,
    "ideal": 3,
-   "max": 5,
+   "max": 6,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -1481,8 +1425,8 @@
    "id": "RO",
    "value": 19.1,
    "rank": 130,
-   "ideal": 14,
-   "max": 21,
+   "ideal": 12,
+   "max": 20,
    "tier": "mid",
    "europe": true,
    "medium": true
@@ -1491,8 +1435,8 @@
    "id": "RU",
    "value": 144,
    "rank": 188,
-   "ideal": 36,
-   "max": 40,
+   "ideal": 48,
+   "max": 71,
    "tier": "large",
    "europe": true,
    "medium": true
@@ -1501,8 +1445,8 @@
    "id": "RW",
    "value": 14.3,
    "rank": 120,
-   "ideal": 11,
-   "max": 16,
+   "ideal": 10,
+   "max": 17,
    "tier": "mid",
    "europe": false,
    "medium": false
@@ -1512,7 +1456,7 @@
    "value": 0.22,
    "rank": 20,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -1522,7 +1466,7 @@
    "value": 0.034,
    "rank": 5,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": true,
    "medium": false
@@ -1532,7 +1476,7 @@
    "value": 0.24,
    "rank": 21,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -1542,7 +1486,7 @@
    "value": 34,
    "rank": 149,
    "ideal": 17,
-   "max": 26,
+   "max": 27,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -1551,7 +1495,7 @@
    "id": "SN",
    "value": 18.5,
    "rank": 128,
-   "ideal": 14,
+   "ideal": 12,
    "max": 20,
    "tier": "mid",
    "europe": false,
@@ -1561,8 +1505,8 @@
    "id": "RS",
    "value": 6.7,
    "rank": 88,
-   "ideal": 5,
-   "max": 9,
+   "ideal": 6,
+   "max": 11,
    "tier": "small",
    "europe": true,
    "medium": false
@@ -1572,7 +1516,7 @@
    "value": 0.13,
    "rank": 17,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -1592,7 +1536,7 @@
    "value": 6,
    "rank": 84,
    "ideal": 5,
-   "max": 8,
+   "max": 9,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -1601,8 +1545,8 @@
    "id": "SK",
    "value": 5.4,
    "rank": 77,
-   "ideal": 4,
-   "max": 8,
+   "ideal": 5,
+   "max": 9,
    "tier": "small",
    "europe": true,
    "medium": false
@@ -1631,8 +1575,8 @@
    "id": "SO",
    "value": 19,
    "rank": 129,
-   "ideal": 14,
-   "max": 21,
+   "ideal": 12,
+   "max": 20,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -1641,8 +1585,8 @@
    "id": "ZA",
    "value": 64,
    "rank": 173,
-   "ideal": 32,
-   "max": 38,
+   "ideal": 29,
+   "max": 44,
    "tier": "large",
    "europe": false,
    "medium": true
@@ -1651,8 +1595,8 @@
    "id": "KR",
    "value": 51.7,
    "rank": 168,
-   "ideal": 26,
-   "max": 31,
+   "ideal": 25,
+   "max": 39,
    "tier": "large",
    "europe": false,
    "medium": true
@@ -1662,7 +1606,7 @@
    "value": 11.9,
    "rank": 116,
    "ideal": 9,
-   "max": 13,
+   "max": 16,
    "tier": "mid",
    "europe": false,
    "medium": false
@@ -1671,7 +1615,7 @@
    "id": "ES",
    "value": 47.9,
    "rank": 165,
-   "ideal": 24,
+   "ideal": 23,
    "max": 36,
    "tier": "mid",
    "europe": true,
@@ -1681,8 +1625,8 @@
    "id": "LK",
    "value": 23.1,
    "rank": 136,
-   "ideal": 12,
-   "max": 17,
+   "ideal": 13,
+   "max": 22,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -1692,7 +1636,7 @@
    "value": 0.047,
    "rank": 9,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -1702,7 +1646,7 @@
    "value": 0.18,
    "rank": 19,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -1712,7 +1656,7 @@
    "value": 0.1,
    "rank": 13,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -1721,8 +1665,8 @@
    "id": "SD",
    "value": 50.4,
    "rank": 167,
-   "ideal": 25,
-   "max": 30,
+   "ideal": 24,
+   "max": 37,
    "tier": "large",
    "europe": false,
    "medium": true
@@ -1732,7 +1676,7 @@
    "value": 0.63,
    "rank": 32,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -1742,7 +1686,7 @@
    "value": 10.6,
    "rank": 106,
    "ideal": 8,
-   "max": 12,
+   "max": 14,
    "tier": "mid",
    "europe": true,
    "medium": false
@@ -1761,8 +1705,8 @@
    "id": "SY",
    "value": 24.7,
    "rank": 140,
-   "ideal": 12,
-   "max": 19,
+   "ideal": 14,
+   "max": 23,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -1771,8 +1715,8 @@
    "id": "TW",
    "value": 23.2,
    "rank": 137,
-   "ideal": 12,
-   "max": 17,
+   "ideal": 13,
+   "max": 22,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -1782,7 +1726,7 @@
    "value": 10.6,
    "rank": 107,
    "ideal": 8,
-   "max": 12,
+   "max": 14,
    "tier": "mid",
    "europe": false,
    "medium": false
@@ -1791,8 +1735,8 @@
    "id": "TZ",
    "value": 68.6,
    "rank": 175,
-   "ideal": 34,
-   "max": 41,
+   "ideal": 31,
+   "max": 47,
    "tier": "large",
    "europe": false,
    "medium": true
@@ -1801,8 +1745,8 @@
    "id": "TH",
    "value": 71.7,
    "rank": 177,
-   "ideal": 36,
-   "max": 43,
+   "ideal": 32,
+   "max": 49,
    "tier": "large",
    "europe": false,
    "medium": true
@@ -1812,7 +1756,7 @@
    "value": 9.5,
    "rank": 100,
    "ideal": 7,
-   "max": 13,
+   "max": 12,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -1822,7 +1766,7 @@
    "value": 0.1,
    "rank": 14,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -1831,8 +1775,8 @@
    "id": "TT",
    "value": 1.5,
    "rank": 45,
-   "ideal": 2,
-   "max": 3,
+   "ideal": 1,
+   "max": 2,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -1842,7 +1786,7 @@
    "value": 12.3,
    "rank": 117,
    "ideal": 9,
-   "max": 14,
+   "max": 16,
    "tier": "mid",
    "europe": false,
    "medium": false
@@ -1851,8 +1795,8 @@
    "id": "TR",
    "value": 87.5,
    "rank": 179,
-   "ideal": 44,
-   "max": 53,
+   "ideal": 37,
+   "max": 56,
    "tier": "large",
    "europe": true,
    "medium": true
@@ -1872,7 +1816,7 @@
    "value": 0.011,
    "rank": 2,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -1881,8 +1825,8 @@
    "id": "UG",
    "value": 50,
    "rank": 166,
-   "ideal": 25,
-   "max": 38,
+   "ideal": 24,
+   "max": 37,
    "tier": "large",
    "europe": false,
    "medium": true
@@ -1892,7 +1836,7 @@
    "value": 37.9,
    "rank": 156,
    "ideal": 19,
-   "max": 28,
+   "max": 30,
    "tier": "mid",
    "europe": true,
    "medium": true
@@ -1902,7 +1846,7 @@
    "value": 11,
    "rank": 111,
    "ideal": 8,
-   "max": 12,
+   "max": 14,
    "tier": "mid",
    "europe": false,
    "medium": false
@@ -1911,8 +1855,8 @@
    "id": "GB",
    "value": 69.1,
    "rank": 176,
-   "ideal": 35,
-   "max": 41,
+   "ideal": 31,
+   "max": 47,
    "tier": "large",
    "europe": true,
    "medium": true
@@ -1921,8 +1865,8 @@
    "id": "US",
    "value": 345.4,
    "rank": 194,
-   "ideal": 86,
-   "max": 95,
+   "ideal": 73,
+   "max": 106,
    "tier": "mega",
    "europe": false,
    "medium": true
@@ -1932,7 +1876,7 @@
    "value": 3.4,
    "rank": 65,
    "ideal": 3,
-   "max": 5,
+   "max": 6,
    "tier": "small",
    "europe": false,
    "medium": false
@@ -1942,7 +1886,7 @@
    "value": 36.4,
    "rank": 154,
    "ideal": 18,
-   "max": 27,
+   "max": 29,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -1952,7 +1896,7 @@
    "value": 0.34,
    "rank": 23,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": false,
    "medium": false
@@ -1962,7 +1906,7 @@
    "value": 0.0008,
    "rank": 1,
    "ideal": 1,
-   "max": 1,
+   "max": 2,
    "tier": "micro",
    "europe": true,
    "medium": false
@@ -1971,8 +1915,8 @@
    "id": "VE",
    "value": 28.4,
    "rank": 144,
-   "ideal": 14,
-   "max": 21,
+   "ideal": 15,
+   "max": 24,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -1981,8 +1925,8 @@
    "id": "VN",
    "value": 101,
    "rank": 181,
-   "ideal": 51,
-   "max": 61,
+   "ideal": 40,
+   "max": 60,
    "tier": "large",
    "europe": false,
    "medium": true
@@ -1992,7 +1936,7 @@
    "value": 40.6,
    "rank": 160,
    "ideal": 20,
-   "max": 30,
+   "max": 32,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -2001,8 +1945,8 @@
    "id": "ZM",
    "value": 21.3,
    "rank": 134,
-   "ideal": 11,
-   "max": 16,
+   "ideal": 13,
+   "max": 22,
    "tier": "mid",
    "europe": false,
    "medium": true
@@ -2011,8 +1955,8 @@
    "id": "ZW",
    "value": 16.6,
    "rank": 123,
-   "ideal": 12,
-   "max": 18,
+   "ideal": 11,
+   "max": 19,
    "tier": "mid",
    "europe": false,
    "medium": true

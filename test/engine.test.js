@@ -2,34 +2,37 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const Engine = require('../engine.js');
 const createRegistry = require('../packs.js');
-const countries = require('../pack-countries.js');
+const real = require('../pack-countries.js');            // the shipped Countries pack (smooth prices, extended bot)
+const countries = require('./pack-countries-august.js');   // the August pack: same items, percentile bands, flat budget, ORIGINAL bot (the legacy path stays tested byte for byte)
 const statesPack = require('../pack-states.js');
 const banter = require('../banter.js');
 const fixture = require('./fixture-pack.js');
-const golden = require('./golden-countries.json');
+const golden = require('./golden-countries.json');                 // today's pinned prices
+const goldenAug = require('./golden-countries-august.json');       // the August prices and bands
 const legacyDecision = require('./legacy-bot.js');
 const { playGame } = require('./sim.js');
 
 const clone = o => JSON.parse(JSON.stringify(o));
 
 /* ===================================================================== GOLDEN */
-test('GOLDEN: every country keeps exactly the old ideal and max price', () => {
-  assert.equal(countries.items.length, golden.countries.length);
+test('GOLDEN: every country keeps exactly its pinned ideal and max price (smooth curve)', () => {
+  assert.equal(real.items.length, golden.countries.length);
   const byId = new Map(golden.countries.map(g => [g.id, g]));
-  for (const it of countries.items) {
+  for (const it of real.items) {
     const g = byId.get(it.id);
     assert.ok(g, 'country in golden: ' + it.id);
     assert.equal(it.value, g.value, it.id + ' value');
-    const p = Engine.priceOf(countries, it);
+    const p = Engine.priceOf(real, it);
     assert.equal(p.rank, g.rank, it.id + ' rank');
     assert.equal(p.ideal, g.ideal, it.id + ' ideal');
     assert.equal(p.max, g.max, it.id + ' max');
   }
 });
 
-test('GOLDEN: band rates are the old table, percentile edges land on the old rank edges', () => {
-  assert.deepEqual(countries.bands.map(b => [b.ideal, b.max]), golden.bands.map(b => [b.ideal, b.max]));
-  const edges = golden.bands.map(b => b.to);
+test('GOLDEN (August): the test-only August pack still has the old band rates and rank edges, and reproduces every old price', () => {
+  assert.deepEqual(countries.bands.map(b => [b.ideal, b.max]), goldenAug.bands.map(b => [b.ideal, b.max]));
+  for (const g of goldenAug.countries) { const p = Engine.priceOf(countries, countries.items.find(i => i.id === g.id)); assert.equal(p.ideal, g.ideal, g.id); assert.equal(p.max, g.max, g.id); }
+  const edges = goldenAug.bands.map(b => b.to);
   const n = countries.items.length;
   let rank = 0;
   countries.bands.forEach((b, i) => {
@@ -47,7 +50,8 @@ test('GOLDEN: difficulty pools and taunt tiers match the old ones', () => {
 });
 
 test('country pack content is complete', () => {
-  assert.deepEqual(Engine.validatePack(countries), []);
+  assert.deepEqual(Engine.validatePack(real), []);
+  assert.deepEqual(Engine.validatePack(countries), [], 'and so is the August test pack');
   for (const it of countries.items) {
     assert.ok(Engine.hasCoords(it), it.id + ' has coordinates');
     assert.ok(countries.taunts.items[it.id].length >= 10, it.id + ' has its taunt bank');
@@ -80,7 +84,7 @@ function randomState(rng, pack) {
 }
 
 test('BOT: identical decisions and identical random draws to the pre-refactor bot (60,000 random states)', () => {
-  const priceById = new Map(golden.countries.map(g => [g.id, { ideal: g.ideal, max: g.max }]));
+  const priceById = new Map(goldenAug.countries.map(g => [g.id, { ideal: g.ideal, max: g.max }]));
   const seedRng = Engine.seededRng(12345);
   let raises = 0, passes = 0, contested = 0;
   for (let k = 0; k < 60000; k++) {
