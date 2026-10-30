@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v34';   // increment this, every time
+const CACHE = 'bidding-wars-v35';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v34` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v35` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -351,20 +351,39 @@ bands also had hard edges (185 pairs where a bigger country was cheaper; Vietnam
 - **Budgets** (`economy.budgets`, per level, multiples of 5): Medium keeps €10 per lot; Beginner and Expert get f × lots × the level's average fair price with
   f = 0.55 (5 and 10 lots), 0.40 (15), 0.36 (20, 30). `validatePack` enforces the top-5 rule per level (budget ≤ 80% of the expected price of the level's
   five biggest, midpoint of ideal and max plus the 15% premium: 435 / 210 / 435 against 300 / 100 / 140). Lot options stay 5 / 10 / 15 / 20 / 30 (no 40).
-- **Bot** (`pack.bot`): `premium { top: 5, pct: 0.15 }`, `kappa 0.8`, `wallet`, `noise`, per-level `limitMul`, the States pacing / mood / temperaments (25/50/25,
-  ±6% / 6 / 5 / 4 / 4% by lot count). End of round, bid buttons, typing grace and sampling are the States ones.
-- **Reference results** (real engine, `node test/economy.js countries 3000`, mix 25/50/25; win % of A creeper / B fair / C smart-€1): Medium 5–30 lots
-  A 27.5 / 11.1 / 8.2 / 7.2 / 4.9, B 49.9 / 39.5 / 30.1 / 23.4 / 22.0, C 48.4 / 38.4 / 29.4 / 22.6 / 22.4 — within ±10 of the frozen August numbers everywhere.
-  Beginner A 26.1 / 23.0 / 8.4 / 5.5 / 3.8, B and the scaled smart player 50–58. Expert within ±10 of Medium except the creeper at 10 lots (20.5 vs ≤ 19.5, accepted).
-  Every temperament keeps B and C between 15% and 75% (lowest 17.8, highest 70.1); the creeper takes at most 40% of the points; the bot ends with 14–28% unspent against it.
-- **Accepted misses** (agreed): Expert and Beginner short rounds are luck-heavy (the rules text says so); the Beginner and Expert 5- and 10-lot creeper
-  is 20–26%. Expert's pool is extremely skewed (median 9 M, India 1,451 M), so one lot decides a round.
-- **Unpredictability** (`node test/economy.js unpredictable`, `learner`; guarded in `test/countries-economy.test.js`): on one lot, same state, fresh seed,
-  creeper rival: SD ≥ 15% of the ideal and no price in more than 20% of games for ideal ≥ 10 (measured 21–33% SD, ≤ 13% top price); even/odd 50 ± 3 above €5;
-  within ±1 of the median in at most 25% (ideal ≥ 25) / 40% (10–24). **Wallet-bound giants** (India/China/Russia when the bot's purse is the limit): the final price
-  equals wallet-minus-reserve in at most 30% of games (measured ≤ 9%; 50% without the `wallet` roll) with SD ≥ 8% of the wallet (measured 9–15%).
-  The Learner E (remembers the bot's drop-outs per country over 200 games, bids just above the median; E2 never above the fair price) must not beat the smart
-  player C by more than ~8 points: Medium and Beginner −12 to −52, Expert +1.3 / +6.9 / +1.8 (10 / 20 / 30 lots).
+- **Bot** (`pack.bot`): `premium { top: 5, pct: 0.15 }`, per-level `limitMul`, `knockout.kappa`, `noise`, `wallet`, the States pacing / mood / temperaments (25/50/25,
+  ±6% / 6 / 5 / 4 / 4% by lot count), plus three blocks added by the bug-test round (all per level, see `lvVal` in `engine.js`):
+  - `efficiency { gamma, lo, hi, pick }` — a knapsack shadow price: the walk-away is scaled by (the lot's points per euro ÷ the best points per euro the bot can still buy)^gamma,
+    clamped to lo…hi. Before this the bot priced lots by a curve, under-bid giants and over-paid junk, and a human who simply went all-in on the efficient lot won 70–99%.
+  - `decisive { share }` — a lot worth at least `share` of the value still to come is decisive: no reserve, ceiling = the whole purse, and when the bot holds at least the
+    rival's money it jumps straight to the rival's whole purse (K or K+1). Consequence (accepted trade-off): on a decisive lot the price *is* a wallet, so it is not random.
+  - `creeperGuard { raises: 3 }` — a rival who raised ≥ 3 times and never passed while able to pay is a +1 creeper; the efficiency factor is then floored at 1 so the creeper keeps losing.
+  - Small prices: when contested at €3–11 the +1 step becomes +2 in 40% of raises (`bot.parity: false` turns it off); without it a +1 bot against a +1 rival always stops on the same parity.
+  End of round, bid buttons, typing grace and sampling are the States ones. An unknown level id falls back to the pack's default (`validLevel`; it used to give NaN budgets).
+- **Reference results** (real engine, `node test/economy.js countries 3000`, mix 25/50/25; win % of A creeper / B fair / C smart-€1):
+  Medium 5–30 lots A 28.1 / 14.5 / 11.0 / 7.8 / 4.6, B 37.3 / 39.3 / 29.3 / 23.0 / 15.6, C 37.0 / 37.5 / 28.7 / 22.6 / 15.5 (against the frozen August Medium: A +7…−9, B +2…−11, C −2…−12 — 30 lots is the most distant).
+  Beginner A 16.3 / 26.1 / 30.3 / 20.4 / 9.6, B 30 / 48 / 52 / 40 / 26 (August Beginner: A 85, B 75 at 10 lots — it was a free win). Expert A 18.8 / 18.2 / 17.6 / 13.7 / 11.6,
+  B 19 / 24 / 28 / 25 / 25. Every temperament keeps B and C between 14% and 60% (lowest Medium 30 lots aggressive 14.2, highest Beginner 15 lots aggressive 60.1); the creeper takes at most 39% of the points; the bot ends with 9–24% unspent against it.
+  The naive fair-value players (B, C) are therefore **harder** to be than they were in August; that is the price of closing the efficiency exploits below.
+- **Accepted misses** (agreed): Expert and Beginner short rounds are luck-heavy (the rules text says so); Beginner creeper 26–30% at 10–15 lots; Expert 5 lots B/C ≈ 19%
+  (−30 against the Medium reference); Medium 30 lots B/C ≈ 15.6%. Expert's pool is extremely skewed (median 9 M, India 1,451 M), so one lot decides a round.
+- **Bug-test round** (dev scripts, none part of `node --test` except the small slices):
+  - `node test/fuzz.js [games] [seed] [pack]` — whole auctions with junk / random / creeper / passer / all-in / fair humans, bogus levels and lot counts, 3–4 seats, forced
+    temperaments; checks exceptions, termination, NaN / non-integer / negative money, money conservation, lots sold twice or lost, a bot move the engine rejects, a rejected
+    human move that changes state, reproducibility of a seed. `test/fuzz.test.js` runs a 600-game slice. Final run: **150,000 games, 0 failures** (≈850,000 during the round).
+    It found one real bug: an unknown level id gave NaN budgets (fixed by `validLevel`).
+  - `node test/exploit.js [pack] [level|all] [games] [confirm]` — a family of ~40 human strategies (ratio, efficiency hunter, saver, hoarder, reader, all-in jumper, sniper, oracle,
+    temperament reader); the best five are re-played on fresh seeds. Limit 60% (65% at 5 lots). August bot, same family: 70–99% for the best strategy in most cells.
+    Final confirmed best blind strategy, Beginner 5/10/15/20/30: 64.6 / 51.7 / **62.3** / **60.3** / 56.8; Medium 51.4 / 49.6 / 52.4 / 51.1 / 40.7; Expert 56.2 / **60.9** / 37.8 / 34.1 / 44.3.
+    **Three cells stay 0.3–2.3 points above the limit** (Beginner 15 and 20: "bid up to 0.8× the fair price"; Expert 10: all-in on a top-decile lot). Moving `limitMul` did not
+    close them (sweeps of ±15% only traded one strategy for another within sampling noise), so they are documented residuals, not fixed.
+  - `node test/ui-sim.js 300 4` — 300 games through the real UI, 0 failures.
+- **Unpredictability** (`node test/economy.js unpredictable`, `learner`; guarded in `test/countries-economy.test.js`): on one lot, same state, fresh seed, creeper rival: SD ≥ 15% of
+  the ideal, no price in more than 20% of games, within ±1 of the median in at most 25% (ideal ≥ 25) / 40% (10–24), even/odd 50 ± 3 above €5 — measured on ordinary mid-size lots
+  (ES, IT, DE, FR, TH, AR: 49.8–50.8% even). **Known exceptions, by design:** (1) decisive giants (e.g. Nigeria at Medium: the price is the rival's whole purse in ≈ 75% of games;
+  Expert Germany ≈ 64%) — predictable, but the only way to win it is to hold more money than the bot, so reading it gives nothing; (2) inefficient small lots (Zimbabwe at Medium:
+  the bot will not pay more than €3–8; 65% of drop-outs are even) — a player who learns this saves a few euros on a lot worth little. Wallet-bound non-decisive lots keep the 70–100%
+  roll (≤ 30% at wallet-minus-reserve). The Learner E (remembers the bot's drop-outs per country over 200 games) must not beat the smart player C by more than ~8–12 points.
 - **Frozen reference**: `test/pack-countries-august.js` (test only: the same items with the August bands, flat budget and the original bot) re-derives the frozen
   numbers (`node test/economy.js baseline`, within 2 points); the States benchmark refers to the fixture, not to today's Countries.
 

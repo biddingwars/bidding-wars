@@ -178,3 +178,6 @@ I could not play these on a device. The harness covers the numbers (`node test/e
 - [ ] The **raise buttons grow with the price** (+1 +2 +5 +10 +25 at the start, up to +10 ... +200 above EUR 100) and typing in the custom field adds a few seconds once per turn.
 - [ ] The rules text (how to play) lists the budgets of all three levels and says short rounds are luck-heavy, in all five languages.
 - [ ] No scrolling on the auction at 402x720 and 834x1194 with the big buttons.
+- [ ] Bug-test round: on a giant (India, China, USA) with the bot holding more money than you, an all-in does not win it any more; on a lot worth very little (Zimbabwe, Tuvalu) the bot stops at a few euros instead of chasing you.
+- [ ] Playing "+1 until the bot gives up" still loses (Medium 10 lots: about 14% wins).
+- [ ] Menu shows `v35`; after a full close and reopen the new build is the one running.

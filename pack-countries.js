@@ -66,13 +66,16 @@
     /* The bot: the August walk-away roll (between ideal and max), randomised raise step and rank-based valuation, plus the shared
        States machinery. limitMul is the per-level, per-lot-count calibration (re-measured with `node test/economy.js`). */
     bot: {
-      limitMul: { beginner: { 5: 0.75, 10: 0.775, 15: 0.875, 20: 0.95, 30: 0.95 }, medium: { 5: 0.875, 10: 0.875, 15: 0.875, 20: 0.875, 30: 0.925 }, expert: { 5: 0.75, 10: 0.725, 15: 0.675, 20: 0.77, 30: 0.8 } },
+      limitMul: { beginner: { 5: 1.28, 10: 1.178, 15: 0.914, 20: 0.812, 30: 0.812 }, medium: { 5: 0.817, 10: 0.817, 15: 0.817, 20: 0.817, 30: 0.864 }, expert: { 5: 0.567, 10: 0.712, 15: 0.51, 20: 0.582, 30: 0.605 } },
       premium: { top: 5, pct: 0.15 },
       pacing: { gamma: 0.5, lo: 0.7, hi: 1.5 },
-      knockout: { kappa: 0.8 },
+      knockout: { kappa: { beginner: 1.5, medium: 0.777, expert: 0.584 } },
       mood: { k: 0.25, up: 0.2, down: 0.15 },
       wallet: { lo: 0.7 },
-      noise: 0.45,
+      noise: { beginner: 0.491, medium: 0.622, expert: 0.505 },
+      efficiency: { gamma: { beginner: 0.697, medium: 0.777, expert: 0.538 }, lo: { beginner: 0.36, medium: 0.335, expert: 0.27 }, hi: { beginner: 3, medium: 2.884, expert: 2.522 }, pick: { beginner: 1.627, medium: 2, expert: 1.912 } },
+      decisive: { share: { beginner: 0.299, medium: 0.211, expert: 0.23 } },
+      creeperGuard: { raises: 3 },
       temperaments: {
         weights: [25, 50, 25], bigRank: 10,
         spread: { 5: 0.06, 10: 0.06, 15: 0.05, 20: 0.04, 30: 0.04 },

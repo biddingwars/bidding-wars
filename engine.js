@@ -191,11 +191,15 @@
       else {
         const lvIds = Array.isArray(pack.levels) ? pack.levels.map(l => l.id) : [], tblOk = (tb, f) => isObj(tb) && (lvIds.length > 0 && lvIds.every(id => isObj(tb[id])) ? lvIds.every(id => opts.every(n => f(tb[id][n]))) : opts.every(n => f(tb[n])));
         if (b.limitMul !== undefined && !tblOk(b.limitMul, v => v > 0)) e('bot.limitMul needs a positive multiplier for every lots option (or per level)');
+        const flat = v => typeof v === 'number' ? [v] : (isObj(v) ? Object.values(v).flatMap(flat) : [NaN]), numOk = (v, f) => v !== undefined && flat(v).length > 0 && flat(v).every(f);   // a number, or per level / per lots numbers
         if (b.wallet !== undefined && !(b.wallet.lo > 0 && b.wallet.lo <= 1)) e('bot.wallet needs { lo: 0 < share <= 1 }');
-        if (b.noise !== undefined && !(b.noise >= 0 && b.noise < 0.5)) e('bot.noise must be 0 <= noise < 0.5');
+        if (b.efficiency !== undefined && !(isObj(b.efficiency) && numOk(b.efficiency.gamma, v => v >= 0) && numOk(b.efficiency.lo, v => v > 0) && numOk(b.efficiency.hi, v => v > 0) && (b.efficiency.pick === undefined || numOk(b.efficiency.pick, v => v > 0)))) e('bot.efficiency needs { gamma >= 0, lo > 0, hi > 0, pick > 0 } (numbers, or per level)');
+        if (b.creeperGuard !== undefined && !(b.creeperGuard.raises >= 1)) e('bot.creeperGuard needs { raises >= 1 }');
+        if (b.decisive !== undefined && !(isObj(b.decisive) && numOk(b.decisive.share, v => v > 0 && v <= 1))) e('bot.decisive needs { share: 0 < share <= 1 } (a number, or per level)');
+        if (b.noise !== undefined && !numOk(b.noise, v => v >= 0 && v < 1)) e('bot.noise must be 0 <= noise < 1 (a number, or per level)');
         if (b.premium !== undefined && !(isPosInt(b.premium.top) && b.premium.pct >= 0)) e('bot.premium needs { top: positive int, pct >= 0 }');
         if (b.pacing !== undefined && !(b.pacing.gamma >= 0 && b.pacing.lo > 0 && b.pacing.hi >= b.pacing.lo)) e('bot.pacing needs { gamma >= 0, 0 < lo <= hi }');
-        if (b.knockout !== undefined && !(b.knockout.kappa > 0)) e('bot.knockout needs { kappa > 0 }');
+        if (b.knockout !== undefined && !(isObj(b.knockout) && numOk(b.knockout.kappa, v => v > 0))) e('bot.knockout needs { kappa > 0 } (a number, or per level)');
         if (b.mood !== undefined && !(b.mood.k >= 0 && b.mood.up >= 0 && b.mood.down >= 0)) e('bot.mood needs { k, up, down } >= 0');
         if (b.temperaments !== undefined) {
           const t = b.temperaments;
@@ -328,7 +332,9 @@
     return tbl[k];
   }
   /* US States: the budget is a table by lot count (economy.budgets, in dollars); Countries: lots x budgetPerLot. */
-  const budgetFor = (pack, lots, level) => (pack.economy && pack.economy.budgets) ? byLots(pack.economy.budgets, lots, level || pack.defaultLevel) : lots * pack.budgetPerLot;
+  /* an unknown, missing or corrupted level id falls back to the pack's default level, everywhere a level is looked up */
+  const validLevel = (pack, level) => (pack.levels && pack.levels.some(l => l.id === level)) ? level : pack.defaultLevel;
+  const budgetFor = (pack, lots, level) => (pack.economy && pack.economy.budgets) ? byLots(pack.economy.budgets, lots, validLevel(pack, level)) : lots * pack.budgetPerLot;
   /* The five raise buttons. Countries: always +1 +2 +5 +10 +25. A pack with economy.bidSteps scales them with the CURRENT PRICE
      (never with the item's fair price, which would leak its size): [[upTo, [5 steps]], …, [null, [5 steps]]]. */
   const DEFAULT_STEPS = [1, 2, 5, 10, 25];
@@ -348,15 +354,16 @@
      renders. Field names are stable on purpose. */
   function newAuction(opts) {
     const pack = opts.pack, rng = opts.rng || defaultRng;
-    const lots = opts.lots, level = opts.level || pack.defaultLevel, budget = budgetFor(pack, lots, level);
+    const lots = opts.lots, level = validLevel(pack, opts.level), budget = budgetFor(pack, lots, level);
     const S = {
       pack, rng,
       kind: opts.kind, mode: opts.kind === 'solo' ? 'bot' : 'table',
       i: 0, clock: opts.clock || 0, level,
-      items: draw(pack, lots, opts.level, rng),
+      items: draw(pack, lots, level, rng),
       players: opts.players.map(p => ({ name: p.name, budget, bought: [], ai: !!p.ai })),
       L: null, _ceil: null, _ceilLot: -1
     };
+    if (pack.bot && pack.bot.creeperGuard) S.watch = { raises: 0, vol: 0 };   // what the human has done so far: raises, and passes made while it could still afford the next euro
     if (pack.economy) S.unsold = [];                              // lots nobody could pay for (house-price endgame)
     if (pack.bot) {                                               // the bot rolls its temperament once, from the injected rng; never shown
       /* "the biggest items" (premium, bigRank) are the biggest of THIS level's pool, so Beginner's giants are Europe's, not the world's */
@@ -422,6 +429,7 @@
     const L = S.L, actor = S.players[L.turn];
     if (!Number.isInteger(amount) || !(amount > L.price)) return { error: 'mustBeat' };
     if (amount > actor.budget) return { error: 'tooMuch' };
+    if (S.watch && !actor.ai) S.watch.raises++;
     L.price = amount; L.holder = L.turn; L.turn = nextAfter(S, L.holder);
     return { ok: true, next: L.turn === null ? 'award' : 'turn' };
   }
@@ -429,6 +437,7 @@
   function pass(S) {
     if (closed(S)) return { error: 'closed' };
     const L = S.L;
+    if (S.watch && !S.players[L.turn].ai && S.players[L.turn].budget >= L.price + 1) S.watch.vol++;
     L.active = L.active.filter(i => i !== L.turn);
     if (L.active.length <= 1) return { ok: true, next: 'award' };
     L.turn = nextAfter(S, L.holder);
@@ -477,6 +486,8 @@
     const t = T[name] || {}, sign = name === 'conservative' ? -1 : name === 'aggressive' ? 1 : 0;
     return { name, limit: 1 + sign * byLots(T.spread, lots, level), step: t.step == null ? 1 : t.step, big: t.big == null ? 1 : t.big, cushion: t.cushion || 0, reserveCap: t.reserveCap == null ? null : t.reserveCap };
   }
+  /* a bot parameter may be a plain number or per level ({ beginner: 0.8, medium: 1.2 }, or per level and lot count) */
+  const lvVal = (v, S) => { if (typeof v === 'number') return v; const t = v && v[S.level] != null ? v[S.level] : v; return typeof t === 'number' ? t : byLots(t, S.items.length); };
   const sumFrom = (S, from, f) => { let a = 0; for (let k = from; k < S.items.length; k++) a += f(S.items[k]); return a; };
   const ptsOf = p => p.bought.reduce((a, b) => a + b.value, 0);
 
@@ -485,12 +496,26 @@
     let w = roll * (B.limitMul ? byLots(B.limitMul, n, S.level) : 1);
     if (B.premium && rankDesc <= B.premium.top) w *= 1 + B.premium.pct;
     if (T) { w *= T.limit; if (rankDesc <= B.temperaments.bigRank) w *= T.big; }
+    if (B.efficiency) {
+      /* Points per euro differ hugely between lots (a giant gives 10-15x the points per euro of a small country at fair price). The bot plans like a
+         knapsack: with the money it can spend on the lots still to come, the marginal lot it could afford sets a shadow price (points per euro); a lot
+         that beats it is worth more than its fair price, a lot that does not is worth less. This is what a disciplined human does by hand. */
+      const E = { gamma: lvVal(B.efficiency.gamma, S), lo: lvVal(B.efficiency.lo, S), hi: lvVal(B.efficiency.hi, S), pick: B.efficiency.pick == null ? 1 : lvVal(B.efficiency.pick, S) }, money = Math.max(1, me.budget - (n - idx - 1 >= 3 ? n - idx - 1 : 0)), rest = [];
+      for (let k = idx; k < n; k++) { const it = S.items[k], id = priceOf(S.pack, it).ideal; rest.push({ e: it.value / id, id }); }
+      rest.sort((a, b) => b.e - a.e);
+      let used = 0, eStar = 0;
+      for (const r of rest) { if (used + r.id > money) { eStar = r.e; break; } used += r.id; }
+      /* a rival who has raised again and again and never once walked away while it could still pay (the "+1 until broke" creeper) is best made to pay
+         full price on every lot, so the efficiency factor may only raise the walk-away for it, never lower it */
+      const creeper = !!(B.creeperGuard && S.watch && S.watch.raises >= B.creeperGuard.raises && S.watch.vol === 0);
+      if (eStar > 0) w *= clamp(Math.pow(item.value / (eStar * E.pick) / priceOf(S.pack, item).ideal, E.gamma), creeper ? 1 : E.lo, E.hi);   // pick > 1: pickier than the fair-price plan, because real prices run above fair when the rival pushes
+    }
     if (B.pacing) w *= clamp(Math.pow(me.budget / Math.max(1, sumFrom(S, idx, i => priceOf(S.pack, i).ideal)) / S.bot.paceTarget, B.pacing.gamma), B.pacing.lo, B.pacing.hi);
     if (B.mood && rival) {
       const wgt = clamp((idx / n - .5) / .5, 0, 1), d = (ptsOf(rival) - ptsOf(me)) / Math.max(1e-9, sumFrom(S, idx, i => i.value));
       w *= 1 + wgt * clamp(B.mood.k * d, -B.mood.down, B.mood.up);
     }
-    if (B.noise) w *= 1 + B.noise * (S.rng(1001) + S.rng(1001) - 1000) / 1000;      // optional per-lot jitter (triangular, +-noise), drawn only when the pack asks for it
+    if (B.noise) w *= 1 + lvVal(B.noise, S) * (S.rng(1001) + S.rng(1001) - 1000) / 1000;      // optional per-lot jitter (triangular, +-noise), drawn only when the pack asks for it
     return Math.round(w);
   }
 
@@ -505,6 +530,8 @@
     }
     const lotsAfter = S.items.length - S.i - 1;
     let reserve = lotsAfter >= 3 ? lotsAfter : 0;
+    const decisiveLot = !!B.decisive && item.value >= lvVal(B.decisive.share, S) * sumFrom(S, S.i, i => i.value);   // a lot worth a big slice of what is left
+    if (decisiveLot) reserve = 0;                                                                           // no euro is kept back for it
     if (T && T.cushion && lotsAfter >= 3) reserve += Math.round(T.cushion * (me.budget + me.bought.reduce((a, b) => a + b.price, 0)));
     if (T && T.reserveCap != null) reserve = Math.min(reserve, T.reserveCap);
     let lim = S._ceil.walk, jump = null;
@@ -520,7 +547,7 @@
         const decisive = (lead <= 0 && after > 0) || after > restPts;
         const m = Math.floor(afford / K);
         let rankV = 1; for (let q = S.i + 1; q < S.items.length; q++) if (S.items[q].value > item.value) rankV++;
-        if (sweep || rankV <= m || (decisive && K <= B.knockout.kappa * pr.max)) {
+        if (sweep || rankV <= m || (decisive && K <= lvVal(B.knockout.kappa, S) * pr.max)) {
           if (L.holder === rivalIdx && L.price >= Math.min(me.budget - reserve, lim)) {
             const target = L.price < K ? K : K + 1;
             if (target <= afford) { lim = Math.max(lim, target); jump = target; }
@@ -528,14 +555,24 @@
         }
       }
     }
+    /* On a lot that decides the game, a bot that holds at least as much money as its rival takes it at once: raising to the rival's whole purse can
+       not be topped. (Waiting only lets a rival who moves first jump to the whole purse and win every tie.) */
+    if (decisiveLot && rival && B.decisive.jump !== false && rival.budget >= 1 && me.budget >= rival.budget && L.holder !== L.turn) {
+      const K = rival.budget, target = L.price < K ? K : (me.budget >= K + 1 ? K + 1 : null);
+      if (target != null && target > L.price) { jump = target; lim = Math.max(lim, target); }
+    }
+    if (decisiveLot) lim = Math.max(lim, me.budget);     // and no random ceiling either: against a rival who goes all-in on the lot that decides the game, a bot that stops at a random 70-100% of its purse simply loses it
     const hardCap = Math.min(me.budget - reserve, lim);
     if (L.price < hardCap && me.budget > L.price) {
       const rivals = L.active.filter(i => i !== L.turn);
       const contested = rivals.some(i => S.players[i].budget > L.price + 1);
       const stepMul = T ? T.step : 1;
-      const step = !contested ? 1
-        : L.price < 5 ? 1
+      let step = !contested ? 1
+        : L.price < 3 ? 1
         : Math.max(1, Math.round(L.price * (0.12 + rng(15) / 100) * stepMul));
+      /* At small prices a +1 bot and a +1 rival alternate, which pins the parity of the price where the bot stops (it would always be odd, or always even).
+         A random +2 now and then breaks that, so even and odd drop-out prices stay equally likely. */
+      if (contested && step === 1 && L.price >= 3 && L.price < 12 && B.parity !== false && rng(100) < 40) step = 2;
       let amount = Math.min(me.budget, hardCap, L.price + step);
       if (jump != null && jump <= hardCap && jump > L.price) amount = jump;
       if (amount > L.price) return { type: 'raise', amount };
