@@ -287,12 +287,18 @@ Census-boundary centroids, taunts, fun facts).
   the one `record:v1` value (privacy: still exactly four keys, and the copy says so). The record is per pack inside
   `record:v1`.
 
-- **Known weakness (found by `node test/exploit.js states all`, not fixed).** A *stingy* player who bids "+1 up to 0.8× (or 1.0×) the fair price" and otherwise passes beats the States bot
-  at 20–50 lots (best blind 76 / 99 / 100 / 100% at 15 / 20 / 30 / 40 / 50 lots; at the default 10 lots it is 46%). Why: the bot buys early at about the fair price, runs out of money
-  first, and the stingy player then takes the big states for a broke rival's last few dollars; because every state costs the same per million people, the "efficiency" fix that
-  works for Countries has nothing to rank. Tried and rejected (each measured, none closed it without breaking the creeper limit): the Countries efficiency / decisive / creeperGuard blocks with a
-  several parameter searches of 150+ steps, stronger pacing, a rival-learning cap on the walk-away, a per-lot house price when a rival cannot really bid, a reserve held back for the biggest state still to come.
-  A real fix needs a rule decision (for example a reserve price per lot, or a smaller late-game advantage for the last solvent player), not a parameter change.
+- **The stingy-player exploit (found and mostly closed in v36).** `node test/exploit.js states all` showed that a player who bids "+1 up to 0.8× the fair price" and otherwise passes beat
+  the old States bot in long rounds (best blind 76 / 99 / 100 / 100% at 15 / 20 / 30 / 40 / 50 lots; 46% at the default 10). Why: the bot's walk-away swings from lot to lot (a roll between ideal and max),
+  so it wins the lots on which it pays the rival's constant limit and hands the rest to the rival at its own low draws; it also spends first and the stingy player then takes the big states for a
+  broke rival's last few dollars. Every state costs the same per million people, so the Countries "efficiency" block has nothing to rank here.
+  **Fix: a narrower roll and lower limits for 15+ lots** — `bot.rollSpan: 0.4` (the roll uses the first 40% of [ideal, max]), `bot.noise: 0.15`, `limitMul` 0.72 / 0.62 / 0.6 / 0.63 / 0.68 for 15 / 20 / 30 / 40 / 50 lots
+  (5 and 10 lots keep 1.0 / 0.925). Result: best blind strategy 42 / 37 / 59 / 55 / 53 / 53 / 53% at 5 / 10 / 15 / 20 / 30 / 40 / 50 lots — **no cell above the limit**.
+  Costs (measured): the creeper wins 28 / 31 / 28 / 22 / 17% at 15 / 20 / 30 / 40 / 50 lots (was 15 / 11 / 7 / 5 / 4%; its share of the points stays under 51%), 42% at 5 lots and 26% at 10 (was 35 / 19);
+  B and C win 16-35% from 10 lots; a ±10% budget now moves a reference player by 14-16 points at 30 lots (a slope, no cliff).
+  Less random: the drop-out price of a mid-size state in a 30-lot round has SD 8-9% of the fair price (was 17%) and the most common price shows up in about 20% of games. A learner that remembers
+  the bot's drop-outs still loses to the smart player by 18-29 points, so this is not exploitable the way the fixed-limit player was.
+  Tried first and rejected (each measured): the Countries efficiency / decisive / creeperGuard blocks with parameter searches of 150+ steps, stronger pacing, a rival-learning cap, a per-lot house price when a rival
+  cannot really bid, a minimum sale price, bidding by money lead, a reserve for the biggest state to come, matching the rival's raise size. None closed it.
 
 ### Economy and bot (`pack.economy`, `pack.bot`: US States and Countries)
 
@@ -317,7 +323,7 @@ knife-edge (50 lots: creeper 2% at 60% budget, 99% at 70%). Measured on the real
   reproduces a game; a pack without a `bot` block keeps the original `botDecision` path byte for byte). Tables such as `economy.budgets`,
   `limitMul` and `temperaments.spread` may be per level: `{ beginner: {5:…}, medium: {…} }` (`Engine.byLots(table, lots, level)`); "the biggest items"
   (`premium`, `bigRank`) and the average price used for pacing (`Engine.avgIdeal(pack, level)`) are those of the level's own pool. Parameters:
-  - `limitMul[lots]` — calibration multiplier on every walk-away roll (1.0, 0.925, 0.9, 0.975, 1.075, 1.125, 1.135 for 5…50 lots).
+  - `limitMul[lots]` — calibration multiplier on every walk-away roll (States: 1.0, 0.925, 0.72, 0.62, 0.6, 0.63, 0.68 for 5…50 lots since v36; before that 1.0, 0.925, 0.9, 0.975, 1.075, 1.125, 1.135).
   - `premium { top: 4, pct: 0.15 }` — the four biggest items get +15% on the roll.
   - `pacing { gamma: 0.5, lo: 0.7, hi: 1.5 }` — walk-away × (budget ÷ value left ÷ the opening budget ratio)^gamma, clamped: the bot spends evenly.
   - `knockout { kappa: 1.5 }` — K = the rival's budget, the price it can no longer top. At its own limit, with the rival holding
@@ -330,6 +336,7 @@ knife-edge (50 lots: creeper 2% at 60% budget, 99% at 70%). Measured on the real
     Conservative: raise steps ×0.75, ×0.95 on the 10 biggest. Aggressive: steps ×1.25, ×1.05 on the 10 biggest, reserve capped at $3 (spends deep).
     `Engine.newAuction({ …, temper })` can force one (the harness does).
   - `reserve` is the original one ($1 per remaining lot outside the last three).
+  - `rollSpan` (States) — the walk-away roll uses only the first share of [ideal, max] (0.4); see "The stingy-player exploit" above. Absent = the full range, as for Countries.
   - `wallet { lo: 0.7 }` (Countries) — when the walk-away reaches into the top of the bot's purse (above `lo` × what it can spend), the ceiling is
     a random 70–100% of what it can spend (one roll per lot), so a giant that costs about its whole purse never ends at "wallet minus reserve" to the euro.
   - `noise: 0.45` (Countries) — a per-lot triangular jitter of ±45% on the walk-away (SD about 18%); it is what keeps the Learner from reading the bot.
