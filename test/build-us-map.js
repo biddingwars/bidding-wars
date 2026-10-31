@@ -1,13 +1,12 @@
 /* Builds the US results map from open data. DEV-ONLY: needs `us-atlas`, `topojson-client`, `d3-geo` and `sharp`
-   (npm) plus a world raster in plain lat/long (the repo's stand-in is Natural Earth NE2_50M_SR_W.tif, public domain).
+   (npm) plus a world raster in plain lat/long (the repo uses NASA Blue Marble Next Generation, July, 21600x10800: see NOTICE.md).
    It writes four files at the repo root (the game itself needs none of these packages):
      us-map.js      projected state outlines, label points, nation outline (loaded lazily on the results screen)
      us-map.webp    the contiguous US, satellite-style, registered to the outlines (Albers equal-area conic)
      us-ak.webp     Alaska inset (same idea, its own conic)
      us-hi.webp     Hawaii inset
    Usage:  NODE_PATH=<dir with node_modules> node test/build-us-map.js <world.tif> [out-dir]
-   To use better imagery (e.g. NASA Blue Marble tiles A1/B1 or the 21600x10800 mosaic) hand this script that
-   equirectangular file instead — nothing else changes: the warp samples by longitude/latitude.
+   To change the imagery hand this script another equirectangular file — nothing else changes: the warp samples by longitude/latitude.
    Borders: US Census Bureau cartographic boundary files via us-atlas (public domain). */
 const fs = require('fs'), path = require('path');
 const SRC = process.argv[2], OUT = process.argv[3] || path.join(__dirname, '..');
