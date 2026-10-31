@@ -189,3 +189,4 @@ I could not play these on a device. The harness covers the numbers (`node test/e
 - [ ] Run out of money in a 1v1 (go all in on India or China): the other player takes every remaining country for 1 each, and the how-to-play text says so in all five languages.
 - [ ] India and China cost about a whole budget (about 158); USA, Brazil, Pakistan, Indonesia, Nigeria cost about 40% more than before.
 - [ ] US States SOLD moment and results: the SOLD plate is red with white lettering, the burst rays and sparks are red / white, the confetti is red, white and blue; Countries keeps the brass plate and gold confetti.
+- [ ] Setup budgets (Countries): Medium and Expert show 50 / 100 / 150 / 200 / 300 euros for 5 / 10 / 15 / 20 / 30 lots, Beginner 25 / 50 / 75 / 100 / 150; the how-to-play text says so in five languages. Beginner feels easier than before and its bot fights for Russia, Turkey, Germany, the UK and France.
