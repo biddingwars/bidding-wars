@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v43';   // increment this, every time
+const CACHE = 'bidding-wars-v44';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v43` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v44` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -56,7 +56,7 @@ asset the game needs to actually play is bundled locally:
 
 - `three.min.js` (vendored, matches the version `globe.js` was written against)
 - every content pack (`pack-*.js`) — they load lazily, but must be in `sw.js`'s `SHELL` so they are cached for offline
-- `earth.jpg` (the globe's satellite texture, NASA Blue Marble July at 4096×2048 since v43, see `NOTICE.md` — same file whether online or offline)
+- `earth.jpg` (the globe's satellite texture, NASA Blue Marble July at 4096×2048 since v44, see `NOTICE.md` — same file whether online or offline)
 - `countries-110m.json` (map borders)
 - `globe-hero.webp` (the menu's planet, also the results card's placeholder)
 - sound is synthesised in `sound.js` with Web Audio — there are no audio files
@@ -434,7 +434,7 @@ bands also had hard edges (185 pairs where a bigger country was cheaper; Vietnam
 - **Frozen reference**: `test/pack-countries-august.js` (test only: the same items with the August bands, flat budget and the original bot) re-derives the frozen
   numbers (`node test/economy.js baseline`, within 2 points); the States benchmark refers to the fixture, not to today's Countries.
 
-### Capital Cities pack (`pack-capitals.js`, v40; bot all-in rule v43)
+### Capital Cities pack (`pack-capitals.js`, v40; bot all-in rule v44)
 
 `pack-capitals.js` is **generated** by `test/make-pack-capitals.js` from two committed inputs — edit those, never the pack: `test/wup2018-f13-capitals.json` (the UN numbers, copied
 unchanged, with licence and the SHA-256 of the downloaded xls) and `test/capitals-content.json` (names in five languages, the Europe list, taunts, level labels). The calibration
@@ -456,15 +456,15 @@ unchanged, with licence and the SHA-256 of the downloaded xls) and `test/capital
 - **Bot**: the Countries machinery (efficiency, decisive, creeperGuard, wallet, knockout, temperaments 25/50/25, premium top 5 with Beginner +50%), parameters found per level by
   `node test/tune-capitals.js <level> [evals] [games] [seed]` (a hill-climb that keeps the exploit family under the limit and the creeper / fair players near the Countries v39 numbers; `BAND=6` tightens the fair-player band) and then
   re-measured on fresh seeds. Starting from the Countries values unchanged, Medium was exploitable (a "bid up to 0.8 x the fair price" player won 68-77% at 10-30 lots) and Beginner failed at 30 lots (64.8%): the capitals pool is far less skewed than the countries pool, so Countries' numbers do not carry over.
-- **All-in rule (v43, owner feedback)**: the Countries `decisive` block sends the bot to the rival's whole purse on a lot worth a big share of the points still to come. In a round of small capitals that made
+- **All-in rule (v44, owner feedback)**: the Countries `decisive` block sends the bot to the rival's whole purse on a lot worth a big share of the points still to come. In a round of small capitals that made
   Washington D.C. (5.2 M, fair price EUR 26) "decisive" at EUR 50 and the bot went all-in on it. `bot.decisive.minPrice: 0.8` (a new optional engine parameter, validated; Countries does not set it) makes a lot decisive only if its **fair price is at least 80%
   of the bot's current purse**: Delhi (EUR 95), Tokyo, Mexico City and, in a 5-lot round, Seoul-sized cities are still all-in (Delhi: whole purse in 100% of games, `node test/economy.js`' `probe`), Washington D.C. at the start of a 5-lot round is not (whole purse in 1% of games, median drop-out about the fair price at Medium and 130% of it at Expert);
   late in a round, with little money left, a pivotal lot is decisive again. (Measuring it against the *opening* purse instead made 30-lot rounds exploitable: Beginner 65%, Medium 60.6%.) Medium kept its parameters; Beginner and Expert were re-tuned.
 - **Measured** (real engine, `node test/economy.js capitals 2000 777`, mix 25/50/25; win % creeper A / fair B, for 5 / 10 / 15 / 20 / 30 lots): Beginner A 30.6 / 34.0 / 25.5 / 14.1 / 5.5, B 39.4 / 46.4 / 50.9 / 53.5 / 51.0;
   Medium A 32.5 / 17.9 / 8.3 / 5.7 / 3.9, B 47.1 / 45.8 / 36.8 / 39.5 / 37.9; Expert A 24.6 / 21.9 / 21.3 / 13.0 / 5.7, B 28.5 / 33.1 / 33.4 / 36.9 / 36.1. The creeper takes at most 47% of the points everywhere; every temperament keeps
   fair players between 28% and 60%. **Exploit search** (`node test/exploit.js capitals all 500 4000`, best confirmed blind strategy, limit 60% / 65% at 5 lots): Beginner 40.3 / 48.1 / 48.1 / 53.1 / 57.0,
-  Medium 50.6 / 55.2 / 47.7 / 53.0 / 57.0, Expert 37.5 / 40.0 / 43.3 / 45.8 / 51.5 — **no cell above the limit** (the oracle, which sees the lots to come, reaches 52%). Expert 5 lots is the hardest on fair players (28%, Countries 40%): one big city decides a 5-lot round. The Learner (memorises the bot's drop-outs per capital) loses to the fair player by 15-52 points (measured before v43).
-  Fuzz: 200,000 hostile games, 0 failures (before v43; 30,000 again after). `node test/ui-sim.js`: 0 failures.
+  Medium 50.6 / 55.2 / 47.7 / 53.0 / 57.0, Expert 37.5 / 40.0 / 43.3 / 45.8 / 51.5 — **no cell above the limit** (the oracle, which sees the lots to come, reaches 52%). Expert 5 lots is the hardest on fair players (28%, Countries 40%): one big city decides a 5-lot round. The Learner (memorises the bot's drop-outs per capital) loses to the fair player by 15-52 points (measured before v44).
+  Fuzz: 200,000 hostile games, 0 failures (before v44; 30,000 again after). `node test/ui-sim.js`: 0 failures.
 - **Accepted / known**: short rounds are luck-heavy (5 lots: one big city decides); Medium 30 lots is the tightest cell (best blind 57.6%); the fair-value player wins only 34-38% of Medium 30-lot rounds (Countries: 29%, so it is not harder); capitals under 0.1 million are worth almost nothing
   (Vatican City 0.0008 points, the metric prints "801"); there are no per-capital fun facts (taunts are generic, by size tier, in all five languages); names and wording in German, Italian, Spanish and French have not been read by a native speaker.
 - **Look**: the existing globe with a pin per capital (`globe: { borders: true, claimBorders: false }`), the normal brass-gold theme, tile icon 🏛️ (`.pack[data-pack=capitals]::before`). Euros, no new theme, nothing new stored (still four keys).
