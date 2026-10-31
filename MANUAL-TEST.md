@@ -190,3 +190,16 @@ I could not play these on a device. The harness covers the numbers (`node test/e
 - [ ] India and China cost about a whole budget (about 158); USA, Brazil, Pakistan, Indonesia, Nigeria cost about 40% more than before.
 - [ ] US States SOLD moment and results: the SOLD plate is red with white lettering, the burst rays and sparks are red / white, the confetti is red, white and blue; Countries keeps the brass plate and gold confetti.
 - [ ] Setup budgets (Countries): Medium and Expert show 50 / 100 / 150 / 200 / 300 euros for 5 / 10 / 15 / 20 / 30 lots, Beginner 25 / 50 / 75 / 100 / 150; the how-to-play text says so in five languages. Beginner feels easier than before and its bot fights for Russia, Turkey, Germany, the UK and France.
+
+## 12. Capital Cities pack (v40) — nothing here has been played on a real device
+
+The numbers are covered by `node --test`, `node test/economy.js capitals`, `node test/exploit.js capitals`, `node test/fuzz.js 20000 1 capitals` and `node test/ui-sim.js`; these are the feel checks.
+
+- [ ] Menu: the **Capitals** tile (🏛️, "195 · Population") is a real tile; the old "Soon" tile is gone and only **World** is still "Soon". Tap Capitals: it highlights, the footer says "195 capitals", the record pill is Capitals' own; Countries and US States keep their own records.
+- [ ] Setup: three levels — **Beginner — Europe only**, **Medium — over 2 million**, **Expert — all 195 capitals**; budgets EUR 50 / 100 / 150 / 200 / 300 for 5 / 10 / 15 / 20 / 30 lots (Medium and Expert), half of that at Beginner. How to play: the Capitals text (euros, "195", seat of government), in all five languages.
+- [ ] Play a round at each level: the lot card shows the country's flag and the capital's name (Beijing / Peking / Pechino / Pekín / Pékin by language); the population stays blacked out until the reveal; Vatican City, if it comes up, prints "801" (people), small capitals "213K", big ones "37.5M".
+- [ ] Choices you may not expect (they follow the seat of government, see `CAPITALS-SOURCES.md`): The **Hague** (not Amsterdam), **Cotonou** (not Porto-Novo), **La Paz**, **Abidjan**, **Pretoria**, **Colombo**; **Nauru** shows as Yaren. Tell me if any of these should change.
+- [ ] Results: the globe shows a pin per capital you bought (no border is lit, because a capital is a point). Credits (Privacy -> Credits & licences) name the UN World Urbanization Prospects 2018, CC BY 3.0 IGO, "not an endorsement".
+- [ ] Bot feel: Beginner should be easiest (the bot fights for the big European capitals), Medium the most demanding, Expert in between; a +1 creeper should lose most 15+ lot rounds; with only 5 lots one big city decides it (that is said in the rules).
+- [ ] Offline (airplane mode, after one online visit and a full close/reopen): Capitals plays; privacy still lists exactly four stored values; Privacy -> Delete all data clears the Capitals record too.
+

@@ -16,6 +16,7 @@ const SHELL = [
   './banter.js',
   './pack-countries.js',
   './pack-states.js',
+  './pack-capitals.js',
   './app.js',
   './globe.js',
   './us-view.js',

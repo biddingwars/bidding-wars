@@ -221,7 +221,7 @@ test('offline: after one visit the whole game, including the lazy pack, works wi
   await page.evaluate(() => navigator.serviceWorker.ready);
   await page.waitForFunction(async () => (await caches.keys()).length > 0 && (await (await caches.open((await caches.keys())[0])).keys()).length >= 20, null, { timeout: 15000 });
   const cached = await page.evaluate(async () => (await (await caches.open((await caches.keys())[0])).keys()).map(r => r.url.replace(/^.*\/bidding-wars\//, '')));
-  for (const f of ['engine.js', 'packs.js', 'banter.js', 'pack-countries.js', 'pack-states.js', 'app.js', 'globe.js', 'us-view.js', 'us-map.js', 'us-map.webp', 'us-ak.webp', 'us-hi.webp', 'sound.js', 'fx.js', 'app.css', 'globe-hero.webp']) assert.ok(cached.includes(f), f + ' is in the offline cache');
+  for (const f of ['engine.js', 'packs.js', 'banter.js', 'pack-countries.js', 'pack-states.js', 'pack-capitals.js', 'app.js', 'globe.js', 'us-view.js', 'us-map.js', 'us-map.webp', 'us-ak.webp', 'us-hi.webp', 'sound.js', 'fx.js', 'app.css', 'globe-hero.webp']) assert.ok(cached.includes(f), f + ' is in the offline cache');
   assert.ok(!cached.some(f => /fonts\.css|\.woff2/.test(f)), 'no font files are cached any more');
   await ctx.setOffline(true);
   await page.reload();
@@ -929,4 +929,104 @@ test('setup: a 5-lot round shows the luck hint, 10 or more hides it (Countries a
   }
   assert.deepEqual(errors, []);
   await ctx.close();
+});
+
+/* ---------------------------------------------------------------- Capital Cities pack */
+const textNoTiles = page => page.evaluate(() => { const c = document.body.cloneNode(true); c.querySelectorAll('.packs').forEach(e => e.remove()); document.body.append(c); c.style.cssText = 'position:absolute;left:-9999px'; const t = c.innerText; c.remove(); return t; });   // the other packs' tiles are named Countries / US States
+const COUNTRY_WORD = { en: /countr/i, de: /\bLänder\b|\bLand\b/, it: /\bpaes[ei]\b/i, es: /\bpaíses\b|\bpaís\b/i, fr: /\bpays\b/i };
+
+test('CAPITALS: menu tile, three levels with their budgets, lazy load, euros, play to the results, own record, only the four keys', { skip: SKIP }, async () => {
+  const { page, errors, ctx, requests } = await open();
+  assert.ok(await page.$('[data-pack="capitals"]'), 'Capitals is a real tile now, not a "Soon" placeholder');
+  assert.match(await page.textContent('[data-pack="capitals"]'), /195/);
+  await pickPack(page, 'capitals');
+  assert.ok(!/\$/.test(await bodyText(page)), 'euros, no dollar sign on the Capitals menu');
+  assert.match(await bodyText(page), /195 capitals/i, 'footer counts the capitals');
+  await page.click('#m1'); await page.waitForSelector('#start');
+  assert.deepEqual(await page.$$eval('[data-g="level"] [data-v]', e => e.map(x => x.dataset.v)), ['beginner', 'medium', 'expert']);
+  assert.deepEqual(await page.$$eval('[data-g="lots"] [data-v]', e => e.map(x => x.dataset.v)), ['5', '10', '15', '20', '30']);
+  assert.match(await page.textContent('[data-g="level"] [data-v="expert"]'), /195/);
+  assert.equal((await page.textContent('#bud')).trim(), '€100', 'Medium, 10 lots');
+  await pick(page, 'level', 'beginner'); assert.equal((await page.textContent('#bud')).trim(), '€50', 'Beginner: half');
+  await pick(page, 'lots', 30); assert.equal((await page.textContent('#bud')).trim(), '€150');
+  await pick(page, 'level', 'expert'); assert.equal((await page.textContent('#bud')).trim(), '€300');
+  await pick(page, 'lots', 5); await pick(page, 'clock', 0);
+  await page.click('#start'); await page.waitForSelector('#ctrl');
+  assert.ok(requests.includes('pack-capitals.js'), 'pack file loaded lazily');
+  assert.ok(!/\$/.test(await bodyText(page)), 'no dollar sign in the auction');
+  await autoplay(page); await reveal(page);
+  await page.waitForSelector('#gl canvas', { timeout: 8000 });
+  const rec = JSON.parse(await page.evaluate(() => localStorage.getItem('record:v1')));
+  assert.equal(rec.packs.capitals.played, 1); assert.equal(rec.last, 'capitals');
+  assert.ok(!rec.packs.countries || !rec.packs.countries.played);
+  const keys = await page.evaluate(() => Object.keys(localStorage).sort());
+  assert.ok(keys.every(k => ['lang:v1', 'theme:v1', 'record:v1', 'name:v1'].includes(k)), 'only the four documented keys: ' + keys);
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('CAPITALS: every level plays through, in every language, with 2-4 seats, and no screen but the rules says "country"', { skip: SKIP }, async () => {
+  for (const [lang, n, lv] of [['en', 2, 'beginner'], ['de', 3, 'medium'], ['it', 2, 'expert'], ['es', 4, 'medium'], ['fr', 3, 'beginner']]) {
+    const { page, errors, ctx } = await open({ init: l => localStorage.setItem('lang:v1', l), initArg: lang });
+    await pickPack(page, 'capitals');
+    assert.ok(!COUNTRY_WORD[lang].test(await textNoTiles(page)), lang + ' menu says "country": ' + (await textNoTiles(page)).match(COUNTRY_WORD[lang]));
+    await page.click(n === 2 ? '#m1' : '#m2'); await page.waitForSelector('#start');
+    assert.ok(!COUNTRY_WORD[lang].test(await textNoTiles(page)), lang + ' setup says "country": ' + (await textNoTiles(page)).match(COUNTRY_WORD[lang]));
+    await pick(page, 'lots', 5); await pick(page, 'clock', 0); if (n > 2) await pick(page, 'players', n); if (await page.$('[data-g="level"]')) await pick(page, 'level', lv);
+    await page.click('#start'); await page.waitForSelector('#ctrl');
+    assert.ok(!COUNTRY_WORD[lang].test(await bodyText(page)), lang + ' auction says "country"');
+    await autoplay(page); await reveal(page);
+    assert.ok(!COUNTRY_WORD[lang].test(await bodyText(page)), lang + ' results say "country"');
+    assert.deepEqual(errors, [], lang);
+    await ctx.close();
+  }
+});
+
+test('CAPITALS: the rules, the credits (UN, CC BY 3.0 IGO, no endorsement) and the privacy copy in five languages', { skip: SKIP }, async () => {
+  for (const lang of ['en', 'de', 'it', 'es', 'fr']) {
+    const { page, errors, ctx } = await open({ init: l => localStorage.setItem('lang:v1', l), initArg: lang });
+    await pickPack(page, 'capitals');
+    await page.click('#mr'); await page.waitForSelector('.sheetbox');
+    const rules = await page.textContent('.sheetbox');
+    assert.match(rules, /195/, lang + ' rules name the 195 capitals'); assert.match(rules, /50|€/, lang);
+    assert.ok(/€|euro/i.test(rules) && !/\$\d/.test(rules), lang + ' rules in euros');
+    await ctx.close();
+  }
+  const { page, errors, ctx } = await open();
+  await page.click('#mp'); await page.waitForSelector('.sheetbox');
+  await page.evaluate(() => credits());
+  await page.waitForFunction(() => /CC BY 3\.0 IGO/.test(document.body.innerText));
+  const txt = await bodyText(page);
+  assert.match(txt, /World Urbanization Prospects/); assert.match(txt, /not an endorsement/);
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('CAPITALS: the auction never scrolls with the longest names, 4 seats, a 3-digit price and a long taunt', { skip: SKIP }, async () => {
+  for (const [w, h] of [[402, 720], [375, 560], [834, 1194], [1194, 834], [844, 390]]) for (const [lang, id] of [['en', 'BN'], ['it', 'GT'], ['de', 'GT'], ['fr', 'VA']]) for (const np of [2, 4]) {
+    const { page, errors, ctx } = await open({ viewport: { width: w, height: h }, init: l => localStorage.setItem('lang:v1', l), initArg: lang });
+    await page.evaluate(() => { window.think = () => new Promise(() => {}); });
+    await page.evaluate(async ([np, id]) => {
+      const pack = await Packs.load('capitals'); PACK = pack;
+      const names = ['Maximiliane-Sophie', 'Bartholomäus-Jan', 'Wolfeschlegelstein', 'Ägidius-Konstantin'];
+      S = Engine.newAuction({ pack, kind: np === 2 ? 'solo' : 'multi', level: 'expert', lots: 30, clock: 30, players: np === 2 ? [{ name: names[0] }, { name: 'Bot', ai: true }] : names.map(n => ({ name: n })), rng: rnd });
+      Engine.startLot(S);
+      S.items[S.i] = pack.items.find(i => i.id === id);
+      S.players.forEach((p, i) => { p.budget = 290 - i; p.bought = new Array(20).fill({}); });
+      S.L.price = 289; S.L.holder = np - 1; S.L.turn = 0;
+      S._taunt = 'Empires are built on lots like this one. Yours is built on islands of regret and spreadsheets.';
+      paintLot(); showTaunt(S._taunt); controls();
+    }, [np, id]);
+    const r = await page.evaluate(() => { const sc = document.querySelector('.screen'); return { y: sc.scrollHeight - sc.clientHeight, x: sc.scrollWidth - sc.clientWidth, page: document.documentElement.scrollHeight - innerHeight }; });
+    assert.ok(r.y <= 1 && r.x <= 1 && r.page <= 1, `${w}x${h} ${lang} ${id} ${np}p scrolls: ${JSON.stringify(r)}`);
+    const dockBottom = await page.$eval('#ctrl', e => e.getBoundingClientRect().bottom);
+    assert.ok(dockBottom <= h + 0.5, `${w}x${h} dock fits (${dockBottom})`);
+    assert.deepEqual(errors, []);
+    await ctx.close();
+  }
+});
+
+test('Capitals metric: Vatican City prints its 801 people, small capitals print thousands, big ones millions', () => {
+  const p = require('../pack-capitals.js'), f = p.metric.format;
+  assert.equal(f(0.000801), '801'); assert.equal(f(0.00547), '5K'); assert.equal(f(0.2127), '213K'); assert.equal(f(1.5), '1.5M'); assert.equal(f(37.468302), '37.5M');
 });
