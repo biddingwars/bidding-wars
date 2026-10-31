@@ -108,15 +108,15 @@ test('PRICING: smooth and monotonic, $1 minimum, tension like Countries, rough t
   for (let i = 1; i < rows.length; i++) { assert.ok(rows[i].ideal >= rows[i - 1].ideal, 'ideal never drops as population grows at ' + rows[i].id); assert.ok(rows[i].max >= rows[i - 1].max, 'max never drops at ' + rows[i].id); }
   rows.forEach(r => { assert.ok(r.ideal >= 1 && r.max >= r.ideal && Number.isInteger(r.ideal) && Number.isInteger(r.max)); });
   const scale = states.economy.priceScale, sumIdeal = rows.reduce((a, r) => a + r.ideal, 0);
-  assert.equal(scale, 3);
-  assert.ok(Math.abs(sumIdeal - 500 * scale) <= 5 * scale, 'all 50 ideals add up to 50 average lots ($1,500): ' + sumIdeal);
-  assert.ok(Math.abs(Engine.avgIdeal(states) - 10 * scale) < 0.3, 'the average state is worth about $30');
+  assert.equal(scale, 1);
+  assert.ok(Math.abs(sumIdeal - 500 * scale) <= 5 * scale, 'all 50 ideals add up to 50 average lots ($500): ' + sumIdeal);
+  assert.ok(Math.abs(Engine.avgIdeal(states) - 10 * scale) < 0.3, 'the average state is worth about $10');
   const get = id => t.get(id);
   assert.ok(get('CA').ideal >= 45 * scale && get('CA').ideal <= 60 * scale, 'California');
   assert.ok(get('TX').ideal >= 35 * scale && get('TX').ideal <= 48 * scale, 'Texas');
   assert.ok(get('FL').ideal >= 26 * scale && get('FL').ideal <= 35 * scale, 'Florida');
   assert.ok(get('NY').ideal >= 22 * scale && get('NY').ideal <= 30 * scale, 'New York');
-  ['WY', 'VT', 'AK', 'ND', 'SD'].forEach(id => assert.ok(get(id).ideal >= 3 && get(id).ideal <= 6, id + ' is $3-6 (the small states no longer collapse to $1-2)'));
+  ['WY', 'VT', 'AK', 'ND', 'SD'].forEach(id => assert.ok(get(id).ideal >= 1 && get(id).ideal <= 2, id + ' is $1-2 (the original scale again since v43)'));
   rows.slice(-10).forEach(r => assert.ok(r.max / r.ideal <= 1.5, 'big states: max is at most 1.5x ideal (' + r.id + ')'));
   rows.slice(0, 5).forEach(r => assert.ok(r.max / r.ideal <= 2.01 && r.max / r.ideal >= 1.9, 'smallest states: about 2x'));
   /* systematic sampling: a round of n states is worth about n average lots (the budget is a fixed share of that, see the economy tests) */
