@@ -177,7 +177,7 @@ async function loadBorders(){
   BORDER_CACHE=false; return false;
 }
 
-/* NASA-derived satellite imagery. Tried in order: a copy bundled with the app,
+/* NASA Blue Marble (July) satellite imagery, see NOTICE.md. Tried in order: a copy bundled with the app,
    then two public CDNs. Falls back to the drawn texture if all three fail. */
 const EARTH_TEXTURES=[
   'earth.jpg',
