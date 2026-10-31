@@ -103,9 +103,9 @@ SOLD screen and tell me any that look wrong.
 - [ ] Menu: tap **US States** (it highlights, the footer says "50 states", the
       record pill shows States' own record). Tap **Countries** again: nothing
       about Countries changed (levels, €, 196).
-- [ ] Setup for States: lots 5 / 10 / 15 / 20 / 30 / 40 / **All 50**, no
-      difficulty section, budget **$100** at 10 lots and **$500** at All 50.
-- [ ] Play an **All 50** game (clock off): every state comes up once, none twice.
+- [ ] Setup for States: lots 5 / 10 / 15 / 20 (no 30 / 40 / All 50 since v40), no
+      difficulty section, budget **$165** at 10 lots and **$210** at 20.
+- [ ] Play a **20-state** game (clock off): every state comes up once, none twice.
 - [ ] Every screen is in **dollars** (`$1,234`) in all five languages — no `€`,
       no "euro", no "countries" anywhere (menu, setup, How to play, auction,
       SOLD, results, Record).
@@ -153,15 +153,15 @@ Natural Earth stand-in (NASA Blue Marble was unreachable from my environment).
 
 I could not play these on a device. The harness covers the numbers; these are the feel checks.
 
-- [ ] **All 50 states, $525 each**: bid +1 over the bot every time. You should lose most games (the creeper wins ~4%), the bot should
-      not sit on a pile of money (it ends with ~25–30% left), and you cannot afford California ($173 fair price) *and* Texas *and* Florida.
+- [ ] **20 states, $210 each**: bid +1 over the bot every time. You should lose most games (the creeper wins ~20-30%), the bot should
+      not sit on a pile of money, and you cannot afford California ($173 fair price) *and* Texas *and* Florida.
 - [ ] Run out of money early: the remaining states are no longer yours for $1 — the bot buys them at 80% of their price
       (the results say "N states went unsold" when nobody could pay).
 - [ ] The **raise buttons grow with the price**: +1 +2 +5 +10 +25 at the start of a lot, +10 … +200 above $100 (Countries uses the same scheme, see section 11).
 - [ ] Tap the **custom amount** field with the 10-second clock on: the clock gains a few seconds (once per turn).
 - [ ] Play 3–4 games in a row: the bot should feel different (cautious / balanced / bold) without ever being obviously broken.
 - [ ] 5- and 10-state rounds feel luck-heavy; 30–50-state rounds feel like skill. The rules text says so (all five languages).
-- [ ] Setup shows the right budget for each lot count ($85 / $165 / $180 / $210 / $315 / $420 / $525).
+- [ ] Setup shows the right budget for each lot count ($85 / $165 / $180 / $210).
 - [ ] No scrolling on the auction at 402×720 and 834×1194 with the big buttons (+100 / +200).
 
 ## 11. Countries economy (smooth prices, per-level budgets, the upgraded bot)

@@ -585,16 +585,16 @@ const toSold = async page => {
 const pickPack = async (page, id) => { await page.click(`[data-pack="${id}"]`); await page.waitForSelector(`[data-pack="${id}"][aria-current="true"]`); };
 const bodyText = page => page.evaluate(() => document.body.innerText);
 
-test('US STATES: pick it on the menu, setup has All 50 and no difficulty, play, fun fact on SOLD, dollars only, own record', { skip: SKIP }, async () => {
+test('US STATES: pick it on the menu, setup offers 5-20 lots and no difficulty, play, fun fact on SOLD, dollars only, own record', { skip: SKIP }, async () => {
   const { page, errors, ctx, requests } = await open();
   await pickPack(page, 'states');
   assert.ok(!/€/.test(await bodyText(page)), 'no euro sign on the States menu');
   await page.click('#m1'); await page.waitForSelector('#start');
-  assert.deepEqual(await page.$$eval('[data-g="lots"] [data-v]', e => e.map(x => x.dataset.v)), ['5', '10', '15', '20', '30', '40', '50']);
-  assert.match(await page.textContent('[data-g="lots"] [data-v="50"]'), /All 50/);
+  assert.deepEqual(await page.$$eval('[data-g="lots"] [data-v]', e => e.map(x => x.dataset.v)), ['5', '10', '15', '20']);
+  assert.equal(await page.$('[data-g="lots"] [data-v="30"]'), null, 'States stops at 20 lots (v40)');
   assert.equal(await page.$('[data-g="level"]'), null, 'no difficulty filter for States');
   assert.equal((await page.textContent('#bud')).trim(), '$165', '10 lots: the budget table, not lots x $10');
-  await pick(page, 'lots', 50); assert.equal((await page.textContent('#bud')).trim(), '$525');
+  await pick(page, 'lots', 20); assert.equal((await page.textContent('#bud')).trim(), '$210');
   await pick(page, 'lots', 5); await pick(page, 'clock', 0);
   await page.click('#start'); await page.waitForSelector('#ctrl');
   assert.ok(requests.includes('pack-states.js'), 'pack file loaded lazily');
@@ -619,14 +619,14 @@ test('US STATES: pick it on the menu, setup has All 50 and no difficulty, play, 
   await ctx.close();
 });
 
-test('US STATES: all 50 states, each exactly once, through the real UI', { skip: SKIP }, async () => {
+test('US STATES: a 20-state round, each state exactly once, through the real UI', { skip: SKIP }, async () => {
   const { page, errors, ctx } = await open();
   await pickPack(page, 'states');
-  await startSolo(page, 50, 0);
+  await startSolo(page, 20, 0);
   await autoplay(page, { maxSteps: 2500 });
   const r = await page.evaluate(() => ({ seen: S.items.map(i => i.id), bought: S.players.flatMap(p => p.bought.map(b => b.id)), unsold: (S.unsold || []).map(i => i.id) }));
-  assert.equal(r.seen.length, 50); assert.equal(new Set(r.seen).size, 50, 'every state once');
-  assert.equal(r.bought.length + r.unsold.length, 50, 'every state is sold or (house-price endgame) unsold'); assert.equal(new Set(r.bought.concat(r.unsold)).size, 50, 'each exactly once');
+  assert.equal(r.seen.length, 20); assert.equal(new Set(r.seen).size, 20, 'every state once');
+  assert.equal(r.bought.length + r.unsold.length, 20, 'every state is sold or (house-price endgame) unsold'); assert.equal(new Set(r.bought.concat(r.unsold)).size, 20, 'each exactly once');
   await reveal(page);
   assert.deepEqual(errors, []);
   await ctx.close();
@@ -715,7 +715,7 @@ test('US STATES: how to play, setup and record say states and dollars in every l
     await page.waitForSelector('.sheetbox');
     const t1 = await page.textContent('.sheetbox');
     assert.ok(!bad.test(t1) && !(lang === 'fr' && badFr.test(t1)), `${lang} how-to-play: ` + (t1.match(bad) || t1.match(badFr)));
-    assert.match(t1, /\$85[^$]+\$165[^$]+\$180[^$]+\$210[^$]+\$315[^$]+\$420[^$]+\$525/, lang + ' how-to-play lists the real budgets');
+    assert.match(t1, /\$85[^$]+\$165[^$]+\$180[^$]+\$210/, lang + ' how-to-play lists the real budgets');
     assert.match(t1, /\$/, lang + ' how-to-play shows dollars');
     await page.keyboard.press('Escape');
     await page.click('#m1'); await page.waitForSelector('#start');

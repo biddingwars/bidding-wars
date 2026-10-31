@@ -72,7 +72,7 @@ const driver = async cfg => {
     while (done + (PAR - 1) < N + PAR - 1 && done < N) {
       const idx = done++;
       const lang = langs[idx % 5], kind = idx % 3 === 0 ? 'solo' : 'multi';
-      const cfg = { kind, lang, level: pick(levels), pack: idx % 2 ? 'states' : 'countries', lots: pick(idx % 2 && idx % 10 === 1 ? [5, 10, 50] : [5, 10]), clock: idx % 11 === 0 ? 10 : 0, players: kind === 'multi' ? 2 + (idx % 3) : 2, strategy: strategies[idx % strategies.length], longNames: idx % 4 === 0, again: idx % 7 === 0, leaveAfter: idx % 13 === 5 ? 2 : 0, timeoutTest: false };
+      const cfg = { kind, lang, level: pick(levels), pack: idx % 2 ? 'states' : 'countries', lots: pick(idx % 2 && idx % 10 === 1 ? [5, 10, 20] : [5, 10]), clock: idx % 11 === 0 ? 10 : 0, players: kind === 'multi' ? 2 + (idx % 3) : 2, strategy: strategies[idx % strategies.length], longNames: idx % 4 === 0, again: idx % 7 === 0, leaveAfter: idx % 13 === 5 ? 2 : 0, timeoutTest: false };
       if (cfg.clock) cfg.clock = 10;
       const ctx = await browser.newContext({ viewport: { width: [402, 375, 834, 393][idx % 4], height: [874, 667, 1194, 700][idx % 4] }, serviceWorkers: 'block', reducedMotion: 'reduce' });
       const page = await ctx.newPage(); const errs = [];

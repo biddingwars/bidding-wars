@@ -22,9 +22,9 @@ test('the money is scarce and the table is sane: budget ratio, top-4 rule, no bu
   assert.ok(opts.filter(n => n >= 20).every(n => Math.abs(Engine.budgetFor(states, n) / (n * avg) - 0.35) < 0.01), '20+ lots: 35%');
   const t = Engine.priceTable(states), top = states.items.slice().sort((a, b) => b.value - a.value).slice(0, states.bot.premium.top);
   const exp = top.reduce((a, i) => a + (t.get(i.id).ideal + t.get(i.id).max) / 2 * (1 + states.bot.premium.pct), 0);
-  assert.ok(Engine.budgetFor(states, 50) <= 0.8 * exp, 'all-50 budget is at most 80% of the expected price of CA+TX+FL+NY incl. the premium');
+  assert.ok(Engine.budgetFor(states, 20) <= 0.8 * exp, 'the 20-lot budget (the biggest option since v40) is at most 80% of the expected price of CA+TX+FL+NY incl. the premium');
   const all = [...t.values()].reduce((a, v) => a + v.ideal, 0);
-  assert.ok(Engine.budgetFor(states, 50) < 0.4 * all, 'a full budget buys well under half the pool at fair prices');
+  assert.ok(Engine.budgetFor(states, 20) < 0.4 * all, 'the biggest budget buys well under half the pool at fair prices');
   assert.equal(Engine.budgetFor(august, 10), 100, 'the August Countries pack keeps 10 lots = 100');
 });
 
@@ -140,7 +140,7 @@ test('knockout (c): the bot never passes while it can afford to sweep (property 
 });
 
 test('the creeper cannot win the round with money: at most 60% of the points, against every temperament and lot count; and loses most games from 15 lots up', () => {
-  for (const n of [5, 15, 30, 50]) for (const mode of [null, 'conservative', 'balanced', 'aggressive']) {
+  for (const n of [5, 15, 20]) for (const mode of [null, 'conservative', 'balanced', 'aggressive']) {
     const r = Eco.run(states, n, 'all', 'A', 250, 50000, mode);
     assert.ok(r.share <= 60, `${n} lots ${mode || 'mix'}: the creeper takes ${r.share}% of the points`);
     if (n >= 15) assert.ok(r.win <= 40, `${n} lots ${mode || 'mix'}: the creeper wins ${r.win}%`);   // 40, not 30: the long-round limits were lowered so a stingy fixed-limit player cannot beat the bot (measured creeper 16-35%)
@@ -150,15 +150,15 @@ test('the creeper cannot win the round with money: at most 60% of the points, ag
 
 test('calibration (loose): the balanced bot keeps B and C between 12% and 50% from 10 lots (the frozen August benchmark was 37 / 39.6; long rounds now sit lower because the bot was made stingier, see CLAUDE.md); every temperament keeps B and C between 12% and 78%', () => {
   const bench = { B: baseline.levels.medium[10].B.win, C: baseline.levels.medium[10].C.win };   // 37 / 39.6, frozen in test/baseline-august.json
-  for (const n of [10, 20, 30, 50]) {
+  for (const n of [10, 15, 20]) {
     for (const p of ['B', 'C']) { const w = Eco.run(states, n, 'all', p, 400, 50000, 'balanced').win; assert.ok(w >= 12 && w <= 50, `${n} lots balanced ${p} wins ${w}% (the August benchmark was ${bench[p]})`); }
     for (const mode of ['conservative', 'aggressive']) for (const p of ['B', 'C']) { const w = Eco.run(states, n, 'all', p, 400, 50000, mode).win; assert.ok(w >= 12 && w <= 78, `${n} lots ${mode} ${p} wins ${w}%`); }
   }
 });
 
-test('no knife-edge: moving the budget by 10% moves no reference player by more than 18 points (30 and 50 lots; measured 14-16 at 30 lots, a smooth slope, no cliff)', () => {
+test('no knife-edge: moving the budget by 10% moves no reference player by more than 18 points (15 and 20 lots, a smooth slope, no cliff)', () => {
   const variant = (n, k) => Object.assign({}, states, { economy: Object.assign({}, states.economy, { budgets: Object.assign({}, states.economy.budgets, { [n]: Math.round(states.economy.budgets[n] * k) }) }) });
-  for (const n of [30, 50]) for (const p of ['A', 'B', 'C']) {
+  for (const n of [15, 20]) for (const p of ['A', 'B', 'C']) {
     const mid = Eco.run(states, n, 'all', p, 500, 70000).win;
     for (const k of [0.9, 1.1]) assert.ok(Math.abs(Eco.run(variant(n, k), n, 'all', p, 500, 70000).win - mid) <= 18, `${n} lots ${p} at ${k}x budget`);
   }
@@ -181,7 +181,7 @@ test('bid buttons follow the current price in both packs (the August pack keeps 
 test('validatePack refuses a broken economy or bot block', () => {
   const bad = (eco, bot) => Engine.validatePack(Object.assign({}, states, eco ? { economy: Object.assign({}, states.economy, eco) } : {}, bot ? { bot: Object.assign({}, states.bot, bot) } : {}));
   assert.ok(bad({ budgets: { 5: 1 } }).some(m => /budgets/.test(m)));
-  assert.ok(bad({ budgets: Object.assign({}, states.economy.budgets, { 50: 900 }) }).some(m => /80%/.test(m)), 'a budget above 80% of the top-4 price');
+  assert.ok(bad({ budgets: Object.assign({}, states.economy.budgets, { 20: 900 }) }).some(m => /80%/.test(m)), 'a budget above 80% of the top-4 price (checked at the biggest lot option)');
   assert.ok(bad({ endgame: { rule: 'nope', price: 1 } }).some(m => /endgame/.test(m)));
   assert.ok(bad(null, { limitMul: { 5: 1 } }).some(m => /limitMul/.test(m)));
   assert.ok(bad(null, { temperaments: { weights: [1, 1], spread: {}, bigRank: 10 } }).some(m => /temperaments/.test(m)));

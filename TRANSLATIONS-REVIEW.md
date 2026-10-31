@@ -120,11 +120,11 @@ English is the source. Please check de / it / es / fr for correctness, natural w
 
 | | text |
 |---|---|
-| en | Everyone starts with the same budget, set by the round length: **$85 for 5 states, $165 for 10, $180 for 15, $210 for 20, $315 for 30, $420 for 40 and $525 for all 50**. Money is scarce on purpose: even the biggest budget cannot buy the four biggest states. |
-| de | Alle starten mit demselben Budget, das von der Rundenlänge abhängt: **$85 für 5 Bundesstaaten, $165 für 10, $180 für 15, $210 für 20, $315 für 30, $420 für 40 und $525 für alle 50**. Das Geld ist absichtlich knapp: Selbst das größte Budget reicht nicht für die vier größten Bundesstaaten. |
-| it | Tutti partono con lo stesso budget, deciso dalla lunghezza della partita: **$85 per 5 stati, $165 per 10, $180 per 15, $210 per 20, $315 per 30, $420 per 40 e $525 per tutti i 50**. Il denaro è scarso di proposito: nemmeno il budget più alto basta per i quattro stati più grandi. |
-| es | Todos empiezan con el mismo presupuesto, que depende de la duración de la partida: **$85 para 5 estados, $165 para 10, $180 para 15, $210 para 20, $315 para 30, $420 para 40 y $525 para los 50**. El dinero escasea a propósito: ni el presupuesto más grande alcanza para los cuatro estados más grandes. |
-| fr | Tout le monde commence avec le même budget, fixé par la longueur de la partie : **$85 pour 5 États, $165 pour 10, $180 pour 15, $210 pour 20, $315 pour 30, $420 pour 40 et $525 pour les 50**. L’argent est rare exprès : même le plus gros budget ne suffit pas pour les quatre plus grands États. |
+| en | Everyone starts with the same budget, set by the round length: **$85 for 5 states, $165 for 10, $180 for 15, $210 for 20**. Money is scarce on purpose: even the biggest budget cannot buy the four biggest states. |
+| de | Alle starten mit demselben Budget, das von der Rundenlänge abhängt: **$85 für 5 Bundesstaaten, $165 für 10, $180 für 15, $210 für 20**. Das Geld ist absichtlich knapp: Selbst das größte Budget reicht nicht für die vier größten Bundesstaaten. |
+| it | Tutti partono con lo stesso budget, deciso dalla lunghezza della partita: **$85 per 5 stati, $165 per 10, $180 per 15, $210 per 20**. Il denaro è scarso di proposito: nemmeno il budget più alto basta per i quattro stati più grandi. |
+| es | Todos empiezan con el mismo presupuesto, que depende de la duración de la partida: **$85 para 5 estados, $165 para 10, $180 para 15, $210 para 20**. El dinero escasea a propósito: ni el presupuesto más grande alcanza para los cuatro estados más grandes. |
+| fr | Tout le monde commence avec le même budget, fixé par la longueur de la partie : **$85 pour 5 États, $165 pour 10, $180 pour 15, $210 pour 20**. L’argent est rare exprès : même le plus gros budget ne suffit pas pour les quatre plus grands États. |
 
 ### `rulesP5`
 
@@ -140,11 +140,11 @@ English is the source. Please check de / it / es / fr for correctness, natural w
 
 | | text |
 |---|---|
-| en | Every state is equally likely to come up, and a state never comes up twice in the same round. Pick 5 to 40 states, or play all 50. Short rounds are luck-heavy: with 5 or 10 states one big draw can decide the game. The longer the round, the more skill counts. |
-| de | Jeder Bundesstaat kommt mit der gleichen Wahrscheinlichkeit dran, und keiner kommt in derselben Runde zweimal vor. Wähle 5 bis 40 Bundesstaaten oder spiel alle 50. Kurze Runden sind glückslastig: Bei 5 oder 10 Bundesstaaten kann ein großer Treffer das Spiel entscheiden. Je länger die Runde, desto mehr zählt Können. |
-| it | Ogni stato ha la stessa probabilità di uscire e nessuno esce due volte nella stessa partita. Scegli da 5 a 40 stati oppure gioca tutti i 50. Le partite corte dipendono molto dalla fortuna: con 5 o 10 stati una sola estrazione può decidere tutto. Più la partita è lunga, più conta l’abilità. |
-| es | Todos los estados tienen la misma probabilidad de salir y ninguno sale dos veces en la misma partida. Elige de 5 a 40 estados o juega los 50. Las partidas cortas dependen mucho de la suerte: con 5 o 10 estados, un solo sorteo puede decidirlo todo. Cuanto más larga es la partida, más cuenta la habilidad. |
-| fr | Chaque État a autant de chances de sortir, et aucun ne sort deux fois dans la même partie. Choisis de 5 à 40 États ou joue les 50. Les parties courtes dépendent beaucoup de la chance : avec 5 ou 10 États, un seul tirage peut tout décider. Plus la partie est longue, plus l’habileté compte. |
+| en | Every state is equally likely to come up, and a state never comes up twice in the same round. Pick 5, 10, 15 or 20 states. Short rounds are luck-heavy: with 5 or 10 states one big draw can decide the game. The longer the round, the more skill counts. |
+| de | Jeder Bundesstaat kommt mit der gleichen Wahrscheinlichkeit dran, und keiner kommt in derselben Runde zweimal vor. Wähle 5, 10, 15 oder 20 Bundesstaaten. Kurze Runden sind glückslastig: Bei 5 oder 10 Bundesstaaten kann ein großer Treffer das Spiel entscheiden. Je länger die Runde, desto mehr zählt Können. |
+| it | Ogni stato ha la stessa probabilità di uscire e nessuno esce due volte nella stessa partita. Scegli 5, 10, 15 o 20 stati. Le partite corte dipendono molto dalla fortuna: con 5 o 10 stati una sola estrazione può decidere tutto. Più la partita è lunga, più conta l’abilità. |
+| es | Todos los estados tienen la misma probabilidad de salir y ninguno sale dos veces en la misma partida. Elige 5, 10, 15 o 20 estados. Las partidas cortas dependen mucho de la suerte: con 5 o 10 estados, un solo sorteo puede decidirlo todo. Cuanto más larga es la partida, más cuenta la habilidad. |
+| fr | Chaque État a autant de chances de sortir, et aucun ne sort deux fois dans la même partie. Choisis 5, 10, 15 ou 20 États. Les parties courtes dépendent beaucoup de la chance : avec 5 ou 10 États, un seul tirage peut tout décider. Plus la partie est longue, plus l’habileté compte. |
 
 ### `rulesP8`
 
