@@ -5,10 +5,10 @@ const assert = require('node:assert/strict');
 const Engine = require('../engine.js');
 const { oneGame } = require('./fuzz.js');
 
-test('fuzz: 6,000 hostile games across Countries, US States and the August pack: no failure of any invariant', () => {
+test('fuzz: 8,000 hostile games across Countries, US States, Capitals and the August pack: no failure of any invariant', () => {
   const failed = [];
-  for (let g = 0; g < 6000; g++) {
-    const name = ['countries', 'states', 'august'][g % 3], a = oneGame(name, 424242 + g);
+  for (let g = 0; g < 8000; g++) {
+    const name = ['countries', 'states', 'capitals', 'august'][g % 4], a = oneGame(name, 424242 + g);
     if (Array.isArray(a)) { failed.push(a[0].slice(0, 300)); continue; }
     if (g % 7 === 0) { const b = oneGame(name, 424242 + g); assert.ok(!Array.isArray(b) && b.fp === a.fp, 'not reproducible: ' + JSON.stringify(a.ctx)); }
   }

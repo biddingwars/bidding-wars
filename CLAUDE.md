@@ -8,7 +8,7 @@ Live: https://biddingwars.github.io/bidding-wars/
 
 Everything lives flat at the repo root. No `js/`, `css/`, `data/`, `img/`,
 `fonts/`, or `vendor/` subfolders — `index.html`, `app.css`, `app.js`,
-`engine.js`, `packs.js`, `banter.js`, `pack-countries.js`, `globe.js`, `us-view.js`, `us-map.js`, `us-map.webp`, `us-ak.webp`, `us-hi.webp`, `NOTICE.md`,
+`engine.js`, `packs.js`, `banter.js`, `pack-countries.js`, `pack-capitals.js`, `CAPITALS-SOURCES.md`, `globe.js`, `us-view.js`, `us-map.js`, `us-map.webp`, `us-ak.webp`, `us-hi.webp`, `NOTICE.md`,
 `platform.js`, `sound.js`, `fx.js`, `sw.js`, `manifest.json`, every icon,
 `globe-hero.webp`, `three.min.js`, `earth.jpg`, `countries-110m.json`,
 `privacy.html`, `support.html` all sit at the root, referenced by plain
@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v39';   // increment this, every time
+const CACHE = 'bidding-wars-v41';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v39` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v41` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -105,7 +105,7 @@ object (`Engine.itemName`).
 
 A pack with a non-euro currency (US States: `$`) says so in **every** language:
 `t()` rewrites `€` amounts to the pack's symbol and `STRP` in `app.js` overrides
-the lines that differ for that pack (`rivalDesc`, `budgetNote`, `rulesP1/P4/P5/P6/P7/P8`, `unsoldNote`, `footer`). Both packs have an entry: Countries
+the lines that differ for that pack (`rivalDesc`, `budgetNote`, `rulesP1/P4/P5/P6/P7/P8`, `unsoldNote`, `footer`). All three packs have an entry (Capitals: euros and its own wording, like Countries): Countries
 keeps euros but has its own budget list (per level) and the same $1-walkover and luck-heavy wording as States. Money on screen goes through `money()` →
 `Engine.formatMoney` (US States: `$1,234`, Intl grouping). `test/browser.test.js`
 fails if the States screens contain `€`, "euro" or "country" in any language.
@@ -276,8 +276,8 @@ Census-boundary centroids, taunts, fun facts).
     Hawaii insets **only when the winner owns them**. (On the menu the world globe is shown only for Countries; with States selected the flag backdrop stands alone, and a US flag emoji marks the tile.) Labels that cannot fit without overlapping are
     dropped (the pin stays). The pack opts in with `map: 'us'`; other packs keep the globe.
     **Regenerate** with `test/build-us-map.js` (dev-only, needs `us-atlas topojson-client d3-geo sharp`);
-    it takes any equirectangular world image — the imagery in the repo is a Natural Earth stand-in, to be
-    replaced by NASA Blue Marble (see `NOTICE.md`).
+    it takes any equirectangular world image — the imagery in the repo is NASA Blue Marble Next Generation (July, 21600×10800;
+    exact file, checksum and credit text in `NOTICE.md`; July because December's snow hides the gold highlight).
   - *Celebration colours*: the red accent, the second (dark blue) button, the SOLD slab (white lettering on a red gradient), the burst rays and sparks and the confetti (red, white and blue) are tokens on `html[data-pack=states]`
     (`--gold1/2`, `--btn2a/b`, `--slab1..3`, `--rays`, `--spark`, `--conf`), all contrast-tested; the results map keeps the winner's states in gold (`--map-edge`) for contrast on the imagery.
   - *Win sound*: `Snd.eagle()` (synthesised raptor cry) replaces the fanfare on a States win; a loss
@@ -429,19 +429,37 @@ bands also had hard edges (185 pairs where a bigger country was cheaper; Vietnam
 - **Frozen reference**: `test/pack-countries-august.js` (test only: the same items with the August bands, flat budget and the original bot) re-derives the frozen
   numbers (`node test/economy.js baseline`, within 2 points); the States benchmark refers to the fixture, not to today's Countries.
 
-### What a Capitals pack would need (not built — do not guess its valuation)
+### Capital Cities pack (`pack-capitals.js`, v40)
 
-A capital's score is not a population the same way a state's is, so before
-building it decide, with the owner: (1) what `value` is — metro or city
-proper population, and which official source/vintage (cities have two
-incompatible definitions); (2) whether lots are drawn with or without
-replacement and what the "all" option is; (3) a `priceTable` or `bands`
-calibrated against the game's feel and pinned in a golden file, with the
-bot-vs-human comparability numbers shown first (see the States PR for the
-method); (4) `lat`/`lon` for every capital with `globe.claimBorders:false`;
-(5) which countries/territories count (196? only capitals with a seat of
-government?); (6) localised capital names in 5 languages. Then follow
-"Adding a pack" below.
+`pack-capitals.js` is **generated** by `test/make-pack-capitals.js` from two committed inputs — edit those, never the pack: `test/wup2018-f13-capitals.json` (the UN numbers, copied
+unchanged, with licence and the SHA-256 of the downloaded xls) and `test/capitals-content.json` (names in five languages, the Europe list, taunts, level labels). The calibration
+(`CAL`: price anchors, ratio, budgets, the whole `bot` block) lives in the generator. `CAPITALS-SOURCES.md` has the source, every choice and every caveat, plus all 195 rows.
+
+- **Score (decided with the owner).** The population of the capital's *urban agglomeration*, in millions, from ONE UN source and vintage: *World Urbanization Prospects: The 2018 Revision*, File 13,
+  *Population of Capital Cities in 2018 (thousands)*, CC BY 3.0 IGO. 1 point = 1 million. The WUP **2025** capital table (`F20`) was looked at and **not** used: it counts functional "cities" by
+  Degree of Urbanisation, which gives Vatican City 2,376 thousand (that is Rome) — the 2018 file is the one that matches "agglomeration" and has a real Vatican row (801 people).
+  Switching vintage means a new input JSON and re-running the calibration; the owner has not yet confirmed 2018.
+- **Lots: 195** = the 193 UN member states + Vatican City ("Holy See" in the file) + Taiwan (Taipei, type "Others"); not Palestine. Every one has a value in the file. Ids are ISO 3166-1 alpha-2, so the
+  country's flag (`iconKind: 'flag'`) marks the lot. A country with several capitals uses the **seat of government**: The Hague (not Amsterdam), Cotonou, La Paz, Abidjan, Pretoria, Colombo.
+  Where the UN row is not (or no longer) the seat — Malaysia (Kuala Lumpur, not Putrajaya), Palau (Koror, not Ngerulmud), Burundi (Bujumbura, not Gitega), Nauru (the UN row is the whole island, shown as Yaren) — the UN row is
+  used and the caveat is in `CAPITALS-SOURCES.md`. Do not invent a number for a seat without a row.
+- **Levels** (filters chosen like Countries'): Beginner = Europe (46 capitals, the same Europe list as Countries plus Vatican City, no Kosovo), Medium = agglomeration over 2 million (70), Expert = all 195.
+- **Prices**: one smooth monotone curve (`priceTable` in the pack, log-log anchors, whole euros, minimum EUR 1; max/ideal 2.0 → 1.45), pinned in `test/golden-capitals.json` (`node test/make-golden-capitals.js`
+  only on purpose). Tokyo 111 (max 161), Delhi 95, Mexico City 80 … Vatican City EUR 1. Average price per lot 10.2 / 30.0 / 13.5 at Beginner / Medium / Expert (Countries: 9 / 31 / 14), so the same budgets
+  (EUR 50 / 100 / 150 / 200 / 300 at Medium and Expert, Beginner half) leave the same scarcity. `validatePack`'s top-5 rule holds per level.
+- **Draw**: `sampling: 'random'` (every capital of the level's pool, every pair, every position equally likely); walkover: EUR 1 each, as in Countries.
+- **Bot**: the Countries machinery (efficiency, decisive, creeperGuard, wallet, knockout, temperaments 25/50/25, premium top 5 with Beginner +50%), parameters found per level by
+  `node test/tune-capitals.js <level> [evals] [games] [seed]` (a hill-climb that keeps the exploit family under the limit and the creeper / fair players near the Countries v39 numbers; `BAND=6` tightens the fair-player band) and then
+  re-measured on fresh seeds. Starting from the Countries values unchanged, Medium was exploitable (a "bid up to 0.8 x the fair price" player won 68-77% at 10-30 lots) and Beginner failed at 30 lots (64.8%): the capitals pool is far less skewed than the countries pool, so Countries' numbers do not carry over.
+- **Measured** (real engine, `node test/economy.js capitals 2000 777`, mix 25/50/25; win % creeper A / fair B, for 5 / 10 / 15 / 20 / 30 lots): Beginner A 37.0 / 34.0 / 20.9 / 11.9 / 6.0, B 42.3 / 48.4 / 48.9 / 50.0 / 53.3;
+  Medium A 32.8 / 18.1 / 8.4 / 5.7 / 3.9, B 47.5 / 45.8 / 36.5 / 39.4 / 37.6; Expert A 48.3 / 38.5 / 29.1 / 20.0 / 9.2, B 40.9 / 41.4 / 43.7 / 40.7 / 34.2. The creeper takes at most 49% of the points everywhere; every temperament keeps
+  fair players between 32% and 60%. **Exploit search** (`node test/exploit.js capitals all 500 4000`, best confirmed blind strategy, limit 60% / 65% at 5 lots): Beginner 41.8 / 47.2 / 47.9 / 52.4 / 56.8,
+  Medium 52.2 / 55.0 / 49.0 / 55.4 / 57.6, Expert 48.3 / 48.7 / 49.7 / 50.3 / 53.8 — **no cell above the limit** (the oracle, which sees the lots to come, reaches 58%). The Learner (memorises the bot's drop-outs per capital) loses to the fair player by 15-52 points.
+  Fuzz: 200,000 hostile games, 0 failures. `node test/ui-sim.js`: 0 failures.
+- **Accepted / known**: short rounds are luck-heavy (5 lots: one big city decides); Medium 30 lots is the tightest cell (best blind 57.6%); the fair-value player wins only 34-38% of Medium 30-lot rounds (Countries: 29%, so it is not harder); capitals under 0.1 million are worth almost nothing
+  (Vatican City 0.0008 points, the metric prints "801"); there are no per-capital fun facts (taunts are generic, by size tier, in all five languages); names and wording in German, Italian, Spanish and French have not been read by a native speaker.
+- **Look**: the existing globe with a pin per capital (`globe: { borders: true, claimBorders: false }`), the normal brass-gold theme, tile icon 🏛️ (`.pack[data-pack=capitals]::before`). Euros, no new theme, nothing new stored (still four keys).
+- **Wording**: `STRP.capitals` in `app.js` (all 5 languages) + `creditsCap` (UN, CC BY 3.0 IGO, "not an endorsement"). `test/browser.test.js` fails if the menu, setup, auction or results of Capitals say "country" in any language.
 
 ## Engine, packs and tests
 
@@ -534,8 +552,9 @@ counters inside the single `record:v1` value.
 - `node --test test/countries-economy.test.js` — the Countries economy on the real engine: per-level budgets and the top-5 rule, smooth monotone prices and the
   level averages, the draw per level pool (random and systematic: equal chance per country, per position and per pair, no duplicates), $1 walkover, knockout (a)/(b)/(c), calibration bands per level and
   temperament, the frozen baseline, the unpredictability tests (repeat test, parity, wallet-bound giants, the Learner), the rules text in five languages.
+- `node --test test/capitals.test.js` — the Capitals pack: UN data as committed (195 lots, values = thousands / 1000, no Palestine), the generator writes exactly the committed pack, the documented seat-of-government choices, pools (46 / 70 / 195), monotone golden prices, budgets and the top-5 cap, random draw (chi-square) per level, the $1 walkover, loose calibration bands per level, a small exploit scan. `node test/economy.js capitals`, `node test/exploit.js capitals`, `node test/tune-capitals.js` are the long ones.
 - `node --test test/fuzz.test.js` — a 600-game slice of `node test/fuzz.js` (hostile and random humans against both bots; invariants after every move). `node test/exploit.js [pack] [level|all]` is the strategy search (dev-only, minutes).
-- `node test/make-translation-review.js` — writes `TRANSLATIONS-REVIEW.md`, the pack wording and the 5-lot hint side by side in five languages for a native speaker (dev-only; the strings stay in `app.js`).
+- `node test/make-translation-review.js` — writes `TRANSLATIONS-REVIEW.md`, the pack wording (Countries, US States, Capitals incl. all 195 capital names, the taunts and the UN credits line) and the 5-lot hint side by side in five languages for a native speaker (dev-only; the strings stay in `app.js`).
 - `node --test test/usmap.test.js` — the generated US map data (48 + AK + HI), the files being in
   the offline cache, and the label layout (no overlaps, callouts inside the map).
 - `node --test test/contrast.test.js` — WCAG contrast of the real design tokens

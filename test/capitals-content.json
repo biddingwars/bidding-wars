@@ -1,0 +1,1085 @@
+{
+ "europe": [
+  "AL",
+  "AD",
+  "AT",
+  "BY",
+  "BE",
+  "BA",
+  "BG",
+  "HR",
+  "CY",
+  "CZ",
+  "DK",
+  "EE",
+  "FI",
+  "FR",
+  "DE",
+  "GR",
+  "HU",
+  "IS",
+  "IE",
+  "IT",
+  "LV",
+  "LI",
+  "LT",
+  "LU",
+  "MT",
+  "MD",
+  "MC",
+  "ME",
+  "NL",
+  "MK",
+  "NO",
+  "PL",
+  "PT",
+  "RO",
+  "RU",
+  "SM",
+  "RS",
+  "SK",
+  "SI",
+  "ES",
+  "SE",
+  "CH",
+  "TR",
+  "UA",
+  "GB",
+  "VA"
+ ],
+ "names": {
+  "AF": {
+   "en": "Kabul",
+   "fr": "Kaboul"
+  },
+  "AL": {
+   "en": "Tirana"
+  },
+  "DZ": {
+   "en": "Algiers",
+   "de": "Algier",
+   "it": "Algeri",
+   "es": "Argel",
+   "fr": "Alger"
+  },
+  "AD": {
+   "en": "Andorra la Vella"
+  },
+  "AO": {
+   "en": "Luanda"
+  },
+  "AG": {
+   "en": "Saint John's"
+  },
+  "AR": {
+   "en": "Buenos Aires"
+  },
+  "AM": {
+   "en": "Yerevan",
+   "de": "Jerewan",
+   "it": "Erevan",
+   "es": "Ereván",
+   "fr": "Erevan"
+  },
+  "AU": {
+   "en": "Canberra"
+  },
+  "AT": {
+   "en": "Vienna",
+   "de": "Wien",
+   "es": "Viena",
+   "fr": "Vienne"
+  },
+  "AZ": {
+   "en": "Baku",
+   "es": "Bakú",
+   "fr": "Bakou"
+  },
+  "BS": {
+   "en": "Nassau"
+  },
+  "BH": {
+   "en": "Manama"
+  },
+  "BD": {
+   "en": "Dhaka",
+   "it": "Dacca",
+   "es": "Daca",
+   "fr": "Dacca"
+  },
+  "BB": {
+   "en": "Bridgetown"
+  },
+  "BY": {
+   "en": "Minsk"
+  },
+  "BE": {
+   "en": "Brussels",
+   "de": "Brüssel",
+   "it": "Bruxelles",
+   "es": "Bruselas",
+   "fr": "Bruxelles"
+  },
+  "BZ": {
+   "en": "Belmopan"
+  },
+  "BJ": {
+   "en": "Cotonou"
+  },
+  "BT": {
+   "en": "Thimphu",
+   "fr": "Thimphou"
+  },
+  "BO": {
+   "en": "La Paz"
+  },
+  "BA": {
+   "en": "Sarajevo"
+  },
+  "BW": {
+   "en": "Gaborone"
+  },
+  "BR": {
+   "en": "Brasília",
+   "it": "Brasilia",
+   "es": "Brasilia",
+   "fr": "Brasilia"
+  },
+  "BN": {
+   "en": "Bandar Seri Begawan"
+  },
+  "BG": {
+   "en": "Sofia",
+   "es": "Sofía"
+  },
+  "BF": {
+   "en": "Ouagadougou",
+   "es": "Uagadugú"
+  },
+  "BI": {
+   "en": "Bujumbura"
+  },
+  "CV": {
+   "en": "Praia"
+  },
+  "KH": {
+   "en": "Phnom Penh",
+   "es": "Nom Pen"
+  },
+  "CM": {
+   "en": "Yaoundé",
+   "de": "Jaunde",
+   "es": "Yaundé"
+  },
+  "CA": {
+   "en": "Ottawa"
+  },
+  "CF": {
+   "en": "Bangui"
+  },
+  "TD": {
+   "en": "N'Djamena",
+   "es": "Yamena",
+   "fr": "N'Djaména"
+  },
+  "CL": {
+   "en": "Santiago"
+  },
+  "CN": {
+   "en": "Beijing",
+   "de": "Peking",
+   "it": "Pechino",
+   "es": "Pekín",
+   "fr": "Pékin"
+  },
+  "CO": {
+   "en": "Bogotá",
+   "fr": "Bogota"
+  },
+  "KM": {
+   "en": "Moroni"
+  },
+  "CG": {
+   "en": "Brazzaville"
+  },
+  "CD": {
+   "en": "Kinshasa"
+  },
+  "CR": {
+   "en": "San José"
+  },
+  "CI": {
+   "en": "Abidjan"
+  },
+  "HR": {
+   "en": "Zagreb"
+  },
+  "CU": {
+   "en": "Havana",
+   "de": "Havanna",
+   "it": "L'Avana",
+   "es": "La Habana",
+   "fr": "La Havane"
+  },
+  "CY": {
+   "en": "Nicosia",
+   "de": "Nikosia",
+   "fr": "Nicosie"
+  },
+  "CZ": {
+   "en": "Prague",
+   "de": "Prag",
+   "it": "Praga",
+   "es": "Praga"
+  },
+  "KP": {
+   "en": "Pyongyang",
+   "de": "Pjöngjang",
+   "es": "Pionyang"
+  },
+  "DK": {
+   "en": "Copenhagen",
+   "de": "Kopenhagen",
+   "it": "Copenaghen",
+   "es": "Copenhague",
+   "fr": "Copenhague"
+  },
+  "DJ": {
+   "en": "Djibouti",
+   "de": "Dschibuti",
+   "it": "Gibuti",
+   "es": "Yibuti"
+  },
+  "DM": {
+   "en": "Roseau"
+  },
+  "DO": {
+   "en": "Santo Domingo"
+  },
+  "EC": {
+   "en": "Quito"
+  },
+  "EG": {
+   "en": "Cairo",
+   "de": "Kairo",
+   "it": "Il Cairo",
+   "es": "El Cairo",
+   "fr": "Le Caire"
+  },
+  "SV": {
+   "en": "San Salvador"
+  },
+  "GQ": {
+   "en": "Malabo"
+  },
+  "ER": {
+   "en": "Asmara"
+  },
+  "EE": {
+   "en": "Tallinn"
+  },
+  "SZ": {
+   "en": "Mbabane"
+  },
+  "ET": {
+   "en": "Addis Ababa",
+   "de": "Addis Abeba",
+   "it": "Addis Abeba",
+   "es": "Adís Abeba",
+   "fr": "Addis-Abeba"
+  },
+  "FJ": {
+   "en": "Suva"
+  },
+  "FI": {
+   "en": "Helsinki"
+  },
+  "FR": {
+   "en": "Paris"
+  },
+  "GA": {
+   "en": "Libreville"
+  },
+  "GM": {
+   "en": "Banjul"
+  },
+  "GE": {
+   "en": "Tbilisi",
+   "fr": "Tbilissi"
+  },
+  "DE": {
+   "en": "Berlin"
+  },
+  "GH": {
+   "en": "Accra",
+   "es": "Acra"
+  },
+  "GR": {
+   "en": "Athens",
+   "de": "Athen",
+   "it": "Atene",
+   "es": "Atenas",
+   "fr": "Athènes"
+  },
+  "GD": {
+   "en": "Saint George's"
+  },
+  "GT": {
+   "en": "Guatemala City",
+   "de": "Guatemala-Stadt",
+   "it": "Città del Guatemala",
+   "es": "Ciudad de Guatemala",
+   "fr": "Guatemala"
+  },
+  "GN": {
+   "en": "Conakry",
+   "es": "Conakri"
+  },
+  "GW": {
+   "en": "Bissau"
+  },
+  "GY": {
+   "en": "Georgetown"
+  },
+  "HT": {
+   "en": "Port-au-Prince",
+   "es": "Puerto Príncipe"
+  },
+  "VA": {
+   "en": "Vatican City",
+   "de": "Vatikanstadt",
+   "it": "Città del Vaticano",
+   "es": "Ciudad del Vaticano",
+   "fr": "Cité du Vatican"
+  },
+  "HN": {
+   "en": "Tegucigalpa"
+  },
+  "HU": {
+   "en": "Budapest"
+  },
+  "IS": {
+   "en": "Reykjavik",
+   "es": "Reikiavik"
+  },
+  "IN": {
+   "en": "Delhi"
+  },
+  "ID": {
+   "en": "Jakarta",
+   "es": "Yakarta"
+  },
+  "IR": {
+   "en": "Tehran",
+   "de": "Teheran",
+   "it": "Teheran",
+   "es": "Teherán",
+   "fr": "Téhéran"
+  },
+  "IQ": {
+   "en": "Baghdad",
+   "de": "Bagdad",
+   "es": "Bagdad",
+   "fr": "Bagdad"
+  },
+  "IE": {
+   "en": "Dublin",
+   "it": "Dublino",
+   "es": "Dublín"
+  },
+  "IL": {
+   "en": "Jerusalem",
+   "it": "Gerusalemme",
+   "es": "Jerusalén",
+   "fr": "Jérusalem"
+  },
+  "IT": {
+   "en": "Rome",
+   "de": "Rom",
+   "it": "Roma",
+   "es": "Roma"
+  },
+  "JM": {
+   "en": "Kingston"
+  },
+  "JP": {
+   "en": "Tokyo",
+   "es": "Tokio"
+  },
+  "JO": {
+   "en": "Amman",
+   "es": "Amán"
+  },
+  "KZ": {
+   "en": "Astana"
+  },
+  "KE": {
+   "en": "Nairobi"
+  },
+  "KI": {
+   "en": "Tarawa"
+  },
+  "KW": {
+   "en": "Kuwait City",
+   "de": "Kuwait-Stadt",
+   "fr": "Koweït"
+  },
+  "KG": {
+   "en": "Bishkek",
+   "it": "Biškek",
+   "es": "Biskek",
+   "fr": "Bichkek"
+  },
+  "LA": {
+   "en": "Vientiane",
+   "es": "Vientián"
+  },
+  "LV": {
+   "en": "Riga"
+  },
+  "LB": {
+   "en": "Beirut",
+   "fr": "Beyrouth"
+  },
+  "LS": {
+   "en": "Maseru"
+  },
+  "LR": {
+   "en": "Monrovia"
+  },
+  "LY": {
+   "en": "Tripoli",
+   "de": "Tripolis"
+  },
+  "LI": {
+   "en": "Vaduz"
+  },
+  "LT": {
+   "en": "Vilnius",
+   "es": "Vilna"
+  },
+  "LU": {
+   "en": "Luxembourg",
+   "de": "Luxemburg",
+   "it": "Lussemburgo",
+   "es": "Luxemburgo"
+  },
+  "MG": {
+   "en": "Antananarivo"
+  },
+  "MW": {
+   "en": "Lilongwe"
+  },
+  "MY": {
+   "en": "Kuala Lumpur"
+  },
+  "MV": {
+   "en": "Malé"
+  },
+  "ML": {
+   "en": "Bamako"
+  },
+  "MT": {
+   "en": "Valletta",
+   "it": "La Valletta",
+   "es": "La Valeta",
+   "fr": "La Valette"
+  },
+  "MH": {
+   "en": "Majuro"
+  },
+  "MR": {
+   "en": "Nouakchott"
+  },
+  "MU": {
+   "en": "Port Louis"
+  },
+  "MX": {
+   "en": "Mexico City",
+   "de": "Mexiko-Stadt",
+   "it": "Città del Messico",
+   "es": "Ciudad de México",
+   "fr": "Mexico"
+  },
+  "FM": {
+   "en": "Palikir"
+  },
+  "MC": {
+   "en": "Monaco",
+   "es": "Mónaco"
+  },
+  "MN": {
+   "en": "Ulaanbaatar",
+   "de": "Ulan Bator",
+   "it": "Ulan Bator",
+   "es": "Ulán Bator",
+   "fr": "Oulan-Bator"
+  },
+  "ME": {
+   "en": "Podgorica"
+  },
+  "MA": {
+   "en": "Rabat"
+  },
+  "MZ": {
+   "en": "Maputo"
+  },
+  "MM": {
+   "en": "Nay Pyi Taw"
+  },
+  "NA": {
+   "en": "Windhoek"
+  },
+  "NR": {
+   "en": "Yaren"
+  },
+  "NP": {
+   "en": "Kathmandu",
+   "es": "Katmandú",
+   "fr": "Katmandou"
+  },
+  "NL": {
+   "en": "The Hague",
+   "de": "Den Haag",
+   "it": "L'Aia",
+   "es": "La Haya",
+   "fr": "La Haye"
+  },
+  "NZ": {
+   "en": "Wellington"
+  },
+  "NI": {
+   "en": "Managua"
+  },
+  "NE": {
+   "en": "Niamey"
+  },
+  "NG": {
+   "en": "Abuja"
+  },
+  "MK": {
+   "en": "Skopje",
+   "es": "Skopie"
+  },
+  "NO": {
+   "en": "Oslo"
+  },
+  "OM": {
+   "en": "Muscat",
+   "de": "Maskat",
+   "it": "Mascate",
+   "es": "Mascate",
+   "fr": "Mascate"
+  },
+  "PK": {
+   "en": "Islamabad"
+  },
+  "PW": {
+   "en": "Koror"
+  },
+  "PA": {
+   "en": "Panama City",
+   "de": "Panama-Stadt",
+   "it": "Città di Panama",
+   "es": "Ciudad de Panamá",
+   "fr": "Panama"
+  },
+  "PG": {
+   "en": "Port Moresby"
+  },
+  "PY": {
+   "en": "Asunción"
+  },
+  "PE": {
+   "en": "Lima"
+  },
+  "PH": {
+   "en": "Manila",
+   "fr": "Manille"
+  },
+  "PL": {
+   "en": "Warsaw",
+   "de": "Warschau",
+   "it": "Varsavia",
+   "es": "Varsovia",
+   "fr": "Varsovie"
+  },
+  "PT": {
+   "en": "Lisbon",
+   "de": "Lissabon",
+   "it": "Lisbona",
+   "es": "Lisboa",
+   "fr": "Lisbonne"
+  },
+  "QA": {
+   "en": "Doha"
+  },
+  "KR": {
+   "en": "Seoul",
+   "it": "Seul",
+   "es": "Seúl",
+   "fr": "Séoul"
+  },
+  "MD": {
+   "en": "Chișinău",
+   "es": "Chisináu"
+  },
+  "RO": {
+   "en": "Bucharest",
+   "de": "Bukarest",
+   "it": "Bucarest",
+   "es": "Bucarest",
+   "fr": "Bucarest"
+  },
+  "RU": {
+   "en": "Moscow",
+   "de": "Moskau",
+   "it": "Mosca",
+   "es": "Moscú",
+   "fr": "Moscou"
+  },
+  "RW": {
+   "en": "Kigali"
+  },
+  "KN": {
+   "en": "Basseterre"
+  },
+  "LC": {
+   "en": "Castries"
+  },
+  "VC": {
+   "en": "Kingstown"
+  },
+  "WS": {
+   "en": "Apia"
+  },
+  "SM": {
+   "en": "San Marino"
+  },
+  "ST": {
+   "en": "São Tomé",
+   "es": "Santo Tomé"
+  },
+  "SA": {
+   "en": "Riyadh",
+   "de": "Riad",
+   "it": "Riyad",
+   "es": "Riad"
+  },
+  "SN": {
+   "en": "Dakar"
+  },
+  "RS": {
+   "en": "Belgrade",
+   "de": "Belgrad",
+   "it": "Belgrado",
+   "es": "Belgrado"
+  },
+  "SC": {
+   "en": "Victoria"
+  },
+  "SL": {
+   "en": "Freetown"
+  },
+  "SG": {
+   "en": "Singapore",
+   "de": "Singapur",
+   "es": "Singapur",
+   "fr": "Singapour"
+  },
+  "SK": {
+   "en": "Bratislava"
+  },
+  "SI": {
+   "en": "Ljubljana",
+   "it": "Lubiana",
+   "es": "Liubliana"
+  },
+  "SB": {
+   "en": "Honiara"
+  },
+  "SO": {
+   "en": "Mogadishu",
+   "de": "Mogadischu",
+   "it": "Mogadiscio",
+   "es": "Mogadiscio",
+   "fr": "Mogadiscio"
+  },
+  "ZA": {
+   "en": "Pretoria"
+  },
+  "SS": {
+   "en": "Juba"
+  },
+  "ES": {
+   "en": "Madrid"
+  },
+  "LK": {
+   "en": "Colombo"
+  },
+  "SD": {
+   "en": "Khartoum",
+   "de": "Khartum",
+   "it": "Khartum",
+   "es": "Jartum"
+  },
+  "SR": {
+   "en": "Paramaribo"
+  },
+  "SE": {
+   "en": "Stockholm",
+   "it": "Stoccolma",
+   "es": "Estocolmo"
+  },
+  "CH": {
+   "en": "Bern",
+   "it": "Berna",
+   "es": "Berna",
+   "fr": "Berne"
+  },
+  "SY": {
+   "en": "Damascus",
+   "de": "Damaskus",
+   "it": "Damasco",
+   "es": "Damasco",
+   "fr": "Damas"
+  },
+  "TJ": {
+   "en": "Dushanbe",
+   "de": "Duschanbe",
+   "es": "Dusambé",
+   "fr": "Douchanbé"
+  },
+  "TH": {
+   "en": "Bangkok"
+  },
+  "TL": {
+   "en": "Dili"
+  },
+  "TG": {
+   "en": "Lomé"
+  },
+  "TO": {
+   "en": "Nuku'alofa"
+  },
+  "TT": {
+   "en": "Port of Spain",
+   "es": "Puerto España",
+   "fr": "Port-d'Espagne"
+  },
+  "TN": {
+   "en": "Tunis",
+   "es": "Túnez"
+  },
+  "TR": {
+   "en": "Ankara"
+  },
+  "TM": {
+   "en": "Ashgabat",
+   "de": "Aschgabat",
+   "es": "Asjabad",
+   "fr": "Achgabat"
+  },
+  "TV": {
+   "en": "Funafuti"
+  },
+  "UG": {
+   "en": "Kampala"
+  },
+  "UA": {
+   "en": "Kyiv",
+   "de": "Kiew",
+   "it": "Kiev",
+   "es": "Kiev",
+   "fr": "Kiev"
+  },
+  "AE": {
+   "en": "Abu Dhabi",
+   "es": "Abu Dabi",
+   "fr": "Abou Dabi"
+  },
+  "GB": {
+   "en": "London",
+   "it": "Londra",
+   "es": "Londres",
+   "fr": "Londres"
+  },
+  "TZ": {
+   "en": "Dodoma"
+  },
+  "US": {
+   "en": "Washington, D.C.",
+   "it": "Washington",
+   "es": "Washington D. C.",
+   "fr": "Washington"
+  },
+  "UY": {
+   "en": "Montevideo"
+  },
+  "UZ": {
+   "en": "Tashkent",
+   "de": "Taschkent",
+   "es": "Taskent",
+   "fr": "Tachkent"
+  },
+  "VU": {
+   "en": "Port Vila"
+  },
+  "VE": {
+   "en": "Caracas"
+  },
+  "VN": {
+   "en": "Hanoi",
+   "es": "Hanói",
+   "fr": "Hanoï"
+  },
+  "YE": {
+   "en": "Sana'a",
+   "de": "Sanaa",
+   "es": "Saná",
+   "fr": "Sanaa"
+  },
+  "ZM": {
+   "en": "Lusaka"
+  },
+  "ZW": {
+   "en": "Harare"
+  },
+  "TW": {
+   "en": "Taipei",
+   "es": "Taipéi",
+   "de": "Taipeh"
+  }
+ },
+ "taunts": {
+  "en": {
+   "mega": [
+    "{n} is the lot people remember. Try to remember it as mine.",
+    "A skyline like {n}'s does not come cheap. Neither will I.",
+    "Bid on {n} if you enjoy expensive lessons.",
+    "Millions live in {n}. You are about to meet the bill.",
+    "I will take {n} and everything inside its ring road."
+   ],
+   "large": [
+    "{n} has real weight. So does my wallet.",
+    "A serious city, {n}. A serious bid is required.",
+    "You cannot out-collect me starting from {n}.",
+    "{n} is worth more than your instincts suggest.",
+    "Careful with {n}: it bites back."
+   ],
+   "mid": [
+    "{n} is decent. I take decent things from people like you.",
+    "Modest, useful, mine. That is {n}.",
+    "You keep bidding. I keep counting. {n} is mine.",
+    "{n} will not win you the evening, but it can lose it.",
+    "I could explain why {n} matters, but you would still lose."
+   ],
+   "small": [
+    "{n} is small, cheap, and still beyond your judgement.",
+    "I have owned larger car parks than {n}.",
+    "{n}? Charming. I shall take it out of spite.",
+    "Do not overpay for {n}. Do. Please do.",
+    "A footnote called {n}. I collect footnotes."
+   ],
+   "micro": [
+    "Somewhere in {n}, three people are watching this. Hello.",
+    "{n} fits in a lift. So does your score.",
+    "I could buy {n} with the change in my coat.",
+    "The whole of {n} would fit on my shortlist.",
+    "{n} rounds down to nothing, and I shall still outbid you."
+   ]
+  },
+  "de": {
+   "mega": [
+    "{n} ist das Los, an das man sich erinnert. Erinnere dich an mich.",
+    "Eine Skyline wie die von {n} gibt es nicht billig. Ich auch nicht.",
+    "Biete auf {n}, wenn du teure Lektionen magst.",
+    "In {n} leben Millionen. Du bekommst gleich die Rechnung.",
+    "Ich nehme {n} und alles innerhalb der Stadtgrenze."
+   ],
+   "large": [
+    "{n} hat Gewicht. Mein Geldbeutel auch.",
+    "Eine ernsthafte Stadt, {n}. Es braucht ein ernsthaftes Gebot.",
+    "Mit {n} als Start überbietest du mich nie.",
+    "{n} ist mehr wert, als dein Gefühl dir sagt.",
+    "Vorsicht mit {n}: Das beißt zurück."
+   ],
+   "mid": [
+    "{n} ist ordentlich. Ordentliches nehme ich Leuten wie dir weg.",
+    "Bescheiden, nützlich, meins. Das ist {n}.",
+    "Du bietest weiter. Ich rechne weiter. {n} gehört mir.",
+    "{n} gewinnt dir nicht den Abend, kann ihn dich aber kosten.",
+    "Ich könnte erklären, warum {n} zählt, aber du würdest trotzdem verlieren."
+   ],
+   "small": [
+    "{n} ist klein, billig und trotzdem jenseits deines Urteilsvermögens.",
+    "Ich habe schon größere Parkplätze besessen als {n}.",
+    "{n}? Reizend. Ich nehme es aus Trotz.",
+    "Zahl bloß nicht zu viel für {n}. Doch. Bitte tu es.",
+    "Eine Fußnote namens {n}. Ich sammle Fußnoten."
+   ],
+   "micro": [
+    "Irgendwo in {n} schauen drei Leute zu. Hallo.",
+    "{n} passt in einen Aufzug. Dein Punktestand auch.",
+    "{n} kaufe ich vom Kleingeld in meiner Manteltasche.",
+    "Ganz {n} passt auf meine Merkliste.",
+    "{n} rundet auf null ab, und ich überbiete dich trotzdem."
+   ]
+  },
+  "it": {
+   "mega": [
+    "{n} è il lotto che tutti ricordano. Ricordalo come mio.",
+    "Uno skyline come quello di {n} non costa poco. Nemmeno io.",
+    "Se ti piacciono le lezioni costose, {n} fa per te.",
+    "{n}: milioni di abitanti. Ti arriva il conto.",
+    "Prendo {n} e tutto ciò che sta dentro la tangenziale."
+   ],
+   "large": [
+    "{n} ha peso. Anche il mio portafoglio.",
+    "Una città seria, {n}. Serve un'offerta seria.",
+    "Non puoi battermi partendo da {n}.",
+    "{n} vale più di quanto suggerisca il tuo istinto.",
+    "Attento con {n}: morde."
+   ],
+   "mid": [
+    "{n} è decente. Prendo le cose decenti a gente come te.",
+    "Modesto, utile, mio: {n}.",
+    "Tu rilanci, io conto. {n} è mio.",
+    "{n} non ti farà vincere la serata, ma può fartela perdere.",
+    "Potrei spiegarti perché {n} conta, ma perderesti lo stesso."
+   ],
+   "small": [
+    "{n}: piccolo, economico e comunque oltre il tuo giudizio.",
+    "Ho posseduto parcheggi più grandi di {n}.",
+    "{n}? Grazioso. Lo prendo per dispetto.",
+    "Non pagare troppo per {n}. Anzi sì. Fallo, ti prego.",
+    "Una nota a piè di pagina chiamata {n}. Le colleziono."
+   ],
+   "micro": [
+    "{n}: da qualche parte, tre persone stanno guardando. Ciao.",
+    "{n} entra in un ascensore. Anche il tuo punteggio.",
+    "Potrei comprare {n} con gli spiccioli del cappotto.",
+    "{n} intero starebbe nella mia lista dei desideri.",
+    "{n} si arrotonda a zero, e ti rilancio lo stesso."
+   ]
+  },
+  "es": {
+   "mega": [
+    "{n} es el lote que todo el mundo recuerda. Recuérdalo como mío.",
+    "Un perfil urbano como el de {n} no sale barato. Yo tampoco.",
+    "Puja por {n} si te gustan las lecciones caras.",
+    "En {n} viven millones. Te va a llegar la factura.",
+    "Me llevo {n} y todo lo que haya dentro de su circunvalación."
+   ],
+   "large": [
+    "{n} pesa. Mi cartera también.",
+    "Una ciudad seria, {n}. Hace falta una puja seria.",
+    "No puedes superarme empezando por {n}.",
+    "{n} vale más de lo que te dice el instinto.",
+    "Cuidado con {n}: muerde."
+   ],
+   "mid": [
+    "{n} está bien. Le quito lo que está bien a gente como tú.",
+    "Humilde, útil y mío: {n}.",
+    "Tú sigues pujando. Yo sigo contando. {n} es para mí.",
+    "{n} no te ganará la noche, pero puede hacértela perder.",
+    "Podría explicarte por qué importa {n}, pero perderías igual."
+   ],
+   "small": [
+    "{n} es poca cosa y aun así supera tu criterio.",
+    "He tenido aparcamientos más grandes que {n}.",
+    "¿{n}? Encantador. Me lo quedo por despecho.",
+    "No pagues de más por {n}. Sí, hazlo. Por favor.",
+    "Una nota a pie de página llamada {n}. Las colecciono."
+   ],
+   "micro": [
+    "En algún lugar de {n}, tres personas están viendo esto. Hola.",
+    "{n} cabe en un ascensor. Tu puntuación también.",
+    "Podría comprar {n} con el cambio del abrigo.",
+    "{n} entero cabría en mi lista corta.",
+    "{n} se redondea a cero, y aun así te supero."
+   ]
+  },
+  "fr": {
+   "mega": [
+    "{n} est le lot dont on se souvient. Souviens-toi qu'il est à moi.",
+    "Une skyline comme celle de {n} ne se brade pas. Moi non plus.",
+    "Enchéris sur {n} si tu aimes les leçons coûteuses.",
+    "Des millions de gens vivent à {n}. L'addition arrive.",
+    "Je prends {n} et tout ce qui est dans son périphérique."
+   ],
+   "large": [
+    "{n} a du poids. Mon portefeuille aussi.",
+    "Une ville sérieuse, {n}. Il faut une mise sérieuse.",
+    "Tu ne peux pas me battre en partant de {n}.",
+    "{n} vaut plus que ton instinct ne le dit.",
+    "Prudence avec {n} : ça mord."
+   ],
+   "mid": [
+    "{n}, c'est correct. Je prends ce qui est correct aux gens comme toi.",
+    "Modeste, utile, à moi : {n}.",
+    "Tu enchéris, je compte. {n} est à moi.",
+    "{n} ne te fera pas gagner la soirée, mais peut te la faire perdre.",
+    "Je pourrais t'expliquer pourquoi {n} compte, mais tu perdrais quand même."
+   ],
+   "small": [
+    "{n} : petit, bon marché et pourtant hors de ta portée.",
+    "J'ai possédé des parkings plus grands que {n}.",
+    "{n} ? Charmant. Je le prends par dépit.",
+    "Ne paie pas trop cher {n}. Si. Fais-le, je t'en prie.",
+    "Une note de bas de page appelée {n}. Je les collectionne."
+   ],
+   "micro": [
+    "Quelque part à {n}, trois personnes regardent ça. Bonjour.",
+    "{n} tient dans un ascenseur. Ton score aussi.",
+    "Je pourrais acheter {n} avec la monnaie de mon manteau.",
+    "Ma liste courte pourrait contenir {n} en entier.",
+    "{n} s'arrondit à zéro, et je te surenchérirai quand même."
+   ]
+  }
+ },
+ "title": {
+  "en": "Capitals",
+  "de": "Hauptstädte",
+  "it": "Capitali",
+  "es": "Capitales",
+  "fr": "Capitales"
+ },
+ "noun": {
+  "en": "capital",
+  "de": "Hauptstadt",
+  "it": "capitale",
+  "es": "capital",
+  "fr": "capitale"
+ },
+ "metricLabel": {
+  "en": "Population",
+  "de": "Einwohner",
+  "it": "Popolazione",
+  "es": "Población",
+  "fr": "Population"
+ },
+ "levels": {
+  "beginner": {
+   "en": "Beginner — Europe only",
+   "de": "Anfänger — nur Europa",
+   "it": "Principiante — solo Europa",
+   "es": "Principiante — solo Europa",
+   "fr": "Débutant — Europe seulement"
+  },
+  "medium": {
+   "en": "Medium — over 2 million",
+   "de": "Mittel — über 2 Millionen",
+   "it": "Medio — oltre 2 milioni",
+   "es": "Medio — más de 2 millones",
+   "fr": "Moyen — plus de 2 millions"
+  },
+  "expert": {
+   "en": "Expert — all 195 capitals",
+   "de": "Experte — alle 195 Hauptstädte",
+   "it": "Esperto — tutte le 195 capitali",
+   "es": "Experto — las 195 capitales",
+   "fr": "Expert — les 195 capitales"
+  }
+ }
+}

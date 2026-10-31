@@ -177,7 +177,7 @@ const LANGS=[
 
 const STR={
 en:{
- credits:'Credits & licences', creditsIntro:'Everything in this game is bundled on your device. Thank you to:', creditsPop:'<b>US population</b> — U.S. Census Bureau, Vintage 2025 estimates (NST-EST2025-POP). Public domain.', creditsMap:'<b>US state outlines</b> — U.S. Census Bureau cartographic boundary files, packaged by us-atlas. Public domain data.', creditsImg:'<b>US map imagery</b> — Natural Earth shaded relief (naturalearthdata.com). Public domain.', creditsWorld:'<b>World borders</b> — Natural Earth. Public domain.', creditsGlobe:'<b>Globe texture</b> — NASA-derived satellite imagery. Public domain.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. MIT licence.', creditsSound:'<b>Sound</b> — every sound is synthesised on your device; there are no recordings. The eagle-style win cry is synthesised too. In films that cry is really a red-tailed hawk, because a bald eagle’s own voice is a thin chirp.', creditsFacts:'<b>US States fun facts</b> — written for this game. They have not been independently verified yet.',
+ credits:'Credits & licences', creditsIntro:'Everything in this game is bundled on your device. Thank you to:', creditsPop:'<b>US population</b> — U.S. Census Bureau, Vintage 2025 estimates (NST-EST2025-POP). Public domain.', creditsCap:'<b>Capital-city population</b> — United Nations, DESA Population Division, World Urbanization Prospects: The 2018 Revision, File 13 (urban agglomeration, 2018). CC BY 3.0 IGO. Data unchanged; this is not an endorsement by the United Nations.', creditsMap:'<b>US state outlines</b> — U.S. Census Bureau cartographic boundary files, packaged by us-atlas. Public domain data.', creditsImg:'<b>US map imagery</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (July). NASA imagery is free to use with credit; this is not an endorsement by NASA.', creditsWorld:'<b>World borders</b> — Natural Earth. Public domain.', creditsGlobe:'<b>Globe texture</b> — NASA-derived satellite imagery. Public domain.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. MIT licence.', creditsSound:'<b>Sound</b> — every sound is synthesised on your device; there are no recordings. The eagle-style win cry is synthesised too. In films that cry is really a red-tailed hawk, because a bald eagle’s own voice is a thin chirp.', creditsFacts:'<b>US States fun facts</b> — written for this game. They have not been independently verified yet.',
  lotsAll:'All {n}', funFacts:'Fun facts', factsIntro:'Every state in this round.',
  tagline:'Use your knowledge to beat your rivals',
  solo:'Solo', soloDesc:'One rival, the bot. It has a price in mind for every country and walks away the moment you beat it. Works offline.',
@@ -241,7 +241,7 @@ en:{
  packCapitals:'Capitals',
  packWorld:'World',
  popLabel:'Population',
- packSoonBody:'More packs are on the way. Countries is the one to play today.',
+ packSoonBody:'More packs are on the way.',
  footer:'No accounts · No tracking · {n} countries',
  appearance:'Appearance',
  themeLight:'Appearance: light',
@@ -277,7 +277,7 @@ en:{
  smartestU:'<b>{name}</b> shopped smartest at {v} {unit}.'
 },
 de:{
- credits:'Quellen & Lizenzen', creditsIntro:'Alles in diesem Spiel liegt auf deinem Gerät. Danke an:', creditsPop:'<b>US-Einwohnerzahlen</b> — U.S. Census Bureau, Schätzung Vintage 2025 (NST-EST2025-POP). Gemeinfrei.', creditsMap:'<b>Umrisse der US-Bundesstaaten</b> — Kartografische Grenzdateien des U.S. Census Bureau, aufbereitet von us-atlas. Gemeinfreie Daten.', creditsImg:'<b>Bilder der US-Karte</b> — Natural Earth, Reliefkarte (naturalearthdata.com). Gemeinfrei.', creditsWorld:'<b>Weltgrenzen</b> — Natural Earth. Gemeinfrei.', creditsGlobe:'<b>Globus-Textur</b> — Satellitenbilder auf NASA-Basis. Gemeinfrei.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. MIT-Lizenz.', creditsSound:'<b>Klang</b> — alle Töne werden auf deinem Gerät erzeugt, es gibt keine Aufnahmen. Auch der adlerartige Siegesruf ist erzeugt. In Filmen ist dieser Ruf in Wirklichkeit ein Rotschwanzbussard, denn die Stimme eines Weißkopfseeadlers ist ein dünnes Zwitschern.', creditsFacts:'<b>Wissenswertes zu den US-Staaten</b> — für dieses Spiel geschrieben und noch nicht unabhängig überprüft.',
+ credits:'Quellen & Lizenzen', creditsIntro:'Alles in diesem Spiel liegt auf deinem Gerät. Danke an:', creditsPop:'<b>US-Einwohnerzahlen</b> — U.S. Census Bureau, Schätzung Vintage 2025 (NST-EST2025-POP). Gemeinfrei.', creditsCap:'<b>Einwohnerzahlen der Hauptstädte</b> — Vereinte Nationen, DESA, Abteilung Bevölkerung, World Urbanization Prospects: The 2018 Revision, Datei 13 (städtische Agglomeration, 2018). CC BY 3.0 IGO. Daten unverändert; keine Billigung durch die Vereinten Nationen.', creditsMap:'<b>Umrisse der US-Bundesstaaten</b> — Kartografische Grenzdateien des U.S. Census Bureau, aufbereitet von us-atlas. Gemeinfreie Daten.', creditsImg:'<b>Bilder der US-Karte</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (Juli). NASA-Bilder dürfen mit Quellenangabe frei verwendet werden; keine Billigung durch die NASA.', creditsWorld:'<b>Weltgrenzen</b> — Natural Earth. Gemeinfrei.', creditsGlobe:'<b>Globus-Textur</b> — Satellitenbilder auf NASA-Basis. Gemeinfrei.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. MIT-Lizenz.', creditsSound:'<b>Klang</b> — alle Töne werden auf deinem Gerät erzeugt, es gibt keine Aufnahmen. Auch der adlerartige Siegesruf ist erzeugt. In Filmen ist dieser Ruf in Wirklichkeit ein Rotschwanzbussard, denn die Stimme eines Weißkopfseeadlers ist ein dünnes Zwitschern.', creditsFacts:'<b>Wissenswertes zu den US-Staaten</b> — für dieses Spiel geschrieben und noch nicht unabhängig überprüft.',
  lotsAll:'Alle {n}', funFacts:'Wissenswertes', factsIntro:'Alle Bundesstaaten dieser Runde.',
  tagline:'Nutze dein Wissen und schlag deine Rivalen',
  solo:'Solo', soloDesc:'Ein Gegner, der Bot. Er hat für jedes Land einen Preis im Kopf und steigt aus, sobald du ihn überbietest. Läuft offline.',
@@ -341,7 +341,7 @@ de:{
  packCapitals:'Hauptstädte',
  packWorld:'Welt',
  popLabel:'Einwohner',
- packSoonBody:'Weitere Pakete sind unterwegs. Heute spielst du Länder.',
+ packSoonBody:'Weitere Pakete sind unterwegs.',
  footer:'Keine Konten · Kein Tracking · {n} Länder',
  appearance:'Darstellung',
  themeLight:'Darstellung: hell',
@@ -377,7 +377,7 @@ de:{
  smartestU:'<b>{name}</b> hat am klügsten eingekauft: {v} {unit}.'
 },
 it:{
- credits:'Crediti e licenze', creditsIntro:'Tutto in questo gioco è sul tuo dispositivo. Grazie a:', creditsPop:'<b>Popolazione USA</b> — U.S. Census Bureau, stime Vintage 2025 (NST-EST2025-POP). Pubblico dominio.', creditsMap:'<b>Contorni degli stati USA</b> — file cartografici di confine del U.S. Census Bureau, a cura di us-atlas. Dati di pubblico dominio.', creditsImg:'<b>Immagini della mappa USA</b> — Natural Earth, rilievo ombreggiato (naturalearthdata.com). Pubblico dominio.', creditsWorld:'<b>Confini del mondo</b> — Natural Earth. Pubblico dominio.', creditsGlobe:'<b>Texture del globo</b> — immagini satellitari derivate dalla NASA. Pubblico dominio.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. Licenza MIT.', creditsSound:'<b>Suono</b> — ogni suono è sintetizzato sul tuo dispositivo, senza registrazioni. Anche il grido di vittoria da aquila è sintetizzato. Nei film quel grido è in realtà di una poiana codarossa, perché la voce dell’aquila di mare testabianca è un sottile cinguettio.', creditsFacts:'<b>Curiosità sugli stati USA</b> — scritte per questo gioco e non ancora verificate in modo indipendente.',
+ credits:'Crediti e licenze', creditsIntro:'Tutto in questo gioco è sul tuo dispositivo. Grazie a:', creditsPop:'<b>Popolazione USA</b> — U.S. Census Bureau, stime Vintage 2025 (NST-EST2025-POP). Pubblico dominio.', creditsCap:'<b>Popolazione delle capitali</b> — Nazioni Unite, DESA, Divisione Popolazione, World Urbanization Prospects: The 2018 Revision, File 13 (agglomerato urbano, 2018). CC BY 3.0 IGO. Dati non modificati; nessun avallo da parte delle Nazioni Unite.', creditsMap:'<b>Contorni degli stati USA</b> — file cartografici di confine del U.S. Census Bureau, a cura di us-atlas. Dati di pubblico dominio.', creditsImg:'<b>Immagini della mappa USA</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (luglio). Le immagini NASA si possono usare liberamente citando la fonte; nessun avallo da parte della NASA.', creditsWorld:'<b>Confini del mondo</b> — Natural Earth. Pubblico dominio.', creditsGlobe:'<b>Texture del globo</b> — immagini satellitari derivate dalla NASA. Pubblico dominio.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. Licenza MIT.', creditsSound:'<b>Suono</b> — ogni suono è sintetizzato sul tuo dispositivo, senza registrazioni. Anche il grido di vittoria da aquila è sintetizzato. Nei film quel grido è in realtà di una poiana codarossa, perché la voce dell’aquila di mare testabianca è un sottile cinguettio.', creditsFacts:'<b>Curiosità sugli stati USA</b> — scritte per questo gioco e non ancora verificate in modo indipendente.',
  lotsAll:'Tutti {n}', funFacts:'Curiosità', factsIntro:'Tutti gli stati di questa partita.',
  tagline:'Usa le tue conoscenze per battere i rivali',
  solo:'Solo', soloDesc:'Un rivale, il bot. Ha un prezzo in mente per ogni paese e si ritira appena lo superi. Funziona offline.',
@@ -441,7 +441,7 @@ it:{
  packCapitals:'Capitali',
  packWorld:'Mondo',
  popLabel:'Popolazione',
- packSoonBody:'Altri pacchetti stanno arrivando. Oggi si gioca con i Paesi.',
+ packSoonBody:'Altri pacchetti stanno arrivando.',
  footer:'Nessun account · Nessun tracciamento · {n} paesi',
  appearance:'Aspetto',
  themeLight:'Aspetto: chiaro',
@@ -477,7 +477,7 @@ it:{
  smartestU:'<b>{name}</b> ha comprato nel modo più furbo: {v} {unit}.'
 },
 es:{
- credits:'Créditos y licencias', creditsIntro:'Todo en este juego está en tu dispositivo. Gracias a:', creditsPop:'<b>Población de EE. UU.</b> — U.S. Census Bureau, estimaciones Vintage 2025 (NST-EST2025-POP). Dominio público.', creditsMap:'<b>Contornos de los estados</b> — archivos cartográficos de límites del U.S. Census Bureau, empaquetados por us-atlas. Datos de dominio público.', creditsImg:'<b>Imágenes del mapa de EE. UU.</b> — Natural Earth, relieve sombreado (naturalearthdata.com). Dominio público.', creditsWorld:'<b>Fronteras del mundo</b> — Natural Earth. Dominio público.', creditsGlobe:'<b>Textura del globo</b> — imágenes de satélite derivadas de la NASA. Dominio público.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. Licencia MIT.', creditsSound:'<b>Sonido</b> — todos los sonidos se sintetizan en tu dispositivo; no hay grabaciones. El grito de victoria de águila también es sintético. En las películas ese grito es en realidad de un ratonero de cola roja, porque la voz del águila calva es un trino fino.', creditsFacts:'<b>Curiosidades de los estados</b> — escritas para este juego y aún sin verificar de forma independiente.',
+ credits:'Créditos y licencias', creditsIntro:'Todo en este juego está en tu dispositivo. Gracias a:', creditsPop:'<b>Población de EE. UU.</b> — U.S. Census Bureau, estimaciones Vintage 2025 (NST-EST2025-POP). Dominio público.', creditsCap:'<b>Población de las capitales</b> — Naciones Unidas, DAES, División de Población, World Urbanization Prospects: The 2018 Revision, archivo 13 (aglomeración urbana, 2018). CC BY 3.0 IGO. Datos sin modificar; no implica respaldo de las Naciones Unidas.', creditsMap:'<b>Contornos de los estados</b> — archivos cartográficos de límites del U.S. Census Bureau, empaquetados por us-atlas. Datos de dominio público.', creditsImg:'<b>Imágenes del mapa de EE. UU.</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (julio). Las imágenes de la NASA se pueden usar libremente citando la fuente; no implica respaldo de la NASA.', creditsWorld:'<b>Fronteras del mundo</b> — Natural Earth. Dominio público.', creditsGlobe:'<b>Textura del globo</b> — imágenes de satélite derivadas de la NASA. Dominio público.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. Licencia MIT.', creditsSound:'<b>Sonido</b> — todos los sonidos se sintetizan en tu dispositivo; no hay grabaciones. El grito de victoria de águila también es sintético. En las películas ese grito es en realidad de un ratonero de cola roja, porque la voz del águila calva es un trino fino.', creditsFacts:'<b>Curiosidades de los estados</b> — escritas para este juego y aún sin verificar de forma independiente.',
  lotsAll:'Todos {n}', funFacts:'Curiosidades', factsIntro:'Todos los estados de esta partida.',
  tagline:'Usa tus conocimientos para vencer a tus rivales',
  solo:'Solo', soloDesc:'Un rival, el bot. Tiene un precio en mente para cada país y se retira en cuanto lo superas. Funciona sin conexión.',
@@ -541,7 +541,7 @@ es:{
  packCapitals:'Capitales',
  packWorld:'Mundo',
  popLabel:'Población',
- packSoonBody:'Vienen más paquetes en camino. Hoy se juega con Países.',
+ packSoonBody:'Vienen más paquetes en camino.',
  footer:'Sin cuentas · Sin rastreo · {n} países',
  appearance:'Apariencia',
  themeLight:'Apariencia: clara',
@@ -577,7 +577,7 @@ es:{
  smartestU:'<b>{name}</b> compró de la forma más lista: {v} {unit}.'
 },
 fr:{
- credits:'Crédits et licences', creditsIntro:'Tout dans ce jeu est sur ton appareil. Merci à :', creditsPop:'<b>Population des États-Unis</b> — U.S. Census Bureau, estimations Vintage 2025 (NST-EST2025-POP). Domaine public.', creditsMap:'<b>Contours des États</b> — fichiers cartographiques de limites du U.S. Census Bureau, mis en forme par us-atlas. Données du domaine public.', creditsImg:'<b>Images de la carte des États-Unis</b> — Natural Earth, relief ombré (naturalearthdata.com). Domaine public.', creditsWorld:'<b>Frontières du monde</b> — Natural Earth. Domaine public.', creditsGlobe:'<b>Texture du globe</b> — imagerie satellite dérivée de la NASA. Domaine public.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. Licence MIT.', creditsSound:'<b>Son</b> — tous les sons sont synthétisés sur ton appareil, sans enregistrement. Le cri de victoire d’aigle est lui aussi synthétisé. Au cinéma ce cri est en réalité celui d’une buse à queue rousse, car la voix du pygargue à tête blanche est un mince pépiement.', creditsFacts:'<b>Le saviez-vous sur les États</b> — écrits pour ce jeu et pas encore vérifiés de façon indépendante.',
+ credits:'Crédits et licences', creditsIntro:'Tout dans ce jeu est sur ton appareil. Merci à :', creditsPop:'<b>Population des États-Unis</b> — U.S. Census Bureau, estimations Vintage 2025 (NST-EST2025-POP). Domaine public.', creditsCap:'<b>Population des capitales</b> — Nations unies, DAES, Division de la population, World Urbanization Prospects: The 2018 Revision, fichier 13 (agglomération urbaine, 2018). CC BY 3.0 IGO. Données non modifiées ; aucune approbation des Nations unies.', creditsMap:'<b>Contours des États</b> — fichiers cartographiques de limites du U.S. Census Bureau, mis en forme par us-atlas. Données du domaine public.', creditsImg:'<b>Images de la carte des États-Unis</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (juillet). Les images de la NASA sont libres d’usage avec mention de la source ; aucune approbation de la NASA.', creditsWorld:'<b>Frontières du monde</b> — Natural Earth. Domaine public.', creditsGlobe:'<b>Texture du globe</b> — imagerie satellite dérivée de la NASA. Domaine public.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. Licence MIT.', creditsSound:'<b>Son</b> — tous les sons sont synthétisés sur ton appareil, sans enregistrement. Le cri de victoire d’aigle est lui aussi synthétisé. Au cinéma ce cri est en réalité celui d’une buse à queue rousse, car la voix du pygargue à tête blanche est un mince pépiement.', creditsFacts:'<b>Le saviez-vous sur les États</b> — écrits pour ce jeu et pas encore vérifiés de façon indépendante.',
  lotsAll:'Tous {n}', funFacts:'Le saviez-vous ?', factsIntro:'Tous les États de cette partie.',
  tagline:'Utilise tes connaissances pour battre tes rivaux',
  solo:'Solo', soloDesc:'Un rival, le bot. Il a un prix en tête pour chaque pays et se retire dès que tu le dépasses. Fonctionne hors ligne.',
@@ -641,7 +641,7 @@ fr:{
  packCapitals:'Capitales',
  packWorld:'Monde',
  popLabel:'Population',
- packSoonBody:'D’autres packs arrivent. Aujourd’hui, on joue avec les Pays.',
+ packSoonBody:'D’autres packs arrivent.',
  footer:'Aucun compte · Aucun suivi · {n} pays',
  appearance:'Apparence',
  themeLight:'Apparence : clair',
@@ -767,6 +767,52 @@ const STRP={ countries:{
   unsoldNote:'{n} États sont restés invendus : personne ne pouvait les payer.',
   rulesP7:'L’efficacité compte aussi : dollars par million d’habitants. Moins, c’est mieux.',
   footer:'Aucun compte · Aucun suivi · {n} États', worldTitle:'La carte', world:'Les États de {name}, en or' }
+}, capitals:{
+ en:{ budgetNote:'Set by the difficulty and the round length — scarce on purpose.',
+  rivalDesc:'The <b>bot</b> prices every capital by the size of its city, spends its money evenly across the round and rolls a fresh walk-away limit for each lot. Each game it is in a different mood — cautious, balanced or bold — and you are not told which. If you run low on money it may go all-in to knock you out.',
+  rulesP1:'Random capital cities come up one at a time, each at most once per round. <b>1 point = 1 million people</b> living in the capital’s urban area, and the population stays blacked out until the very end.',
+  rulesP4:'Everyone starts with the same budget, set by the difficulty and the round length. <b>Medium and Expert: €50 for 5 capitals, €100 for 10, €150 for 15, €200 for 20, €300 for 30</b>. Beginner gets half: €25, €50, €75, €100, €150. Money is scarce on purpose: even the biggest budget cannot buy the five biggest cities.',
+  rulesP5:'The bot values every capital by its population and rolls a fresh walk-away limit for each lot, so you can never quite read it. It spends evenly, pays a little extra for the biggest cities, and each game it is cautious, balanced or bold. If it has far more money than you, it bids the amount you can no longer top. Beat its limit by one euro and the lot is yours — unless it can knock you out.',
+  rulesP6:'<b>Difficulty</b> decides which capitals can come up: Beginner draws from Europe only, Medium from every capital with more than 2 million people, Expert from all 195 (the 193 UN member states plus Vatican City and Taipei). Where a country has several capitals, its seat of government is used. Every capital is equally likely and none comes up twice in a round. Short rounds are luck-heavy: with 5 or 10 capitals one big draw can decide the game. The longer the round, the more skill counts.',
+  rulesP8:'<b>Out of money?</b> When only one player still has money, that player takes every remaining capital for €1 each. Going all in is a real risk: it hands the rest of the round to your rival.',
+  unsoldNote:'{n} capitals went unsold — nobody could afford them.',
+  footer:'No accounts · No tracking · {n} capitals' },
+ de:{ budgetNote:'Hängt von Schwierigkeit und Rundenlänge ab – mit Absicht knapp.',
+  rivalDesc:'Der <b>Bot</b> bewertet jede Hauptstadt nach der Größe ihrer Stadt, verteilt sein Geld gleichmäßig über die Runde und würfelt pro Los eine neue Schmerzgrenze. In jedem Spiel hat er eine andere Laune – vorsichtig, ausgewogen oder mutig – und du erfährst nicht, welche. Wird dein Geld knapp, geht er womöglich aufs Ganze, um dich auszustechen.',
+  rulesP1:'Zufällige Hauptstädte kommen nacheinander auf den Tisch, jede höchstens einmal pro Runde. <b>1 Punkt = 1 Million Einwohner</b> des Stadtgebiets der Hauptstadt, und die Einwohnerzahl bleibt bis ganz zum Schluss geschwärzt.',
+  rulesP4:'Alle starten mit demselben Budget, das von der Schwierigkeit und der Rundenlänge abhängt. <b>Mittel und Experte: 50 € für 5 Hauptstädte, 100 € für 10, 150 € für 15, 200 € für 20, 300 € für 30</b>. Anfänger bekommen die Hälfte: 25 €, 50 €, 75 €, 100 €, 150 €. Das Geld ist absichtlich knapp: Selbst das größte Budget reicht nicht für die fünf größten Städte.',
+  rulesP5:'Der Bot bewertet jede Hauptstadt nach Einwohnerzahl und würfelt pro Los eine neue Schmerzgrenze, du kannst ihn also nie ganz durchschauen. Er verteilt sein Geld gleichmäßig, zahlt für die größten Städte etwas mehr und ist in jedem Spiel vorsichtig, ausgewogen oder mutig. Hat er viel mehr Geld als du, bietet er den Betrag, den du nicht mehr überbieten kannst. Überbiete seine Grenze um einen Euro und das Los gehört dir – es sei denn, er kann dich ausstechen.',
+  rulesP6:'Die <b>Schwierigkeit</b> bestimmt, welche Hauptstädte vorkommen: Anfänger nur aus Europa, Mittel aus allen Hauptstädten mit mehr als 2 Millionen Einwohnern, Experte aus allen 195 (die 193 UN-Mitgliedstaaten plus Vatikanstadt und Taipeh). Hat ein Land mehrere Hauptstädte, zählt der Regierungssitz. Jede Hauptstadt kommt mit der gleichen Wahrscheinlichkeit dran und keine zweimal in derselben Runde. Kurze Runden sind glückslastig: Bei 5 oder 10 Hauptstädten kann ein großer Treffer das Spiel entscheiden. Je länger die Runde, desto mehr zählt Können.',
+  rulesP8:'<b>Kein Geld mehr?</b> Hat nur noch ein Spieler Geld, bekommt er alle übrigen Hauptstädte für je 1 €. Alles auf eine Karte zu setzen ist ein echtes Risiko: Es schenkt deinem Gegner den Rest der Runde.',
+  unsoldNote:'{n} Hauptstädte blieben unverkauft – niemand konnte sie bezahlen.',
+  footer:'Keine Konten · Kein Tracking · {n} Hauptstädte' },
+ it:{ budgetNote:'Dipende dalla difficoltà e dalla lunghezza della partita — scarso di proposito.',
+  rivalDesc:'Il <b>bot</b> valuta ogni capitale in base alle dimensioni della città, distribuisce i soldi in modo uniforme lungo la partita e tira un nuovo limite per ogni lotto. Ogni partita ha un umore diverso — prudente, equilibrato o audace — e non ti viene detto quale. Se i tuoi soldi scarseggiano, può giocare il tutto per tutto per metterti fuori gioco.',
+  rulesP1:'Escono capitali a caso, una alla volta e al massimo una volta per partita. <b>1 punto = 1 milione di abitanti</b> dell’area urbana della capitale, e la popolazione resta oscurata fino alla fine.',
+  rulesP4:'Tutti partono con lo stesso budget, deciso dalla difficoltà e dalla lunghezza della partita. <b>Medio ed Esperto: 50 € per 5 capitali, 100 € per 10, 150 € per 15, 200 € per 20, 300 € per 30</b>. I principianti hanno la metà: 25 €, 50 €, 75 €, 100 €, 150 €. Il denaro è scarso di proposito: nemmeno il budget più alto basta per le cinque città più grandi.',
+  rulesP5:'Il bot valuta ogni capitale in base alla popolazione e tira un nuovo limite di rinuncia per ogni lotto, quindi non riesci mai a leggerlo. Spende in modo uniforme, paga un po’ di più per le città più grandi ed è, partita per partita, prudente, equilibrato o audace. Se ha molti più soldi di te, offre la cifra che non puoi più superare. Supera il suo limite di un euro e il lotto è tuo — a meno che non riesca a metterti fuori gioco.',
+  rulesP6:'La <b>difficoltà</b> decide quali capitali possono uscire: Principiante solo l’Europa, Medio ogni capitale con più di 2 milioni di abitanti, Esperto tutte le 195 (i 193 Stati membri dell’ONU più Città del Vaticano e Taipei). Se un paese ha più capitali, conta la sede del governo. Ogni capitale ha la stessa probabilità di uscire e nessuna esce due volte nella stessa partita. Le partite corte dipendono molto dalla fortuna: con 5 o 10 capitali una sola estrazione può decidere tutto. Più la partita è lunga, più conta l’abilità.',
+  rulesP8:'<b>Senza soldi?</b> Quando solo un giocatore ha ancora denaro, si prende tutte le capitali rimaste a 1 € ciascuna. Puntare tutto è un vero rischio: regala il resto della partita al rivale.',
+  unsoldNote:'{n} capitali sono rimaste invendute: nessuno poteva permettersele.',
+  footer:'Nessun account · Nessun tracciamento · {n} capitali' },
+ es:{ budgetNote:'Depende de la dificultad y de la duración de la partida — escaso a propósito.',
+  rivalDesc:'El <b>bot</b> valora cada capital por el tamaño de su ciudad, reparte su dinero de forma pareja a lo largo de la partida y saca un límite nuevo en cada lote. En cada partida tiene un humor distinto — prudente, equilibrado o audaz — y no se te dice cuál. Si te quedas corto de dinero, puede jugárselo todo para dejarte fuera.',
+  rulesP1:'Salen capitales al azar, una a una y como máximo una vez por partida. <b>1 punto = 1 millón de habitantes</b> del área urbana de la capital, y la población permanece tachada hasta el final.',
+  rulesP4:'Todos empiezan con el mismo presupuesto, que depende de la dificultad y de la duración de la partida. <b>Medio y Experto: 50 € para 5 capitales, 100 € para 10, 150 € para 15, 200 € para 20, 300 € para 30</b>. Principiante recibe la mitad: 25 €, 50 €, 75 €, 100 €, 150 €. El dinero escasea a propósito: ni el presupuesto más grande alcanza para las cinco ciudades más grandes.',
+  rulesP5:'El bot valora cada capital por su población y saca un nuevo límite de retirada para cada lote, así que nunca puedes leerlo del todo. Gasta de forma pareja, paga algo más por las ciudades más grandes y en cada partida es prudente, equilibrado o audaz. Si tiene mucho más dinero que tú, ofrece la cantidad que ya no puedes superar. Supera su límite por un euro y el lote es tuyo — a menos que pueda dejarte fuera.',
+  rulesP6:'La <b>dificultad</b> decide qué capitales pueden salir: Principiante solo Europa, Medio todas las de más de 2 millones de habitantes, Experto las 195 (los 193 Estados miembros de la ONU más la Ciudad del Vaticano y Taipéi). Si un país tiene varias capitales, cuenta la sede del gobierno. Todas las capitales tienen la misma probabilidad de salir y ninguna sale dos veces en la misma partida. Las partidas cortas dependen mucho de la suerte: con 5 o 10 capitales, un solo sorteo puede decidirlo todo. Cuanto más larga es la partida, más cuenta la habilidad.',
+  rulesP8:'<b>¿Sin dinero?</b> Cuando solo un jugador conserva dinero, se lleva todas las capitales restantes por 1 € cada una. Jugárselo todo es un riesgo real: le regala el resto de la ronda a tu rival.',
+  unsoldNote:'{n} capitales quedaron sin vender: nadie podía pagarlas.',
+  footer:'Sin cuentas · Sin rastreo · {n} capitales' },
+ fr:{ budgetNote:'Dépend de la difficulté et de la longueur de la partie — rare exprès.',
+  rivalDesc:'Le <b>bot</b> évalue chaque capitale selon la taille de sa ville, répartit son argent régulièrement sur la partie et tire une nouvelle limite à chaque lot. À chaque partie il est d’humeur différente — prudent, équilibré ou audacieux — et on ne te dit pas laquelle. Si ton argent s’épuise, il peut jouer le tout pour le tout pour t’éliminer.',
+  rulesP1:'Des capitales tombent au hasard, une par une et au plus une fois par partie. <b>1 point = 1 million d’habitants</b> de l’agglomération de la capitale, et la population reste masquée jusqu’à la fin.',
+  rulesP4:'Tout le monde commence avec le même budget, fixé par la difficulté et la longueur de la partie. <b>Moyen et Expert : 50 € pour 5 capitales, 100 € pour 10, 150 € pour 15, 200 € pour 20, 300 € pour 30</b>. Débutant reçoit la moitié : 25 €, 50 €, 75 €, 100 €, 150 €. L’argent est rare exprès : même le plus gros budget ne suffit pas pour les cinq plus grandes villes.',
+  rulesP5:'Le bot évalue chaque capitale selon sa population et tire une nouvelle limite d’abandon à chaque lot, impossible donc de le lire complètement. Il dépense régulièrement, paye un peu plus pour les plus grandes villes et, à chaque partie, est prudent, équilibré ou audacieux. S’il a bien plus d’argent que toi, il offre le montant que tu ne peux plus surenchérir. Dépasse sa limite d’un euro et le lot est à toi — sauf s’il peut t’éliminer.',
+  rulesP6:'La <b>difficulté</b> décide quelles capitales peuvent sortir : Débutant seulement l’Europe, Moyen toutes celles de plus de 2 millions d’habitants, Expert les 195 (les 193 États membres de l’ONU plus la Cité du Vatican et Taipei). Quand un pays a plusieurs capitales, c’est le siège du gouvernement qui compte. Chaque capitale a autant de chances de sortir et aucune ne sort deux fois dans la même partie. Les parties courtes dépendent beaucoup de la chance : avec 5 ou 10 capitales, un seul tirage peut tout décider. Plus la partie est longue, plus l’habileté compte.',
+  rulesP8:'<b>Plus d’argent ?</b> Quand un seul joueur a encore de l’argent, il rafle toutes les capitales restantes pour 1 € chacune. Tout miser est un vrai risque : cela offre le reste de la manche à ton rival.',
+  unsoldNote:'{n} capitales sont restées invendues : personne ne pouvait les payer.',
+  footer:'Aucun compte · Aucun suivi · {n} capitales' }
 }};
 
 let LANG='en';
@@ -832,8 +878,8 @@ function home() {
       </div>
       <div class="m-r">
         <div class="packs" role="list">
-          ${[['countries', 'packCountries'], ['states', 'packStates']].map(([id, k]) => { const pm = Packs.meta(id), sel = id === SELPACK; return `<button class="pack ${sel ? 'on glass2' : 'off'}" data-pack="${id}" role="listitem" ${sel ? 'aria-current="true"' : ''}><b>${esc(t(k))}</b><span class="s">${pm.count} · ${esc(t('popLabel'))}</span></button>`; }).join('')}
-          ${['packCapitals', 'packWorld'].map(k => `<button class="pack off" data-soon="1" role="listitem" aria-disabled="true"><i>${esc(t('soon'))}</i><b>${esc(t(k))}</b><span class="s">${esc(t('popLabel'))}</span></button>`).join('')}
+          ${[['countries', 'packCountries'], ['states', 'packStates'], ['capitals', 'packCapitals']].map(([id, k]) => { const pm = Packs.meta(id), sel = id === SELPACK; return `<button class="pack ${sel ? 'on glass2' : 'off'}" data-pack="${id}" role="listitem" ${sel ? 'aria-current="true"' : ''}><b>${esc(t(k))}</b><span class="s">${pm.count} · ${esc(t('popLabel'))}</span></button>`; }).join('')}
+          ${['packWorld'].map(k => `<button class="pack off" data-soon="1" role="listitem" aria-disabled="true"><i>${esc(t('soon'))}</i><b>${esc(t(k))}</b><span class="s">${esc(t('popLabel'))}</span></button>`).join('')}
         </div>
         <div class="modes">
           <button class="glass mode" id="m1"><span class="ic">${IC('person')}</span><span class="t"><b>${esc(t('solo'))}</b><span class="d">${esc(t('soloShort'))}</span></span><span class="go">${IC('chev', 'sm')}</span></button>
@@ -900,7 +946,7 @@ function privacy() {
 /* sources and licences for everything bundled (the full text lives in NOTICE.md) */
 function credits() {
   const h = sheet({ title: t('credits'), foot: `<button class="btn gold" id="cd">${esc(t('done'))}</button>`,
-    body: `<p>${esc(t('creditsIntro'))}</p>` + ['creditsPop', 'creditsMap', 'creditsImg', 'creditsWorld', 'creditsGlobe', 'creditsThree', 'creditsSound', 'creditsFacts'].map(k => `<p class="sm">${t(k)}</p>`).join('') });
+    body: `<p>${esc(t('creditsIntro'))}</p>` + ['creditsPop', 'creditsCap', 'creditsMap', 'creditsImg', 'creditsWorld', 'creditsGlobe', 'creditsThree', 'creditsSound', 'creditsFacts'].map(k => `<p class="sm">${t(k)}</p>`).join('') });
   on('cd', () => { Snd.ui(); h.close(); });
 }
 

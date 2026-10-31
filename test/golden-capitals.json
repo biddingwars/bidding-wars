@@ -1,0 +1,1370 @@
+{
+ "generatedFrom": "pack-capitals.js priceTable (monotone cubic through log-log anchors, whole euros, minimum 1; max/ideal 2.0 -> 1.45)",
+ "capitals": [
+  {
+   "id": "AF",
+   "value": 4.01177,
+   "ideal": 21,
+   "max": 34,
+   "tier": "large"
+  },
+  {
+   "id": "AL",
+   "value": 0.47557699999999997,
+   "ideal": 3,
+   "max": 6,
+   "tier": "small"
+  },
+  {
+   "id": "DZ",
+   "value": 2.693542,
+   "ideal": 15,
+   "max": 25,
+   "tier": "mid"
+  },
+  {
+   "id": "AD",
+   "value": 0.022614000000000002,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "AO",
+   "value": 7.7741999999999996,
+   "ideal": 36,
+   "max": 55,
+   "tier": "large"
+  },
+  {
+   "id": "AG",
+   "value": 0.020763999999999998,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "AR",
+   "value": 14.96653,
+   "ideal": 62,
+   "max": 92,
+   "tier": "mega"
+  },
+  {
+   "id": "AM",
+   "value": 1.080324,
+   "ideal": 6,
+   "max": 11,
+   "tier": "mid"
+  },
+  {
+   "id": "AU",
+   "value": 0.44769200000000003,
+   "ideal": 3,
+   "max": 6,
+   "tier": "small"
+  },
+  {
+   "id": "AT",
+   "value": 1.900547,
+   "ideal": 11,
+   "max": 19,
+   "tier": "mid"
+  },
+  {
+   "id": "AZ",
+   "value": 2.285729,
+   "ideal": 13,
+   "max": 22,
+   "tier": "mid"
+  },
+  {
+   "id": "BS",
+   "value": 0.279668,
+   "ideal": 2,
+   "max": 4,
+   "tier": "small"
+  },
+  {
+   "id": "BH",
+   "value": 0.564631,
+   "ideal": 4,
+   "max": 7,
+   "tier": "small"
+  },
+  {
+   "id": "BD",
+   "value": 19.578421,
+   "ideal": 75,
+   "max": 110,
+   "tier": "mega"
+  },
+  {
+   "id": "BB",
+   "value": 0.08920099999999999,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "BY",
+   "value": 2.0046720000000002,
+   "ideal": 12,
+   "max": 20,
+   "tier": "mid"
+  },
+  {
+   "id": "BE",
+   "value": 2.04951,
+   "ideal": 12,
+   "max": 20,
+   "tier": "mid"
+  },
+  {
+   "id": "BZ",
+   "value": 0.022964,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "BJ",
+   "value": 0.685458,
+   "ideal": 4,
+   "max": 7,
+   "tier": "small"
+  },
+  {
+   "id": "BT",
+   "value": 0.203297,
+   "ideal": 1,
+   "max": 2,
+   "tier": "small"
+  },
+  {
+   "id": "BO",
+   "value": 1.814087,
+   "ideal": 10,
+   "max": 17,
+   "tier": "mid"
+  },
+  {
+   "id": "BA",
+   "value": 0.342577,
+   "ideal": 2,
+   "max": 4,
+   "tier": "small"
+  },
+  {
+   "id": "BW",
+   "value": 0.269338,
+   "ideal": 2,
+   "max": 4,
+   "tier": "small"
+  },
+  {
+   "id": "BR",
+   "value": 4.469585,
+   "ideal": 23,
+   "max": 37,
+   "tier": "large"
+  },
+  {
+   "id": "BN",
+   "value": 0.040781,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "BG",
+   "value": 1.2724179999999998,
+   "ideal": 7,
+   "max": 12,
+   "tier": "mid"
+  },
+  {
+   "id": "BF",
+   "value": 2.5313809999999997,
+   "ideal": 15,
+   "max": 25,
+   "tier": "mid"
+  },
+  {
+   "id": "BI",
+   "value": 0.898968,
+   "ideal": 5,
+   "max": 9,
+   "tier": "small"
+  },
+  {
+   "id": "CV",
+   "value": 0.167504,
+   "ideal": 1,
+   "max": 2,
+   "tier": "small"
+  },
+  {
+   "id": "KH",
+   "value": 1.952329,
+   "ideal": 11,
+   "max": 19,
+   "tier": "mid"
+  },
+  {
+   "id": "CM",
+   "value": 3.655656,
+   "ideal": 20,
+   "max": 32,
+   "tier": "large"
+  },
+  {
+   "id": "CA",
+   "value": 1.363159,
+   "ideal": 8,
+   "max": 14,
+   "tier": "mid"
+  },
+  {
+   "id": "CF",
+   "value": 0.850946,
+   "ideal": 5,
+   "max": 9,
+   "tier": "small"
+  },
+  {
+   "id": "TD",
+   "value": 1.3226790000000002,
+   "ideal": 8,
+   "max": 14,
+   "tier": "mid"
+  },
+  {
+   "id": "CL",
+   "value": 6.680371,
+   "ideal": 32,
+   "max": 50,
+   "tier": "large"
+  },
+  {
+   "id": "CN",
+   "value": 19.617963,
+   "ideal": 75,
+   "max": 110,
+   "tier": "mega"
+  },
+  {
+   "id": "CO",
+   "value": 10.574409,
+   "ideal": 47,
+   "max": 71,
+   "tier": "mega"
+  },
+  {
+   "id": "KM",
+   "value": 0.062351,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "CG",
+   "value": 2.229693,
+   "ideal": 13,
+   "max": 22,
+   "tier": "mid"
+  },
+  {
+   "id": "CD",
+   "value": 13.171256,
+   "ideal": 56,
+   "max": 83,
+   "tier": "mega"
+  },
+  {
+   "id": "CR",
+   "value": 1.357745,
+   "ideal": 8,
+   "max": 14,
+   "tier": "mid"
+  },
+  {
+   "id": "CI",
+   "value": 4.920776,
+   "ideal": 25,
+   "max": 39,
+   "tier": "large"
+  },
+  {
+   "id": "HR",
+   "value": 0.685587,
+   "ideal": 4,
+   "max": 7,
+   "tier": "small"
+  },
+  {
+   "id": "CU",
+   "value": 2.136468,
+   "ideal": 12,
+   "max": 20,
+   "tier": "mid"
+  },
+  {
+   "id": "CY",
+   "value": 0.269469,
+   "ideal": 2,
+   "max": 4,
+   "tier": "small"
+  },
+  {
+   "id": "CZ",
+   "value": 1.2915519999999998,
+   "ideal": 8,
+   "max": 14,
+   "tier": "mid"
+  },
+  {
+   "id": "KP",
+   "value": 3.037862,
+   "ideal": 17,
+   "max": 28,
+   "tier": "large"
+  },
+  {
+   "id": "DK",
+   "value": 1.320826,
+   "ideal": 8,
+   "max": 14,
+   "tier": "mid"
+  },
+  {
+   "id": "DJ",
+   "value": 0.561564,
+   "ideal": 4,
+   "max": 7,
+   "tier": "small"
+  },
+  {
+   "id": "DM",
+   "value": 0.014942,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "DO",
+   "value": 3.172152,
+   "ideal": 18,
+   "max": 29,
+   "tier": "large"
+  },
+  {
+   "id": "EC",
+   "value": 1.822397,
+   "ideal": 11,
+   "max": 19,
+   "tier": "mid"
+  },
+  {
+   "id": "EG",
+   "value": 20.076002,
+   "ideal": 76,
+   "max": 111,
+   "tier": "mega"
+  },
+  {
+   "id": "SV",
+   "value": 1.1066980000000002,
+   "ideal": 7,
+   "max": 12,
+   "tier": "mid"
+  },
+  {
+   "id": "GQ",
+   "value": 0.29677,
+   "ideal": 2,
+   "max": 4,
+   "tier": "small"
+  },
+  {
+   "id": "ER",
+   "value": 0.8958630000000001,
+   "ideal": 5,
+   "max": 9,
+   "tier": "small"
+  },
+  {
+   "id": "EE",
+   "value": 0.437027,
+   "ideal": 3,
+   "max": 6,
+   "tier": "small"
+  },
+  {
+   "id": "SZ",
+   "value": 0.06801,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "ET",
+   "value": 4.399674,
+   "ideal": 23,
+   "max": 37,
+   "tier": "large"
+  },
+  {
+   "id": "FJ",
+   "value": 0.178339,
+   "ideal": 1,
+   "max": 2,
+   "tier": "small"
+  },
+  {
+   "id": "FI",
+   "value": 1.279096,
+   "ideal": 8,
+   "max": 14,
+   "tier": "mid"
+  },
+  {
+   "id": "FR",
+   "value": 10.900952,
+   "ideal": 48,
+   "max": 72,
+   "tier": "mega"
+  },
+  {
+   "id": "GA",
+   "value": 0.813489,
+   "ideal": 5,
+   "max": 9,
+   "tier": "small"
+  },
+  {
+   "id": "GM",
+   "value": 0.437161,
+   "ideal": 3,
+   "max": 6,
+   "tier": "small"
+  },
+  {
+   "id": "GE",
+   "value": 1.077333,
+   "ideal": 6,
+   "max": 11,
+   "tier": "mid"
+  },
+  {
+   "id": "DE",
+   "value": 3.552123,
+   "ideal": 19,
+   "max": 31,
+   "tier": "large"
+  },
+  {
+   "id": "GH",
+   "value": 2.4393890000000003,
+   "ideal": 14,
+   "max": 23,
+   "tier": "mid"
+  },
+  {
+   "id": "GR",
+   "value": 3.1555999999999997,
+   "ideal": 18,
+   "max": 29,
+   "tier": "large"
+  },
+  {
+   "id": "GD",
+   "value": 0.039297,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "GT",
+   "value": 2.851104,
+   "ideal": 16,
+   "max": 26,
+   "tier": "mid"
+  },
+  {
+   "id": "GN",
+   "value": 1.843121,
+   "ideal": 11,
+   "max": 19,
+   "tier": "mid"
+  },
+  {
+   "id": "GW",
+   "value": 0.558399,
+   "ideal": 4,
+   "max": 7,
+   "tier": "small"
+  },
+  {
+   "id": "GY",
+   "value": 0.109934,
+   "ideal": 1,
+   "max": 2,
+   "tier": "small"
+  },
+  {
+   "id": "HT",
+   "value": 2.6367629999999997,
+   "ideal": 15,
+   "max": 25,
+   "tier": "mid"
+  },
+  {
+   "id": "VA",
+   "value": 0.0008010000000000001,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "HN",
+   "value": 1.363041,
+   "ideal": 8,
+   "max": 14,
+   "tier": "mid"
+  },
+  {
+   "id": "HU",
+   "value": 1.759497,
+   "ideal": 10,
+   "max": 17,
+   "tier": "mid"
+  },
+  {
+   "id": "IS",
+   "value": 0.216364,
+   "ideal": 1,
+   "max": 2,
+   "tier": "small"
+  },
+  {
+   "id": "IN",
+   "value": 28.513682,
+   "ideal": 95,
+   "max": 138,
+   "tier": "mega"
+  },
+  {
+   "id": "ID",
+   "value": 10.516926999999999,
+   "ideal": 47,
+   "max": 71,
+   "tier": "mega"
+  },
+  {
+   "id": "IR",
+   "value": 8.895947,
+   "ideal": 40,
+   "max": 61,
+   "tier": "large"
+  },
+  {
+   "id": "IQ",
+   "value": 6.811955,
+   "ideal": 32,
+   "max": 50,
+   "tier": "large"
+  },
+  {
+   "id": "IE",
+   "value": 1.2014259999999999,
+   "ideal": 7,
+   "max": 12,
+   "tier": "mid"
+  },
+  {
+   "id": "IL",
+   "value": 0.907062,
+   "ideal": 6,
+   "max": 11,
+   "tier": "small"
+  },
+  {
+   "id": "IT",
+   "value": 4.20971,
+   "ideal": 22,
+   "max": 35,
+   "tier": "large"
+  },
+  {
+   "id": "JM",
+   "value": 0.589083,
+   "ideal": 4,
+   "max": 7,
+   "tier": "small"
+  },
+  {
+   "id": "JP",
+   "value": 37.468302,
+   "ideal": 111,
+   "max": 161,
+   "tier": "mega"
+  },
+  {
+   "id": "JO",
+   "value": 2.0645819999999997,
+   "ideal": 12,
+   "max": 20,
+   "tier": "mid"
+  },
+  {
+   "id": "KZ",
+   "value": 1.068113,
+   "ideal": 6,
+   "max": 11,
+   "tier": "mid"
+  },
+  {
+   "id": "KE",
+   "value": 4.385853,
+   "ideal": 23,
+   "max": 37,
+   "tier": "large"
+  },
+  {
+   "id": "KI",
+   "value": 0.064011,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "KW",
+   "value": 2.98927,
+   "ideal": 17,
+   "max": 28,
+   "tier": "mid"
+  },
+  {
+   "id": "KG",
+   "value": 0.996319,
+   "ideal": 6,
+   "max": 11,
+   "tier": "small"
+  },
+  {
+   "id": "LA",
+   "value": 0.6647540000000001,
+   "ideal": 4,
+   "max": 7,
+   "tier": "small"
+  },
+  {
+   "id": "LV",
+   "value": 0.637089,
+   "ideal": 4,
+   "max": 7,
+   "tier": "small"
+  },
+  {
+   "id": "LB",
+   "value": 2.3852710000000004,
+   "ideal": 14,
+   "max": 23,
+   "tier": "mid"
+  },
+  {
+   "id": "LS",
+   "value": 0.201851,
+   "ideal": 1,
+   "max": 2,
+   "tier": "small"
+  },
+  {
+   "id": "LR",
+   "value": 1.4183,
+   "ideal": 8,
+   "max": 14,
+   "tier": "mid"
+  },
+  {
+   "id": "LY",
+   "value": 1.1577460000000002,
+   "ideal": 7,
+   "max": 12,
+   "tier": "mid"
+  },
+  {
+   "id": "LI",
+   "value": 0.00547,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "LT",
+   "value": 0.536055,
+   "ideal": 4,
+   "max": 7,
+   "tier": "small"
+  },
+  {
+   "id": "LU",
+   "value": 0.119752,
+   "ideal": 1,
+   "max": 2,
+   "tier": "small"
+  },
+  {
+   "id": "MG",
+   "value": 3.058387,
+   "ideal": 17,
+   "max": 28,
+   "tier": "large"
+  },
+  {
+   "id": "MW",
+   "value": 1.029639,
+   "ideal": 6,
+   "max": 11,
+   "tier": "mid"
+  },
+  {
+   "id": "MY",
+   "value": 7.563912,
+   "ideal": 35,
+   "max": 54,
+   "tier": "large"
+  },
+  {
+   "id": "MV",
+   "value": 0.176851,
+   "ideal": 1,
+   "max": 2,
+   "tier": "small"
+  },
+  {
+   "id": "ML",
+   "value": 2.4467489999999996,
+   "ideal": 14,
+   "max": 23,
+   "tier": "mid"
+  },
+  {
+   "id": "MT",
+   "value": 0.212768,
+   "ideal": 1,
+   "max": 2,
+   "tier": "small"
+  },
+  {
+   "id": "MH",
+   "value": 0.030661,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "MR",
+   "value": 1.205414,
+   "ideal": 7,
+   "max": 12,
+   "tier": "mid"
+  },
+  {
+   "id": "MU",
+   "value": 0.149365,
+   "ideal": 1,
+   "max": 2,
+   "tier": "small"
+  },
+  {
+   "id": "MX",
+   "value": 21.580827000000003,
+   "ideal": 80,
+   "max": 117,
+   "tier": "mega"
+  },
+  {
+   "id": "FM",
+   "value": 0.0069960000000000005,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "MC",
+   "value": 0.038897,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "MN",
+   "value": 1.520381,
+   "ideal": 9,
+   "max": 15,
+   "tier": "mid"
+  },
+  {
+   "id": "ME",
+   "value": 0.177177,
+   "ideal": 1,
+   "max": 2,
+   "tier": "small"
+  },
+  {
+   "id": "MA",
+   "value": 1.846661,
+   "ideal": 11,
+   "max": 19,
+   "tier": "mid"
+  },
+  {
+   "id": "MZ",
+   "value": 1.101771,
+   "ideal": 7,
+   "max": 12,
+   "tier": "mid"
+  },
+  {
+   "id": "MM",
+   "value": 0.500218,
+   "ideal": 3,
+   "max": 6,
+   "tier": "small"
+  },
+  {
+   "id": "NA",
+   "value": 0.40428,
+   "ideal": 3,
+   "max": 6,
+   "tier": "small"
+  },
+  {
+   "id": "NR",
+   "value": 0.011312,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "NP",
+   "value": 1.329732,
+   "ideal": 8,
+   "max": 14,
+   "tier": "mid"
+  },
+  {
+   "id": "NL",
+   "value": 0.68514,
+   "ideal": 4,
+   "max": 7,
+   "tier": "small"
+  },
+  {
+   "id": "NZ",
+   "value": 0.411346,
+   "ideal": 3,
+   "max": 6,
+   "tier": "small"
+  },
+  {
+   "id": "NI",
+   "value": 1.047923,
+   "ideal": 6,
+   "max": 11,
+   "tier": "mid"
+  },
+  {
+   "id": "NE",
+   "value": 1.213781,
+   "ideal": 7,
+   "max": 12,
+   "tier": "mid"
+  },
+  {
+   "id": "NG",
+   "value": 2.918518,
+   "ideal": 17,
+   "max": 28,
+   "tier": "mid"
+  },
+  {
+   "id": "MK",
+   "value": 0.584208,
+   "ideal": 4,
+   "max": 7,
+   "tier": "small"
+  },
+  {
+   "id": "NO",
+   "value": 1.012225,
+   "ideal": 6,
+   "max": 11,
+   "tier": "mid"
+  },
+  {
+   "id": "OM",
+   "value": 1.446563,
+   "ideal": 8,
+   "max": 14,
+   "tier": "mid"
+  },
+  {
+   "id": "PK",
+   "value": 1.061412,
+   "ideal": 6,
+   "max": 11,
+   "tier": "mid"
+  },
+  {
+   "id": "PW",
+   "value": 0.01141,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "PA",
+   "value": 1.78349,
+   "ideal": 10,
+   "max": 17,
+   "tier": "mid"
+  },
+  {
+   "id": "PG",
+   "value": 0.366862,
+   "ideal": 3,
+   "max": 6,
+   "tier": "small"
+  },
+  {
+   "id": "PY",
+   "value": 3.2221990000000003,
+   "ideal": 18,
+   "max": 29,
+   "tier": "large"
+  },
+  {
+   "id": "PE",
+   "value": 10.390607,
+   "ideal": 46,
+   "max": 69,
+   "tier": "mega"
+  },
+  {
+   "id": "PH",
+   "value": 13.482468,
+   "ideal": 57,
+   "max": 85,
+   "tier": "mega"
+  },
+  {
+   "id": "PL",
+   "value": 1.767798,
+   "ideal": 10,
+   "max": 17,
+   "tier": "mid"
+  },
+  {
+   "id": "PT",
+   "value": 2.927316,
+   "ideal": 17,
+   "max": 28,
+   "tier": "mid"
+  },
+  {
+   "id": "QA",
+   "value": 0.633401,
+   "ideal": 4,
+   "max": 7,
+   "tier": "small"
+  },
+  {
+   "id": "KR",
+   "value": 9.963497,
+   "ideal": 45,
+   "max": 68,
+   "tier": "large"
+  },
+  {
+   "id": "MD",
+   "value": 0.509707,
+   "ideal": 3,
+   "max": 6,
+   "tier": "small"
+  },
+  {
+   "id": "RO",
+   "value": 1.82138,
+   "ideal": 11,
+   "max": 19,
+   "tier": "mid"
+  },
+  {
+   "id": "RU",
+   "value": 12.409737999999999,
+   "ideal": 53,
+   "max": 79,
+   "tier": "mega"
+  },
+  {
+   "id": "RW",
+   "value": 1.057836,
+   "ideal": 6,
+   "max": 11,
+   "tier": "mid"
+  },
+  {
+   "id": "KN",
+   "value": 0.014433999999999999,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "LC",
+   "value": 0.022258,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "VC",
+   "value": 0.026636,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "WS",
+   "value": 0.036066,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "SM",
+   "value": 0.004465,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "ST",
+   "value": 0.080099,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "SA",
+   "value": 6.906595,
+   "ideal": 33,
+   "max": 51,
+   "tier": "large"
+  },
+  {
+   "id": "SN",
+   "value": 2.9784189999999997,
+   "ideal": 17,
+   "max": 28,
+   "tier": "mid"
+  },
+  {
+   "id": "RS",
+   "value": 1.389351,
+   "ideal": 8,
+   "max": 14,
+   "tier": "mid"
+  },
+  {
+   "id": "SC",
+   "value": 0.028091,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "SL",
+   "value": 1.135949,
+   "ideal": 7,
+   "max": 12,
+   "tier": "mid"
+  },
+  {
+   "id": "SG",
+   "value": 5.791901,
+   "ideal": 28,
+   "max": 44,
+   "tier": "large"
+  },
+  {
+   "id": "SK",
+   "value": 0.42992,
+   "ideal": 3,
+   "max": 6,
+   "tier": "small"
+  },
+  {
+   "id": "SI",
+   "value": 0.286491,
+   "ideal": 2,
+   "max": 4,
+   "tier": "small"
+  },
+  {
+   "id": "SB",
+   "value": 0.081801,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "SO",
+   "value": 2.0816239999999997,
+   "ideal": 12,
+   "max": 20,
+   "tier": "mid"
+  },
+  {
+   "id": "ZA",
+   "value": 2.3783499999999997,
+   "ideal": 14,
+   "max": 23,
+   "tier": "mid"
+  },
+  {
+   "id": "SS",
+   "value": 0.36891399999999996,
+   "ideal": 3,
+   "max": 6,
+   "tier": "small"
+  },
+  {
+   "id": "ES",
+   "value": 6.4971239999999995,
+   "ideal": 31,
+   "max": 48,
+   "tier": "large"
+  },
+  {
+   "id": "LK",
+   "value": 0.599821,
+   "ideal": 4,
+   "max": 7,
+   "tier": "small"
+  },
+  {
+   "id": "SD",
+   "value": 5.534078999999999,
+   "ideal": 27,
+   "max": 42,
+   "tier": "large"
+  },
+  {
+   "id": "SR",
+   "value": 0.239457,
+   "ideal": 2,
+   "max": 4,
+   "tier": "small"
+  },
+  {
+   "id": "SE",
+   "value": 1.5829680000000002,
+   "ideal": 9,
+   "max": 15,
+   "tier": "mid"
+  },
+  {
+   "id": "CH",
+   "value": 0.422153,
+   "ideal": 3,
+   "max": 6,
+   "tier": "small"
+  },
+  {
+   "id": "SY",
+   "value": 2.319545,
+   "ideal": 13,
+   "max": 22,
+   "tier": "mid"
+  },
+  {
+   "id": "TJ",
+   "value": 0.872653,
+   "ideal": 5,
+   "max": 9,
+   "tier": "small"
+  },
+  {
+   "id": "TH",
+   "value": 10.156316,
+   "ideal": 45,
+   "max": 68,
+   "tier": "mega"
+  },
+  {
+   "id": "TL",
+   "value": 0.28113499999999997,
+   "ideal": 2,
+   "max": 4,
+   "tier": "small"
+  },
+  {
+   "id": "TG",
+   "value": 1.745744,
+   "ideal": 10,
+   "max": 17,
+   "tier": "mid"
+  },
+  {
+   "id": "TO",
+   "value": 0.022904,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "TT",
+   "value": 0.544417,
+   "ideal": 4,
+   "max": 7,
+   "tier": "small"
+  },
+  {
+   "id": "TN",
+   "value": 2.290777,
+   "ideal": 13,
+   "max": 22,
+   "tier": "mid"
+  },
+  {
+   "id": "TR",
+   "value": 4.919073999999999,
+   "ideal": 25,
+   "max": 39,
+   "tier": "large"
+  },
+  {
+   "id": "TM",
+   "value": 0.8101860000000001,
+   "ideal": 5,
+   "max": 9,
+   "tier": "small"
+  },
+  {
+   "id": "TV",
+   "value": 0.007042,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "UG",
+   "value": 2.9863519999999997,
+   "ideal": 17,
+   "max": 28,
+   "tier": "mid"
+  },
+  {
+   "id": "UA",
+   "value": 2.956706,
+   "ideal": 17,
+   "max": 28,
+   "tier": "mid"
+  },
+  {
+   "id": "AE",
+   "value": 1.419699,
+   "ideal": 8,
+   "max": 14,
+   "tier": "mid"
+  },
+  {
+   "id": "GB",
+   "value": 9.046485,
+   "ideal": 41,
+   "max": 62,
+   "tier": "large"
+  },
+  {
+   "id": "TZ",
+   "value": 0.26164499999999996,
+   "ideal": 2,
+   "max": 4,
+   "tier": "small"
+  },
+  {
+   "id": "US",
+   "value": 5.206593,
+   "ideal": 26,
+   "max": 41,
+   "tier": "large"
+  },
+  {
+   "id": "UY",
+   "value": 1.7369890000000001,
+   "ideal": 10,
+   "max": 17,
+   "tier": "mid"
+  },
+  {
+   "id": "UZ",
+   "value": 2.463969,
+   "ideal": 14,
+   "max": 23,
+   "tier": "mid"
+  },
+  {
+   "id": "VU",
+   "value": 0.05269,
+   "ideal": 1,
+   "max": 2,
+   "tier": "micro"
+  },
+  {
+   "id": "VE",
+   "value": 2.93456,
+   "ideal": 17,
+   "max": 28,
+   "tier": "mid"
+  },
+  {
+   "id": "VN",
+   "value": 4.282738,
+   "ideal": 22,
+   "max": 35,
+   "tier": "large"
+  },
+  {
+   "id": "YE",
+   "value": 2.779317,
+   "ideal": 16,
+   "max": 26,
+   "tier": "mid"
+  },
+  {
+   "id": "ZM",
+   "value": 2.523844,
+   "ideal": 14,
+   "max": 23,
+   "tier": "mid"
+  },
+  {
+   "id": "ZW",
+   "value": 1.5150160000000001,
+   "ideal": 9,
+   "max": 15,
+   "tier": "mid"
+  },
+  {
+   "id": "TW",
+   "value": 2.705791,
+   "ideal": 15,
+   "max": 25,
+   "tier": "mid"
+  }
+ ]
+}

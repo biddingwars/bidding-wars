@@ -1,15 +1,15 @@
 /* Bug hunt for the engine and the bot: plays whole auctions with hostile and random players and checks invariants after every move.
    Dev-only (`node --test` never starts it; test/fuzz.test.js runs a small slice).
 
-     node test/fuzz.js [games=20000] [seed=1] [pack=countries|states|august|all]
+     node test/fuzz.js [games=20000] [seed=1] [pack=countries|states|capitals|august|all]
 
    A "failure" is any of: an exception, a non-terminating auction, NaN or a non-integer in a budget/price, a negative budget, money that is
    not conserved, a lot sold twice, a lot neither bought nor unsold, a bot move the engine rejects (the bot must never propose an invalid raise),
    a bot raise above its own budget, an invalid human move that changes the state, a non-reproducible game (same seed, different result). */
 const Engine = require('../engine.js');
-const countries = require('../pack-countries.js'), states = require('../pack-states.js'), august = require('./pack-countries-august.js');
+const countries = require('../pack-countries.js'), states = require('../pack-states.js'), capitals = require('../pack-capitals.js'), august = require('./pack-countries-august.js');
 
-const PACKS = { countries, states, august };
+const PACKS = { countries, states, capitals, august };
 const clone = o => JSON.parse(JSON.stringify(o, (k, v) => (v instanceof Map ? undefined : v)));
 
 /* hostile / random human policies: they may send anything */
@@ -101,7 +101,7 @@ module.exports = { oneGame, PACKS };
 
 if (require.main === module && !process.env.NODE_TEST_CONTEXT) {
   const games = +process.argv[2] || 20000, seed0 = +process.argv[3] || 1, which = process.argv[4] || 'all';
-  const names = which === 'all' ? ['countries', 'states', 'august'] : [which];
+  const names = which === 'all' ? ['countries', 'states', 'capitals', 'august'] : [which];
   let total = 0, failed = 0; const samples = [];
   const t0 = Date.now();
   for (let g = 0; g < games; g++) {

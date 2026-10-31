@@ -30,7 +30,8 @@
      `count` is checked against the real pack by the tests so it cannot drift. */
   const META = meta || [
     { id: 'countries', file: 'pack-countries.js', count: 196, sym: '€' },
-    { id: 'states', file: 'pack-states.js', count: 50, sym: '$' }
+    { id: 'states', file: 'pack-states.js', count: 50, sym: '$' },
+    { id: 'capitals', file: 'pack-capitals.js', count: 195, sym: '€' }
   ];
 
   const loaded = new Map(), pending = new Map();

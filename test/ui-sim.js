@@ -13,10 +13,10 @@ const driver = async cfg => {
   const sleep = ms => new Promise(r => setTimeout(r, ms));
   const $ = s => document.querySelector(s), bad = /NaN|undefined|\[object|Infinity/;
   const problems = [];
-  const check = where => { const txt = document.body.innerText; if (cfg.pack === 'states' && /€/.test(txt)) problems.push('euro sign on ' + where); if (bad.test(txt)) problems.push('bad text on ' + where + ': ' + (txt.match(bad) || [])[0]); if (S && S.players) S.players.forEach(p => { if (!(p.budget >= 0) || !Number.isInteger(p.budget)) problems.push('budget ' + p.budget); }); };
+  const check = where => { const txt = document.body.innerText; if (cfg.pack === 'states' && /€/.test(txt)) problems.push('euro sign on ' + where); if (cfg.pack === 'capitals' && /\$\d/.test(txt)) problems.push('dollar sign on ' + where); if (bad.test(txt)) problems.push('bad text on ' + where + ': ' + (txt.match(bad) || [])[0]); if (S && S.players) S.players.forEach(p => { if (!(p.budget >= 0) || !Number.isInteger(p.budget)) problems.push('budget ' + p.budget); }); };
   const wait = async (fn, ms = 6000, what = '') => { const t0 = Date.now(); while (Date.now() - t0 < ms) { const r = fn(); if (r) return r; await sleep(3); } throw new Error('timeout waiting for ' + what); };
   window.think = () => Promise.resolve(); lockMs = 0;   // the hot-seat guard has its own test
-  if (cfg.pack === 'states') { $('[data-pack="states"]').click(); await wait(() => $('[data-pack="states"][aria-current]'), 2000, 'states tile'); }
+  if (cfg.pack !== 'countries') { $(`[data-pack="${cfg.pack}"]`).click(); await wait(() => $(`[data-pack="${cfg.pack}"][aria-current]`), 2000, cfg.pack + ' tile'); }
   $(cfg.kind === 'solo' ? '#m1' : '#m2').click();
   await wait(() => $('#start'), 6000, 'setup');
   const pickv = (g, v) => { const b = document.querySelector(`[data-g="${g}"] [data-v="${v}"]`); if (b) b.click(); };
@@ -71,8 +71,8 @@ const driver = async cfg => {
   const worker = async w => {
     while (done + (PAR - 1) < N + PAR - 1 && done < N) {
       const idx = done++;
-      const lang = langs[idx % 5], kind = idx % 3 === 0 ? 'solo' : 'multi';
-      const cfg = { kind, lang, level: pick(levels), pack: idx % 2 ? 'states' : 'countries', lots: pick(idx % 2 && idx % 10 === 1 ? [5, 10, 20] : [5, 10]), clock: idx % 11 === 0 ? 10 : 0, players: kind === 'multi' ? 2 + (idx % 3) : 2, strategy: strategies[idx % strategies.length], longNames: idx % 4 === 0, again: idx % 7 === 0, leaveAfter: idx % 13 === 5 ? 2 : 0, timeoutTest: false };
+      const lang = langs[idx % 5], kind = Math.floor(idx / 3) % 3 === 0 ? 'solo' : 'multi', packId = ['countries', 'states', 'capitals'][idx % 3];
+      const cfg = { kind, lang, level: pick(levels), pack: packId, lots: pick(packId === 'states' && idx % 2 ? [5, 10, 20] : [5, 10]), clock: idx % 11 === 0 ? 10 : 0, players: kind === 'multi' ? 2 + (idx % 3) : 2, strategy: strategies[idx % strategies.length], longNames: idx % 4 === 0, again: idx % 7 === 0, leaveAfter: idx % 13 === 5 ? 2 : 0, timeoutTest: false };
       if (cfg.clock) cfg.clock = 10;
       const ctx = await browser.newContext({ viewport: { width: [402, 375, 834, 393][idx % 4], height: [874, 667, 1194, 700][idx % 4] }, serviceWorkers: 'block', reducedMotion: 'reduce' });
       const page = await ctx.newPage(); const errs = [];
