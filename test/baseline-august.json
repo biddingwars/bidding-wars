@@ -1,0 +1,554 @@
+{
+ "note": "Frozen August Countries numbers: REAL engine, legacy bot path, pack-countries.js at commit c3c1408 (bands + EUR 10 per lot). 3000 games per cell, seeds from 50000, systematic sampling OFF (random draws). Players: A creeper (+1 always), B fair-value (<=1.25x ideal), C smart (B + EUR 1 reserve per remaining lot), D rationer (<=0.6x ideal). win = % of games with more points than the bot (ties count half); share = A points as % of the pool; botLeft = bot money left at the end, % of its budget.",
+ "games": 3000,
+ "seed": 50000,
+ "commit": "c3c1408",
+ "levels": {
+  "beginner": {
+   "5": {
+    "A": {
+     "win": 70,
+     "share": 72.2,
+     "botShare": 27.8,
+     "botLeft": 79.2,
+     "unsold": 0
+    },
+    "B": {
+     "win": 55.6,
+     "share": 51.6,
+     "botShare": 48.4,
+     "botLeft": 57.9,
+     "unsold": 0
+    },
+    "C": {
+     "win": 52.2,
+     "share": 49.8,
+     "botShare": 50.2,
+     "botLeft": 54.7,
+     "unsold": 0
+    },
+    "D": {
+     "win": 1.9,
+     "share": 4.3,
+     "botShare": 95.7,
+     "botLeft": 45,
+     "unsold": 0
+    }
+   },
+   "10": {
+    "A": {
+     "win": 85.3,
+     "share": 77.3,
+     "botShare": 22.7,
+     "botLeft": 85.7,
+     "unsold": 0
+    },
+    "B": {
+     "win": 74.9,
+     "share": 62.5,
+     "botShare": 37.5,
+     "botLeft": 58.1,
+     "unsold": 0
+    },
+    "C": {
+     "win": 74,
+     "share": 62,
+     "botShare": 38,
+     "botLeft": 57.2,
+     "unsold": 0
+    },
+    "D": {
+     "win": 0,
+     "share": 1,
+     "botShare": 99,
+     "botLeft": 41,
+     "unsold": 0
+    }
+   },
+   "15": {
+    "A": {
+     "win": 95.1,
+     "share": 80.5,
+     "botShare": 19.5,
+     "botLeft": 89.3,
+     "unsold": 0
+    },
+    "B": {
+     "win": 87.5,
+     "share": 68.1,
+     "botShare": 31.9,
+     "botLeft": 59.9,
+     "unsold": 0
+    },
+    "C": {
+     "win": 87.3,
+     "share": 67.8,
+     "botShare": 32.2,
+     "botLeft": 59.4,
+     "unsold": 0
+    },
+    "D": {
+     "win": 0,
+     "share": 0.4,
+     "botShare": 99.6,
+     "botLeft": 40.7,
+     "unsold": 0
+    }
+   },
+   "20": {
+    "A": {
+     "win": 98,
+     "share": 81.5,
+     "botShare": 18.5,
+     "botLeft": 91.1,
+     "unsold": 0
+    },
+    "B": {
+     "win": 93.9,
+     "share": 71.5,
+     "botShare": 28.5,
+     "botLeft": 60.7,
+     "unsold": 0
+    },
+    "C": {
+     "win": 93.9,
+     "share": 71.3,
+     "botShare": 28.7,
+     "botLeft": 60.5,
+     "unsold": 0
+    },
+    "D": {
+     "win": 0,
+     "share": 0.3,
+     "botShare": 99.7,
+     "botLeft": 40.3,
+     "unsold": 0
+    }
+   },
+   "30": {
+    "A": {
+     "win": 100,
+     "share": 82.9,
+     "botShare": 17.1,
+     "botLeft": 92.8,
+     "unsold": 0
+    },
+    "B": {
+     "win": 98.9,
+     "share": 74.7,
+     "botShare": 25.3,
+     "botLeft": 61.8,
+     "unsold": 0
+    },
+    "C": {
+     "win": 98.9,
+     "share": 74.6,
+     "botShare": 25.4,
+     "botLeft": 61.7,
+     "unsold": 0
+    },
+    "D": {
+     "win": 0,
+     "share": 0.2,
+     "botShare": 99.8,
+     "botLeft": 40.1,
+     "unsold": 0
+    }
+   },
+   "40": {
+    "A": {
+     "win": 100,
+     "share": 82.8,
+     "botShare": 17.2,
+     "botLeft": 93.4,
+     "unsold": 0
+    },
+    "B": {
+     "win": 100,
+     "share": 75.8,
+     "botShare": 24.2,
+     "botLeft": 62,
+     "unsold": 0
+    },
+    "C": {
+     "win": 100,
+     "share": 75.8,
+     "botShare": 24.2,
+     "botLeft": 62,
+     "unsold": 0
+    },
+    "D": {
+     "win": 0,
+     "share": 0.2,
+     "botShare": 99.8,
+     "botLeft": 39.9,
+     "unsold": 0
+    }
+   }
+  },
+  "medium": {
+   "5": {
+    "A": {
+     "win": 22.2,
+     "share": 35.8,
+     "botShare": 64.2,
+     "botLeft": 41.3,
+     "unsold": 0
+    },
+    "B": {
+     "win": 48.7,
+     "share": 48.9,
+     "botShare": 51.1,
+     "botLeft": 30.4,
+     "unsold": 0
+    },
+    "C": {
+     "win": 49.2,
+     "share": 48.9,
+     "botShare": 51.1,
+     "botLeft": 20.7,
+     "unsold": 0
+    },
+    "D": {
+     "win": 40.9,
+     "share": 45.4,
+     "botShare": 54.6,
+     "botLeft": 11.4,
+     "unsold": 0
+    }
+   },
+   "10": {
+    "A": {
+     "win": 9.5,
+     "share": 30.2,
+     "botShare": 69.8,
+     "botLeft": 37.7,
+     "unsold": 0
+    },
+    "B": {
+     "win": 37,
+     "share": 44.2,
+     "botShare": 55.8,
+     "botLeft": 19.4,
+     "unsold": 0
+    },
+    "C": {
+     "win": 39.6,
+     "share": 45,
+     "botShare": 55,
+     "botLeft": 13.7,
+     "unsold": 0
+    },
+    "D": {
+     "win": 36.2,
+     "share": 44.7,
+     "botShare": 55.3,
+     "botLeft": 4.5,
+     "unsold": 0
+    }
+   },
+   "15": {
+    "A": {
+     "win": 8.1,
+     "share": 29.5,
+     "botShare": 70.5,
+     "botLeft": 41.1,
+     "unsold": 0
+    },
+    "B": {
+     "win": 27.1,
+     "share": 40.2,
+     "botShare": 59.8,
+     "botLeft": 19.1,
+     "unsold": 0
+    },
+    "C": {
+     "win": 31.4,
+     "share": 42.1,
+     "botShare": 57.9,
+     "botLeft": 10,
+     "unsold": 0
+    },
+    "D": {
+     "win": 33,
+     "share": 44.1,
+     "botShare": 55.9,
+     "botLeft": 2.8,
+     "unsold": 0
+    }
+   },
+   "20": {
+    "A": {
+     "win": 9.8,
+     "share": 29.6,
+     "botShare": 70.4,
+     "botLeft": 45.5,
+     "unsold": 0
+    },
+    "B": {
+     "win": 22.6,
+     "share": 38.8,
+     "botShare": 61.2,
+     "botLeft": 19.4,
+     "unsold": 0
+    },
+    "C": {
+     "win": 27.4,
+     "share": 40.2,
+     "botShare": 59.8,
+     "botLeft": 8.2,
+     "unsold": 0
+    },
+    "D": {
+     "win": 31.5,
+     "share": 43.6,
+     "botShare": 56.4,
+     "botLeft": 2.1,
+     "unsold": 0
+    }
+   },
+   "30": {
+    "A": {
+     "win": 13.3,
+     "share": 30.2,
+     "botShare": 69.8,
+     "botLeft": 49.7,
+     "unsold": 0
+    },
+    "B": {
+     "win": 20.3,
+     "share": 36.8,
+     "botShare": 63.2,
+     "botLeft": 22,
+     "unsold": 0
+    },
+    "C": {
+     "win": 25.7,
+     "share": 39.2,
+     "botShare": 60.8,
+     "botLeft": 6.4,
+     "unsold": 0
+    },
+    "D": {
+     "win": 31.1,
+     "share": 43.3,
+     "botShare": 56.7,
+     "botLeft": 1.4,
+     "unsold": 0
+    }
+   },
+   "40": {
+    "A": {
+     "win": 13.4,
+     "share": 30.8,
+     "botShare": 69.2,
+     "botLeft": 53.7,
+     "unsold": 0
+    },
+    "B": {
+     "win": 17.9,
+     "share": 35.5,
+     "botShare": 64.5,
+     "botLeft": 24,
+     "unsold": 0
+    },
+    "C": {
+     "win": 22.7,
+     "share": 38.1,
+     "botShare": 61.9,
+     "botLeft": 5.5,
+     "unsold": 0
+    },
+    "D": {
+     "win": 31.7,
+     "share": 43.3,
+     "botShare": 56.7,
+     "botLeft": 1,
+     "unsold": 0
+    }
+   }
+  },
+  "expert": {
+   "5": {
+    "A": {
+     "win": 59.3,
+     "share": 61.1,
+     "botShare": 38.9,
+     "botLeft": 71.7,
+     "unsold": 0
+    },
+    "B": {
+     "win": 57.3,
+     "share": 53.8,
+     "botShare": 46.2,
+     "botLeft": 49.3,
+     "unsold": 0
+    },
+    "C": {
+     "win": 52.5,
+     "share": 50.8,
+     "botShare": 49.2,
+     "botLeft": 43.8,
+     "unsold": 0
+    },
+    "D": {
+     "win": 11.2,
+     "share": 12.3,
+     "botShare": 87.7,
+     "botLeft": 36.3,
+     "unsold": 0
+    }
+   },
+   "10": {
+    "A": {
+     "win": 65.2,
+     "share": 62.1,
+     "botShare": 37.9,
+     "botLeft": 75.9,
+     "unsold": 0
+    },
+    "B": {
+     "win": 66.2,
+     "share": 58,
+     "botShare": 42,
+     "botLeft": 44.9,
+     "unsold": 0
+    },
+    "C": {
+     "win": 63.8,
+     "share": 56.8,
+     "botShare": 43.2,
+     "botLeft": 42.9,
+     "unsold": 0
+    },
+    "D": {
+     "win": 3.9,
+     "share": 5.9,
+     "botShare": 94.1,
+     "botLeft": 27.8,
+     "unsold": 0
+    }
+   },
+   "15": {
+    "A": {
+     "win": 70.7,
+     "share": 63.8,
+     "botShare": 36.2,
+     "botLeft": 80.8,
+     "unsold": 0
+    },
+    "B": {
+     "win": 74.1,
+     "share": 61.6,
+     "botShare": 38.4,
+     "botLeft": 45.2,
+     "unsold": 0
+    },
+    "C": {
+     "win": 72.5,
+     "share": 60.8,
+     "botShare": 39.2,
+     "botLeft": 43.9,
+     "unsold": 0
+    },
+    "D": {
+     "win": 1.6,
+     "share": 3.9,
+     "botShare": 96.1,
+     "botLeft": 25.5,
+     "unsold": 0
+    }
+   },
+   "20": {
+    "A": {
+     "win": 71.5,
+     "share": 63.7,
+     "botShare": 36.3,
+     "botLeft": 82.9,
+     "unsold": 0
+    },
+    "B": {
+     "win": 80.2,
+     "share": 64.2,
+     "botShare": 35.8,
+     "botLeft": 46.6,
+     "unsold": 0
+    },
+    "C": {
+     "win": 79.3,
+     "share": 63.5,
+     "botShare": 36.5,
+     "botLeft": 44.8,
+     "unsold": 0
+    },
+    "D": {
+     "win": 1.4,
+     "share": 2.6,
+     "botShare": 97.4,
+     "botLeft": 23.7,
+     "unsold": 0
+    }
+   },
+   "30": {
+    "A": {
+     "win": 79,
+     "share": 64.8,
+     "botShare": 35.2,
+     "botLeft": 86.6,
+     "unsold": 0
+    },
+    "B": {
+     "win": 85.4,
+     "share": 67.7,
+     "botShare": 32.3,
+     "botLeft": 48.4,
+     "unsold": 0
+    },
+    "C": {
+     "win": 84.7,
+     "share": 67,
+     "botShare": 33,
+     "botLeft": 46.4,
+     "unsold": 0
+    },
+    "D": {
+     "win": 0.5,
+     "share": 1.3,
+     "botShare": 98.7,
+     "botLeft": 22.3,
+     "unsold": 0
+    }
+   },
+   "40": {
+    "A": {
+     "win": 79.3,
+     "share": 64.5,
+     "botShare": 35.5,
+     "botLeft": 88.3,
+     "unsold": 0
+    },
+    "B": {
+     "win": 86.4,
+     "share": 69.8,
+     "botShare": 30.2,
+     "botLeft": 49.4,
+     "unsold": 0
+    },
+    "C": {
+     "win": 85.9,
+     "share": 69.2,
+     "botShare": 30.8,
+     "botLeft": 48.1,
+     "unsold": 0
+    },
+    "D": {
+     "win": 0.1,
+     "share": 0.7,
+     "botShare": 99.3,
+     "botLeft": 21.7,
+     "unsold": 0
+    }
+   }
+  }
+ }
+}

@@ -4,32 +4,85 @@
    Pack format: see CLAUDE.md "Adding a pack".
    ========================================================================== */
 (function (root) {
+  /* ---- prices -------------------------------------------------------------------------------------------------
+     One smooth, monotone curve for all 196 countries (no percentile bands, so a bigger country never costs less):
+     a monotone cubic (Fritsch-Carlson) through log-log anchors [population in millions, fair price in EUR], rounded to
+     whole euros, minimum EUR 1. The bot's ceiling is ideal x ratio, the ratio easing from 2.0 for the tiniest countries
+     to 1.45 for giants and forced to be non-decreasing in population. test/golden-countries.json pins every price;
+     test/countries-prices-old-vs-new.md compares them with the August bands. */
+  const ANCHORS = [[0.001, 1], [0.3, 1], [1, 1.1], [3, 3.1], [8, 6.4], [15, 10.2], [30, 15.5], [60, 28], [100, 40], [160, 50], [250, 63], [350, 73], [700, 83], [1500, 92]];
+  const RATIO = { tiny: 2.0, giant: 1.45, from: 0.5, to: 300 };
+  function pchip(xs, ys) {
+    const n = xs.length, h = [], d = [], m = new Array(n).fill(0);
+    for (let i = 0; i < n - 1; i++) { h.push(xs[i + 1] - xs[i]); d.push((ys[i + 1] - ys[i]) / h[i]); }
+    for (let i = 1; i < n - 1; i++) { if (d[i - 1] * d[i] <= 0) m[i] = 0; else { const w1 = 2 * h[i] + h[i - 1], w2 = h[i] + 2 * h[i - 1]; m[i] = (w1 + w2) / (w1 / d[i - 1] + w2 / d[i]); } }
+    m[0] = d[0]; m[n - 1] = d[n - 2];
+    return x => {
+      if (x <= xs[0]) return ys[0]; if (x >= xs[n - 1]) return ys[n - 1];
+      let i = 0; while (x > xs[i + 1]) i++;
+      const t = (x - xs[i]) / h[i], t2 = t * t, t3 = t2 * t;
+      return (2 * t3 - 3 * t2 + 1) * ys[i] + (t3 - 2 * t2 + t) * h[i] * m[i] + (-2 * t3 + 3 * t2) * ys[i + 1] + (t3 - t2) * h[i] * m[i + 1];
+    };
+  }
+  function priceTable(items) {
+    const f = pchip(ANCHORS.map(a => Math.log(a[0])), ANCHORS.map(a => Math.log(a[1])));
+    const ideal = v => Math.max(1, Math.round(Math.exp(f(Math.log(Math.max(v, ANCHORS[0][0]))))));
+    const ratio = v => { const t = Math.min(1, Math.max(0, Math.log(v / RATIO.from) / Math.log(RATIO.to / RATIO.from))); return RATIO.tiny + (RATIO.giant - RATIO.tiny) * t * t * (3 - 2 * t); };
+    const out = new Map(); let prevMax = 0;
+    items.map((it, i) => i).sort((a, b) => items[a].value - items[b].value).forEach(i => {
+      const it = items[i], p = ideal(it.value), mx = Math.max(p, Math.round(p * ratio(it.value)), prevMax);
+      prevMax = mx; out.set(it.id, { ideal: p, max: mx });
+    });
+    return out;
+  }
   const pack = {
     id: 'countries',
     title: {"en":"Countries","de":"Länder","it":"Paesi","es":"Países","fr":"Pays"},
     noun:  {"en":"country","de":"Land","it":"paese","es":"país","fr":"pays"},
     iconKind: 'flag',                       // item id is the ISO code → regional-indicator flag
     currency: { symbol: '€' },
-    budgetPerLot: 10,                       // calibrated against the bands: 10 lots = 100
+    budgetPerLot: 10,                       // Medium's rate (10 lots = 100); economy.budgets below is what the auction really uses
     lots: { options: [5, 10, 15, 20, 30], default: 10 },
     metric: {
       label: {"en":"Population","de":"Einwohner","it":"Popolazione","es":"Población","fr":"Population"},
       effUnit: '€/M',                       // euros per million people
       format: v => v >= 1 ? v.toFixed(1) + 'M' : Math.round(v * 1000).toLocaleString('en-US') + 'K'
     },
-    /* Percentile bands: an item whose rank/N is <= upTo falls in the band.
-       ideal / max are € per unit of value (per million people). */
-    bands: [
-    {upTo:0.196, ideal:1.00, max:2.000},
-    {upTo:0.319, ideal:1.00, max:1.750},
-    {upTo:0.365, ideal:1.00, max:1.600},
-    {upTo:0.523, ideal:0.75, max:1.400},
-    {upTo:0.671, ideal:0.75, max:1.100},
-    {upTo:0.849, ideal:0.50, max:0.750},
-    {upTo:0.926, ideal:0.50, max:0.600},
-    {upTo:0.992, ideal:0.25, max:0.275},
-    {upTo:1, ideal:0.05, max:0.067}
-    ],
+    priceTable,
+    /* Money is scarce on purpose, in every level (see CLAUDE.md "Economy"). Medium keeps EUR 10 per lot; Beginner and Expert, whose
+       fair prices are much lower per lot, get a share of the expected value of the round (55% for 5-10 lots, 40% for 15, 36% from 20),
+       rounded to multiples of 5. The expected value of a round at fair prices stays within ~4% of the August game. */
+    economy: {
+      budgets: {
+        beginner: { 5: 25, 10: 50, 15: 55, 20: 65, 30: 100 },
+        medium:   { 5: 50, 10: 100, 15: 150, 20: 200, 30: 300 },
+        expert:   { 5: 35, 10: 70, 15: 75, 20: 90, 30: 140 }
+      },
+      endgame: { rule: 'house', price: 0.8 },
+      sampling: 'random',   /* 'systematic' restores the variance-reduced draw (items of similar size never share a round) */
+      bidSteps: [[12, [1, 2, 5, 10, 25]], [40, [2, 5, 10, 25, 50]], [100, [5, 10, 25, 50, 100]], [null, [10, 25, 50, 100, 200]]],
+      typingBonus: 4
+    },
+    /* The bot: the August walk-away roll (between ideal and max), randomised raise step and rank-based valuation, plus the shared
+       States machinery. limitMul is the per-level, per-lot-count calibration (re-measured with `node test/economy.js`). */
+    bot: {
+      limitMul: { beginner: { 5: 1.28, 10: 1.178, 15: 1.097, 20: 0.974, 30: 0.812 }, medium: { 5: 0.817, 10: 0.817, 15: 0.817, 20: 0.817, 30: 0.864 }, expert: { 5: 0.567, 10: 0.926, 15: 0.663, 20: 0.698, 30: 0.605 } },
+      premium: { top: 5, pct: 0.15 },
+      pacing: { gamma: 0.5, lo: 0.7, hi: 1.5 },
+      knockout: { kappa: { beginner: 1.5, medium: 0.777, expert: 0.584 } },
+      mood: { k: 0.25, up: 0.2, down: 0.15 },
+      wallet: { lo: 0.7 },
+      noise: { beginner: 0.491, medium: 0.622, expert: 0.505 },
+      efficiency: { gamma: { beginner: 0.697, medium: 0.777, expert: 0.538 }, lo: { beginner: 0.36, medium: 0.335, expert: 0.27 }, hi: { beginner: 3, medium: 2.884, expert: 2.522 }, pick: { beginner: 1.627, medium: 2, expert: 1.912 } },
+      decisive: { share: { beginner: 0.299, medium: 0.211, expert: 0.23 } },
+      creeperGuard: { raises: 3 },
+      temperaments: {
+        weights: [25, 50, 25], bigRank: 10,
+        spread: { 5: 0.06, 10: 0.06, 15: 0.05, 20: 0.04, 30: 0.04 },
+        conservative: { step: 0.75, big: 0.95 },
+        aggressive: { step: 1.25, big: 1.05, reserveCap: 3 }
+      }
+    },
     levels: [
       { id: 'beginner', label: {"en":"Beginner — Europe only","de":"Anfänger — nur Europa","it":"Principiante — solo Europa","es":"Principiante — solo Europa","fr":"Débutant — Europe seulement"}, tag: 'europe' },
       { id: 'medium',   label: {"en":"Medium — over 15 million","de":"Mittel — über 15 Millionen","it":"Medio — oltre 15 milioni","es":"Medio — más de 15 millones","fr":"Moyen — plus de 15 millions"}, minValue: 15 },

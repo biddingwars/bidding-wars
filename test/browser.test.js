@@ -533,7 +533,12 @@ test('sold moment: Next lot always appears by itself within 1.5 s, with full mot
   await startSolo(page, 5, 0);
   await page.evaluate(() => { window.think = () => Promise.resolve(); });
   for (let round = 0; round < 3; round++) {
-    await page.waitForSelector('#pass:not(:disabled)'); await page.click('#pass');
+    /* a lot can already be sold when the bot will not beat the opening EUR 1 on a tiny country, so pass only if it is still open;
+       with the fully random draw the bot can also spend its whole purse on the first lots and the round then ends early (house prices, unsold): that is
+       the game working, so stop after the sold moments seen so far (at least one is required) */
+    await page.waitForSelector('#pass:not(:disabled), #sold, #rev');
+    if (await page.$('#rev')) { assert.ok(round >= 1, 'the round ended before a single sold moment was seen'); break; }
+    if (!(await page.$('#sold'))) await page.click('#pass').catch(() => {});
     await page.waitForSelector('#sold');
     await page.waitForSelector('#sold.ready', { timeout: 1500 });
     await page.waitForTimeout(1500);                       // it must not vanish again
@@ -845,7 +850,7 @@ test('US flag backdrop is straight (not tilted) and covers the screen width', { 
 });
 
 /* ---------------------------------------------------------------- US States economy: bid buttons and the typing grace */
-test('US STATES: the raise buttons follow the current price; Countries keeps +1 +2 +5 +10 +25', { skip: SKIP }, async () => {
+test('the raise buttons follow the current price in both packs (the same scheme)', { skip: SKIP }, async () => {
   const { page, errors, ctx } = await open();
   await pickPack(page, 'states'); await startSolo(page, 10, 0);
   await page.evaluate(() => { window.think = () => new Promise(() => {}); });
@@ -861,11 +866,11 @@ test('US STATES: the raise buttons follow the current price; Countries keeps +1 
   await c.page.click('#m1'); await c.page.waitForSelector('#start'); await pick(c.page, 'clock', 0); await c.page.click('#start'); await c.page.waitForSelector('#ctrl');
   assert.deepEqual(await c.page.$$eval('#ctrl [data-s]', e => e.map(x => x.dataset.s)), ['1', '2', '5', '10', '25']);
   await c.page.evaluate(() => { S.L.price = 150; controls(); });
-  assert.deepEqual(await c.page.$$eval('#ctrl [data-s]', e => e.map(x => x.dataset.s)), ['1', '2', '5', '10', '25'], 'Countries never rescales');
+  assert.deepEqual(await c.page.$$eval('#ctrl [data-s]', e => e.map(x => x.dataset.s)), ['10', '25', '50', '100', '200'], 'Countries rescales with the price too');
   await c.ctx.close();
 });
 
-test('US STATES: typing a custom amount adds a few seconds once per turn (and only in this pack)', { skip: SKIP }, async () => {
+test('typing a custom amount adds a few seconds once per turn (both packs)', { skip: SKIP }, async () => {
   const { page, errors, ctx } = await open({ motion: 'reduce' });
   await pickPack(page, 'states');
   await page.click('#m1'); await page.waitForSelector('#start'); await pick(page, 'lots', 10); await pick(page, 'clock', 10); await page.click('#start'); await page.waitForSelector('#ctrl');
@@ -881,7 +886,7 @@ test('US STATES: typing a custom amount adds a few seconds once per turn (and on
   await c.page.click('#m1'); await c.page.waitForSelector('#start'); await pick(c.page, 'clock', 10); await c.page.click('#start'); await c.page.waitForSelector('#ctrl');
   await c.page.evaluate(() => { window.think = () => new Promise(() => {}); S.L.turn = 0; S.L.holder = 1; controls(); startClock(() => {}); });
   await c.page.focus('#cus'); await c.page.waitForTimeout(250);
-  assert.ok(await c.page.evaluate(() => parseInt(document.querySelector('#secs').textContent.split(':')[1])) <= 10, 'Countries gets no bonus');
+  assert.ok(await c.page.evaluate(() => parseInt(document.querySelector('#secs').textContent.split(':')[1])) >= 13, 'Countries gets the typing bonus too');
   await c.ctx.close();
 });
 

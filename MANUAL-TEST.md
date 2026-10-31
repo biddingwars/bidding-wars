@@ -157,9 +157,28 @@ I could not play these on a device. The harness covers the numbers; these are th
       not sit on a pile of money (it ends with ~25–30% left), and you cannot afford California ($173 fair price) *and* Texas *and* Florida.
 - [ ] Run out of money early: the remaining states are no longer yours for $1 — the bot buys them at 80% of their price
       (the results say "N states went unsold" when nobody could pay).
-- [ ] The **raise buttons grow with the price**: +1 +2 +5 +10 +25 at the start of a lot, +10 … +200 above $100. Countries is unchanged.
+- [ ] The **raise buttons grow with the price**: +1 +2 +5 +10 +25 at the start of a lot, +10 … +200 above $100 (Countries uses the same scheme, see section 11).
 - [ ] Tap the **custom amount** field with the 10-second clock on: the clock gains a few seconds (once per turn).
 - [ ] Play 3–4 games in a row: the bot should feel different (cautious / balanced / bold) without ever being obviously broken.
 - [ ] 5- and 10-state rounds feel luck-heavy; 30–50-state rounds feel like skill. The rules text says so (all five languages).
 - [ ] Setup shows the right budget for each lot count ($85 / $165 / $180 / $210 / $315 / $420 / $525).
 - [ ] No scrolling on the auction at 402×720 and 834×1194 with the big buttons (+100 / +200).
+
+## 11. Countries economy (smooth prices, per-level budgets, the upgraded bot)
+
+I could not play these on a device. The harness covers the numbers (`node test/economy.js countries`, `learner`, `unpredictable`); these are the feel checks.
+
+- [ ] **Medium, 10 lots, EUR 100**: it should feel like before. Bid +1 over the bot every time: you lose almost every game (about 10% wins).
+- [ ] **Beginner** (Europe only) and **Expert** (all 196) now have their own budgets: setup shows EUR 25 / 50 / 55 / 65 / 100 for 5 / 10 / 15 / 20 / 30 lots in Beginner and EUR 35 / 70 / 75 / 90 / 140 in Expert, and the figure changes when you change the level.
+      The +1 creeper no longer wins them (long rounds: about 5% or less).
+- [ ] The **biggest countries** (India, China, USA) cost about EUR 70-92: a bigger country is never cheaper than a smaller one (Vietnam is cheaper than DR Congo no more).
+- [ ] Bid on India or China with the bot holding a full purse: the price it stops at is **not** always its wallet minus the reserve; across a few games it varies.
+- [ ] Play the same country in several games: the bot's drop-out point should differ every time (no price you can learn).
+- [ ] Run out of money early: the rest is no longer yours for EUR 1; the bot buys it at 80% of the price and the results say "N countries went unsold" when nobody could pay.
+- [ ] The **raise buttons grow with the price** (+1 +2 +5 +10 +25 at the start, up to +10 ... +200 above EUR 100) and typing in the custom field adds a few seconds once per turn.
+- [ ] The rules text (how to play) lists the budgets of all three levels and says short rounds are luck-heavy, in all five languages.
+- [ ] No scrolling on the auction at 402x720 and 834x1194 with the big buttons.
+- [ ] Bug-test round: on a giant (India, China, USA) with the bot holding more money than you, an all-in does not win it any more; on a lot worth very little (Zimbabwe, Tuvalu) the bot stops at a few euros instead of chasing you.
+- [ ] Playing "+1 until the bot gives up" still loses (Medium 10 lots: about 14% wins).
+- [ ] Menu shows `v35`; after a full close and reopen the new build is the one running.
+- [ ] Draw is fully random: play 20 Expert rounds of 10 lots; countries repeat across rounds with no pattern, and similar-sized countries (e.g. Spain and Italy) can appear in the same round. (Revert: `sampling: 'systematic'` in `pack-countries.js`.)

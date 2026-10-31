@@ -5,8 +5,8 @@
 
 const CONFIG = {
   /* The release number shown on the menu so anyone can check they have the latest build.
-     MUST equal the number in sw.js's CACHE ('bidding-wars-v33' -> 33); test/version.test.js enforces it. */
-  version: 33,
+     MUST equal the number in sw.js's CACHE ('bidding-wars-v35' -> 35); test/version.test.js enforces it. */
+  version: 35,
 
   /* Online 1 vs 1 needs a real backend (Firebase, Supabase, PartyKit, …).
      Leave this false until one is wired up in Net.* below — shipping a mode

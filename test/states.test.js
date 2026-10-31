@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 const fs = require('fs'), path = require('path');
 const Engine = require('../engine.js');
 const states = require('../pack-states.js');
-const countries = require('../pack-countries.js');
+const countries = require('../pack-countries.js'), august = require('./pack-countries-august.js');
 const census = require('./census-nst-est2025.json');
 const content = require('./states-content.json');
 const golden = require('./golden-states.json');
@@ -128,18 +128,16 @@ test('PRICING: smooth and monotonic, $1 minimum, tension like Countries, rough t
   }
 });
 
-test('PRICING: the Countries prices are untouched by the new hook (existing golden still passes)', () => {
-  const golden = require('./golden-countries.json'), t = Engine.priceTable(countries);
-  const sample = countries.items.slice(0, 30);
-  for (const it of sample) { assert.ok(t.get(it.id).ideal >= 1); }
-  assert.equal(typeof countries.priceTable, 'undefined');
-  assert.ok(golden);
+test('PRICING: a pack without a priceTable still prices from percentile bands (the August Countries pack, pinned by its own golden)', () => {
+  const golden = require('./golden-countries-august.json'), t = Engine.priceTable(august);
+  assert.equal(typeof august.priceTable, 'undefined');
+  for (const g of golden.countries) { const p = t.get(g.id); assert.equal(p.ideal, g.ideal, g.id); assert.equal(p.max, g.max, g.id); }
 });
 
 test('PRICING: validatePack refuses a pricing table that gets cheaper as value grows, or has both bands and a table', () => {
   const bad = Object.assign({}, states, { priceTable: its => { const m = new Map(); its.forEach((i, k) => m.set(i.id, { ideal: 10 - Math.floor(i.value), max: 20 })); return m; } });
   assert.ok(Engine.validatePack(bad).some(e => /cheaper/.test(e)));
-  const both = Object.assign({}, states, { bands: countries.bands });
+  const both = Object.assign({}, states, { bands: august.bands });
   assert.ok(Engine.validatePack(both).some(e => /not both/.test(e)));
   const none = Object.assign({}, states); delete none.priceTable;
   assert.ok(Engine.validatePack(none).some(e => /bands/.test(e)));
