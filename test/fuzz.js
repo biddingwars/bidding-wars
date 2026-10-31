@@ -34,7 +34,7 @@ function oneGame(packName, seed) {
   const lotsPool = pack.lots.options.concat([1, 2, 3, 4, 6, 7, 11, 33, 47, 60, 500]);
   const lots = lotsPool[rng(lotsPool.length)];
   const nPl = rng(10) === 0 ? 3 + rng(2) : 2;
-  const temper = rng(4) === 0 ? ['conservative', 'balanced', 'aggressive', 'bogus'][rng(4)] : undefined;
+  const temper = rng(4) === 0 ? ['conservative', 'balanced', 'aggressive', 'cautious', 'fierce', 'bogus'][rng(6)] : undefined;
   const pol = ['junk', 'random', 'creeper', 'passer', 'allin', 'fair'][rng(6)];
   const ctx = { packName, seed, level, lots, nPl, temper, pol };
   const gameRng = Engine.seededRng(seed);

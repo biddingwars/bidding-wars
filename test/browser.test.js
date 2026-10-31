@@ -258,19 +258,21 @@ test('Online 1 vs 1 shows "Soon" and opens nothing while CONFIG.online is false'
   await ctx.close();
 });
 
-test('Delete all data wipes the record, the name, the language and the appearance', { skip: SKIP }, async () => {
-  const { page, ctx } = await open({ init: () => { localStorage.setItem('name:v1', 'Ana'); localStorage.setItem('lang:v1', 'de'); localStorage.setItem('theme:v1', 'light'); localStorage.setItem('record:v1', JSON.stringify({ played: 3, won: 2, lost: 1 })); } });
+test('Delete all data wipes the record, the name, the language, the appearance and the settings', { skip: SKIP }, async () => {
+  const { page, ctx } = await open({ init: () => { localStorage.setItem('settings:v1', '{"cur":"SEK","aggr":4}'); localStorage.setItem('name:v1', 'Ana'); localStorage.setItem('lang:v1', 'de'); localStorage.setItem('theme:v1', 'light'); localStorage.setItem('record:v1', JSON.stringify({ played: 3, won: 2, lost: 1 })); } });
   assert.equal(await page.getAttribute('html', 'data-theme'), 'light');
   await page.evaluate(() => privacy());
   await page.click('#wipe'); await page.click('#dy');
   await page.waitForTimeout(300);
   const s = await page.evaluate(() => ({ name: localStorage.getItem('name:v1'), lang: localStorage.getItem('lang:v1'), theme: localStorage.getItem('theme:v1'), rec: localStorage.getItem('record:v1'), attr: document.documentElement.getAttribute('data-theme') }));
   assert.equal(s.name, null); assert.equal(s.lang, null); assert.equal(s.theme, null); assert.equal(s.attr, 'dark', 'back to the dark default');
+  assert.equal(await page.evaluate(() => localStorage.getItem('settings:v1')), null, 'the settings are wiped too');
+  assert.deepEqual(await page.evaluate(() => ({ cur: SET.cur, aggr: SET.aggr })), { cur: null, aggr: 2 }, 'and reset in memory');
   assert.equal(JSON.parse(s.rec).packs.countries.played, 0);
   await ctx.close();
 });
 
-test('only the four documented values are ever stored', { skip: SKIP }, async () => {
+test('only the five documented values are ever stored', { skip: SKIP }, async () => {
   const { page, ctx } = await open();
   await page.click('#theme'); await page.click('#mute');
   await startSolo(page, 5, 0);
@@ -278,7 +280,7 @@ test('only the four documented values are ever stored', { skip: SKIP }, async ()
   await autoplay(page); await reveal(page);
   const keys = await page.evaluate(() => Object.keys(localStorage).sort());
   assert.deepEqual(keys, ['name:v1', 'record:v1', 'theme:v1'].filter(k => keys.includes(k)));
-  assert.ok(keys.every(k => ['lang:v1', 'record:v1', 'name:v1', 'theme:v1'].includes(k)), keys.join());
+  assert.ok(keys.every(k => ['lang:v1', 'record:v1', 'name:v1', 'theme:v1', 'settings:v1'].includes(k)), keys.join());
   await ctx.close();
 });
 
@@ -614,7 +616,7 @@ test('US STATES: pick it on the menu, setup offers 5-20 lots and no difficulty, 
   const rec = JSON.parse(await page.evaluate(() => localStorage.getItem('record:v1')));
   assert.equal(rec.packs.states.played, 1); assert.ok(!rec.packs.countries || !rec.packs.countries.played);
   const keys = await page.evaluate(() => Object.keys(localStorage).sort());
-  assert.ok(keys.every(k => ['lang:v1', 'theme:v1', 'record:v1', 'name:v1'].includes(k)), 'only the four documented keys: ' + keys);
+  assert.ok(keys.every(k => ['lang:v1', 'theme:v1', 'record:v1', 'name:v1', 'settings:v1'].includes(k)), 'only the five documented keys: ' + keys);
   assert.deepEqual(errors, []);
   await ctx.close();
 });
@@ -962,7 +964,7 @@ test('CAPITALS: menu tile, three levels with their budgets, lazy load, euros, pl
   assert.equal(rec.packs.capitals.played, 1); assert.equal(rec.last, 'capitals');
   assert.ok(!rec.packs.countries || !rec.packs.countries.played);
   const keys = await page.evaluate(() => Object.keys(localStorage).sort());
-  assert.ok(keys.every(k => ['lang:v1', 'theme:v1', 'record:v1', 'name:v1'].includes(k)), 'only the four documented keys: ' + keys);
+  assert.ok(keys.every(k => ['lang:v1', 'theme:v1', 'record:v1', 'name:v1', 'settings:v1'].includes(k)), 'only the five documented keys: ' + keys);
   assert.deepEqual(errors, []);
   await ctx.close();
 });
@@ -1031,4 +1033,144 @@ test('CAPITALS: the auction never scrolls with the longest names, 4 seats, a 3-d
 test('Capitals metric: Vatican City prints its 801 people, small capitals print thousands, big ones millions', () => {
   const p = require('../pack-capitals.js'), f = p.metric.format;
   assert.equal(f(0.000801), '801'); assert.equal(f(0.00547), '5K'); assert.equal(f(0.2127), '213K'); assert.equal(f(1.5), '1.5M'); assert.equal(f(37.468302), '37.5M');
+});
+
+
+/* ============ SETTINGS (v44) ============ */
+const openSettings = async page => { await page.click('#mset'); await page.waitForSelector('.sheetbox [data-g="cur"]'); };
+
+test('SETTINGS: the gear opens the page; currency, bot style, accessibility and practice helpers are there; Done goes back to the menu', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open();
+  await openSettings(page);
+  const t = await page.textContent('.sheetbox');
+  for (const w of [/Currency/, /Bot style/, /Appearance/, /Language/, /Accessibility/, /Practice helpers/, /Reduce motion/, /Seat shapes/, /Show the fair price/]) assert.match(t, w);
+  assert.equal(await page.$$eval('[data-g="cur"] [role=radio]', e => e.length), 21, 'Automatic + 20 currencies');
+  assert.equal(await page.inputValue('#aggr'), '2', 'Balanced is the default');
+  await page.click('#sdone'); await page.waitForSelector('#m1');
+  assert.equal(await page.evaluate(() => localStorage.getItem('settings:v1')), null, 'nothing changed, nothing stored');
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('SETTINGS: a chosen currency is written everywhere in all five languages, never changes a number, is remembered, and Automatic undoes it', { skip: SKIP }, async () => {
+  for (const lang of ['en', 'de', 'it', 'es', 'fr']) {
+    const { page, errors, ctx } = await open({ init: l => localStorage.setItem('lang:v1', l), initArg: lang });
+    await openSettings(page);
+    await page.click('[data-g="cur"] [data-v="SEK"]');
+    assert.equal(await page.evaluate(() => localStorage.getItem('settings:v1')), '{"cur":"SEK"}');
+    await page.click('#sdone'); await page.waitForSelector('#m1');
+    await page.click('#m1'); await page.waitForSelector('#start');
+    assert.equal((await page.textContent('#bud')).trim(), '100 kr', lang + ': Countries Medium 10 lots, same number, other currency');
+    await page.click('#back');
+    await page.click('#mr'); await page.waitForSelector('.sheetbox');
+    const rules = await page.textContent('.sheetbox');
+    assert.ok(!/€|\beuros?\b/i.test(rules), lang + ' rules mention no euro: ' + (rules.match(/.{20}(€|euro).{10}/i) || [''])[0]);
+    assert.match(rules, /\d+ kr/, lang + ' rules show kr amounts');
+    await page.keyboard.press('Escape');
+    await page.reload(); await page.waitForFunction(() => document.body.classList.contains('booted'));
+    assert.equal(await page.evaluate(() => SET.cur), 'SEK', lang + ': remembered after a reload');
+    /* States: the dollars become kr too, and Automatic brings the dollars back */
+    await page.evaluate(() => { SELPACK = 'states'; home(); }); await page.click('#m1'); await page.waitForSelector('#start');
+    assert.equal((await page.textContent('#bud')).trim(), '35 kr', lang + ': States 10 lots');
+    await page.click('#back'); await page.click('#mr'); await page.waitForSelector('.sheetbox');
+    const sr = await page.textContent('.sheetbox');
+    assert.ok(!/\$|\bdollars?\b|\bDollar\b|\bdollari\b|\bdólares\b/.test(sr), lang + ' States rules mention no dollar: ' + (sr.match(/.{20}(\$|ollar).{10}/) || [''])[0]);
+    await page.keyboard.press('Escape');
+    await openSettings(page); await page.click('[data-g="cur"] [data-v=""]'); await page.click('#sdone'); await page.waitForSelector('#m1');
+    assert.equal(await page.evaluate(() => localStorage.getItem('settings:v1')), null, 'Automatic stores nothing again');
+    await page.click('#m1'); await page.waitForSelector('#start'); assert.equal((await page.textContent('#bud')).trim(), '$35');
+    assert.deepEqual(errors, []);
+    await ctx.close();
+  }
+});
+
+test('SETTINGS: the currency shows in the auction and on the results (CHF with a space)', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open({ init: () => localStorage.setItem('settings:v1', '{"cur":"CHF"}') });
+  await startSolo(page, 5, 0, 'medium');
+  assert.match(await page.textContent('#bump'), /CHF/);
+  assert.match(await page.textContent('#players'), /CHF 50/, 'budget tiles');
+  await autoplay(page); await reveal(page);
+  assert.match(await page.textContent('#lb'), /CHF \d/, 'results list prices in CHF');
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('SETTINGS: bot style has 5 steps; any step but Balanced is a practice game that leaves the record alone', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open();
+  await openSettings(page);
+  await page.fill('#aggr', '4');
+  assert.equal(await page.evaluate(() => localStorage.getItem('settings:v1')), '{"aggr":4}');
+  assert.match(await page.textContent('#aggrD'), /Fierce/); assert.match(await page.textContent('#aggrD'), /Practice games do not change your record/);
+  await page.click('#sdone'); await page.waitForSelector('#m1');
+  await startSolo(page, 5, 0);
+  assert.equal((await page.evaluate(() => [S.bot.temper.name, S.practice])).join(), 'fierce,true');
+  await autoplay(page); await reveal(page);
+  assert.equal(await page.evaluate(() => RECS.packs.countries.played), 0, 'practice game: not counted');
+  await page.waitForSelector('#extra:not([hidden])', { timeout: 6000 });
+  assert.match(await page.textContent('#extra'), /Practice game/);
+  /* Balanced again: the same flow counts */
+  await page.evaluate(() => { SET.aggr = 2; saveSettings(); home(); }); await page.waitForSelector('#m1');
+  await startSolo(page, 5, 0);
+  assert.equal(await page.evaluate(() => S.practice), false);
+  await autoplay(page); await reveal(page);
+  assert.equal(await page.evaluate(() => RECS.packs.countries.played), 1);
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('SETTINGS: the practice helpers (fair price, confirm before dropping out, quiet bot) and the accessibility switches work', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open();
+  await openSettings(page);
+  for (const k of ['fair', 'confirm', 'quiet', 'shapes', 'motion']) await page.click(`.sw[data-k="${k}"]`);
+  assert.deepEqual(JSON.parse(await page.evaluate(() => localStorage.getItem('settings:v1'))), { shapes: true, fair: true, confirm: true, quiet: true, motion: 'reduce' });
+  assert.equal(await page.getAttribute('html', 'data-shapes'), '1'); assert.equal(await page.getAttribute('html', 'data-motion'), 'reduce'); assert.equal(await page.evaluate(() => FX.reduced), true);
+  await page.click('#sdone'); await page.waitForSelector('#m1');
+  await startSolo(page, 5, 0);
+  await page.evaluate(() => { window.think = () => new Promise(() => {}); });
+  const fair = await page.evaluate(() => ({ txt: document.querySelector('#fairp').textContent, want: Math.max(1, Math.round(Engine.priceOf(S.pack, S.items[S.i]).ideal)) }));
+  assert.ok(fair.txt.includes('€' + fair.want), 'the fair price is shown: ' + fair.txt);
+  await page.evaluate(() => { S.L.turn = 0; controls(); });
+  await page.click('#pass'); await page.waitForSelector('.sheetbox.alert');
+  assert.match(await page.textContent('.sheetbox.alert'), /Drop out\?/);
+  await page.click('#dn'); assert.equal(await page.evaluate(() => S.L.turn), 0, 'cancel: still my turn');
+  await page.evaluate(() => showTaunt('a rude line')); assert.equal((await page.textContent('#taunt')).trim(), '', 'quiet bot: no taunts');
+  assert.equal(await page.evaluate(() => S.practice), true, 'the fair price makes it a practice game');
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('SETTINGS: larger text and seat shapes keep the menu and the sheets inside the screen; the auction never scrolls with the helpers on', { skip: SKIP }, async () => {
+  for (const [w, h] of [[375, 667], [402, 874], [834, 1194], [667, 375]]) {
+    const { page, errors, ctx } = await open({ viewport: { width: w, height: h }, init: () => localStorage.setItem('settings:v1', '{"tz":2,"shapes":true,"fair":true,"cur":"MXN"}') });
+    const m = await page.evaluate(() => ({ x: document.documentElement.scrollWidth - innerWidth, sx: document.querySelector('.screen').scrollWidth - document.querySelector('.screen').clientWidth }));
+    assert.ok(m.x <= 1 && m.sx <= 1, `${w}x${h} menu at the larger text step does not overflow sideways: ${JSON.stringify(m)}`);
+    await page.click('#mset'); await page.waitForSelector('.sheetbox');
+    const sb = await page.$eval('.sheetbox', e => { const r = e.getBoundingClientRect(); return { top: r.top, bottom: r.bottom, right: r.right, left: r.left }; });
+    assert.ok(sb.top >= -1 && sb.bottom <= h + 1 && sb.left >= -1 && sb.right <= w + 1, `${w}x${h} settings sheet inside the screen: ${JSON.stringify(sb)}`);
+    await page.keyboard.press('Escape');
+    for (const pk of ['states', 'countries', 'capitals']) for (const np of [2, 4]) {
+      await page.evaluate(async ([pk, np]) => {
+        window.think = () => new Promise(() => {}); const pack = await Packs.load(pk); PACK = pack; SELPACK = pk;
+        const names = ['Maximiliane-Sophie', 'Bartholomäus-Jan', 'Wolfeschlegelstein', 'Ägidius-Konstantin'];
+        S = Engine.newAuction({ pack, kind: np === 2 ? 'solo' : 'multi', level: pack.defaultLevel, lots: 10, clock: 30, players: np === 2 ? [{ name: names[0] }, { name: 'Bot', ai: true }] : names.map(n => ({ name: n })), rng: rnd });
+        Engine.startLot(S); S.items[S.i] = pack.items.slice().sort((a, b) => cname(b).length - cname(a).length)[0];
+        S.players.forEach((p, i) => { p.budget = 295 - i; p.bought = new Array(12).fill({}); }); S.L.price = 289; S.L.holder = np - 1; S.L.turn = 0; paintLot(); controls();
+      }, [pk, np]);
+      const r = await page.evaluate(() => { const sc = document.querySelector('.screen'); return { y: sc.scrollHeight - sc.clientHeight, x: sc.scrollWidth - sc.clientWidth, page: document.documentElement.scrollHeight - innerHeight }; });
+      assert.ok(r.y <= 1 && r.x <= 1 && r.page <= 1, `${w}x${h} ${pk} ${np}p with helpers on scrolls: ${JSON.stringify(r)}`);
+      assert.ok(await page.$eval('#ctrl', e => e.getBoundingClientRect().bottom) <= h + 0.5, `${w}x${h} ${pk} dock fits`);
+    }
+    assert.deepEqual(errors, []);
+    await ctx.close();
+  }
+});
+
+test('SETTINGS: the privacy text says five things in every language', { skip: SKIP }, async () => {
+  const five = { en: /Five things/, de: /Fünf Dinge/, it: /cinque cose/, es: /cinco cosas/, fr: /Cinq choses/ };
+  for (const lang of Object.keys(five)) {
+    const { page, ctx } = await open({ init: l => localStorage.setItem('lang:v1', l), initArg: lang });
+    await page.evaluate(() => privacy()); await page.waitForSelector('.sheetbox');
+    assert.match(await page.textContent('.sheetbox'), five[lang], lang);
+    await ctx.close();
+  }
 });

@@ -12,8 +12,9 @@
    ========================================================================== */
 const FX = (() => {
   const mq = window.matchMedia ? matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
-  let reduced = !!mq.matches;
-  if (mq.addEventListener) mq.addEventListener('change', e => { reduced = e.matches; });
+  let forced = false, reduced = !!mq.matches;                      // forced: Settings > Reduce motion, on top of the phone's own setting
+  if (mq.addEventListener) mq.addEventListener('change', e => { reduced = forced || e.matches; });
+  const forceReduced = v => { forced = !!v; reduced = forced || !!mq.matches; };
   const $ = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => [...(r || document).querySelectorAll(s)];
 
@@ -221,5 +222,5 @@ const FX = (() => {
     return result;
   }
 
-  return { get reduced() { return reduced; }, $, $$, springFrames, spring, fade, roll, bump, shakeX, gavelMarkup, confetti, playSold, PAD, PIVOT };
+  return { get reduced() { return reduced; }, forceReduced, $, $$, springFrames, spring, fade, roll, bump, shakeX, gavelMarkup, confetti, playSold, PAD, PIVOT };
 })();

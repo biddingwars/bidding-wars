@@ -236,6 +236,32 @@ h1.title span{display:block}
 .sheetbox.alert .sheetbody{align-items:center}
 .sheetbox.alert .sh-title{font-size:22px}
 .fld{display:flex;flex-direction:column;gap:7px}
+/* ---------- settings sheet ---------- */
+.sg.cur button{flex:0 1 auto;min-width:88px;font-size:13.5px;padding:0 12px}
+.row small{display:block;color:var(--ink2);font-size:12.5px;font-weight:400;line-height:1.35;margin-top:2px}
+.langrow{width:100%;text-align:left;color:var(--ink);border-radius:16px}
+.sw{width:100%;text-align:left;background:none;border:0;color:var(--ink);font:inherit;cursor:pointer}
+.sw .knob{flex:none;width:46px;height:28px;border-radius:14px;background:var(--glass);border:1px solid var(--stroke);position:relative;transition:background .18s}
+.sw .knob::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--ink2);transition:transform .18s,background .18s}
+.sw[aria-checked=true] .knob{background:linear-gradient(180deg,var(--gold1),var(--gold2));border-color:transparent}
+.sw[aria-checked=true] .knob::after{transform:translateX(18px);background:var(--on-gold)}
+.slider{width:100%;accent-color:var(--gold1);min-height:34px;margin:0}
+.ticks{display:flex;justify-content:space-between;gap:4px;font-size:12px;color:var(--ink2);text-align:center}
+.ticks span{flex:1;min-width:0}
+.ticks span.on{color:var(--goldink);font-weight:800}
+.fairp{font-size:12.5px;font-weight:700;color:var(--goldink);margin-top:4px;flex:none;text-align:center}
+/* accessibility: seat shapes next to the seat colours, and a larger text step (menu, results and sheets; the auction screen keeps its own fitted sizes) */
+html[data-shapes="1"] .po .o,html[data-shapes="1"] .lbr .o{position:relative}
+html[data-shapes="1"] .po .o::after,html[data-shapes="1"] .lbr .o::after{content:'';position:absolute;right:-4px;bottom:-4px;width:16px;height:16px;background:var(--ink);border-radius:50%}
+html[data-shapes="1"] .o.s1::after{border-radius:3px}
+html[data-shapes="1"] .o.s2::after{border-radius:0;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+html[data-shapes="1"] .o.s3::after{border-radius:0;clip-path:polygon(50% 0,100% 100%,0 100%)}
+html[data-shapes="1"] .dot{width:12px;height:12px}
+html[data-shapes="1"] .dot.s1{border-radius:3px}
+html[data-shapes="1"] .dot.s2{border-radius:0;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+html[data-shapes="1"] .dot.s3{border-radius:0;clip-path:polygon(50% 0,100% 100%,0 100%)}
+html[data-tz="1"] .sheetbox,html[data-tz="1"] .screen:not([data-screen=auction]){zoom:1.12}
+html[data-tz="2"] .sheetbox,html[data-tz="2"] .screen:not([data-screen=auction]){zoom:1.25}
 .sg{display:flex;gap:6px;flex-wrap:wrap}
 .sg button{flex:1;min-width:52px;min-height:44px;border-radius:22px;background:var(--glass);border:1px solid var(--stroke);font-weight:700;font-size:15px;color:var(--ink);padding:0 10px}
 .sg button[aria-checked=true]{background:linear-gradient(180deg,var(--gold1),var(--gold2));color:var(--on-gold);border-color:transparent;box-shadow:0 6px 18px var(--goldglow)}
@@ -461,6 +487,9 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
   .rays,.confetti{display:none}
 }
+/* the same, when Settings > Reduce motion is on */
+html[data-motion=reduce] *,html[data-motion=reduce] *::before,html[data-motion=reduce] *::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+html[data-motion=reduce] .rays,html[data-motion=reduce] .confetti{display:none}
 
 /* ---------- LARGE: iPad and anything at least 760 x 520 ---------- */
 @media (min-width:760px) and (min-height:520px){
