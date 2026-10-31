@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v37';   // increment this, every time
+const CACHE = 'bidding-wars-v38';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v37` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v38` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -263,9 +263,8 @@ Census-boundary centroids, taunts, fun facts).
 - **Fun facts.** `pack.facts[id] = { en }`, one per state, shown on the SOLD screen
   and in the results "Fun facts" sheet; must not hint at population or rank;
   other languages fall back to English. `FACTS-SOURCES.md` lists every fact with
-  where it was checked — **37 of 50 were checked online (Oct 2026), 13 plain landmark facts only from
-  general knowledge, and the file says which**; four were reworded after the check. Keep each row's status honest
-  (`test/states.test.js` enforces the two allowed wordings); look up the remaining 13 before claiming more.
+  where it was checked — **all 50 were checked online (Oct 2026)**; four were reworded after the first pass.
+  Keep each row's status honest (`test/states.test.js` enforces the two allowed wordings and that the header's count matches the rows); a fact added later starts as "general knowledge only" until looked up.
 - **Look (only while States is the pack on screen).**
   - *Flag backdrop*: `body.pk-states` (set by `syncPackTheme()` in `go()`) turns on two
     fixed pseudo-element layers in `app.css` — stripes + canton, and the stars as a mask; straight (never tilted), sized from `--fw` so it covers the screen width —
@@ -279,6 +278,8 @@ Census-boundary centroids, taunts, fun facts).
     **Regenerate** with `test/build-us-map.js` (dev-only, needs `us-atlas topojson-client d3-geo sharp`);
     it takes any equirectangular world image — the imagery in the repo is a Natural Earth stand-in, to be
     replaced by NASA Blue Marble (see `NOTICE.md`).
+  - *Celebration colours*: the red accent, the second (dark blue) button, the SOLD slab (white lettering on a red gradient), the burst rays and sparks and the confetti (red, white and blue) are tokens on `html[data-pack=states]`
+    (`--gold1/2`, `--btn2a/b`, `--slab1..3`, `--rays`, `--spark`, `--conf`), all contrast-tested; the results map keeps the winner's states in gold (`--map-edge`) for contrast on the imagery.
   - *Win sound*: `Snd.eagle()` (synthesised raptor cry) replaces the fanfare on a States win; a loss
     keeps the sting. It is not a recording — in films the "eagle" cry is a red-tailed hawk.
   - *Credits*: Privacy → "Credits & licences" (`credits()`, 5 languages) and `NOTICE.md`. Add every
@@ -366,13 +367,13 @@ bands also had hard edges (185 pairs where a bigger country was cheaper; Vietnam
   and pays about the rival's whole wallet. Average price per lot vs August: Medium +17%, Expert +13%, Beginner unchanged; budgets were not changed. Measured: Medium creeper 53 / 27 / 13 / 9 / 8% at 5-30 lots,
   B/C 61 / 51 / 40 / 35 / 29%; no exploit-search cell above its limit (worst Medium 5 lots 64.4 against 65).
 - **Prices**: one smooth monotone curve (`priceTable` in the pack: monotone cubic through log-log anchors, whole euros, minimum €1); the bot's ceiling is
-  ideal × a ratio easing from 2.0 (tiny) to 1.45 (giants), forced non-decreasing. 0 inversions. Expected price per lot vs August: Beginner −2%, Medium +3.9%,
-  Expert +3.5%. Ten countries move by more than 25% (DR Congo, Philippines, Egypt, Japan, Mexico, Ethiopia, Russia up; China, India up; Trinidad and Tobago €2→€1);
+  ideal × a ratio easing from 2.0 (tiny) to 1.45 (giants), forced non-decreasing. 0 inversions. Expected price per lot vs August: Beginner −2%, Medium +17%,
+  Expert +13% (the v37 giants included). Fifteen countries move by more than 25% (DR Congo, Philippines, Egypt, Japan, Mexico, Ethiopia, Russia, Bangladesh, Brazil, Nigeria, Pakistan, Indonesia, China, India up; Trinidad and Tobago €2→€1);
   the full old-vs-new table is `test/countries-prices-old-vs-new.md`, every price is pinned in `test/golden-countries.json` (regenerate on purpose with
   `node test/make-golden-countries.js`). The August prices live on in `test/golden-countries-august.json`.
 - **Budgets** (`economy.budgets`, per level, multiples of 5): Medium keeps €10 per lot; Beginner and Expert get f × lots × the level's average fair price with
   f = 0.55 (5 and 10 lots), 0.40 (15), 0.36 (20, 30). `validatePack` enforces the top-5 rule per level (budget ≤ 80% of the expected price of the level's
-  five biggest, midpoint of ideal and max plus the 15% premium: 435 / 210 / 435 against 300 / 100 / 140). Lot options stay 5 / 10 / 15 / 20 / 30 (no 40).
+  five biggest, midpoint of ideal and max plus the 15% premium: 675 / 210 / 675 against 300 / 100 / 140). Lot options stay 5 / 10 / 15 / 20 / 30 (no 40).
 - **Bot** (`pack.bot`): `premium { top: 5, pct: 0.15 }`, per-level `limitMul`, `knockout.kappa`, `noise`, `wallet`, the States pacing / mood / temperaments (25/50/25,
   ±6% / 6 / 5 / 4 / 4% by lot count), plus three blocks added by the bug-test round (all per level, see `lvVal` in `engine.js`):
   - `efficiency { gamma, lo, hi, pick }` — a knapsack shadow price: the walk-away is scaled by (the lot's points per euro ÷ the best points per euro the bot can still buy)^gamma,
@@ -386,23 +387,23 @@ bands also had hard edges (185 pairs where a bigger country was cheaper; Vietnam
   every *pair* of countries and every lot position is equally likely (Expert: 1/196 = 0.51% for lot 1, 1/186 = 0.53% for lot 11). `'systematic'` (the sorted, fixed-interval
   draw States still uses) gave every country the same *single* chance, but two countries of similar size never shared a round (0.000% against 0.235% for independent draws).
   **To revert, change `sampling: 'random'` to `'systematic'` in `pack-countries.js` and bump `CACHE`/`CONFIG.version`; nothing else depends on it** (the sampling test runs both modes).
-  Cost of the random draw, measured: round value swings more (Beginner 10 lots SD 47%), so luck rises and every result moves toward 50%: Medium creeper 44 / 24 / 14 / 8 / 6% (was 28 / 15 / 11 / 8 / 5),
+  Cost of the random draw, measured at v35 (before the v37 giants and sweep): round value swings more (Beginner 10 lots SD 47%), so luck rises and every result moves toward 50%: Medium creeper 44 / 24 / 14 / 8 / 6% (was 28 / 15 / 11 / 8 / 5),
   fair-value players 49–54% at 5–10 lots (was 37–39), Expert creeper 40 / 33 / 25 / 16 / 14% at 5–30 lots. The exploit search is cleaner (no cell above the limit); `limitMul` was raised for
   Beginner 15/20 and Expert 10/15/20 (it cannot remove the short-round luck: ×1.45 on every limit moved the Medium 5-lot creeper by only 2 points).
-- **Reference results** (real engine, `node test/economy.js countries 3000`, mix 25/50/25; win % of A creeper / B fair / C smart-€1, random draw):
-  Medium 5–30 lots A 44.3 / 23.6 / 13.6 / 8.2 / 6.0, B 53.7 / 48.7 / 40.9 / 33.9 / 25.8, C 53.4 / 47.8 / 40.9 / 33.4 / 25.3.
-  Beginner A 27.9 / 30.6 / 24.3 / 18.3 / 9.6, B 31 / 48 / 46 / 39 / 28. Expert A 40.0 / 32.8 / 24.7 / 16.0 / 14.0, B 38 / 44 / 41 / 33 / 38. The bot ends with 13–24% unspent against the creeper.
-  The loose calibration test allows +17 (creeper +27 at 5 lots) against the frozen August Medium numbers for this reason. 5-lot rounds are mostly luck (the rules text says so).
-- **Accepted misses** (agreed): short rounds are luck-heavy; the creeper wins 24–44% of 5–10-lot rounds at every level; Expert's pool is extremely skewed (median 9 M, India 1,451 M),
+- **Reference results** (real engine, v37 prices and $1 sweep, `node test/economy.js countries 3000`, mix 25/50/25; win % of A creeper / B fair / C smart-€1, random draw), for 5 / 10 / 15 / 20 / 30 lots:
+  Medium A 52.4 / 26.7 / 13.2 / 8.6 / 7.5, B 61.4 / 51.0 / 39.9 / 35.4 / 29.2, C 61.1 / 50.9 / 39.8 / 34.6 / 29.0.
+  Beginner A 32.0 / 32.2 / 24.6 / 17.1 / 6.3, B 36.1 / 49.7 / 48.0 / 39.2 / 27.2. Expert A 43.5 / 32.8 / 25.1 / 17.0 / 12.7, B 42.0 / 44.5 / 41.1 / 33.8 / 36.9. The bot ends with 13–27% unspent against the creeper.
+  The loose calibration test allows, against the frozen August Medium numbers, +17 (creeper +24 at 10 lots, +38 at 5; B/C +22 at 5): short rounds are mostly luck (the rules text says so), and at 5 lots a €50 Medium budget cannot buy a giant.
+- **Accepted misses** (agreed): short rounds are luck-heavy; the creeper wins 27–52% of 5–10-lot rounds at every level and fair-value players win about 61% of 5-lot Medium rounds; Expert's pool is extremely skewed (median 9 M, India 1,451 M),
   so one lot decides a round — and with the random draw a mid-size country sits in a round without any giant about a third of the time, where it is decisive.
 - **Bug-test round** (dev scripts, none part of `node --test` except the small slices):
   - `node test/fuzz.js [games] [seed] [pack]` — whole auctions with junk / random / creeper / passer / all-in / fair humans, bogus levels and lot counts, 3–4 seats, forced
     temperaments; checks exceptions, termination, NaN / non-integer / negative money, money conservation, lots sold twice or lost, a bot move the engine rejects, a rejected
-    human move that changes state, reproducibility of a seed. `test/fuzz.test.js` runs a 600-game slice. Final runs: **150,000 games with the systematic draw and 100,000 with the random draw, 0 failures** (≈950,000 during the round).
+    human move that changes state, reproducibility of a seed. `test/fuzz.test.js` runs a 600-game slice. Final runs: **150,000 games with the systematic draw, 100,000 with the random draw and 100,000 more after v37 (both packs), 0 failures** (≈1,050,000 in all).
     It found one real bug: an unknown level id gave NaN budgets (fixed by `validLevel`).
   - `node test/exploit.js [pack] [level|all] [games] [confirm]` — a family of ~40 human strategies (ratio, efficiency hunter, saver, hoarder, reader, all-in jumper, sniper, oracle,
     temperament reader); the best five are re-played on fresh seeds. Limit 60% (65% at 5 lots). August bot, same family: 70–99% for the best strategy in most cells.
-    Final confirmed best blind strategy with the random draw, Beginner 5/10/15/20/30: 46.6 / 49.6 / 49.5 / 53.2 / 55.2; Medium 57.4 / 58.4 / 49.1 / 49.0 / 50.5; Expert 41.7 / 45.5 / 44.5 / 43.0 / 50.3
+    Final confirmed best blind strategy (v37: random draw, giants repriced, $1 sweep), Beginner 5/10/15/20/30: 45.1 / 49.9 / 53.8 / 55.8 / 55.2; Medium 64.4 / 58.3 / 51.1 / 46.1 / 49.7; Expert 41.8 / 46.4 / 46.5 / 44.5 / 48.6
     — **no cell above the limit**. (With the systematic draw three cells sat 0.3–2.3 points over it; the random draw's extra luck pulls every strategy toward 50%, so that is partly an effect of luck,
     not of a stronger bot.) The oracle (sees the lots to come, not available to a player) reaches up to 62%.
   - `node test/ui-sim.js 300 4` — 300 games through the real UI, 0 failures.
@@ -521,6 +522,7 @@ counters inside the single `record:v1` value.
   level averages, the draw per level pool (random and systematic: equal chance per country, per position and per pair, no duplicates), $1 walkover, knockout (a)/(b)/(c), calibration bands per level and
   temperament, the frozen baseline, the unpredictability tests (repeat test, parity, wallet-bound giants, the Learner), the rules text in five languages.
 - `node --test test/fuzz.test.js` — a 600-game slice of `node test/fuzz.js` (hostile and random humans against both bots; invariants after every move). `node test/exploit.js [pack] [level|all]` is the strategy search (dev-only, minutes).
+- `node test/make-translation-review.js` — writes `TRANSLATIONS-REVIEW.md`, the pack wording and the 5-lot hint side by side in five languages for a native speaker (dev-only; the strings stay in `app.js`).
 - `node --test test/usmap.test.js` — the generated US map data (48 + AK + HI), the files being in
   the offline cache, and the label layout (no overlaps, callouts inside the map).
 - `node --test test/contrast.test.js` — WCAG contrast of the real design tokens

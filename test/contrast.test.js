@@ -68,11 +68,12 @@ for (const [name, T] of [['Nocturne (dark)', dark], ['Daylight (light)', light],
   });
 }
 
-test('the gold SOLD slab: dark lettering on the whole brass gradient', () => {
-  for (const bg of ['#F4DC9A', '#E7BE62', '#C9953C']) {
-    assert.ok(ratio(parse('#2B1E06'), parse(bg)) >= 4.5, 'SOLD on ' + bg);
-    assert.ok(ratio(parse('#2B1E06'), parse(bg)) >= 4.5, 'caption on ' + bg);
-  }
+for (const [name, T] of [['gold', dark], ['light', light], ['US States red (dark)', usDark], ['US States red (light)', usLight]]) {
+  test('the SOLD slab (' + name + '): the lettering reaches 4.5:1 on the whole gradient', () => {
+    for (const k of ['slab1', 'slab2', 'slab3']) assert.ok(ratio(parse(T['on-slab']), parse(T[k])) >= 4.5, `SOLD and caption on ${k} ${ratio(parse(T['on-slab']), parse(T[k])).toFixed(2)}`);
+  });
+}
+test('the overpaid slab and pill stay readable', () => {
   assert.ok(ratio(parse('#2A2E4A'), parse('#A9AFC8')) >= 4.5, 'overpaid caption');
   assert.ok(ratio(parse('#FFFFFF'), parse('#5F688D')) >= 4.5, 'overpaid pill');
 });

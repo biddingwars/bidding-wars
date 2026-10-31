@@ -81,7 +81,8 @@ const FX = (() => {
   /* ---------- confetti: a few dozen pieces, compositor-only, in one contained layer ---------- */
   function confetti(root, n, cols) {
     if (reduced) return null;
-    cols = cols || ['#EDC66F', '#C99A3F', '#F4DC9A', '#EDC66F', '#7FA9FF', '#FF8A96'];
+    /* the colours are design tokens (--conf), so the US States theme throws red, white and blue */
+    if (!cols) { const v = getComputedStyle(document.documentElement).getPropertyValue('--conf').split(',').map(x => x.trim()).filter(Boolean); cols = v.length ? v : ['#EDC66F', '#C99A3F', '#F4DC9A', '#EDC66F', '#7FA9FF', '#FF8A96']; }
     const box = document.createElement('div'); box.className = 'confetti'; box.setAttribute('aria-hidden', 'true'); root.appendChild(box);
     const h = Math.max(300, root.clientHeight || innerHeight);
     for (let i = 0; i < (n || 22); i++) {

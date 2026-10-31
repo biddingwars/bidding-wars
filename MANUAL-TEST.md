@@ -188,3 +188,4 @@ I could not play these on a device. The harness covers the numbers (`node test/e
 - [ ] US States theme: with States selected the main buttons (Open the auction, Done, Menu, Raise) are red, the second kind (Back, Drop out, Play again) dark blue, English shows the American flag in the language chip and sheet; with Countries selected everything is brass gold and English shows the Union Jack again.
 - [ ] Run out of money in a 1v1 (go all in on India or China): the other player takes every remaining country for 1 each, and the how-to-play text says so in all five languages.
 - [ ] India and China cost about a whole budget (about 158); USA, Brazil, Pakistan, Indonesia, Nigeria cost about 40% more than before.
+- [ ] US States SOLD moment and results: the SOLD plate is red with white lettering, the burst rays and sparks are red / white, the confetti is red, white and blue; Countries keeps the brass plate and gold confetti.
