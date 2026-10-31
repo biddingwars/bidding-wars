@@ -293,12 +293,22 @@ Census-boundary centroids, taunts, fun facts).
   so it wins the lots on which it pays the rival's constant limit and hands the rest to the rival at its own low draws; it also spends first and the stingy player then takes the big states for a
   broke rival's last few dollars. Every state costs the same per million people, so the Countries "efficiency" block has nothing to rank here.
   **Fix: a narrower roll and lower limits for 15+ lots** — `bot.rollSpan: 0.4` (the roll uses the first 40% of [ideal, max]), `bot.noise: 0.15`, `limitMul` 0.72 / 0.62 / 0.6 / 0.63 / 0.68 for 15 / 20 / 30 / 40 / 50 lots
-  (5 and 10 lots keep 1.0 / 0.925). Result: best blind strategy 42 / 37 / 59 / 55 / 53 / 53 / 53% at 5 / 10 / 15 / 20 / 30 / 40 / 50 lots — **no cell above the limit**.
+  (5 and 10 lots keep 1.0 / 0.925). Result on the *coarse* ratio grid (0.6 / 0.8 / 1 …): best blind strategy 42 / 37 / 59 / 55 / 53 / 53 / 53% at 5 / 10 / 15 / 20 / 30 / 40 / 50 lots.
+  **CORRECTION (found after v39, not fixed yet): that "no cell above the limit" was an artefact of the coarse grid.** `test/exploit.js` now sweeps the fixed-cap player in steps of 0.05, and "+1 up to 0.70× the fair price" wins
+  **64 / 73 / 82 / 99%** of the 20 / 30 / 40 / 50-lot States rounds (0.75× is nearly as good: 61 / 70 / 78 / 89%; 15 lots peak at 0.85× with 59%; 5 and 10 lots are fine, 42 / 39%). The fix above only moved the peak from 0.8× to 0.70-0.75×.
+  Why it cannot be tuned away (measured, scratch harness): the winner of a lot pays the *loser's* limit, so a player whose constant cap sits just under the bot's mean walk-away (about 0.65-0.73× the fair price, falling through the round
+  because of pacing) wins the lots where the bot's limit is lower at the bot's lower price and makes the bot pay the cap on the rest (50 lots: the cap player pays 0.57× fair per lot, the bot 0.73×). Over 40-50 lots that 5-10% discount is
+  decisive, because "All 50" is the same 50 states every time and a long round has almost no luck. A completely constant bot (no roll, no noise, no pacing, no mood) is still beaten 91% at 50 lots by a cap just above its limit: there is always a
+  window of width ≥ the bot's overhead. More noise makes it worse (`noise` 0.3 / 0.45: 100% at 50 lots, 87-92% at 30), less roll helps only at 15-30 lots (`rollSpan` 0: 49 / 58 / 97% at 15 / 30 / 50), smaller raise steps (stepMul 0.25-0.5) do nothing,
+  removing pacing makes it worse (100% at 50), a "deny floor" (the bot never lets a lot go for less than the learned cap) is much worse (92% at 30, 100% at 50: the bot pays the cap on every lot and runs dry first), and a learned best-response
+  (win by buying when the bot's money exceeds half of cap × value to come, otherwise push the rival up to its cap) still lost 96% at 50 lots (the cap estimate is biased by the bot's own raise steps). Countries does not have the problem
+  (fine grid, 500 games per cell: worst Beginner 15 lots 58%, Medium 5 lots 62% against its 65% limit at 5 lots, Expert at most 40%), so what is needed is not another parameter pass on `pack-states.js` but either a different design for 30+ lots
+  (e.g. a random draw so long rounds are not the same 50 states, which adds luck like Countries, or a rule change) or a bot that learns the rival's cap well enough to answer it.
   Costs (measured): the creeper wins 28 / 31 / 28 / 22 / 17% at 15 / 20 / 30 / 40 / 50 lots (was 15 / 11 / 7 / 5 / 4%; its share of the points stays under 51%), 42% at 5 lots and 26% at 10 (was 35 / 19);
   B and C win 16-35% from 10 lots; a ±10% budget now moves a reference player by 14-16 points at 30 lots (a slope, no cliff).
   Less random: the drop-out price of a mid-size state in a 30-lot round has SD 8-9% of the fair price (was 17%) and the most common price shows up in about 20% of games. A learner that remembers
   the bot's drop-outs still loses to the smart player by 18-29 points, so this is not exploitable the way the fixed-limit player was.
-  Tried first and rejected (each measured): the Countries efficiency / decisive / creeperGuard blocks with parameter searches of 150+ steps, stronger pacing, a rival-learning cap, a per-lot house price when a rival
+  Tried first and rejected (each measured): the Countries efficiency / decisive / creeperGuard blocks with parameter searches of 150+ steps, stronger pacing, a rival-learning cap (and, after the correction above, a learned floor and a learned best-response), a per-lot house price when a rival
   cannot really bid, a minimum sale price, bidding by money lead, a reserve for the biggest state to come, matching the rival's raise size. None closed it.
 
 ### Economy and bot (`pack.economy`, `pack.bot`: US States and Countries)
