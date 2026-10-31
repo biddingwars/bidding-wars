@@ -73,7 +73,20 @@
   }
   /* "$1,234" for packs that give a currency locale (US States), plain "€12" for the rest (Countries). */
   const numFmt = new Map();
-  function formatMoney(pack, n) {
+  /* The currencies a player can pick in Settings. This only changes how the game's money is WRITTEN (symbol and where it goes): the numbers do not change,
+     a $70 budget is simply shown as 70 kr or CHF 70. There are no exchange rates. `post` puts the symbol after the number ("70 kr"), `sp` adds a space after a letter symbol ("CHF 70"). */
+  const CURRENCIES = [
+    { id: 'EUR', sym: '€' }, { id: 'USD', sym: '$' }, { id: 'GBP', sym: '£' }, { id: 'CHF', sym: 'CHF', sp: true }, { id: 'JPY', sym: '¥' }, { id: 'CNY', sym: 'CN¥' },
+    { id: 'INR', sym: '₹' }, { id: 'KRW', sym: '₩' }, { id: 'BRL', sym: 'R$' }, { id: 'CAD', sym: 'C$' }, { id: 'AUD', sym: 'A$' }, { id: 'MXN', sym: 'MX$' },
+    { id: 'TRY', sym: '₺' }, { id: 'ZAR', sym: 'R', sp: true }, { id: 'SEK', sym: 'kr', post: true }, { id: 'NOK', sym: 'kr', post: true }, { id: 'DKK', sym: 'kr', post: true },
+    { id: 'PLN', sym: 'zł', post: true }, { id: 'CZK', sym: 'Kč', post: true }, { id: 'HUF', sym: 'Ft', post: true }
+  ];
+  const currencyById = id => CURRENCIES.find(c => c.id === id) || null;
+  /* the written form of an amount in a chosen currency: money("GBP", 70) = "£70", ("SEK", 70) = "70 kr", ("CHF", 1234) = "CHF 1,234" */
+  function currencyText(cur, text) { return cur.post ? text + ' ' + cur.sym : cur.sym + (cur.sp ? ' ' : '') + text; }
+  function formatMoney(pack, n, curId) {
+    const own = curId && currencyById(curId);
+    if (own) { let f = numFmt.get('en-US'); if (!f) numFmt.set('en-US', f = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 })); return currencyText(own, f.format(n)); }
     const c = pack ? pack.currency : { symbol: '€' };
     if (c.locale) {
       let f = numFmt.get(c.locale); if (!f) numFmt.set(c.locale, f = new Intl.NumberFormat(c.locale, { maximumFractionDigits: 0 }));
@@ -487,8 +500,12 @@
       const w = T.weights, total = w[0] + w[1] + w[2], r = rng(total);
       name = r < w[0] ? names[0] : r < w[0] + w[1] ? names[1] : names[2];
     }
-    const t = T[name] || {}, sign = name === 'conservative' ? -1 : name === 'aggressive' ? 1 : 0;
-    return { name, limit: 1 + sign * byLots(T.spread, lots, level), step: t.step == null ? 1 : t.step, big: t.big == null ? 1 : t.big, cushion: t.cushion || 0, reserveCap: t.reserveCap == null ? null : t.reserveCap };
+    /* Settings offers five steps; the two outer ones ("cautious", "fierce") are the calibrated conservative / aggressive temperaments pushed twice as far
+       (the walk-away spread doubled, the raise-step and big-item factors squared). They only exist when the player picks them: the random draw above never returns them. */
+    const outer = name === 'cautious' || name === 'fierce', base = name === 'cautious' ? 'conservative' : name === 'fierce' ? 'aggressive' : name, k = outer ? 2 : 1;
+    const t = T[base] || {}, sign = base === 'conservative' ? -1 : base === 'aggressive' ? 1 : 0;
+    const pw = (x, d) => x == null ? d : Math.pow(x, k);
+    return { name, limit: 1 + sign * k * byLots(T.spread, lots, level), step: pw(t.step, 1), big: pw(t.big, 1), cushion: t.cushion || 0, reserveCap: t.reserveCap == null ? null : (outer ? Math.max(1, Math.floor(t.reserveCap / 2)) : t.reserveCap) };
   }
   /* a bot parameter may be a plain number or per level ({ beginner: 0.8, medium: 1.2 }, or per level and lot count) */
   const lvVal = (v, S) => { if (typeof v === 'number') return v; const t = v && v[S.level] != null ? v[S.level] : v; return typeof t === 'number' ? t : byLots(t, S.items.length); };
@@ -630,6 +647,29 @@
        { v:2, packs: { <packId>: { played, won, lost, ... byLevel } } }
      The first version was a single flat record (the countries pack); it migrates
      in place. Anything unreadable falls back to a blank record, never a crash. */
+  /* ---- SETTINGS: the one extra value stored on the device (settings:v1), only the choices that differ from the defaults.
+     aggr is the bot-aggression step 0..4 (2 = the default mix, the only one that counts for your record). */
+  const SETTINGS_KEY = 'settings:v1';
+  const DEFAULT_SETTINGS = { cur: null, aggr: 2, tz: 0, motion: 'auto', shapes: false, fair: false, confirm: false, quiet: false };
+  const AGGR_TEMPER = ['cautious', 'conservative', null, 'aggressive', 'fierce'];     // step -> forced temperament (null = the usual hidden 25/50/25 draw)
+  function parseSettings(raw) {
+    const out = Object.assign({}, DEFAULT_SETTINGS); let o = null;
+    try { o = typeof raw === 'string' ? JSON.parse(raw) : raw; } catch (e) { o = null; }
+    if (!o || typeof o !== 'object' || Array.isArray(o)) return out;
+    if (typeof o.cur === 'string' && currencyById(o.cur)) out.cur = o.cur;
+    if (Number.isInteger(o.aggr) && o.aggr >= 0 && o.aggr <= 4) out.aggr = o.aggr;
+    if (Number.isInteger(o.tz) && o.tz >= 0 && o.tz <= 2) out.tz = o.tz;
+    if (o.motion === 'reduce') out.motion = 'reduce';
+    ['shapes', 'fair', 'confirm', 'quiet'].forEach(k => { if (o[k] === true) out[k] = true; });
+    return out;
+  }
+  /* only what differs from the defaults is stored; all defaults = nothing stored (null: the caller removes the key) */
+  function stringifySettings(st) {
+    const o = {}; Object.keys(DEFAULT_SETTINGS).forEach(k => { if (st[k] !== DEFAULT_SETTINGS[k]) o[k] = st[k]; });
+    return Object.keys(o).length ? JSON.stringify(o) : null;
+  }
+  /* a game that does not count for the record: not the default bot, or the fair price on screen */
+  const isPractice = st => st.aggr !== DEFAULT_SETTINGS.aggr || st.fair === true;
   const REC_KEY = 'record:v1';
   const blankPackRecord = () => ({
     played: 0, won: 0, lost: 0, drawn: 0, pts: 0, botPts: 0, spent: 0, streak: 0, best: 0,
@@ -691,7 +731,7 @@
   }
 
   return {
-    LANGS, REC_KEY,
+    LANGS, REC_KEY, SETTINGS_KEY, DEFAULT_SETTINGS, AGGR_TEMPER, CURRENCIES, currencyById, currencyText, parseSettings, stringifySettings, isPractice,
     cryptoRng, seededRng, defaultRng, pick,
     itemName, itemIcon, hasCoords, factFor, formatMoney,
     validatePack, levelPool, draw, priceTable, priceOf, botCeiling,

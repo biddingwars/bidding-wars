@@ -21,8 +21,12 @@ function icon(it) {
 }
 const fmtVal = v => PACK.metric.format(v);
 let SELPACK = DEFAULT_PACK;                         // the pack picked on the menu (memory only; nothing about it is stored)
-const cur = () => (PACK ? PACK.currency.symbol : ((Packs.meta(SELPACK) || {}).sym || '€'));
-const money = n => (PACK ? Engine.formatMoney(PACK, n) : cur() + n);   // "$1,234" for US States, "€12" for Countries
+/* The money is written in the currency the player picked in Settings (SET.cur), else in the pack's own ("$" for US States, "€" for the rest). Only the writing changes, never the numbers. */
+let SET = Engine.parseSettings(null);
+const nativeSym = () => (PACK ? PACK.currency.symbol : ((Packs.meta(SELPACK) || {}).sym || '€'));
+const chosenCur = () => { const c = Engine.currencyById(SET.cur); return c && c.sym !== nativeSym() ? c : null; };   // null = write it the pack's own way
+const cur = () => { const c = chosenCur(); return c ? c.sym : nativeSym(); };
+const money = n => { const c = chosenCur(); return c ? Engine.formatMoney(PACK, n, c.id) : (PACK ? Engine.formatMoney(PACK, n) : nativeSym() + n); };   // "$1,234" for US States, "€12" for Countries, "70 kr" when kr is picked
 const ini = n => (Array.from(String(n || '?').trim())[0] || '?').toUpperCase();
 const IC = (id, cls) => `<svg class="i ${cls || ''}" aria-hidden="true" focusable="false"><use href="#i-${id}"/></svg>`;
 const isOnline = () => navigator.onLine !== false;
@@ -68,6 +72,19 @@ async function setTheme(v) {
   if (THEME === 'dark') await Store.remove('theme:v1'); else await Store.set('theme:v1', 'light');     // only a forced Daylight is stored
 }
 const themeLabel = () => t(THEME === 'light' ? 'themeLight' : 'themeDark');
+
+/* ---- settings: one small local value (settings:v1) holding only what differs from the defaults ---- */
+function applySettings() {
+  const r = document.documentElement;
+  r.dataset.tz = String(SET.tz); r.dataset.shapes = SET.shapes ? '1' : '0'; r.dataset.motion = SET.motion === 'reduce' ? 'reduce' : 'auto';
+  FX.forceReduced(SET.motion === 'reduce');
+}
+async function loadSettings() { SET = Engine.parseSettings(await Store.get(Engine.SETTINGS_KEY)); applySettings(); }
+async function saveSettings() {
+  applySettings();
+  const v = Engine.stringifySettings(SET);
+  if (v) await Store.set(Engine.SETTINGS_KEY, v); else await Store.remove(Engine.SETTINGS_KEY);
+}
 
 /* the buttons every screen carries in its top bar */
 const navBtns = (withTheme = true) => `<span class="navr">${withTheme ? `<button class="ibtn" id="theme" aria-label="${esc(themeLabel())}">${IC('theme')}</button>` : ''}<button class="ibtn${Snd.muted ? ' off' : ''}" id="mute" aria-label="${esc(t('aSound'))}" aria-pressed="${Snd.muted}">${IC(Snd.muted ? 'mute' : 'note')}</button></span>`;
@@ -230,10 +247,10 @@ en:{
  youTag:'you', hostTag:'HOST',
  privacy:'Privacy', soon:'Soon', soonBody:'Online play is not switched on yet. Everything else works without a connection.',
  privP1:'This game has no accounts, no sign-in and no analytics. Nothing you do here is sent anywhere.',
- privP2:'Four things are saved, and only on this device: the language you picked, the appearance you chose, your record against the bot (with the game you last picked), and the name you last entered. Deleting the app deletes all four.',
+ privP2:'Five things are saved, and only on this device: the language you picked, the appearance you chose, your record against the bot (with the game you last picked), the name you last entered, and your settings (currency, bot style, accessibility and practice choices). Deleting the app deletes all five.',
  privP3:'Nicknames are optional. They label the players on screen during a round; only your own is remembered on this device, so you do not have to type it again.',
  privP4:'No advertising, no tracking, no third-party software development kits.',
- wipe:'Delete all data', wipeTitle:'Delete everything?', wipeBody:'Your record, your saved name, your language and your appearance choice will be removed from this device.', wiped:'Deleted.',
+ wipe:'Delete all data', wipeTitle:'Delete everything?', wipeBody:'Your record, your saved name, your language, your appearance and your settings will be removed from this device.', wiped:'Deleted.',
  packFail:'Could not load the game data. Check your connection and try again.',
  loadingBorders:'loading borders…',
  packCountries:'Countries',
@@ -330,10 +347,10 @@ de:{
  youTag:'du', hostTag:'GASTGEBER',
  privacy:'Datenschutz', soon:'Bald', soonBody:'Online-Spiel ist noch nicht freigeschaltet. Alles andere läuft ohne Verbindung.',
  privP1:'Dieses Spiel hat keine Konten, keine Anmeldung und keine Analyse. Nichts, was du hier tust, wird irgendwohin gesendet.',
- privP2:'Vier Dinge werden gespeichert, und nur auf diesem Gerät: deine Sprache, die gewählte Darstellung, deine Bilanz gegen den Bot (samt dem zuletzt gewählten Spiel) und der zuletzt eingegebene Name. Beim Löschen der App verschwinden alle vier.',
+ privP2:'Fünf Dinge werden gespeichert, und nur auf diesem Gerät: deine Sprache, die gewählte Darstellung, deine Bilanz gegen den Bot (samt dem zuletzt gewählten Spiel), der zuletzt eingegebene Name und deine Einstellungen (Währung, Bot-Stil, Bedienungshilfen und Übungsoptionen). Beim Löschen der App verschwinden alle fünf.',
  privP3:'Spitznamen sind freiwillig. Sie beschriften die Spieler während einer Runde; nur dein eigener wird auf diesem Gerät gemerkt, damit du ihn nicht neu eintippen musst.',
  privP4:'Keine Werbung, kein Tracking, keine Fremd-Bausteine.',
- wipe:'Alle Daten löschen', wipeTitle:'Alles löschen?', wipeBody:'Deine Bilanz, dein gespeicherter Name, deine Sprache und deine Darstellung werden von diesem Gerät entfernt.', wiped:'Gelöscht.',
+ wipe:'Alle Daten löschen', wipeTitle:'Alles löschen?', wipeBody:'Deine Bilanz, dein gespeicherter Name, deine Sprache, deine Darstellung und deine Einstellungen werden von diesem Gerät entfernt.', wiped:'Gelöscht.',
  packFail:'Die Spieldaten konnten nicht geladen werden. Prüfe deine Verbindung und versuch es noch einmal.',
  loadingBorders:'Grenzen werden geladen…',
  packCountries:'Länder',
@@ -430,10 +447,10 @@ it:{
  youTag:'tu', hostTag:'HOST',
  privacy:'Privacy', soon:'Presto', soonBody:'Il gioco online non è ancora attivo. Tutto il resto funziona senza connessione.',
  privP1:'Questo gioco non ha account, né accessi, né analisi. Nulla di ciò che fai qui viene inviato da qualche parte.',
- privP2:'Vengono salvate quattro cose, e solo su questo dispositivo: la lingua scelta, l’aspetto scelto, il tuo bilancio contro il bot (con l’ultimo gioco scelto) e l’ultimo nome inserito. Disinstallando l’app spariscono tutte e quattro.',
+ privP2:'Vengono salvate cinque cose, e solo su questo dispositivo: la lingua scelta, l’aspetto scelto, il tuo bilancio contro il bot (con l’ultimo gioco scelto), l’ultimo nome inserito e le tue impostazioni (valuta, stile del bot, accessibilità e opzioni di prova). Disinstallando l’app spariscono tutte e cinque.',
  privP3:'I soprannomi sono facoltativi. Servono a identificare i giocatori durante una partita; solo il tuo viene ricordato su questo dispositivo, così non devi riscriverlo.',
  privP4:'Nessuna pubblicità, nessun tracciamento, nessun componente di terze parti.',
- wipe:'Cancella tutti i dati', wipeTitle:'Cancellare tutto?', wipeBody:'Il tuo bilancio, il nome salvato, la lingua e l’aspetto scelti verranno rimossi da questo dispositivo.', wiped:'Cancellato.',
+ wipe:'Cancella tutti i dati', wipeTitle:'Cancellare tutto?', wipeBody:'Il tuo bilancio, il nome salvato, la lingua, l’aspetto e le impostazioni verranno rimossi da questo dispositivo.', wiped:'Cancellato.',
  packFail:'Impossibile caricare i dati di gioco. Controlla la connessione e riprova.',
  loadingBorders:'caricamento confini…',
  packCountries:'Paesi',
@@ -530,10 +547,10 @@ es:{
  youTag:'tú', hostTag:'ANFITRIÓN',
  privacy:'Privacidad', soon:'Pronto', soonBody:'El juego en línea aún no está activado. Todo lo demás funciona sin conexión.',
  privP1:'Este juego no tiene cuentas, ni inicio de sesión, ni analíticas. Nada de lo que haces aquí se envía a ningún sitio.',
- privP2:'Se guardan cuatro cosas, y solo en este dispositivo: el idioma que elegiste, la apariencia elegida, tu balance contra el bot (con el último juego elegido) y el último nombre introducido. Al borrar la app desaparecen las cuatro.',
+ privP2:'Se guardan cinco cosas, y solo en este dispositivo: el idioma que elegiste, la apariencia elegida, tu balance contra el bot (con el último juego elegido), el último nombre introducido y tus ajustes (moneda, estilo del bot, accesibilidad y opciones de práctica). Al borrar la app desaparecen las cinco.',
  privP3:'Los apodos son opcionales. Sirven para identificar a los jugadores durante una partida; solo el tuyo se recuerda en este dispositivo, para que no tengas que escribirlo otra vez.',
  privP4:'Sin publicidad, sin rastreo, sin componentes de terceros.',
- wipe:'Borrar todos los datos', wipeTitle:'¿Borrar todo?', wipeBody:'Tu balance, tu nombre guardado, tu idioma y tu apariencia se eliminarán de este dispositivo.', wiped:'Borrado.',
+ wipe:'Borrar todos los datos', wipeTitle:'¿Borrar todo?', wipeBody:'Tu balance, tu nombre guardado, tu idioma, tu apariencia y tus ajustes se eliminarán de este dispositivo.', wiped:'Borrado.',
  packFail:'No se pudieron cargar los datos del juego. Comprueba tu conexión e inténtalo de nuevo.',
  loadingBorders:'cargando fronteras…',
  packCountries:'Países',
@@ -630,10 +647,10 @@ fr:{
  youTag:'toi', hostTag:'HÔTE',
  privacy:'Confidentialité', soon:'Bientôt', soonBody:'Le jeu en ligne n’est pas encore activé. Tout le reste fonctionne sans connexion.',
  privP1:'Ce jeu n’a ni compte, ni connexion, ni analyse. Rien de ce que tu fais ici n’est envoyé où que ce soit.',
- privP2:'Quatre choses sont enregistrées, uniquement sur cet appareil : la langue choisie, l’apparence choisie, ton bilan face au bot (avec le dernier jeu choisi) et le dernier prénom saisi. Supprimer l’app supprime les quatre.',
+ privP2:'Cinq choses sont enregistrées, uniquement sur cet appareil : la langue choisie, l’apparence choisie, ton bilan face au bot (avec le dernier jeu choisi), le dernier prénom saisi et tes réglages (devise, style du bot, accessibilité et options d’entraînement). Supprimer l’app supprime les cinq.',
  privP3:'Les pseudos sont facultatifs. Ils servent à identifier les joueurs pendant une partie ; seul le tien est mémorisé sur cet appareil, pour que tu n’aies pas à le retaper.',
  privP4:'Aucune publicité, aucun suivi, aucun composant tiers.',
- wipe:'Effacer toutes les données', wipeTitle:'Tout effacer ?', wipeBody:'Ton bilan, ton prénom enregistré, ta langue et ton apparence seront retirés de cet appareil.', wiped:'Effacé.',
+ wipe:'Effacer toutes les données', wipeTitle:'Tout effacer ?', wipeBody:'Ton bilan, ton prénom enregistré, ta langue, ton apparence et tes réglages seront retirés de cet appareil.', wiped:'Effacé.',
  packFail:'Impossible de charger les données du jeu. Vérifie ta connexion et réessaie.',
  loadingBorders:'chargement des frontières…',
  packCountries:'Pays',
@@ -680,6 +697,246 @@ fr:{
 
 /* Pack-specific wording: only the lines that talk about countries are replaced for US States
    (every other string is shared). t() looks here first for the pack on screen. */
+/* ---- Settings page, practice helpers and the practice-game note (all five languages; merged into STR) ---- */
+const STR_SET = {
+ "en": {
+  "settings": "Settings",
+  "setAppear": "Appearance",
+  "themeDarkL": "Dark",
+  "themeLightL": "Light",
+  "textSize": "Text size",
+  "tz0": "Normal",
+  "tz1": "Large",
+  "tz2": "Larger",
+  "tzNote": "Larger text applies to the menu, the results and the sheets. The auction screen is sized to fit and stays as it is.",
+  "setCurrency": "Currency",
+  "curAuto": "Automatic",
+  "curNote": "Only changes how money is written. The numbers stay the same and there are no exchange rates.",
+  "curExample": "Example: a budget of {a}.",
+  "setBot": "Bot style",
+  "aggr0": "Cautious",
+  "aggr1": "Careful",
+  "aggr2": "Balanced",
+  "aggr3": "Bold",
+  "aggr4": "Fierce",
+  "aggrD0": "Very careful with its money: small raises, gives up early.",
+  "aggrD1": "Careful: steady raises and a tight limit.",
+  "aggrD2": "The normal bot: a hidden mix of careful, balanced and bold.",
+  "aggrD3": "Bold: bigger raises, and it will pay more.",
+  "aggrD4": "Fierce: big jumps, spends deep and often overpays.",
+  "aggrPractice": "Practice games do not change your record.",
+  "setAccess": "Accessibility",
+  "reduceMotion": "Reduce motion",
+  "reduceMotionD": "Calm animations, no confetti (also follows your phone setting).",
+  "seatShapes": "Seat shapes",
+  "seatShapesD": "Adds a shape to each player colour.",
+  "setHelpers": "Practice helpers",
+  "dropAsk": "Confirm before dropping out",
+  "dropAskD": "Asks once before you drop out of a lot.",
+  "quietBot": "Quiet bot",
+  "quietBotD": "Hides the rival’s one-liners.",
+  "fairShow": "Show the fair price",
+  "fairShowD": "Shows what each lot is worth while it is on the block. Practice games do not change your record.",
+  "resetSettings": "Reset settings",
+  "resetSetTitle": "Reset settings?",
+  "resetSetBody": "Currency, bot style and the other choices go back to the defaults.",
+  "practiceTitle": "Practice game",
+  "practiceNote": "Your record was not changed.",
+  "fairHint": "Fair price about {p}",
+  "dropAskTitle": "Drop out?",
+  "dropAskBody": "You keep your money, and whoever holds the top bid buys this lot."
+ },
+ "de": {
+  "settings": "Einstellungen",
+  "setAppear": "Darstellung",
+  "themeDarkL": "Dunkel",
+  "themeLightL": "Hell",
+  "textSize": "Textgröße",
+  "tz0": "Normal",
+  "tz1": "Groß",
+  "tz2": "Größer",
+  "tzNote": "Größerer Text gilt für Menü, Ergebnisse und Fenster. Der Auktionsbildschirm ist auf Passgenauigkeit ausgelegt und bleibt unverändert.",
+  "setCurrency": "Währung",
+  "curAuto": "Automatisch",
+  "curNote": "Ändert nur, wie Geld geschrieben wird. Die Zahlen bleiben gleich, es gibt keine Wechselkurse.",
+  "curExample": "Beispiel: ein Budget von {a}.",
+  "setBot": "Stil des Bots",
+  "aggr0": "Vorsichtig",
+  "aggr1": "Zurückhaltend",
+  "aggr2": "Ausgewogen",
+  "aggr3": "Mutig",
+  "aggr4": "Wild",
+  "aggrD0": "Sehr sparsam: kleine Gebote, gibt früh auf.",
+  "aggrD1": "Zurückhaltend: gleichmäßige Gebote und eine enge Grenze.",
+  "aggrD2": "Der normale Bot: eine verborgene Mischung aus zurückhaltend, ausgewogen und mutig.",
+  "aggrD3": "Mutig: größere Gebote, zahlt auch mehr.",
+  "aggrD4": "Wild: große Sprünge, gibt viel aus und zahlt oft zu viel.",
+  "aggrPractice": "Übungsspiele ändern deine Bilanz nicht.",
+  "setAccess": "Bedienungshilfen",
+  "reduceMotion": "Bewegung reduzieren",
+  "reduceMotionD": "Ruhige Animationen, kein Konfetti (folgt auch der Einstellung deines Geräts).",
+  "seatShapes": "Spielerformen",
+  "seatShapesD": "Ergänzt jede Spielerfarbe um eine Form.",
+  "setHelpers": "Übungshilfen",
+  "dropAsk": "Vor dem Aufgeben nachfragen",
+  "dropAskD": "Fragt einmal nach, bevor du bei einem Los aussteigst.",
+  "quietBot": "Stiller Bot",
+  "quietBotD": "Blendet die Sprüche des Gegners aus.",
+  "fairShow": "Fairen Preis anzeigen",
+  "fairShowD": "Zeigt, was ein Los wert ist, solange es aufgerufen ist. Übungsspiele ändern deine Bilanz nicht.",
+  "resetSettings": "Einstellungen zurücksetzen",
+  "resetSetTitle": "Einstellungen zurücksetzen?",
+  "resetSetBody": "Währung, Bot-Stil und die übrigen Auswahlen kehren zu den Standardwerten zurück.",
+  "practiceTitle": "Übungsspiel",
+  "practiceNote": "Deine Bilanz wurde nicht geändert.",
+  "fairHint": "Fairer Preis etwa {p}",
+  "dropAskTitle": "Aussteigen?",
+  "dropAskBody": "Du behältst dein Geld, und wer das höchste Gebot hält, kauft dieses Los."
+ },
+ "it": {
+  "settings": "Impostazioni",
+  "setAppear": "Aspetto",
+  "themeDarkL": "Scuro",
+  "themeLightL": "Chiaro",
+  "textSize": "Dimensione del testo",
+  "tz0": "Normale",
+  "tz1": "Grande",
+  "tz2": "Più grande",
+  "tzNote": "Il testo più grande vale per il menu, i risultati e le schede. La schermata dell’asta è dimensionata per entrare e resta com’è.",
+  "setCurrency": "Valuta",
+  "curAuto": "Automatica",
+  "curNote": "Cambia solo il modo in cui si scrive il denaro. I numeri restano gli stessi e non ci sono tassi di cambio.",
+  "curExample": "Esempio: un budget di {a}.",
+  "setBot": "Stile del bot",
+  "aggr0": "Prudente",
+  "aggr1": "Cauto",
+  "aggr2": "Equilibrato",
+  "aggr3": "Audace",
+  "aggr4": "Feroce",
+  "aggrD0": "Molto attento ai soldi: rilanci piccoli, si ritira presto.",
+  "aggrD1": "Cauto: rilanci regolari e un limite stretto.",
+  "aggrD2": "Il bot normale: un mix nascosto di cauto, equilibrato e audace.",
+  "aggrD3": "Audace: rilanci più grandi e paga di più.",
+  "aggrD4": "Feroce: grandi salti, spende molto e spesso paga troppo.",
+  "aggrPractice": "Le partite di prova non cambiano il tuo bilancio.",
+  "setAccess": "Accessibilità",
+  "reduceMotion": "Riduci il movimento",
+  "reduceMotionD": "Animazioni calme, niente coriandoli (segue anche l’impostazione del telefono).",
+  "seatShapes": "Forme dei giocatori",
+  "seatShapesD": "Aggiunge una forma a ogni colore.",
+  "setHelpers": "Aiuti per allenarsi",
+  "dropAsk": "Conferma prima di ritirarti",
+  "dropAskD": "Chiede una volta prima che ti ritiri da un lotto.",
+  "quietBot": "Bot silenzioso",
+  "quietBotD": "Nasconde le battute dell’avversario.",
+  "fairShow": "Mostra il prezzo equo",
+  "fairShowD": "Mostra quanto vale ogni lotto mentre è all’asta. Le partite di prova non cambiano il tuo bilancio.",
+  "resetSettings": "Ripristina impostazioni",
+  "resetSetTitle": "Ripristinare le impostazioni?",
+  "resetSetBody": "Valuta, stile del bot e le altre scelte tornano ai valori predefiniti.",
+  "practiceTitle": "Partita di prova",
+  "practiceNote": "Il tuo bilancio non è cambiato.",
+  "fairHint": "Prezzo equo circa {p}",
+  "dropAskTitle": "Ritirarti?",
+  "dropAskBody": "Tieni i tuoi soldi e chi ha l’offerta più alta compra questo lotto."
+ },
+ "es": {
+  "settings": "Ajustes",
+  "setAppear": "Apariencia",
+  "themeDarkL": "Oscuro",
+  "themeLightL": "Claro",
+  "textSize": "Tamaño del texto",
+  "tz0": "Normal",
+  "tz1": "Grande",
+  "tz2": "Más grande",
+  "tzNote": "El texto más grande se aplica al menú, los resultados y las hojas. La pantalla de la subasta está medida para caber y no cambia.",
+  "setCurrency": "Moneda",
+  "curAuto": "Automática",
+  "curNote": "Solo cambia cómo se escribe el dinero. Los números siguen igual y no hay tipos de cambio.",
+  "curExample": "Ejemplo: un presupuesto de {a}.",
+  "setBot": "Estilo del bot",
+  "aggr0": "Prudente",
+  "aggr1": "Cauto",
+  "aggr2": "Equilibrado",
+  "aggr3": "Atrevido",
+  "aggr4": "Feroz",
+  "aggrD0": "Muy cuidadoso con el dinero: subidas pequeñas, se retira pronto.",
+  "aggrD1": "Cauto: subidas constantes y un límite ajustado.",
+  "aggrD2": "El bot normal: una mezcla oculta de cauto, equilibrado y atrevido.",
+  "aggrD3": "Atrevido: subidas mayores y paga más.",
+  "aggrD4": "Feroz: grandes saltos, gasta a fondo y a menudo paga de más.",
+  "aggrPractice": "Las partidas de práctica no cambian tu balance.",
+  "setAccess": "Accesibilidad",
+  "reduceMotion": "Reducir movimiento",
+  "reduceMotionD": "Animaciones tranquilas, sin confeti (también sigue el ajuste del teléfono).",
+  "seatShapes": "Formas de jugador",
+  "seatShapesD": "Añade una forma a cada color de jugador.",
+  "setHelpers": "Ayudas para practicar",
+  "dropAsk": "Confirmar antes de retirarte",
+  "dropAskD": "Pregunta una vez antes de que te retires de un lote.",
+  "quietBot": "Bot silencioso",
+  "quietBotD": "Oculta las frases del rival.",
+  "fairShow": "Mostrar el precio justo",
+  "fairShowD": "Muestra cuánto vale cada lote mientras se subasta. Las partidas de práctica no cambian tu balance.",
+  "resetSettings": "Restablecer ajustes",
+  "resetSetTitle": "¿Restablecer los ajustes?",
+  "resetSetBody": "La moneda, el estilo del bot y las demás opciones vuelven a los valores por defecto.",
+  "practiceTitle": "Partida de práctica",
+  "practiceNote": "Tu balance no ha cambiado.",
+  "fairHint": "Precio justo: unos {p}",
+  "dropAskTitle": "¿Retirarte?",
+  "dropAskBody": "Conservas tu dinero y quien tenga la puja más alta compra este lote."
+ },
+ "fr": {
+  "settings": "Réglages",
+  "setAppear": "Apparence",
+  "themeDarkL": "Sombre",
+  "themeLightL": "Clair",
+  "textSize": "Taille du texte",
+  "tz0": "Normale",
+  "tz1": "Grande",
+  "tz2": "Plus grande",
+  "tzNote": "Le texte plus grand s’applique au menu, aux résultats et aux fenêtres. L’écran de la vente est calé pour tenir et ne change pas.",
+  "setCurrency": "Devise",
+  "curAuto": "Automatique",
+  "curNote": "Ne change que la façon d’écrire l’argent. Les chiffres restent les mêmes et il n’y a pas de taux de change.",
+  "curExample": "Exemple : un budget de {a}.",
+  "setBot": "Style du bot",
+  "aggr0": "Prudent",
+  "aggr1": "Réservé",
+  "aggr2": "Équilibré",
+  "aggr3": "Audacieux",
+  "aggr4": "Féroce",
+  "aggrD0": "Très prudent avec son argent : petites relances, abandonne tôt.",
+  "aggrD1": "Réservé : relances régulières et une limite serrée.",
+  "aggrD2": "Le bot normal : un mélange caché de réservé, équilibré et audacieux.",
+  "aggrD3": "Audacieux : relances plus grosses, il paie plus.",
+  "aggrD4": "Féroce : gros sauts, il dépense à fond et paie souvent trop.",
+  "aggrPractice": "Les parties d’entraînement ne modifient pas ton bilan.",
+  "setAccess": "Accessibilité",
+  "reduceMotion": "Réduire les animations",
+  "reduceMotionD": "Animations calmes, pas de confettis (suit aussi le réglage du téléphone).",
+  "seatShapes": "Formes des joueurs",
+  "seatShapesD": "Ajoute une forme à chaque couleur de joueur.",
+  "setHelpers": "Aides à l’entraînement",
+  "dropAsk": "Confirmer avant d’abandonner",
+  "dropAskD": "Demande une fois avant que tu abandonnes un lot.",
+  "quietBot": "Bot silencieux",
+  "quietBotD": "Masque les répliques de l’adversaire.",
+  "fairShow": "Afficher le prix juste",
+  "fairShowD": "Montre ce que vaut chaque lot pendant la vente. Les parties d’entraînement ne modifient pas ton bilan.",
+  "resetSettings": "Réinitialiser les réglages",
+  "resetSetTitle": "Réinitialiser les réglages ?",
+  "resetSetBody": "La devise, le style du bot et les autres choix reviennent aux valeurs par défaut.",
+  "practiceTitle": "Partie d’entraînement",
+  "practiceNote": "Ton bilan n’a pas changé.",
+  "fairHint": "Prix juste : environ {p}",
+  "dropAskTitle": "Abandonner ?",
+  "dropAskBody": "Tu gardes ton argent, et celui qui détient la meilleure enchère remporte ce lot."
+ }
+};
+Object.keys(STR_SET).forEach(l => Object.assign(STR[l], STR_SET[l]));
+
 const STRP={ countries:{
  en:{ budgetNote:'Set by the difficulty and the round length — scarce on purpose.',
   rivalDesc:'The <b>bot</b> prices every country by population, spends its money evenly across the round and rolls a fresh walk-away limit for each lot. Each game it is in a different mood — cautious, balanced or bold — and you are not told which. If you run low on money it may go all-in to knock you out.',
@@ -816,13 +1073,25 @@ const STRP={ countries:{
 }};
 
 let LANG='en';
+/* Settings > Currency: every amount in a text ("€50", "50 €", "$20") and the words euro / dollar are rewritten into the chosen currency ("£50", "50 kr", "CHF 50"). */
+const CURWORDS={
+  one:{ en:/\bone (?:euro|dollar)\b/gi, de:/\beinen (?:Euro|Dollar)\b/g, it:/\bun (?:euro|dollaro)\b/g, es:/\bun (?:euro|dólar)\b/g, fr:/\b(d’)?un (?:euro|dollar)\b/g },
+  many:{ en:/\b(?:euros|dollars)\b/gi, de:/\b(?:Euro|Dollar)\b/g, it:/\b(?:euro|dollari)\b/g, es:/\b(?:euros|dólares)\b/g, fr:/\b(?:euros|dollars)\b/g }
+};
+function writeIn(c, v){
+  v=v.replace(CURWORDS.one[LANG]||CURWORDS.one.en,(m,d)=>(typeof d==='string'&&d?'de ':'')+Engine.currencyText(c,'1'));
+  v=v.replace(CURWORDS.many[LANG]||CURWORDS.many.en,()=>c.sym);
+  return v.replace(/[€$]\s?(\d[\d.,]*)|(\d[\d.,]*)\s?[€$]/g,(m,a,b)=>Engine.currencyText(c,a||b));
+}
 function t(key, vars){
   const po=STRP[PACK ? PACK.id : SELPACK];
   let v=(po&&((po[LANG]&&po[LANG][key])||(po.en&&po.en[key]))) || (STR[LANG]&&STR[LANG][key]) || STR.en[key] || key;
   vars=Object.assign({cur:cur()}, vars);
   Object.keys(vars).forEach(k=>{ v=v.split('{'+k+'}').join(vars[k]); });
   /* a pack in dollars (US States) says "$" in every language: "€10", "10 €" and "100 €" all become "$10", "$100" */
-  if(cur()!=='€') v=v.replace(/€\s?(\d[\d.,]*)/g,(m,n)=>cur()+n).replace(/(\d[\d.,]*)\s?€/g,(m,n)=>cur()+n);
+  const cc=chosenCur();
+  if(cc) v=writeIn(cc,v);
+  else if(cur()!=='€') v=v.replace(/€\s?(\d[\d.,]*)/g,(m,n)=>cur()+n).replace(/(\d[\d.,]*)\s?€/g,(m,n)=>cur()+n);
   return v;
 }
 async function loadLang(){
@@ -889,6 +1158,7 @@ function home() {
         <div class="dockbar">
           <button class="glass chipbtn" id="mr">${IC('book', 'sm')}${esc(t('how'))}</button>
           <button class="glass chipbtn" id="ml" aria-label="${esc(t('language'))}: ${esc(lang.label)}"><span aria-hidden="true">${flag(langFlag(lang))}</span> ${esc(lang.label)}</button>
+          <button class="glass chipbtn sq" id="mset" aria-label="${esc(t('settings'))}">${IC('gear', 'sm')}</button>
           <button class="glass chipbtn sq" id="mp" aria-label="${esc(t('privacy'))}">${IC('lock', 'sm')}</button>
         </div>
         <p class="foot">${esc(t('footer', { n: count }))} · <span class="ver" aria-label="Version ${CONFIG.version}">v${CONFIG.version}</span></p>
@@ -898,13 +1168,66 @@ function home() {
   tap('m1', () => setup('solo'));
   tap('m2', () => setup('multi'));
   tap('m3', () => { if (!Net.available) return toast(t('soonBody')); if (!isOnline()) return toast(t('needsNet')); online(); });
-  tap('mr', rules); tap('mp', privacy); tap('mrec', recordScreen); tap('ml', langSheet);
+  tap('mr', rules); tap('mp', privacy); tap('mrec', recordScreen); tap('ml', langSheet); tap('mset', settingsSheet);
   $$('[data-soon]', sec).forEach(b => b.onclick = () => { Snd.ui(); toast(t('packSoonBody')); });
   $$('[data-pack]', sec).forEach(b => b.onclick = () => {
     if (b.dataset.pack === SELPACK) return;
     Snd.ui(); Haptics.light(); SELPACK = b.dataset.pack; RECS.last = SELPACK; saveRec(); home();
     (window.requestIdleCallback || (f => setTimeout(f, 200)))(() => Packs.load(SELPACK).catch(() => {}));   // warm it up so Setup opens instantly
   });
+}
+
+/* ============ SETTINGS — one sheet: currency, bot style, accessibility, practice helpers (stored in settings:v1) ============ */
+const AGGR_KEYS = ['aggr0', 'aggr1', 'aggr2', 'aggr3', 'aggr4'];
+function settingsSheet() {
+  const sw = (k, label, desc) => `<button class="row sw" role="switch" aria-checked="${SET[k]}" data-k="${k}"><span class="t">${esc(label)}<small>${esc(desc)}</small></span><span class="knob" aria-hidden="true"></span></button>`;
+  const curList = [['', t('curAuto')]].concat(Engine.CURRENCIES.map(c => [c.id, c.sym.trim() === c.id ? c.id : c.id + ' · ' + c.sym.trim()]));
+  const body = () => `
+    <div class="fld"><span class="label">${esc(t('setCurrency'))}</span>
+      <div class="sg cur" role="radiogroup" aria-label="${esc(t('setCurrency'))}" data-g="cur">${curList.map(([v, l]) => `<button type="button" role="radio" data-v="${v}" aria-checked="${(SET.cur || '') === v}">${esc(l)}</button>`).join('')}</div>
+      <p class="sm" id="curEx"></p><p class="sm">${esc(t('curNote'))}</p></div>
+    <div class="fld"><span class="label">${esc(t('setBot'))}</span>
+      <input class="slider" id="aggr" type="range" min="0" max="4" step="1" value="${SET.aggr}" aria-label="${esc(t('setBot'))}" aria-valuetext="${esc(t(AGGR_KEYS[SET.aggr]))}">
+      <div class="ticks" aria-hidden="true">${AGGR_KEYS.map(k => `<span>${esc(t(k))}</span>`).join('')}</div>
+      <p class="sm" id="aggrD"></p></div>
+    <div class="fld"><span class="label">${esc(t('setAppear'))}</span>
+      ${seg('theme', t('setAppear'), [['dark', t('themeDarkL')], ['light', t('themeLightL')]], THEME)}
+      <div class="sgl">${seg('tz', t('textSize'), [[0, t('tz0')], [1, t('tz1')], [2, t('tz2')]], SET.tz)}</div>
+      <p class="sm">${esc(t('tzNote'))}</p></div>
+    <div class="fld"><span class="label">${esc(t('language'))}</span><button class="row glass langrow" id="slang"><span class="t"><span aria-hidden="true">${flag(langFlag(LANGS.find(l => l.id === LANG) || LANGS[0]))}</span> ${esc((LANGS.find(l => l.id === LANG) || LANGS[0]).label)}</span>${IC('chev', 'sm')}</button></div>
+    <div class="fld"><span class="label">${esc(t('setAccess'))}</span><div class="group">
+      ${sw('motion', t('reduceMotion'), t('reduceMotionD'))}${sw('shapes', t('seatShapes'), t('seatShapesD'))}</div></div>
+    <div class="fld"><span class="label">${esc(t('setHelpers'))}</span><div class="group">
+      ${sw('confirm', t('dropAsk'), t('dropAskD'))}${sw('quiet', t('quietBot'), t('quietBotD'))}${sw('fair', t('fairShow'), t('fairShowD'))}</div></div>`;
+  const h = sheet({ title: t('settings'), foot: `<button class="btn ghost" id="sreset">${esc(t('resetSettings'))}</button><button class="btn gold" id="sdone">${esc(t('done'))}</button>`, body: body() });
+  const box = h.wrap;
+  const sample = () => { const c = Engine.currencyById(SET.cur) || null; return c ? Engine.formatMoney(null, 70, c.id) : null; };
+  const paint = () => {
+    $('#curEx', box).textContent = t('curExample').replace('{a}', sample() || (PACK ? money(70) : nativeSym() + '70'));
+    $('#aggrD', box).textContent = t('aggrD' + SET.aggr) + (SET.aggr === 2 ? '' : ' ' + t('aggrPractice'));
+    const sl = $('#aggr', box); sl.setAttribute('aria-valuetext', t(AGGR_KEYS[SET.aggr]));
+    $$('.ticks span', box).forEach((el, i) => el.classList.toggle('on', i === SET.aggr));
+  };
+  paint();
+  $$('[data-g]', box).forEach(grp => $$('[role=radio]', grp).forEach(b => b.onclick = () => {
+    $$('[role=radio]', grp).forEach(x => x.setAttribute('aria-checked', 'false')); b.setAttribute('aria-checked', 'true');
+    Snd.ui(); Haptics.light();
+    const g = grp.dataset.g, v = b.dataset.v;
+    if (g === 'theme') setTheme(v); else if (g === 'tz') { SET.tz = +v; saveSettings(); } else if (g === 'cur') { SET.cur = v || null; saveSettings(); }
+    paint();
+  }));
+  $$('.sw', box).forEach(b => b.onclick = () => {
+    const k = b.dataset.k, on = b.getAttribute('aria-checked') !== 'true';
+    if (k === 'motion') SET.motion = on ? 'reduce' : 'auto'; else SET[k] = on;
+    b.setAttribute('aria-checked', String(on)); Snd.ui(); Haptics.light(); saveSettings();
+  });
+  $('#aggr', box).oninput = e => { SET.aggr = +e.target.value; saveSettings(); paint(); Snd.ui(); };
+  on('slang', () => { Snd.ui(); langSheet(); });
+  on('sdone', () => { Snd.ui(); h.close(); home(); });
+  on('sreset', () => { Snd.ui(); ask(t('resetSetTitle'), t('resetSetBody'), t('resetSettings'), async () => { SET = Engine.parseSettings(null); await saveSettings(); settingsSheet(); }, null, t('cancel')); });
+  h.onDismiss = () => home();
+  /* the sheet repaints the menu behind it (currency and language show there) when it closes */
+  return h;
 }
 
 function langSheet() {
@@ -938,8 +1261,8 @@ function privacy() {
   on('pd', () => { Snd.ui(); h.close(); });
   on('cr', () => { Snd.ui(); credits(); });
   on('wipe', () => { Snd.ui(); ask(t('wipeTitle'), t('wipeBody'), t('wipe'), async () => {
-    await clearRec(); await Store.remove('lang:v1'); await Store.remove('name:v1'); await Store.remove('theme:v1');
-    THEME = 'dark'; applyTheme(); toast(t('wiped')); home();
+    await clearRec(); await Store.remove('lang:v1'); await Store.remove('name:v1'); await Store.remove('theme:v1'); await Store.remove(Engine.SETTINGS_KEY);
+    THEME = 'dark'; applyTheme(); SET = Engine.parseSettings(null); applySettings(); toast(t('wiped')); home();
   }, null, t('cancel')); });
 }
 
@@ -979,7 +1302,7 @@ async function setup(kind, packId = SELPACK) {
   h.set(`
     ${kind === 'solo' ? `<p class="sm">${t('rivalDesc')}</p>` : `<p class="sm">${esc(t('multiDesc'))}</p>`}
     <div class="fld"><span class="label">${esc(t('lots'))}</span>${seg('lots', t('lots'), pack.lots.options.map(n => [n, n === pack.lots.all ? t('lotsAll', { n }) : n]), lots)}<p class="sm" id="lotHint" role="note"${lots <= 5 ? '' : ' hidden'}>${esc(t('shortHint'))}</p></div>
-    <div class="budget"><span><span class="label">${esc(t('budget'))}</span><small>${esc(t('budgetNote'))}</small></span><b class="num" id="bud">${Engine.formatMoney(pack, Engine.budgetFor(pack, lots, level))}</b></div>
+    <div class="budget"><span><span class="label">${esc(t('budget'))}</span><small>${esc(t('budgetNote'))}</small></span><b class="num" id="bud">${Engine.formatMoney(pack, Engine.budgetFor(pack, lots, level), SET.cur && chosenCur() ? SET.cur : undefined)}</b></div>
     ${pack.levels.length > 1 ? `<div class="fld"><span class="label">${esc(t('difficulty'))}</span><div class="lvls" role="radiogroup" aria-label="${esc(t('difficulty'))}" data-g="level">${pack.levels.map(l => { const [a, b] = lvlParts(l); return `<button type="button" class="lvl" role="radio" data-v="${l.id}" aria-checked="${l.id === level}"><span class="tt">${esc(a)}${b ? `<small>${esc(b)}</small>` : ''}</span><span class="ck" aria-hidden="true"></span></button>`; }).join('')}</div></div>` : ''}
     <div class="fld"><span class="label">${esc(t('seconds'))}</span>${seg('clock', t('seconds'), [[10, '10'], [15, '15'], [20, '20'], [30, '30'], [0, t('noClock')]], clock)}</div>
     ${kind === 'multi' ? `<div class="fld"><span class="label">${esc(t('playersN'))}</span>${seg('players', t('playersN'), [[2, '2'], [3, '3'], [4, '4']], nPl)}</div>` : ''}
@@ -988,7 +1311,7 @@ async function setup(kind, packId = SELPACK) {
     `<button class="btn gold big" id="start">${esc(t('open'))}</button><button class="btn ghost" id="back">${esc(t('back'))}</button>`);
   const box = h.wrap;
   const pick = g => { const b = $(`[data-g="${g}"] [aria-checked="true"]`, box); return b ? b.dataset.v : null; };
-  const sync = () => { $('#bud', box).textContent = Engine.formatMoney(pack, Engine.budgetFor(pack, +pick('lots') || pack.lots.default, pick('level') || level)); };   // the budget depends on the lot count and the level
+  const sync = () => { $('#bud', box).textContent = Engine.formatMoney(pack, Engine.budgetFor(pack, +pick('lots') || pack.lots.default, pick('level') || level), SET.cur && chosenCur() ? SET.cur : undefined); };   // the budget depends on the lot count and the level
   $$('[data-g]', box).forEach(grp => $$('[role=radio]', grp).forEach(b => b.onclick = () => {
     $$('[role=radio]', grp).forEach(x => x.setAttribute('aria-checked', 'false')); b.setAttribute('aria-checked', 'true');
     Snd.ui(); Haptics.light();
@@ -1008,8 +1331,9 @@ async function setup(kind, packId = SELPACK) {
     else players = [1, 2, 3, 4].slice(0, count).map(i => ({ name: val('p' + i).slice(0, 16) || `${t('player')} ${i}` }));
     LASTCFG = { packId: pack.id, kind, lots: +pick('lots'), level: pick('level'), clock: +pick('clock'), players: count };
     h.close(true);
-    S = Engine.newAuction({ pack, kind, level: pick('level') || pack.defaultLevel, lots: +pick('lots') || pack.lots.default, clock: +pick('clock'), players, rng: rnd });
+    S = Engine.newAuction({ pack, kind, level: pick('level') || pack.defaultLevel, lots: +pick('lots') || pack.lots.default, clock: +pick('clock'), players, rng: rnd, temper: kind === 'solo' ? (Engine.AGGR_TEMPER[SET.aggr] || undefined) : undefined });
     S.packId = pack.id;
+    S.practice = kind === 'solo' && Engine.isPractice(SET);          // another bot style or the fair price on screen: it plays like any game but does not change the record
     lot();
   });
 }
@@ -1046,6 +1370,7 @@ function paintLot() {
             <circle cx="100" cy="100" r="92" fill="none" stroke="var(--track)" stroke-width="9"/><circle class="prog" cx="100" cy="100" r="92" fill="none" stroke="url(#rg)" stroke-width="9" stroke-linecap="round"/></svg>
           <div class="in" id="bump"><div class="lbl">${esc(t('standing'))}</div><div class="price"><sup>${esc(cur())}</sup><span id="price">${L.price}</span></div></div><span class="secs num" id="secs" aria-hidden="true"></span></div>
         <div class="holder"><span class="dot s${L.holder % 4}" id="hd"></span><span id="hn"></span></div>
+        ${SET.fair ? `<div class="fairp" id="fairp">${esc(t('fairHint').replace('{p}', money(Math.max(1, Math.round(Engine.priceOf(S.pack, c).ideal)))))}</div>` : ''}
         <div class="taunt${PACK.captionFacts ? ' fact' : ''}" id="taunt" aria-hidden="true">${PACK.captionFacts ? esc(Engine.factFor(S.pack, c, LANG)) : '&nbsp;'}</div>
       </div></div>
       <div class="aud-r">
@@ -1059,7 +1384,11 @@ function paintLot() {
   on('cb', () => { if (!humanCan()) return; const v = parseInt(val('cus')); if (!v || v <= S.L.price) { FX.shakeX($('#cus')); return toast(t('mustBeat', { price: S.L.price })); } raise(v); });
   $('#cus', sec).onkeydown = e => { if (e.key === 'Enter') $('#cb').click(); };
   $('#cus', sec).onfocus = () => extendClock(((S.pack.economy && S.pack.economy.typingBonus) || 0) * 1000);   // typing a 3-digit price takes longer than a tap
-  on('pass', () => { if (humanCan()) pass(); });
+  on('pass', () => {
+    if (!humanCan()) return;
+    if (SET.confirm) return ask(t('dropAskTitle'), t('dropAskBody'), t('dropOut'), () => { if (humanCan()) pass(); }, null, t('cancel'));
+    pass();
+  });
   on('nb', () => {
     Snd.ui(); Haptics.light();
     ask(t('leaveTitle'), t('leaveBody'), t('leave'), () => home(), null);
@@ -1167,7 +1496,7 @@ function showPrice(prev) {
 }
 
 function showTaunt(text) {
-  const el = $('#taunt'); if (!el || (PACK && PACK.captionFacts)) return;   // US States: the caption is the state's fun fact (set in paintLot), never the rival's one-liners
+  const el = $('#taunt'); if (!el || SET.quiet || (PACK && PACK.captionFacts)) return;   // US States: the caption is the state's fun fact (set in paintLot), never the rival's one-liners
   el.textContent = text ? '“' + text + '”' : ' ';
   if (text && !FX.reduced) el.animate([{ opacity: 0, transform: 'translateY(4px)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'ease-out' });
   if (text) live(text);
@@ -1308,7 +1637,7 @@ async function reveal(sec, rows, best, bestEff, REC) {
   let outcome = null;
   if (S.kind === 'solo' && rows.length === 2) {
     const you = rows.find(r => !r.p.ai), bot = rows.find(r => r.p.ai);
-    if (you && bot) outcome = await recordGame(you, bot, S.level || 'expert');
+    if (you && bot && !S.practice) outcome = await recordGame(you, bot, S.level || 'expert');
     if (tok !== navTok) return;
   }
   rootEl.classList.add('celebrating');
@@ -1321,7 +1650,7 @@ async function reveal(sec, rows, best, bestEff, REC) {
     <div class="pts goldtext num" aria-hidden="true"><span class="v" data-n="${best.pts}">${FX.reduced ? best.pts.toFixed(1) : '0.0'}</span><small>${esc(t('points'))}</small></div>
     <p class="sr">${best.pts.toFixed(1)} ${esc(t('points'))}</p>
     <p>${rows.filter(r => r !== best).map(r => `<b>${esc(r.p.name)}</b> ${r.pts.toFixed(1)}`).join(' · ')}</p>
-    ${bestEff.eff !== Infinity ? `<p>${PACK.metric.effUnit === cur() + '/M' ? t('smartest', { name: esc(bestEff.p.name), v: bestEff.eff.toFixed(2) }) : t('smartestU', { name: esc(bestEff.p.name), v: bestEff.eff.toFixed(2), unit: esc((PACK.metric.effLabel && (PACK.metric.effLabel[LANG] || PACK.metric.effLabel.en)) || PACK.metric.effUnit) })}</p>` : ''}`;
+    ${bestEff.eff !== Infinity ? `<p>${PACK.metric.effUnit === nativeSym() + '/M' ? t('smartest', { name: esc(bestEff.p.name), v: bestEff.eff.toFixed(2) }) : t('smartestU', { name: esc(bestEff.p.name), v: bestEff.eff.toFixed(2), unit: esc(unitLabel()) })}</p>` : ''}`;
   if (!FX.reduced) FX.spring(v, 0, 1, x => ({ transform: `scale(${.96 + .04 * x})`, opacity: Math.min(1, x * 1.6) }), { k: 220, c: 14 });
   $('#acts', sec).innerHTML = `<button class="btn glassb" id="again">${esc(t('playAgain'))}</button><button class="btn gold" id="menu">${esc(t('menu'))}</button>${PACK.facts ? `<button class="btn glassb wide" id="facts">${esc(t('funFacts'))}</button>` : ''}`;
   on('again', () => { Snd.ui(); S.kind === 'net' ? online() : setup(S.kind || 'multi', S.pack.id); });
@@ -1338,7 +1667,7 @@ async function reveal(sec, rows, best, bestEff, REC) {
   });
   /* the card with the world and the record */
   const ex = $('#extra', sec);
-  const recHtml = outcome ? `<div class="glass recpill" style="padding:8px 14px;order:0"><div class="big num" style="font-size:24px">${REC.won}<i>–</i>${REC.lost}${REC.drawn ? `<i>–</i>${REC.drawn}` : ''}</div><div class="m"><b>${esc(outcome.record ? t('newRecord') : t('record'))}</b><br>${REC.played} ${esc(t('games'))}${REC.streak ? ` · ${esc(t('streak'))} ${REC.streak > 0 ? '+' : ''}${REC.streak}` : ''}</div></div>` : '';
+  const recHtml = outcome ? `<div class="glass recpill" style="padding:8px 14px;order:0"><div class="big num" style="font-size:24px">${REC.won}<i>–</i>${REC.lost}${REC.drawn ? `<i>–</i>${REC.drawn}` : ''}</div><div class="m"><b>${esc(outcome.record ? t('newRecord') : t('record'))}</b><br>${REC.played} ${esc(t('games'))}${REC.streak ? ` · ${esc(t('streak'))} ${REC.streak > 0 ? '+' : ''}${REC.streak}` : ''}</div></div>` : S.practice ? `<div class="glass recpill" style="padding:8px 14px;order:0"><div class="m"><b>${esc(t('practiceTitle'))}</b><br>${esc(t('practiceNote'))}</div></div>` : '';
   const usMode = S.pack.map === 'us' && window.USView;                  // States: the map of the US instead of the globe
   ex.innerHTML = `${lots.length ? `<div class="glass gl${usMode ? ' gl-us' : ''}">${usMode ? `<div class="usm" id="gl"><img class="gph" src="us-map.webp" alt="" decoding="async"></div>` : `<div class="globe" id="gl"><img class="gph" src="globe-hero.webp" alt="" decoding="async"></div>`}
       <div class="cap"><b>${esc(t('worldTitle'))}</b>${t('world', { name: esc(best.p.name) })}</div>
@@ -1369,6 +1698,11 @@ async function reveal(sec, rows, best, bestEff, REC) {
 }
 
 /* every state of the round with its fun fact (shown after the reveal, so no population is given away early) */
+/* "€ per million" / "$ per million" in the chosen currency */
+function unitLabel() {
+  const u = (PACK.metric.effLabel && (PACK.metric.effLabel[LANG] || PACK.metric.effLabel.en)) || PACK.metric.effUnit, c = chosenCur();
+  return c ? u.replace(/^[€$]/, () => c.sym) : u;
+}
 function factsSheet() {
   const seen = new Set(), list = [];
   S.players.forEach(p => p.bought.forEach(b => { if (!seen.has(b.id)) { seen.add(b.id); list.push(b); } }));

@@ -28,6 +28,7 @@
  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.4 3.8 5.2 3.8 8.5S14.6 18.1 12 20.5C9.4 18.1 8.2 15.3 8.2 12S9.4 5.9 12 3.5z"/></symbol>
  <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
  <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 5.5C7.5 4.5 10 4.7 12 6c2-1.3 4.5-1.5 7-.5V19c-2.5-1-5-.8-7 .5-2-1.3-4.5-1.5-7-.5z"/><path d="M12 6v13.5"/></symbol>
+ <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 3.2l1.6 2.3 2.7-.6.9 2.6 2.6.9-.6 2.7 2.3 1.6-2.3 1.6.6 2.7-2.6.9-.9 2.6-2.7-.6L12 20.8l-1.6-2.3-2.7.6-.9-2.6-2.6-.9.6-2.7L2.5 12l2.3-1.6-.6-2.7 2.6-.9.9-2.6 2.7.6z"/></symbol>
  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="9.5" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 017 0v2.5"/></symbol>
  <symbol id="i-theme" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17a8.5 8.5 0 000-17z" fill="currentColor"/></symbol>
 </defs></svg>
@@ -61,7 +62,7 @@
 <script src="globe.js"></script>
 <script src="us-view.js"></script>
 <script>
-  Promise.all([loadLang(), loadRec(), loadTheme()]).then(function () {
+  Promise.all([loadLang(), loadRec(), loadTheme(), loadSettings()]).then(function () {
     home();
     Shell.ready();
     var c = document.getElementById('curtain');
