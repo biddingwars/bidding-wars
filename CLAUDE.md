@@ -260,8 +260,8 @@ Census-boundary centroids, taunts, fun facts).
   `test/states.test.js` checks the targets (×3 of CA 45–60, TX 35–48, FL 26–35, NY 22–30).
 - **Currency.** USD in every language (see "Five languages").
 - **Economy.** See the next section.
-- **Fun facts.** `pack.facts[id] = { en }`, one per state, shown on the SOLD screen
-  and in the results "Fun facts" sheet; must not hint at population or rank;
+- **Fun facts.** `pack.facts[id] = { en }`, one per state, shown on the SOLD screen,
+  in the results "Fun facts" sheet and (since v43, `pack.captionFacts`, owner: "put the fun facts there instead") as the caption under the lot while it is on the block — in US States the rival's taunts and its drop-out / win one-liners are not shown at all (`showTaunt` returns early; the caption wraps to at most three lines, `.taunt.fact`; Countries and Capitals keep their taunts); must not hint at population or rank;
   other languages fall back to English. `FACTS-SOURCES.md` lists every fact with
   where it was checked — **all 50 were checked online (Oct 2026)**; four were reworded after the first pass.
   Keep each row's status honest (`test/states.test.js` enforces the two allowed wordings and that the header's count matches the rows); a fact added later starts as "general knowledge only" until looked up.
@@ -294,6 +294,10 @@ Census-boundary centroids, taunts, fun facts).
   broke rival's last few dollars. Every state costs the same per million people, so the Countries "efficiency" block has nothing to rank here.
   **Fix: a narrower roll and lower limits for 15+ lots** — `bot.rollSpan: 0.4` (the roll uses the first 40% of [ideal, max]), `bot.noise: 0.15`, `limitMul` 0.72 / 0.62 / 0.6 / 0.63 / 0.68 for 15 / 20 / 30 / 40 / 50 lots
   (5 and 10 lots keep 1.0 / 0.925). Result on the *coarse* ratio grid (0.6 / 0.8 / 1 …): best blind strategy 42 / 37 / 59 / 55 / 53 / 53 / 53% at 5 / 10 / 15 / 20 / 30 / 40 / 50 lots.
+  **v43 (owner: $20 / $35 / $50 / $70, prices about a third of what they were) — the ≤ 20-lot rounds are now clean on the fine grid.** With `priceScale: 1` the budget is about 0.35 of a round's fair value at 10-20 lots, which puts
+  the bot's walk-away limit (`limitMul`) where a fixed cap no longer has a window: `node test/exploit.js states all 400 4000` (fine ratio grid, 56 strategies) gives best blind **49.3 / 41.1 / 46.9 / 47.3%** at 5 / 10 / 15 / 20 lots (v42: 44 / 39 / 59 / 64) and the scan
+  of `limitMul` shows why (20 lots: 0.45 → 70%, 0.5 → 55%, **0.55 → 50%**, 0.6 → 57%, 0.7 → 76%: a narrow valley, found per lot count with a scratch scan, then re-measured). Creeper (+1 over the bot) wins 43 / 35 / 21 / 27% (mix), fair-value B 42 / 38 / 24 / 30%, smart C 39 / 33 / 20 / 24%,
+  every temperament inside 18-46%; 150,000 fuzz games, 0 failures. The long-round warning below still holds for 30-50 lots, which are not offered; at the new scale the same valley may exist there, but it has not been measured.
   **v40 decision (owner): States is limited to 20 lots; "if people want more we will have to find a solution". Even at 20 lots the 0.70× cap wins 64% (limit 60), accepted for now. CORRECTION (found after v39, not fixed): that "no cell above the limit" was an artefact of the coarse grid.** `test/exploit.js` now sweeps the fixed-cap player in steps of 0.05, and "+1 up to 0.70× the fair price" wins
   **64 / 73 / 82 / 99%** of the 20 / 30 / 40 / 50-lot States rounds (0.75× is nearly as good: 61 / 70 / 78 / 89%; 15 lots peak at 0.85× with 59%; 5 and 10 lots are fine, 42 / 39%). The fix above only moved the peak from 0.8× to 0.70-0.75×.
   Why it cannot be tuned away (measured, scratch harness): the winner of a lot pays the *loser's* limit, so a player whose constant cap sits just under the bot's mean walk-away (about 0.65-0.73× the fair price, falling through the round
@@ -337,7 +341,7 @@ knife-edge (50 lots: creeper 2% at 60% budget, 99% at 70%). Measured on the real
   reproduces a game; a pack without a `bot` block keeps the original `botDecision` path byte for byte). Tables such as `economy.budgets`,
   `limitMul` and `temperaments.spread` may be per level: `{ beginner: {5:…}, medium: {…} }` (`Engine.byLots(table, lots, level)`); "the biggest items"
   (`premium`, `bigRank`) and the average price used for pacing (`Engine.avgIdeal(pack, level)`) are those of the level's own pool. Parameters:
-  - `limitMul[lots]` — calibration multiplier on every walk-away roll (States: 1.0, 0.925, 0.72, 0.62, 0.6, 0.63, 0.68 for 5…50 lots since v36, 5…20 only since v40; before that 1.0, 0.925, 0.9, 0.975, 1.075, 1.125, 1.135).
+  - `limitMul[lots]` — calibration multiplier on every walk-away roll (States: 0.8 / 0.55 / 0.55 / 0.55 for 5 / 10 / 15 / 20 lots since v43; 1.0, 0.925, 0.72, 0.62 for 5…20 lots in v40-v42, with 0.6, 0.63, 0.68 for 30-50; before that 1.0, 0.925, 0.9, 0.975, 1.075, 1.125, 1.135).
   - `premium { top: 4, pct: 0.15 }` — the four biggest items get +15% on the roll.
   - `pacing { gamma: 0.5, lo: 0.7, hi: 1.5 }` — walk-away × (budget ÷ value left ÷ the opening budget ratio)^gamma, clamped: the bot spends evenly.
   - `knockout { kappa: 1.5 }` — K = the rival's budget, the price it can no longer top. At its own limit, with the rival holding

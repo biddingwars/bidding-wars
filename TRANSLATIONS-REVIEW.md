@@ -120,11 +120,11 @@ English is the source. Please check de / it / es / fr for correctness, natural w
 
 | | text |
 |---|---|
-| en | Everyone starts with the same budget, set by the round length: **$17 for 5 states, $34 for 10, $51 for 15, $68 for 20**. Money is scarce on purpose: even the biggest budget cannot buy the four biggest states. |
-| de | Alle starten mit demselben Budget, das von der Rundenlänge abhängt: **$17 für 5 Bundesstaaten, $34 für 10, $51 für 15, $68 für 20**. Das Geld ist absichtlich knapp: Selbst das größte Budget reicht nicht für die vier größten Bundesstaaten. |
-| it | Tutti partono con lo stesso budget, deciso dalla lunghezza della partita: **$17 per 5 stati, $34 per 10, $51 per 15, $68 per 20**. Il denaro è scarso di proposito: nemmeno il budget più alto basta per i quattro stati più grandi. |
-| es | Todos empiezan con el mismo presupuesto, que depende de la duración de la partida: **$17 para 5 estados, $34 para 10, $51 para 15, $68 para 20**. El dinero escasea a propósito: ni el presupuesto más grande alcanza para los cuatro estados más grandes. |
-| fr | Tout le monde commence avec le même budget, fixé par la longueur de la partie : **$17 pour 5 États, $34 pour 10, $51 pour 15, $68 pour 20**. L’argent est rare exprès : même le plus gros budget ne suffit pas pour les quatre plus grands États. |
+| en | Everyone starts with the same budget, set by the round length: **$20 for 5 states, $35 for 10, $50 for 15, $70 for 20**. Money is scarce on purpose: even the biggest budget cannot buy the four biggest states. |
+| de | Alle starten mit demselben Budget, das von der Rundenlänge abhängt: **$20 für 5 Bundesstaaten, $35 für 10, $50 für 15, $70 für 20**. Das Geld ist absichtlich knapp: Selbst das größte Budget reicht nicht für die vier größten Bundesstaaten. |
+| it | Tutti partono con lo stesso budget, deciso dalla lunghezza della partita: **$20 per 5 stati, $35 per 10, $50 per 15, $70 per 20**. Il denaro è scarso di proposito: nemmeno il budget più alto basta per i quattro stati più grandi. |
+| es | Todos empiezan con el mismo presupuesto, que depende de la duración de la partida: **$20 para 5 estados, $35 para 10, $50 para 15, $70 para 20**. El dinero escasea a propósito: ni el presupuesto más grande alcanza para los cuatro estados más grandes. |
+| fr | Tout le monde commence avec le même budget, fixé par la longueur de la partie : **$20 pour 5 États, $35 pour 10, $50 pour 15, $70 pour 20**. L’argent est rare exprès : même le plus gros budget ne suffit pas pour les quatre plus grands États. |
 
 ### `rulesP5`
 
