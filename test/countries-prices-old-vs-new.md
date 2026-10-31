@@ -1,4 +1,4 @@
-# Countries prices: August bands vs proposed smooth curve (EUR)
+# Countries prices: August bands vs the v37 smooth curve (EUR; USA, Indonesia, Pakistan, Nigeria, Brazil about +40% over the first smooth curve, India and China all in)
 
 ideal = the bot's fair price; max = its hard ceiling. `!` = ideal changes by more than 25%.
 
@@ -189,22 +189,22 @@ ideal = the bot's fair price; max = its hard ceiling. `!` = ideal changes by mor
 | Philippines | 115.8 | 29 | 43 | +48% ! | 32 | 64 | +100% |
 | Egypt | 116.5 | 29 | 43 | +48% ! | 32 | 64 | +100% |
 | Japan | 123.1 | 31 | 44 | +42% ! | 34 | 65 | +91% |
-| Mexico | 130.9 | 33 | 46 | +39% ! | 36 | 68 | +89% |
-| Ethiopia | 132.1 | 33 | 46 | +39% ! | 36 | 68 | +89% |
+| Mexico | 130.9 | 33 | 45 | +36% ! | 36 | 66 | +83% |
+| Ethiopia | 132.1 | 33 | 45 | +36% ! | 36 | 66 | +83% |
 | Russia | 144 | 36 | 48 | +33% ! | 40 | 71 | +77% |
-| Bangladesh | 173.6 | 43 | 52 | +21% | 48 | 76 | +58% |
-| Brazil | 212.8 | 53 | 58 | +9% | 59 | 84 | +42% |
-| Nigeria | 232.7 | 58 | 61 | +5% | 64 | 89 | +39% |
-| Pakistan | 251.3 | 63 | 63 | 0% | 69 | 91 | +32% |
-| Indonesia | 285.7 | 71 | 67 | -6% | 79 | 97 | +23% |
-| United States | 345.4 | 86 | 73 | -15% | 95 | 106 | +12% |
-| China | 1416.1 | 71 | 91 | +28% ! | 95 | 132 | +39% |
-| India | 1450.9 | 73 | 92 | +26% ! | 97 | 133 | +37% |
+| Bangladesh | 173.6 | 43 | 60 | +40% ! | 48 | 88 | +83% |
+| Brazil | 212.8 | 53 | 78 | +47% ! | 59 | 113 | +92% |
+| Nigeria | 232.7 | 58 | 84 | +45% ! | 64 | 122 | +91% |
+| Pakistan | 251.3 | 63 | 88 | +40% ! | 69 | 128 | +86% |
+| Indonesia | 285.7 | 71 | 94 | +32% ! | 79 | 136 | +72% |
+| United States | 345.4 | 86 | 102 | +19% | 95 | 148 | +56% |
+| China | 1416.1 | 71 | 157 | +121% ! | 95 | 228 | +140% |
+| India | 1450.9 | 73 | 158 | +116% ! | 97 | 229 | +136% |
 
 ## Level averages (expected fair price per lot)
 
 | Level | pool | old avg ideal | new avg ideal | change | old avg max | new avg max |
 |---|---:|---:|---:|---:|---:|---:|
 | beginner | 47 | 9.5 | 9.3 | -2.0% | 13.1 | 15.1 |
-| medium | 74 | 26.4 | 27.4 | 3.9% | 33.9 | 41.9 |
-| expert | 196 | 12.3 | 12.8 | 3.5% | 16.6 | 20.2 |
+| medium | 74 | 26.4 | 30.9 | 17.3% | 33.9 | 47.0 |
+| expert | 196 | 12.3 | 14.1 | 14.3% | 16.6 | 22.2 |

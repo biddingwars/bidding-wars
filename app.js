@@ -85,7 +85,9 @@ function bindNav(sec) {
 
 /* replace the screen. `name` marks it for the stylesheet; the auction is the one that never scrolls */
 /* the US States pack gets its dimmed flag behind everything (CSS: body.pk-states); other packs stay plain */
-function syncPackTheme() { document.body.classList.toggle('pk-states', (PACK ? PACK.id : SELPACK) === 'states'); }
+/* In the US States theme English is shown with the American flag, not the Union Jack (the language is the same; the flag is only the badge) */
+const langFlag = l => (l.id === 'en' && (PACK ? PACK.id : SELPACK) === 'states') ? 'US' : l.flag;
+function syncPackTheme() { const us = (PACK ? PACK.id : SELPACK) === 'states'; document.body.classList.toggle('pk-states', us); if (us) document.documentElement.dataset.pack = 'states'; else delete document.documentElement.dataset.pack; }
 function go(h, name) {
   navTok++; closeSheets(true); stopClock();
   if (stopGlobe) { stopGlobe(); stopGlobe = null; }
@@ -684,35 +686,35 @@ const STRP={ countries:{
   rulesP4:'Everyone starts with the same budget, set by the difficulty and the round length. <b>Medium: €50 for 5 countries, €100 for 10, €150 for 15, €200 for 20, €300 for 30</b>. Beginner: €25, €50, €55, €65, €100. Expert: €35, €70, €75, €90, €140. Money is scarce on purpose: even the biggest budget cannot buy the five biggest countries.',
   rulesP5:'The bot values every country by population and rolls a fresh walk-away limit for each lot, so you can never quite read it. It spends evenly, pays a little extra for the biggest countries, and each game it is cautious, balanced or bold. If it has far more money than you, it bids the amount you can no longer top. Beat its limit by one euro and the lot is yours — unless it can knock you out.',
   rulesP6:'<b>Difficulty</b> decides which countries can come up: Beginner draws from Europe only, Medium from every country above 15 million, Expert from all 196. Every country is equally likely and none comes up twice in a round. Short rounds are luck-heavy: with 5 or 10 countries one big draw can decide the game, most of all in Expert. The longer the round, the more skill counts.',
-  rulesP8:'<b>Out of money?</b> When only one player still has money, the remaining countries are sold to that player at 80% of their fair price, as long as the money lasts. Countries nobody can pay for stay unsold. Nobody can sweep the rest for €1.',
+  rulesP8:'<b>Out of money?</b> When only one player still has money, that player takes every remaining country for €1 each. Going all in is a real risk: it hands the rest of the round to your rival.',
   unsoldNote:'{n} countries went unsold — nobody could afford them.' },
  de:{ budgetNote:'Hängt von Schwierigkeit und Rundenlänge ab – mit Absicht knapp.',
   rivalDesc:'Der <b>Bot</b> bewertet jedes Land nach Einwohnerzahl, verteilt sein Geld gleichmäßig über die Runde und würfelt pro Los eine neue Schmerzgrenze. In jedem Spiel hat er eine andere Laune – vorsichtig, ausgewogen oder mutig – und du erfährst nicht, welche. Wird dein Geld knapp, geht er womöglich aufs Ganze, um dich auszustechen.',
   rulesP4:'Alle starten mit demselben Budget, das von der Schwierigkeit und der Rundenlänge abhängt. <b>Mittel: 50 € für 5 Länder, 100 € für 10, 150 € für 15, 200 € für 20, 300 € für 30</b>. Anfänger: 25 €, 50 €, 55 €, 65 €, 100 €. Experte: 35 €, 70 €, 75 €, 90 €, 140 €. Das Geld ist absichtlich knapp: Selbst das größte Budget reicht nicht für die fünf größten Länder.',
   rulesP5:'Der Bot bewertet jedes Land nach Einwohnerzahl und würfelt pro Los eine neue Schmerzgrenze, du kannst ihn also nie ganz durchschauen. Er verteilt sein Geld gleichmäßig, zahlt für die größten Länder etwas mehr und ist in jedem Spiel vorsichtig, ausgewogen oder mutig. Hat er viel mehr Geld als du, bietet er den Betrag, den du nicht mehr überbieten kannst. Überbiete seine Grenze um einen Euro und das Los gehört dir – es sei denn, er kann dich ausstechen.',
   rulesP6:'Die <b>Schwierigkeit</b> bestimmt, welche Länder vorkommen: Anfänger nur aus Europa, Mittel aus allen Ländern über 15 Millionen, Experte aus allen 196. Jedes Land kommt mit der gleichen Wahrscheinlichkeit dran und keines zweimal in derselben Runde. Kurze Runden sind glückslastig: Bei 5 oder 10 Ländern kann ein großer Treffer das Spiel entscheiden, im Expertenmodus am meisten. Je länger die Runde, desto mehr zählt Können.',
-  rulesP8:'<b>Kein Geld mehr?</b> Hat nur noch ein Spieler Geld, werden die übrigen Länder an ihn verkauft – zu 80 % ihres fairen Preises, solange das Geld reicht. Was niemand bezahlen kann, bleibt unverkauft. Den Rest für 1 € abzuräumen geht nicht mehr.',
+  rulesP8:'<b>Kein Geld mehr?</b> Hat nur noch ein Spieler Geld, bekommt er alle übrigen Länder für je 1 €. Alles auf eine Karte zu setzen ist ein echtes Risiko: Es schenkt deinem Gegner den Rest der Runde.',
   unsoldNote:'{n} Länder blieben unverkauft – niemand konnte sie bezahlen.' },
  it:{ budgetNote:'Dipende dalla difficoltà e dalla lunghezza della partita — scarso di proposito.',
   rivalDesc:'Il <b>bot</b> valuta ogni paese in base alla popolazione, distribuisce i soldi in modo uniforme lungo la partita e tira un nuovo limite per ogni lotto. Ogni partita ha un umore diverso — prudente, equilibrato o audace — e non ti viene detto quale. Se i tuoi soldi scarseggiano, può giocare il tutto per tutto per metterti fuori gioco.',
   rulesP4:'Tutti partono con lo stesso budget, deciso dalla difficoltà e dalla lunghezza della partita. <b>Medio: 50 € per 5 paesi, 100 € per 10, 150 € per 15, 200 € per 20, 300 € per 30</b>. Principiante: 25 €, 50 €, 55 €, 65 €, 100 €. Esperto: 35 €, 70 €, 75 €, 90 €, 140 €. Il denaro è scarso di proposito: nemmeno il budget più alto basta per i cinque paesi più grandi.',
   rulesP5:'Il bot valuta ogni paese in base alla popolazione e tira un nuovo limite di rinuncia per ogni lotto, quindi non riesci mai a leggerlo. Spende in modo uniforme, paga un po’ di più per i paesi più grandi ed è, partita per partita, prudente, equilibrato o audace. Se ha molti più soldi di te, offre la cifra che non puoi più superare. Supera il suo limite di un euro e il lotto è tuo — a meno che non riesca a metterti fuori gioco.',
   rulesP6:'La <b>difficoltà</b> decide quali paesi possono uscire: Principiante solo l’Europa, Medio ogni paese sopra i 15 milioni, Esperto tutti i 196. Ogni paese ha la stessa probabilità di uscire e nessuno esce due volte nella stessa partita. Le partite corte dipendono molto dalla fortuna: con 5 o 10 paesi una sola estrazione può decidere tutto, soprattutto in Esperto. Più la partita è lunga, più conta l’abilità.',
-  rulesP8:'<b>Senza soldi?</b> Quando solo un giocatore ha ancora denaro, i paesi rimasti gli vengono venduti all’80% del loro prezzo equo, finché i soldi bastano. Quelli che nessuno può pagare restano invenduti. Non si può più portare via il resto per 1 €.',
+  rulesP8:'<b>Senza soldi?</b> Quando solo un giocatore ha ancora denaro, si prende tutti i paesi rimasti a 1 € ciascuno. Puntare tutto è un vero rischio: regala il resto della partita al rivale.',
   unsoldNote:'{n} paesi sono rimasti invenduti: nessuno poteva permetterseli.' },
  es:{ budgetNote:'Depende de la dificultad y de la duración de la partida — escaso a propósito.',
   rivalDesc:'El <b>bot</b> valora cada país por su población, reparte su dinero de forma pareja a lo largo de la partida y saca un límite nuevo en cada lote. En cada partida tiene un humor distinto — prudente, equilibrado o audaz — y no se te dice cuál. Si te quedas corto de dinero, puede jugárselo todo para dejarte fuera.',
   rulesP4:'Todos empiezan con el mismo presupuesto, que depende de la dificultad y de la duración de la partida. <b>Medio: 50 € para 5 países, 100 € para 10, 150 € para 15, 200 € para 20, 300 € para 30</b>. Principiante: 25 €, 50 €, 55 €, 65 €, 100 €. Experto: 35 €, 70 €, 75 €, 90 €, 140 €. El dinero escasea a propósito: ni el presupuesto más grande alcanza para los cinco países más grandes.',
   rulesP5:'El bot valora cada país por su población y saca un nuevo límite de retirada para cada lote, así que nunca puedes leerlo del todo. Gasta de forma pareja, paga algo más por los países más grandes y en cada partida es prudente, equilibrado o audaz. Si tiene mucho más dinero que tú, ofrece la cantidad que ya no puedes superar. Supera su límite por un euro y el lote es tuyo — a menos que pueda dejarte fuera.',
   rulesP6:'La <b>dificultad</b> decide qué países pueden salir: Principiante solo Europa, Medio todos los de más de 15 millones, Experto los 196. Todos los países tienen la misma probabilidad de salir y ninguno sale dos veces en la misma partida. Las partidas cortas dependen mucho de la suerte: con 5 o 10 países, un solo sorteo puede decidirlo todo, sobre todo en Experto. Cuanto más larga es la partida, más cuenta la habilidad.',
-  rulesP8:'<b>¿Sin dinero?</b> Cuando solo un jugador conserva dinero, los países restantes se le venden al 80 % de su precio justo, mientras le alcance el dinero. Los que nadie puede pagar quedan sin vender. Ya no se puede llevar el resto por 1 €.',
+  rulesP8:'<b>¿Sin dinero?</b> Cuando solo un jugador conserva dinero, se lleva todos los países restantes por 1 € cada uno. Jugárselo todo es un riesgo real: le regala el resto de la ronda a tu rival.',
   unsoldNote:'{n} países quedaron sin vender: nadie podía pagarlos.' },
  fr:{ budgetNote:'Dépend de la difficulté et de la longueur de la partie — rare exprès.',
   rivalDesc:'Le <b>bot</b> évalue chaque pays selon sa population, répartit son argent régulièrement sur la partie et tire une nouvelle limite à chaque lot. À chaque partie il est d’humeur différente — prudent, équilibré ou audacieux — et on ne te dit pas laquelle. Si ton argent s’épuise, il peut jouer le tout pour le tout pour t’éliminer.',
   rulesP4:'Tout le monde commence avec le même budget, fixé par la difficulté et la longueur de la partie. <b>Moyen : 50 € pour 5 pays, 100 € pour 10, 150 € pour 15, 200 € pour 20, 300 € pour 30</b>. Débutant : 25 €, 50 €, 55 €, 65 €, 100 €. Expert : 35 €, 70 €, 75 €, 90 €, 140 €. L’argent est rare exprès : même le plus gros budget ne suffit pas pour les cinq plus grands pays.',
   rulesP5:'Le bot évalue chaque pays selon sa population et tire une nouvelle limite d’abandon à chaque lot, impossible donc de le lire complètement. Il dépense régulièrement, paye un peu plus pour les plus grands pays et, à chaque partie, est prudent, équilibré ou audacieux. S’il a bien plus d’argent que toi, il offre le montant que tu ne peux plus surenchérir. Dépasse sa limite d’un euro et le lot est à toi — sauf s’il peut t’éliminer.',
   rulesP6:'La <b>difficulté</b> décide quels pays peuvent sortir : Débutant seulement l’Europe, Moyen tous les pays de plus de 15 millions, Expert les 196. Chaque pays a autant de chances de sortir et aucun ne sort deux fois dans la même partie. Les parties courtes dépendent beaucoup de la chance : avec 5 ou 10 pays, un seul tirage peut tout décider, surtout en Expert. Plus la partie est longue, plus l’habileté compte.',
-  rulesP8:'<b>Plus d’argent ?</b> Quand un seul joueur a encore de l’argent, les pays restants lui sont vendus à 80 % de leur juste prix, tant que l’argent suffit. Ceux que personne ne peut payer restent invendus. Impossible de rafler le reste pour 1 €.',
+  rulesP8:'<b>Plus d’argent ?</b> Quand un seul joueur a encore de l’argent, il rafle tous les pays restants pour 1 € chacun. Tout miser est un vrai risque : cela offre le reste de la manche à votre rival.',
   unsoldNote:'{n} pays sont restés invendus : personne ne pouvait les payer.' }
 }, states:{
  en:{ budgetNote:'Set by the round length — scarce on purpose.',
@@ -721,7 +723,7 @@ const STRP={ countries:{
   rulesP4:'Everyone starts with the same budget, set by the round length: <b>$85 for 5 states, $165 for 10, $180 for 15, $210 for 20, $315 for 30, $420 for 40 and $525 for all 50</b>. Money is scarce on purpose: even the biggest budget cannot buy the four biggest states.',
   rulesP5:'The bot values every state by population and rolls a fresh walk-away limit for each lot, so you can never quite read it. It spends evenly, pays a little extra for the biggest states, and each game it is cautious, balanced or bold. If it has far more money than you, it bids the amount you can no longer top. Beat its limit by one dollar and the lot is yours — unless it can knock you out.',
   rulesP6:'Every state is equally likely to come up, and a state never comes up twice in the same round. Pick 5 to 40 states, or play all 50. Short rounds are luck-heavy: with 5 or 10 states one big draw can decide the game. The longer the round, the more skill counts.',
-  rulesP8:'<b>Out of money?</b> When only one player still has money, the remaining states are sold to that player at 80% of their fair price, as long as the money lasts. States nobody can pay for stay unsold. Nobody can sweep the rest for $1.',
+  rulesP8:'<b>Out of money?</b> When only one player still has money, that player takes every remaining state for $1 each. Going all in is a real risk: it hands the rest of the round to your rival.',
   unsoldNote:'{n} states went unsold — nobody could afford them.',
   rulesP7:'Efficiency is scored too: dollars per million people. Lower is better.',
   footer:'No accounts · No tracking · {n} states', worldTitle:'The map', world:'{name}’s states, lit in gold' },
@@ -731,7 +733,7 @@ const STRP={ countries:{
   rulesP4:'Alle starten mit demselben Budget, das von der Rundenlänge abhängt: <b>$85 für 5 Bundesstaaten, $165 für 10, $180 für 15, $210 für 20, $315 für 30, $420 für 40 und $525 für alle 50</b>. Das Geld ist absichtlich knapp: Selbst das größte Budget reicht nicht für die vier größten Bundesstaaten.',
   rulesP5:'Der Bot bewertet jeden Bundesstaat nach Einwohnerzahl und würfelt pro Los eine neue Schmerzgrenze, du kannst ihn also nie ganz durchschauen. Er verteilt sein Geld gleichmäßig, zahlt für die größten Staaten etwas mehr und ist in jedem Spiel vorsichtig, ausgewogen oder mutig. Hat er viel mehr Geld als du, bietet er den Betrag, den du nicht mehr überbieten kannst. Überbiete seine Grenze um einen Dollar und das Los gehört dir – es sei denn, er kann dich ausstechen.',
   rulesP6:'Jeder Bundesstaat kommt mit der gleichen Wahrscheinlichkeit dran, und keiner kommt in derselben Runde zweimal vor. Wähle 5 bis 40 Bundesstaaten oder spiel alle 50. Kurze Runden sind glückslastig: Bei 5 oder 10 Bundesstaaten kann ein großer Treffer das Spiel entscheiden. Je länger die Runde, desto mehr zählt Können.',
-  rulesP8:'<b>Kein Geld mehr?</b> Hat nur noch ein Spieler Geld, werden die übrigen Bundesstaaten an ihn verkauft – zu 80 % ihres fairen Preises, solange das Geld reicht. Was niemand bezahlen kann, bleibt unverkauft. Den Rest für $1 abzuräumen geht nicht mehr.',
+  rulesP8:'<b>Kein Geld mehr?</b> Hat nur noch ein Spieler Geld, bekommt er alle übrigen Bundesstaaten für je $1. Alles auf eine Karte zu setzen ist ein echtes Risiko: Es schenkt deinem Gegner den Rest der Runde.',
   unsoldNote:'{n} Bundesstaaten blieben unverkauft – niemand konnte sie bezahlen.',
   rulesP7:'Auch die Effizienz wird gewertet: Dollar pro Million Einwohner. Weniger ist besser.',
   footer:'Keine Konten · Kein Tracking · {n} Bundesstaaten', worldTitle:'Die Karte', world:'Die Staaten von {name}, golden markiert' },
@@ -741,7 +743,7 @@ const STRP={ countries:{
   rulesP4:'Tutti partono con lo stesso budget, deciso dalla lunghezza della partita: <b>$85 per 5 stati, $165 per 10, $180 per 15, $210 per 20, $315 per 30, $420 per 40 e $525 per tutti i 50</b>. Il denaro è scarso di proposito: nemmeno il budget più alto basta per i quattro stati più grandi.',
   rulesP5:'Il bot valuta ogni stato in base alla popolazione e tira un nuovo limite di rinuncia per ogni lotto, quindi non riesci mai a leggerlo. Spende in modo uniforme, paga un po’ di più per gli stati più grandi ed è, partita per partita, prudente, equilibrato o audace. Se ha molti più soldi di te, offre la cifra che non puoi più superare. Supera il suo limite di un dollaro e il lotto è tuo, a meno che non possa metterti fuori gioco.',
   rulesP6:'Ogni stato ha la stessa probabilità di uscire e nessuno esce due volte nella stessa partita. Scegli da 5 a 40 stati oppure gioca tutti i 50. Le partite corte dipendono molto dalla fortuna: con 5 o 10 stati una sola estrazione può decidere tutto. Più la partita è lunga, più conta l’abilità.',
-  rulesP8:'<b>Senza soldi?</b> Quando solo un giocatore ha ancora denaro, gli stati rimasti gli vengono venduti all’80% del loro prezzo equo, finché i soldi bastano. Quelli che nessuno può pagare restano invenduti. Non si può più portare via il resto per $1.',
+  rulesP8:'<b>Senza soldi?</b> Quando solo un giocatore ha ancora denaro, si prende tutti gli stati rimasti a $1 ciascuno. Puntare tutto è un vero rischio: regala il resto della partita al rivale.',
   unsoldNote:'{n} stati sono rimasti invenduti: nessuno poteva permetterseli.',
   rulesP7:'Si valuta anche l’efficienza: dollari per milione di abitanti. Meno è meglio.',
   footer:'Nessun account · Nessun tracciamento · {n} stati', worldTitle:'La mappa', world:'Gli stati di {name}, evidenziati in oro' },
@@ -751,7 +753,7 @@ const STRP={ countries:{
   rulesP4:'Todos empiezan con el mismo presupuesto, que depende de la duración de la partida: <b>$85 para 5 estados, $165 para 10, $180 para 15, $210 para 20, $315 para 30, $420 para 40 y $525 para los 50</b>. El dinero escasea a propósito: ni el presupuesto más grande alcanza para los cuatro estados más grandes.',
   rulesP5:'El bot valora cada estado por su población y saca un nuevo límite de retirada para cada lote, así que nunca puedes leerlo del todo. Gasta de forma pareja, paga algo más por los estados más grandes y en cada partida es prudente, equilibrado o audaz. Si tiene mucho más dinero que tú, ofrece la cantidad que ya no puedes superar. Supera su límite por un dólar y el lote es tuyo, salvo que pueda dejarte fuera.',
   rulesP6:'Todos los estados tienen la misma probabilidad de salir y ninguno sale dos veces en la misma partida. Elige de 5 a 40 estados o juega los 50. Las partidas cortas dependen mucho de la suerte: con 5 o 10 estados, un solo sorteo puede decidirlo todo. Cuanto más larga es la partida, más cuenta la habilidad.',
-  rulesP8:'<b>¿Sin dinero?</b> Cuando solo un jugador conserva dinero, los estados restantes se le venden al 80 % de su precio justo, mientras le alcance el dinero. Los que nadie puede pagar quedan sin vender. Ya no se puede llevar el resto por $1.',
+  rulesP8:'<b>¿Sin dinero?</b> Cuando solo un jugador conserva dinero, se lleva todos los estados restantes por $1 cada uno. Jugárselo todo es un riesgo real: le regala el resto de la ronda a tu rival.',
   unsoldNote:'{n} estados quedaron sin vender: nadie podía pagarlos.',
   rulesP7:'También se puntúa la eficiencia: dólares por millón de habitantes. Cuanto menos, mejor.',
   footer:'Sin cuentas · Sin rastreo · {n} estados', worldTitle:'El mapa', world:'Los estados de {name}, en dorado' },
@@ -761,7 +763,7 @@ const STRP={ countries:{
   rulesP4:'Tout le monde commence avec le même budget, fixé par la longueur de la partie : <b>$85 pour 5 États, $165 pour 10, $180 pour 15, $210 pour 20, $315 pour 30, $420 pour 40 et $525 pour les 50</b>. L’argent est rare exprès : même le plus gros budget ne suffit pas pour les quatre plus grands États.',
   rulesP5:'Le bot évalue chaque État selon sa population et tire une nouvelle limite d’abandon à chaque lot, impossible donc de le lire complètement. Il dépense régulièrement, paye un peu plus pour les plus grands États et, à chaque partie, est prudent, équilibré ou audacieux. S’il a bien plus d’argent que toi, il mise la somme que tu ne peux plus dépasser. Dépasse sa limite d’un dollar et le lot est à toi, sauf s’il peut t’éliminer.',
   rulesP6:'Chaque État a autant de chances de sortir, et aucun ne sort deux fois dans la même partie. Choisis de 5 à 40 États ou joue les 50. Les parties courtes dépendent beaucoup de la chance : avec 5 ou 10 États, un seul tirage peut tout décider. Plus la partie est longue, plus l’habileté compte.',
-  rulesP8:'<b>Plus d’argent ?</b> Quand un seul joueur a encore de l’argent, les États restants lui sont vendus à 80 % de leur juste prix, tant que l’argent suffit. Ceux que personne ne peut payer restent invendus. Impossible de rafler le reste pour $1.',
+  rulesP8:'<b>Plus d’argent ?</b> Quand un seul joueur a encore de l’argent, il rafle tous les États restants pour $1 chacun. Tout miser est un vrai risque : cela offre le reste de la manche à votre rival.',
   unsoldNote:'{n} États sont restés invendus : personne ne pouvait les payer.',
   rulesP7:'L’efficacité compte aussi : dollars par million d’habitants. Moins, c’est mieux.',
   footer:'Aucun compte · Aucun suivi · {n} États', worldTitle:'La carte', world:'Les États de {name}, en or' }
@@ -840,7 +842,7 @@ function home() {
         </div>
         <div class="dockbar">
           <button class="glass chipbtn" id="mr">${IC('book', 'sm')}${esc(t('how'))}</button>
-          <button class="glass chipbtn" id="ml" aria-label="${esc(t('language'))}: ${esc(lang.label)}"><span aria-hidden="true">${flag(lang.flag)}</span> ${esc(lang.label)}</button>
+          <button class="glass chipbtn" id="ml" aria-label="${esc(t('language'))}: ${esc(lang.label)}"><span aria-hidden="true">${flag(langFlag(lang))}</span> ${esc(lang.label)}</button>
           <button class="glass chipbtn sq" id="mp" aria-label="${esc(t('privacy'))}">${IC('lock', 'sm')}</button>
         </div>
         <p class="foot">${esc(t('footer', { n: count }))} · <span class="ver" aria-label="Version ${CONFIG.version}">v${CONFIG.version}</span></p>
@@ -861,7 +863,7 @@ function home() {
 
 function langSheet() {
   const h = sheet({ title: t('language'), foot: `<button class="btn gold" id="ld">${esc(t('done'))}</button>`,
-    body: `<div class="group" role="radiogroup" aria-label="${esc(t('language'))}">${LANGS.map(l => `<button class="row" role="radio" aria-checked="${l.id === LANG}" data-l="${l.id}"><span class="t"><span aria-hidden="true">${flag(l.flag)}</span> ${esc(l.label)}</span>${l.id === LANG ? `<span class="val" aria-hidden="true">✓</span>` : ''}</button>`).join('')}</div>` });
+    body: `<div class="group" role="radiogroup" aria-label="${esc(t('language'))}">${LANGS.map(l => `<button class="row" role="radio" aria-checked="${l.id === LANG}" data-l="${l.id}"><span class="t"><span aria-hidden="true">${flag(langFlag(l))}</span> ${esc(l.label)}</span>${l.id === LANG ? `<span class="val" aria-hidden="true">✓</span>` : ''}</button>`).join('')}</div>` });
   $$('[data-l]', h.wrap).forEach(b => b.onclick = () => { Snd.ui(); setLang(b.dataset.l); });
   on('ld', () => { Snd.ui(); h.close(); });
 }

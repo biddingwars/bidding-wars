@@ -66,21 +66,15 @@ function playOut(S, who) {
   return r;
 }
 
-test('endgame: a broke player no longer hands over the rest for $1; the rest sells at 80% of fair price while money lasts', () => {
+test('endgame: a player who goes broke hands the rest of the round to the other player for $1 each (going all in is a risk)', () => {
   const S = setup([0, 40], 10, 5);
   const r = Engine.startLot(S);
-  assert.equal(r.state, 'done'); assert.equal(r.reason, 'house');
-  const bought = S.players[1].bought, spent = bought.reduce((a, b) => a + b.price, 0);
-  assert.equal(S.players[1].budget, 40 - spent, 'money is conserved');
-  for (const b of bought) assert.equal(b.price, Math.max(1, Math.round(0.8 * Engine.priceOf(states, b).ideal)), 'house price is 80% of the ideal');
-  assert.equal(bought.length + S.unsold.length, 10, 'every lot is either bought or unsold');
-  assert.ok(S.unsold.length > 0, 'with $40 not everything can be paid for');
-  for (const u of S.unsold) assert.ok(Math.max(1, Math.round(0.8 * Engine.priceOf(states, u).ideal)) > S.players[1].budget || true);
-  const rich = setup([0, 100000], 10, 5); Engine.startLot(rich);
-  assert.equal(rich.unsold.length, 0, 'with enough money everything sells'); assert.equal(rich.players[1].bought.length, 10);
+  assert.equal(r.state, 'done'); assert.equal(r.reason, 'walkover');
+  const bought = S.players[1].bought;
+  assert.equal(bought.length, 10, 'every remaining lot goes to the player who still has money');
+  assert.ok(bought.every(b => b.price === 1), '$1 each'); assert.equal(S.players[1].budget, 30, 'money is conserved');
+  const poor = setup([0, 4], 10, 5); Engine.startLot(poor); assert.equal(poor.players[1].bought.length, 10); assert.equal(poor.players[1].bought.filter(b => b.free).length, 6, 'once the money is gone the rest is free');
   const none = setup([0, 0], 10, 5), z = Engine.startLot(none); assert.equal(z.reason, 'broke'); assert.equal(none.unsold.length, 10);
-  const old = Engine.newAuction({ pack: august, kind: 'solo', level: 'medium', lots: 10, players: [{ name: 'a' }, { name: 'b', ai: true }], rng: Engine.seededRng(1) });
-  old.players[0].budget = 0; assert.equal(Engine.startLot(old).reason, 'walkover', 'a pack without an economy block keeps the old walkover rule (the legacy path)');
 });
 
 test('temperaments: seeded and reproducible, about 25 / 50 / 25, never shown, symmetric around the balanced bot', () => {
@@ -108,11 +102,11 @@ test('knockout (a): rival $10, bot $110, 10 lots: the bot takes (almost) every l
   }
 });
 
-test('knockout (b): rival $30, bot $110: it spends its knockouts, wins more than the plain bot, and does not overpay a rival who folds', () => {
+test('knockout (b): rival $30, bot $110: it spends its knockouts, scores about as many points as the plain bot (the creeper now bankrupts itself into the $1 sweep), and does not overpay a rival who folds', () => {
   const plain = Object.assign({}, states, { bot: Object.assign({}, states.bot, { knockout: undefined }) });
   const run = (pack, who) => { let pts = 0, spent = 0; const G = 200; for (let g = 0; g < G; g++) { const S = Engine.newAuction({ pack, kind: 'solo', level: 'all', lots: 10, players: [{ name: 'a' }, { name: 'b', ai: true }], rng: Engine.seededRng(1200 + g), temper: 'balanced' }); S.players[0].budget = 30; S.players[1].budget = 110; playOut(S, who); pts += S.players[1].bought.reduce((a, b) => a + b.value, 0); spent += 110 - S.players[1].budget; } return { pts: pts / G, spent: spent / G }; };
   const ko = run(states, 'A'), no = run(plain, 'A');
-  assert.ok(ko.pts >= no.pts - 0.5, `knockout points ${ko.pts.toFixed(1)} vs plain ${no.pts.toFixed(1)}`);
+  assert.ok(ko.pts >= no.pts - 3.5, `knockout points ${ko.pts.toFixed(1)} vs plain ${no.pts.toFixed(1)}`);
   assert.ok(ko.spent > no.spent, 'it pays for the knockouts');
   const koD = run(states, 'D'), noD = run(plain, 'D');
   assert.ok(koD.spent <= noD.spent * 1.05 + 1, `vs a rival who folds early it does not overpay: ${koD.spent.toFixed(0)} vs ${noD.spent.toFixed(0)}`);
@@ -203,7 +197,7 @@ test('the rules text lists the real budgets and says short rounds are luck-heavy
     const got = (STRP[lang].rulesP4.match(/\$(\d+)/g) || []).map(x => +x.slice(1));
     assert.deepEqual(got, want, lang + ': rulesP4 budgets match economy.budgets');
     assert.ok(STRP[lang].budgetNote && STRP[lang].rulesP6 && STRP[lang].rulesP8 && STRP[lang].unsoldNote && STRP[lang].rivalDesc, lang + ' has the economy strings');
-    assert.match(STRP[lang].rulesP8, /80 ?%/, lang + ': the house price is stated');
+    assert.match(STRP[lang].rulesP8, /(€|\$) ?1\b|\b1 ?(€|\$)/, lang + ': the $1 sweep is stated');
   }
   assert.match(STRP.en.rulesP6, /luck/i); assert.match(STRP.de.rulesP6, /glückslastig/); assert.match(STRP.it.rulesP6, /fortuna/); assert.match(STRP.es.rulesP6, /suerte/); assert.match(STRP.fr.rulesP6, /chance/);
 });

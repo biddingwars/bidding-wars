@@ -35,18 +35,21 @@ test('Countries: the pack validates, budgets are per level in multiples of 5, Me
   }
 });
 
-test('Countries prices: smooth and monotone (no bigger country is cheaper), EUR 1 floor, level averages within 10% of August, at most 12 countries move more than 25%', () => {
+test('Countries prices: smooth and monotone (no bigger country is cheaper), EUR 1 floor, level averages within 20% of August (the giants were raised on purpose: Medium +17%, Expert +13%), at most 16 countries move more than 25%', () => {
   const t = Engine.priceTable(countries), ta = Engine.priceTable(august);
   const rows = countries.items.slice().sort((a, b) => a.value - b.value).map(i => ({ v: i.value, id: i.id, ...t.get(i.id) }));
   for (let i = 1; i < rows.length; i++) { assert.ok(rows[i].ideal >= rows[i - 1].ideal, 'ideal is monotone at ' + rows[i].id); assert.ok(rows[i].max >= rows[i - 1].max, 'max is monotone at ' + rows[i].id); }
   rows.forEach(r => { assert.ok(r.ideal >= 1 && r.max >= r.ideal, r.id); });
   for (const lv of LV) {
     const n = Engine.avgIdeal(countries, lv), o = Engine.avgIdeal(august, lv);
-    assert.ok(Math.abs(n / o - 1) < 0.1, `${lv}: expected price per lot ${o.toFixed(1)} -> ${n.toFixed(1)}`);
+    assert.ok(Math.abs(n / o - 1) < 0.2, `${lv}: expected price per lot ${o.toFixed(1)} -> ${n.toFixed(1)}`);
   }
   assert.ok(Engine.avgIdeal(countries, 'medium') >= Engine.avgIdeal(august, 'medium') * 0.98, 'Medium is not cheaper, so not easier');
   const moved = countries.items.filter(i => Math.abs(t.get(i.id).ideal / ta.get(i.id).ideal - 1) > 0.25).map(i => i.id);
-  assert.ok(moved.length <= 12, 'moved by more than 25%: ' + moved.join(' '));
+  assert.ok(moved.length <= 16, 'moved by more than 25%: ' + moved.join(' '));
+  /* v37, on purpose: the big countries cost about 40% more than in v36 (USA about 102, Brazil 78, Pakistan 88, Indonesia 94), and India and China are "all in" (about 158 against a 100 budget at 10 lots) */
+  assert.ok(t.get('US').ideal >= 95 && t.get('BR').ideal >= 75 && t.get('PK').ideal >= 85, 'USA / Brazil / Pakistan are priced as giants');
+  for (const id of ['IN', 'CN']) assert.ok(t.get(id).ideal >= 150, id + ' costs about a whole budget: ' + t.get(id).ideal);
   for (const id of ['IN', 'CN']) assert.ok(t.get('IN').ideal >= t.get('US').ideal && t.get(id).ideal > t.get('ID').ideal, 'India and China cost more than the USA and Indonesia');
   const sd = t.get('DE'); assert.ok(sd.max / sd.ideal >= 1.4, 'a giant keeps a wide walk-away range (needed for an unpredictable bot)');
 });
@@ -94,14 +97,15 @@ function playOut(S, who) {
   return r;
 }
 
-test('Countries endgame: a broke player no longer hands over the rest for EUR 1; the rest sells at 80% of fair price while money lasts', () => {
+test('Countries endgame: a player who goes broke hands the rest of the round to the other player for EUR 1 each (going all in is a risk)', () => {
   const S = setup([0, 60], 10, 5), r = Engine.startLot(S);
-  assert.equal(r.reason, 'house');
-  const bought = S.players[1].bought, spent = bought.reduce((a, b) => a + b.price, 0);
-  assert.equal(S.players[1].budget, 60 - spent, 'money is conserved');
-  for (const b of bought) assert.equal(b.price, Math.max(1, Math.round(0.8 * Engine.priceOf(countries, b).ideal)), '80% of the ideal');
-  assert.equal(bought.length + S.unsold.length, 10); assert.ok(S.unsold.length > 0);
-  const rich = setup([0, 100000], 10, 5); Engine.startLot(rich); assert.equal(rich.unsold.length, 0);
+  assert.equal(r.state, 'done'); assert.equal(r.reason, 'walkover');
+  const bought = S.players[1].bought;
+  assert.equal(bought.length, 10, 'every remaining lot goes to the player who still has money');
+  assert.equal(bought.filter(b => b.price === 1).length, 10, 'for EUR 1 each (EUR 60 covers ten lots)');
+  assert.equal(S.players[1].budget, 50, 'money is conserved');
+  const poor = setup([0, 4], 10, 5); Engine.startLot(poor); assert.equal(poor.players[1].bought.length, 10); assert.equal(poor.players[1].bought.filter(b => b.price === 0 && b.free).length, 6, 'once the money is gone the rest is free');
+  const none = setup([0, 0], 10, 5), z = Engine.startLot(none); assert.equal(z.reason, 'broke'); assert.equal(none.unsold.length, 10);
 });
 
 test('Countries knockout (a): rival EUR 10, bot EUR 110, 10 lots: the bot takes at least 9 of the 10 lots against the creeper and the rationer', () => {
@@ -150,11 +154,11 @@ test('Countries knockout (c): the bot never passes while it can afford to sweep 
   assert.deepEqual(bad, [], 'passes while a sweep was affordable');
 });
 
-test('Countries calibration (loose): Medium never easier than the frozen August numbers (+17, the creeper +27 at 5 lots: the fully random draw compresses every result toward 50%) and at most 24 points harder for B/C; Beginner A <= 42 and B/C 15-70 (measured 20-58 on 2,000 games; 350 games swing by about 2.5 points); every temperament keeps B and C between 8% and 78%; the creeper takes at most 60% of the points', () => {
+test('Countries calibration (loose): Medium never easier than the frozen August numbers (+17; the creeper +24 at 10 lots and +38 at 5, B/C +22 at 5 lots, where a EUR 50 budget cannot buy a giant and one lot of luck decides the round) and at most 24 points harder for B/C; Beginner A <= 42 and B/C 15-70; every temperament keeps B and C between 8% and 78%; the creeper takes at most 60% of the points', () => {
   const G = 350, seed = 50000, win = (lv, n, who, mode) => Eco.run(countries, n, lv, who, G, seed, mode);
   for (const n of [5, 10, 20, 30]) {
     const ref = baseline.levels.medium[n];
-    for (const who of ['A', 'B', 'C']) { const d = win('medium', n, who, 'balanced').win - ref[who].win, up = who === 'A' && n === 5 ? 27 : 17; assert.ok(d <= up && d >= (who === 'A' ? -14 : -24), `medium ${n} lots ${who} vs August ${ref[who].win}: ${d.toFixed(1)}`); }
+    for (const who of ['A', 'B', 'C']) { const d = win('medium', n, who, 'balanced').win - ref[who].win, up = n === 5 ? (who === 'A' ? 38 : 22) : who === 'A' && n === 10 ? 24 : 17; assert.ok(d <= up && d >= (who === 'A' ? -14 : -24), `medium ${n} lots ${who} vs August ${ref[who].win}: ${d.toFixed(1)}`); }
   }
   for (const n of [5, 10, 30]) {
     assert.ok(win('beginner', n, 'A', 'balanced').win <= 42, `beginner ${n} lots: the creeper`);
@@ -250,7 +254,7 @@ test('Countries rules text: the real budgets per level and the luck-heavy line, 
     for (const lv of LV) for (const b of tbl(lv)) assert.ok(new RegExp('(^|[^\\d])' + b + '(?!\\d)').test(text), `${lang}: rulesP4 mentions ${b}`);
     assert.ok(nums.length >= 10, lang + ' lists the budgets');
     assert.ok(STRP[lang].budgetNote && STRP[lang].rivalDesc && STRP[lang].rulesP5 && STRP[lang].rulesP6 && STRP[lang].rulesP8 && STRP[lang].unsoldNote, lang + ' has the economy strings');
-    assert.match(STRP[lang].rulesP8, /80 ?%/, lang + ': the house price is stated');
+    assert.match(STRP[lang].rulesP8, /(€|\$) ?1\b|\b1 ?(€|\$)/, lang + ': the EUR 1 sweep is stated');
     assert.ok(!/\$/.test(Object.values(STRP[lang]).join(' ')), lang + ': Countries talks euros');
   }
   assert.match(STRP.en.rulesP6, /luck/i); assert.match(STRP.de.rulesP6, /glückslastig/); assert.match(STRP.it.rulesP6, /fortuna/); assert.match(STRP.es.rulesP6, /suerte/); assert.match(STRP.fr.rulesP6, /chance/);

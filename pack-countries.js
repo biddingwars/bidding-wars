@@ -10,7 +10,7 @@
      whole euros, minimum EUR 1. The bot's ceiling is ideal x ratio, the ratio easing from 2.0 for the tiniest countries
      to 1.45 for giants and forced to be non-decreasing in population. test/golden-countries.json pins every price;
      test/countries-prices-old-vs-new.md compares them with the August bands. */
-  const ANCHORS = [[0.001, 1], [0.3, 1], [1, 1.1], [3, 3.1], [8, 6.4], [15, 10.2], [30, 15.5], [60, 28], [100, 40], [160, 50], [250, 63], [350, 73], [700, 83], [1500, 92]];
+  const ANCHORS = [[0.001, 1], [0.3, 1], [1, 1.1], [3, 3.1], [8, 6.4], [15, 10.2], [30, 15.5], [60, 28], [100, 40], [150, 49], [200, 74], [250, 88], [350, 102], [700, 125], [1500, 160]];
   const RATIO = { tiny: 2.0, giant: 1.45, from: 0.5, to: 300 };
   function pchip(xs, ys) {
     const n = xs.length, h = [], d = [], m = new Array(n).fill(0);
@@ -58,7 +58,7 @@
         medium:   { 5: 50, 10: 100, 15: 150, 20: 200, 30: 300 },
         expert:   { 5: 35, 10: 70, 15: 75, 20: 90, 30: 140 }
       },
-      endgame: { rule: 'house', price: 0.8 },
+      /* no `endgame`: when only one player has money left, that player takes every remaining lot for 1 each (the walkover in startLot) - going all in is a risk on purpose */
       sampling: 'random',   /* 'systematic' restores the variance-reduced draw (items of similar size never share a round) */
       bidSteps: [[12, [1, 2, 5, 10, 25]], [40, [2, 5, 10, 25, 50]], [100, [5, 10, 25, 50, 100]], [null, [10, 25, 50, 100, 200]]],
       typingBonus: 4

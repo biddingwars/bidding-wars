@@ -36,6 +36,7 @@
   /* US States: the dimmed flag behind everything (colours of the flag, strength set by --flag-op; contrast-tested) */
   --flag-red:#B22234; --flag-white:#383E76; --flag-blue:#3C3B6E; --flag-star:#3C4278; --flag-op:.14;
   /* US results map: the dim over everything outside the 48 states, the winner's gold */
+  --map-edge:#EDC66F;
   --map-dim:rgba(10,9,7,.6); --map-line:rgba(255,255,255,.5); --map-win:rgba(237,198,111,.34); --map-glow:rgba(237,198,111,.55); --map-pin:#F6D993; --map-pin-ring:#14130F;
 
   --top:max(env(safe-area-inset-top,0px),8px);
@@ -58,8 +59,23 @@
   --halo1:rgba(80,115,255,.5); --halo2:rgba(80,115,255,.24); --halo0:rgba(80,115,255,0);
   --sheet1:#FFFFFF; --sheet2:#F4F2FF; --scrim:rgba(246,243,255,.9); --backdrop:rgba(30,30,70,.32);
   --flag-red:#E0808A; --flag-white:#FFFFFF; --flag-blue:#8A8BD0; --flag-star:#FFFFFF; --flag-op:.12;
+  --map-edge:#E7BE62;
   --map-dim:rgba(238,240,255,.62); --map-line:rgba(20,21,43,.45); --map-win:rgba(231,190,98,.42); --map-glow:rgba(201,149,60,.6); --map-pin:#C9953C; --map-pin-ring:#FFFFFF;
 }
+
+/* ---------- US States: the accent is the flag's red instead of brass; the second kind of button is the flag's dark blue ----------
+   Set by syncPackTheme() (data-pack on <html>). Only tokens change, never a component rule; test/contrast.test.js checks both sets. */
+:root[data-pack=states]{
+  --gold1:#D93A4E; --gold2:#B01F33; --goldink:#FFA8B2; --on-gold:#FFFFFF; --brass:#FFA8B2;
+  --goldglow:rgba(200,40,62,.5); --goldtint:rgba(220,70,88,.16);
+  --btn2a:#34458A; --btn2b:#1B2760; --on-btn2:#FFFFFF; --btn2glow:rgba(40,58,140,.45);
+}
+:root[data-theme=light][data-pack=states]{
+  --gold1:#D93A4E; --gold2:#B01F33; --goldink:#8F1727; --on-gold:#FFFFFF; --brass:#B01F33;
+  --goldglow:rgba(176,31,51,.4); --goldtint:rgba(190,35,56,.12);
+  --btn2a:#34458A; --btn2b:#1B2760; --on-btn2:#FFFFFF; --btn2glow:rgba(40,58,140,.35);
+}
+:root[data-pack=states] .btn.glassb,:root[data-pack=states] .btn.ghost,:root[data-pack=states] .btn.drop{background:linear-gradient(180deg,var(--btn2a),var(--btn2b));color:var(--on-btn2);border:1px solid rgba(255,255,255,.14);box-shadow:0 8px 24px var(--btn2glow),inset 0 1px 0 rgba(255,255,255,.22);-webkit-backdrop-filter:none;backdrop-filter:none}
 
 /* ---------- base ---------- */
 html,body{position:fixed;inset:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none}
@@ -502,7 +518,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 .usm.still .um-wins>g{animation:none}
 .um-dim{fill:var(--map-dim)}
 .um-b path{fill:none;stroke:var(--map-line);stroke-width:1;stroke-linejoin:round;vector-effect:non-scaling-stroke}
-.um-win{fill:var(--map-win);stroke:var(--gold1);stroke-width:2;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.um-win{fill:var(--map-win);stroke:var(--map-edge);stroke-width:2;stroke-linejoin:round;vector-effect:non-scaling-stroke}
 .um-glow{fill:none;stroke:var(--map-glow);stroke-width:7;stroke-linejoin:round;opacity:.55;vector-effect:non-scaling-stroke}
 .um-wins>g{animation:um-in .55s ease-out both}
 @keyframes um-in{from{opacity:0}to{opacity:1}}

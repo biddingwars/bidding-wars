@@ -26,7 +26,8 @@ const over = (fg, bg) => [0, 1, 2].map(i => fg[i] * fg[3] + bg[i] * (1 - fg[3]))
 const lum = c => { const [r, g, b] = c.slice(0, 3).map(v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }); return .2126 * r + .7152 * g + .0722 * b; };
 const ratio = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + .05) / (y + .05); };
 
-for (const [name, T] of [['Nocturne (dark)', dark], ['Daylight (light)', light]]) {
+const usDark = Object.assign({}, dark, tokens(':root[data-pack=states]')), usLight = Object.assign({}, light, tokens(':root[data-theme=light][data-pack=states]'));
+for (const [name, T] of [['Nocturne (dark)', dark], ['Daylight (light)', light], ['US States red/blue (dark)', usDark], ['US States red/blue (light)', usLight]]) {
   const bg1 = parse(T.bg1), bg2 = parse(T.bg2);
   const bases = [bg1, bg2, over(parse(T.blob1), bg1), over(parse(T.blob2), bg2)];
   const surfaces = bases.flatMap(b => [b, over(parse(T.glass), b), over(parse(T.glass2), b)]);
@@ -75,3 +76,10 @@ test('the gold SOLD slab: dark lettering on the whole brass gradient', () => {
   assert.ok(ratio(parse('#2A2E4A'), parse('#A9AFC8')) >= 4.5, 'overpaid caption');
   assert.ok(ratio(parse('#FFFFFF'), parse('#5F688D')) >= 4.5, 'overpaid pill');
 });
+
+for (const [name, T] of [['US States (dark)', usDark], ['US States (light)', usLight]]) {
+  test(name + ': white text reaches 4.5:1 on the whole red gradient and on the whole dark-blue gradient of the buttons', () => {
+    for (const g of ['gold1', 'gold2']) assert.ok(ratio(parse(T['on-gold']), parse(T[g])) >= 4.5, `on-gold on ${g}`);
+    for (const g of ['btn2a', 'btn2b']) assert.ok(ratio(parse(T['on-btn2']), parse(T[g])) >= 4.5, `on-btn2 on ${g} ${ratio(parse(T['on-btn2']), parse(T[g])).toFixed(2)}`);
+  });
+}
