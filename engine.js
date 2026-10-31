@@ -209,6 +209,7 @@
         if (b.efficiency !== undefined && !(isObj(b.efficiency) && numOk(b.efficiency.gamma, v => v >= 0) && numOk(b.efficiency.lo, v => v > 0) && numOk(b.efficiency.hi, v => v > 0) && (b.efficiency.pick === undefined || numOk(b.efficiency.pick, v => v > 0)))) e('bot.efficiency needs { gamma >= 0, lo > 0, hi > 0, pick > 0 } (numbers, or per level)');
         if (b.creeperGuard !== undefined && !(b.creeperGuard.raises >= 1)) e('bot.creeperGuard needs { raises >= 1 }');
         if (b.decisive !== undefined && !(isObj(b.decisive) && numOk(b.decisive.share, v => v > 0 && v <= 1))) e('bot.decisive needs { share: 0 < share <= 1 } (a number, or per level)');
+        if (b.decisive && b.decisive.minPrice !== undefined && !numOk(b.decisive.minPrice, v => v > 0 && v <= 2)) e('bot.decisive.minPrice must be 0 < x <= 2 (a share of the current budget of the bot, a number or per level)');
         if (b.rollSpan !== undefined && !numOk(b.rollSpan, v => v >= 0 && v <= 1)) e('bot.rollSpan must be 0..1 (a number, or per level / per lots)');
         if (b.noise !== undefined && !numOk(b.noise, v => v >= 0 && v < 1)) e('bot.noise must be 0 <= noise < 1 (a number, or per level)');
         if (b.premium !== undefined && !(isPosInt(b.premium.top) && numOk(b.premium.pct, v => v >= 0))) e('bot.premium needs { top: positive int, pct >= 0 (a number, or per level) }');
@@ -552,7 +553,10 @@
     }
     const lotsAfter = S.items.length - S.i - 1;
     let reserve = lotsAfter >= 3 ? lotsAfter : 0;
-    const decisiveLot = !!B.decisive && item.value >= lvVal(B.decisive.share, S) * sumFrom(S, S.i, i => i.value);   // a lot worth a big slice of what is left
+    /* A lot worth a big slice of what is left AND (when the pack sets decisive.minPrice) one whose fair price is a real share of the bot's CURRENT purse: the biggest lot of a
+       round of small capitals is "decisive" in points but not worth the whole purse (Washington D.C., about EUR 26, at the start of a 5-lot round with EUR 50), whereas Delhi (about EUR 95) is; late in a round, with little money left, a pivotal lot still is. */
+    const decisiveLot = !!B.decisive && item.value >= lvVal(B.decisive.share, S) * sumFrom(S, S.i, i => i.value)
+      && (B.decisive.minPrice == null || pr.ideal >= lvVal(B.decisive.minPrice, S) * me.budget);
     if (decisiveLot) reserve = 0;                                                                           // no euro is kept back for it
     if (T && T.cushion && lotsAfter >= 3) reserve += Math.round(T.cushion * (me.budget + me.bought.reduce((a, b) => a + b.price, 0)));
     if (T && T.reserveCap != null) reserve = Math.min(reserve, T.reserveCap);

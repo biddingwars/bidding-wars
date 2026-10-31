@@ -43,14 +43,14 @@
   const pack = {
     id: 'capitals',
     title: {"en":"Capitals","de":"Hauptstädte","it":"Capitali","es":"Capitales","fr":"Capitales"},
-    noun:  {"en":"capital","de":"Hauptstadt","it":"capitale","es":"capital","fr":"capitale"},
-    iconKind: 'flag',                       // item id is the ISO code of the country → its flag marks the capital
+    noun: {"en":"capital","de":"Hauptstadt","it":"capitale","es":"capital","fr":"capitale"},
+    iconKind: 'flag', // item id is the ISO code of the country → its flag marks the capital
     currency: { symbol: '€' },
-    budgetPerLot: 10,                       // Medium's rate; economy.budgets below is what the auction really uses
+    budgetPerLot: 10, // Medium's rate; economy.budgets below is what the auction really uses
     lots: { options: [5, 10, 15, 20, 30], default: 10 },
     metric: {
       label: {"en":"Population","de":"Einwohner","it":"Popolazione","es":"Población","fr":"Population"},
-      effUnit: '€/M',                       // euros per million people
+      effUnit: '€/M', // euros per million people
       /* Vatican City is 801 people: below 1,000 the count itself is shown */
       format: v => v >= 1 ? v.toFixed(1) + 'M' : v >= 0.001 ? Math.round(v * 1000).toLocaleString('en-US') + 'K' : String(Math.round(v * 1e6))
     },
@@ -63,11 +63,11 @@
       typingBonus: 4
     },
     /* The Countries machinery (see CLAUDE.md "Economy and bot"), calibrated for this pool with `node test/economy.js capitals`. */
-    bot: {"limitMul":{"beginner":{"5":1.054,"10":1,"15":1,"20":1.052,"30":1.011},"medium":{"5":0.796,"10":0.872,"15":0.956,"20":0.88,"30":0.891},"expert":{"5":1,"10":1.2,"15":1.35,"20":1.5,"30":1.782}},"premium":{"top":5,"pct":{"beginner":0.5,"medium":0.15,"expert":0.15}},"pacing":{"gamma":0.5,"lo":0.7,"hi":1.5},"knockout":{"kappa":{"beginner":1.5,"medium":0.484,"expert":0.584}},"mood":{"k":0.25,"up":0.2,"down":0.15},"wallet":{"lo":0.7},"noise":{"beginner":0.397,"medium":0.377,"expert":0.505},"efficiency":{"gamma":{"beginner":0.72,"medium":0.989,"expert":0.538},"lo":{"beginner":0.36,"medium":0.272,"expert":0.27},"hi":{"beginner":3,"medium":2.623,"expert":2.522},"pick":{"beginner":1.909,"medium":1.85,"expert":1.779}},"decisive":{"share":{"beginner":0.35,"medium":0.374,"expert":0.23}},"creeperGuard":{"raises":3},"temperaments":{"weights":[25,50,25],"bigRank":10,"spread":{"5":0.06,"10":0.06,"15":0.05,"20":0.04,"30":0.04},"conservative":{"step":0.75,"big":0.95},"aggressive":{"step":1.25,"big":1.05,"reserveCap":3}}},
+    bot: {"limitMul":{"beginner":{"5":1.211,"10":0.838,"15":0.769,"20":0.826,"30":0.991},"medium":{"5":0.796,"10":0.872,"15":0.956,"20":0.88,"30":0.891},"expert":{"5":1.55,"10":1.419,"15":1.261,"20":1.405,"30":1.782}},"premium":{"top":5,"pct":{"beginner":0.5,"medium":0.15,"expert":0.15}},"pacing":{"gamma":0.5,"lo":0.7,"hi":1.5},"knockout":{"kappa":{"beginner":1.221,"medium":0.484,"expert":0.64}},"mood":{"k":0.25,"up":0.2,"down":0.15},"wallet":{"lo":0.7},"noise":{"beginner":0.376,"medium":0.377,"expert":0.471},"efficiency":{"gamma":{"beginner":0.72,"medium":0.989,"expert":0.598},"lo":{"beginner":0.4,"medium":0.272,"expert":0.27},"hi":{"beginner":3.076,"medium":2.623,"expert":2.522},"pick":{"beginner":1.909,"medium":1.85,"expert":1.903}},"decisive":{"share":{"beginner":0.251,"medium":0.374,"expert":0.209},"minPrice":0.8},"creeperGuard":{"raises":3},"temperaments":{"weights":[25,50,25],"bigRank":10,"spread":{"5":0.06,"10":0.06,"15":0.05,"20":0.04,"30":0.04},"conservative":{"step":0.75,"big":0.95},"aggressive":{"step":1.25,"big":1.05,"reserveCap":3}}},
     levels: [
       { id: 'beginner', label: {"en":"Beginner — Europe only","de":"Anfänger — nur Europa","it":"Principiante — solo Europa","es":"Principiante — solo Europa","fr":"Débutant — Europe seulement"}, tag: 'europe' },
-      { id: 'medium',   label: {"en":"Medium — over 2 million","de":"Mittel — über 2 Millionen","it":"Medio — oltre 2 milioni","es":"Medio — más de 2 millones","fr":"Moyen — plus de 2 millions"}, minValue: 2 },
-      { id: 'expert',   label: {"en":"Expert — all 195 capitals","de":"Experte — alle 195 Hauptstädte","it":"Esperto — tutte le 195 capitali","es":"Experto — las 195 capitales","fr":"Expert — les 195 capitales"} }
+      { id: 'medium', label: {"en":"Medium — over 2 million","de":"Mittel — über 2 Millionen","it":"Medio — oltre 2 milioni","es":"Medio — más de 2 millones","fr":"Moyen — plus de 2 millions"}, minValue: 2 },
+      { id: 'expert', label: {"en":"Expert — all 195 capitals","de":"Experte — alle 195 Hauptstädte","it":"Esperto — tutte le 195 capitali","es":"Experto — las 195 capitales","fr":"Expert — les 195 capitales"} }
     ],
     defaultLevel: 'medium',
     globe: { borders: true, claimBorders: false },
