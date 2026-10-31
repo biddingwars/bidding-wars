@@ -116,7 +116,7 @@ fails if the States screens contain `€`, "euro" or "country" in any language.
 - Drop out and whoever holds the top bid buys it at that price.
 - Budget. Countries: a table per level and lot count — Medium and Expert €10 per lot (€50 / 100 / 150 / 200 / 300 for 5 / 10 / 15 / 20 / 30 lots),
   Beginner half of that (€25 / 50 / 75 / 100 / 150; see "Countries"). US States: a budget *table* by lot
-  count ($85 / $165 / $180 / $210 for 5 / 10 / 15 / 20 lots; **States stops at 20 lots since v40**, see "The stingy-player exploit"). Money is deliberately scarce in both —
+  count ($20 / $35 / $50 / $70 for 5 / 10 / 15 / 20 lots since v43 — about $170 for all 50 states, one dollar per million people for the two players together; **States stops at 20 lots since v40**, see "The stingy-player exploit"). Money is deliberately scarce in both —
   see "Economy and bot".
 - Default 10 seconds per decision; timeout = automatic drop out.
 - The opening €1 bid rotates seat by seat each lot.
@@ -251,8 +251,8 @@ Census-boundary centroids, taunts, fun facts).
   state comes up exactly once, shuffled. (Measured: every state keeps the chance n/50, but two states of similar size — KY and LA — never share a round, 0.000% against 3.7% for independent draws;
   a fully random draw would widen the swing of a 10-lot round's total value from SD 18.6% to 31.5%. Countries switched to `'random'`; States stays systematic until the bot is re-tuned for the wider swing — set `economy.sampling` in `test/make-pack-states.js` to try it.) No difficulty levels (`levels` has one
   entry and the setup hides the section when there is only one).
-- **Pricing.** Prices run at **3× the original scale** (`economy.priceScale`; an average
-  lot is $30, CA $173, TX $139, WY $3, the smallest states $3–6 instead of $1–2).
+- **Pricing.** Since v43 (owner: "the prices are way too high for way too little population") prices run at the **original scale** (`economy.priceScale: 1`; an average
+  lot is $10, about $1.5 per million at the fair price: CA $57, TX $46, FL $34, NY $29, the smallest states $1–2; it was 3×: lot $30, CA $173).
   Ideal = the state's share of the 50-state total × (10 × priceScale × 50), in whole dollars
   (floor $1); a scale factor `k` makes the whole-dollar ideals sum to 50 average lots.
   `max` = ideal × a multiplier that eases from about 2.0 (smallest) to 1.35 (largest). Both
@@ -260,8 +260,8 @@ Census-boundary centroids, taunts, fun facts).
   `test/states.test.js` checks the targets (×3 of CA 45–60, TX 35–48, FL 26–35, NY 22–30).
 - **Currency.** USD in every language (see "Five languages").
 - **Economy.** See the next section.
-- **Fun facts.** `pack.facts[id] = { en }`, one per state, shown on the SOLD screen
-  and in the results "Fun facts" sheet; must not hint at population or rank;
+- **Fun facts.** `pack.facts[id] = { en }`, one per state, shown on the SOLD screen,
+  in the results "Fun facts" sheet and (since v43, `pack.captionFacts`, owner: "put the fun facts there instead") as the caption under the lot while it is on the block — in US States the rival's taunts and its drop-out / win one-liners are not shown at all (`showTaunt` returns early; the caption wraps to at most three lines, `.taunt.fact`; Countries and Capitals keep their taunts); must not hint at population or rank;
   other languages fall back to English. `FACTS-SOURCES.md` lists every fact with
   where it was checked — **all 50 were checked online (Oct 2026)**; four were reworded after the first pass.
   Keep each row's status honest (`test/states.test.js` enforces the two allowed wordings and that the header's count matches the rows); a fact added later starts as "general knowledge only" until looked up.
@@ -294,6 +294,10 @@ Census-boundary centroids, taunts, fun facts).
   broke rival's last few dollars. Every state costs the same per million people, so the Countries "efficiency" block has nothing to rank here.
   **Fix: a narrower roll and lower limits for 15+ lots** — `bot.rollSpan: 0.4` (the roll uses the first 40% of [ideal, max]), `bot.noise: 0.15`, `limitMul` 0.72 / 0.62 / 0.6 / 0.63 / 0.68 for 15 / 20 / 30 / 40 / 50 lots
   (5 and 10 lots keep 1.0 / 0.925). Result on the *coarse* ratio grid (0.6 / 0.8 / 1 …): best blind strategy 42 / 37 / 59 / 55 / 53 / 53 / 53% at 5 / 10 / 15 / 20 / 30 / 40 / 50 lots.
+  **v43 (owner: $20 / $35 / $50 / $70, prices about a third of what they were) — the ≤ 20-lot rounds are now clean on the fine grid.** With `priceScale: 1` the budget is about 0.35 of a round's fair value at 10-20 lots, which puts
+  the bot's walk-away limit (`limitMul`) where a fixed cap no longer has a window: `node test/exploit.js states all 400 4000` (fine ratio grid, 56 strategies) gives best blind **49.3 / 41.1 / 46.9 / 47.3%** at 5 / 10 / 15 / 20 lots (v42: 44 / 39 / 59 / 64) and the scan
+  of `limitMul` shows why (20 lots: 0.45 → 70%, 0.5 → 55%, **0.55 → 50%**, 0.6 → 57%, 0.7 → 76%: a narrow valley, found per lot count with a scratch scan, then re-measured). Creeper (+1 over the bot) wins 43 / 35 / 21 / 27% (mix), fair-value B 42 / 38 / 24 / 30%, smart C 39 / 33 / 20 / 24%,
+  every temperament inside 18-46%; 150,000 fuzz games, 0 failures. The long-round warning below still holds for 30-50 lots, which are not offered; at the new scale the same valley may exist there, but it has not been measured.
   **v40 decision (owner): States is limited to 20 lots; "if people want more we will have to find a solution". Even at 20 lots the 0.70× cap wins 64% (limit 60), accepted for now. CORRECTION (found after v39, not fixed): that "no cell above the limit" was an artefact of the coarse grid.** `test/exploit.js` now sweeps the fixed-cap player in steps of 0.05, and "+1 up to 0.70× the fair price" wins
   **64 / 73 / 82 / 99%** of the 20 / 30 / 40 / 50-lot States rounds (0.75× is nearly as good: 61 / 70 / 78 / 89%; 15 lots peak at 0.85× with 59%; 5 and 10 lots are fine, 42 / 39%). The fix above only moved the peak from 0.8× to 0.70-0.75×.
   Why it cannot be tuned away (measured, scratch harness): the winner of a lot pays the *loser's* limit, so a player whose constant cap sits just under the bot's mean walk-away (about 0.65-0.73× the fair price, falling through the round
@@ -320,8 +324,9 @@ knife-edge (50 lots: creeper 2% at 60% budget, 99% at 70%). Measured on the real
 
 - **Budget = f × lots × average ideal price** (`economy.budgets` is the resulting table in dollars).
   f = 0.57 (5 lots) and 0.55 (10 lots) — so few lots that one state decides the round — then 0.40 (15),
-  and **0.35 at 20 lots** ($210; the former 30 / 40 / 50-lot budgets were $315 / $420 / $525). `validatePack` refuses a budget for the biggest lot option above 80% of the
-  expected price of the four biggest states (midpoint of ideal and max, plus the bot's 15% premium): $525 vs a cap of $545.
+  and **0.35 at 20 lots** — **replaced in v43** (owner: "for 50 lots everyone should have 170 USD, that is 1 USD per million population; adjust the other rounds", then "for cleanliness: 20, 35, 50, 70") by **$20 / $35 / $50 / $70 for 5 / 10 / 15 / 20 lots**
+  (f = 0.40 / 0.35 / 0.33 / 0.35 of the round's fair value, since the price scale dropped to 1; before v43 $85 / $165 / $180 / $210). `validatePack` refuses a budget for the biggest lot option above 80% of the
+  expected price of the four biggest states (midpoint of ideal and max, plus the bot's 15% premium): $70 against a cap of about $200.
 - **End-of-round rule** (the walkover in `startLot`; both packs, since v37): when only one player has money left, that player takes **every remaining lot for $1 each** (free once their money is gone).
   Going all in is a deliberate risk: it hands the rest of the round to the rival. v36 and earlier sold the rest at 80% of the fair price ("house price", `economy.endgame { rule: 'house', price }`, which the
   engine still supports and `test/economy.js` can still use on a scratch pack); the owner asked for the $1 sweep back. Measured effect of the switch: almost none on the exploit search or the win-rate
@@ -336,7 +341,7 @@ knife-edge (50 lots: creeper 2% at 60% budget, 99% at 70%). Measured on the real
   reproduces a game; a pack without a `bot` block keeps the original `botDecision` path byte for byte). Tables such as `economy.budgets`,
   `limitMul` and `temperaments.spread` may be per level: `{ beginner: {5:…}, medium: {…} }` (`Engine.byLots(table, lots, level)`); "the biggest items"
   (`premium`, `bigRank`) and the average price used for pacing (`Engine.avgIdeal(pack, level)`) are those of the level's own pool. Parameters:
-  - `limitMul[lots]` — calibration multiplier on every walk-away roll (States: 1.0, 0.925, 0.72, 0.62, 0.6, 0.63, 0.68 for 5…50 lots since v36, 5…20 only since v40; before that 1.0, 0.925, 0.9, 0.975, 1.075, 1.125, 1.135).
+  - `limitMul[lots]` — calibration multiplier on every walk-away roll (States: 0.8 / 0.55 / 0.55 / 0.55 for 5 / 10 / 15 / 20 lots since v43; 1.0, 0.925, 0.72, 0.62 for 5…20 lots in v40-v42, with 0.6, 0.63, 0.68 for 30-50; before that 1.0, 0.925, 0.9, 0.975, 1.075, 1.125, 1.135).
   - `premium { top: 4, pct: 0.15 }` — the four biggest items get +15% on the roll.
   - `pacing { gamma: 0.5, lo: 0.7, hi: 1.5 }` — walk-away × (budget ÷ value left ÷ the opening budget ratio)^gamma, clamped: the bot spends evenly.
   - `knockout { kappa: 1.5 }` — K = the rival's budget, the price it can no longer top. At its own limit, with the rival holding

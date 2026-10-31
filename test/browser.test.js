@@ -593,8 +593,8 @@ test('US STATES: pick it on the menu, setup offers 5-20 lots and no difficulty, 
   assert.deepEqual(await page.$$eval('[data-g="lots"] [data-v]', e => e.map(x => x.dataset.v)), ['5', '10', '15', '20']);
   assert.equal(await page.$('[data-g="lots"] [data-v="30"]'), null, 'States stops at 20 lots (v40)');
   assert.equal(await page.$('[data-g="level"]'), null, 'no difficulty filter for States');
-  assert.equal((await page.textContent('#bud')).trim(), '$165', '10 lots: the budget table, not lots x $10');
-  await pick(page, 'lots', 20); assert.equal((await page.textContent('#bud')).trim(), '$210');
+  assert.equal((await page.textContent('#bud')).trim(), '$35', '10 lots: the budget table, not lots x $10');
+  await pick(page, 'lots', 20); assert.equal((await page.textContent('#bud')).trim(), '$70');
   await pick(page, 'lots', 5); await pick(page, 'clock', 0);
   await page.click('#start'); await page.waitForSelector('#ctrl');
   assert.ok(requests.includes('pack-states.js'), 'pack file loaded lazily');
@@ -647,7 +647,7 @@ test('US STATES: 2 to 4 players in every language, light and dark, never a euro 
   }
 });
 
-test('US STATES: the auction never scrolls with the longest names, 4 seats, a 3-digit price and a long taunt', { skip: SKIP }, async () => {
+test('US STATES: the auction never scrolls with the longest names, 4 seats, a 3-digit price and the longest fun-fact caption', { skip: SKIP }, async () => {
   const sizes = [[402, 720], [375, 560], [393, 700], [375, 667], [430, 932], [834, 1194], [1194, 834], [507, 1024], [844, 390]];
   for (const [w, h] of sizes) for (const lang of ['de', 'fr']) for (const np of [2, 4]) {
     const { page, errors, ctx } = await open({ viewport: { width: w, height: h }, init: l => localStorage.setItem('lang:v1', l), initArg: lang });
@@ -657,14 +657,16 @@ test('US STATES: the auction never scrolls with the longest names, 4 seats, a 3-
       const names = ['Maximiliane-Sophie', 'Bartholomäus-Jan', 'Wolfeschlegelstein', 'Ägidius-Konstantin'];
       S = Engine.newAuction({ pack, kind: np === 2 ? 'solo' : 'multi', level: 'all', lots: 50, clock: 30, players: np === 2 ? [{ name: names[0] }, { name: 'Bot', ai: true }] : names.map(n => ({ name: n })), rng: rnd });
       Engine.startLot(S);
-      S.items[S.i] = pack.items.find(i => i.id === 'NC');
+      S.items[S.i] = pack.items.find(i => i.id === 'MO');
       S.players.forEach((p, i) => { p.budget = 500 - i; p.bought = new Array(20).fill({}); });
       S.L.price = 289; S.L.holder = np - 1; S.L.turn = 0;
-      S._taunt = 'Empires are built on lots like this one. Yours is built on islands of regret and spreadsheets.';
+      S._taunt = 'Empires are built on lots like this one. Yours is built on islands of regret and spreadsheets.';   // must NOT show: the States caption is the fun fact
       paintLot(); showTaunt(S._taunt); controls();
     }, np);
     const r = await page.evaluate(() => { const sc = document.querySelector('.screen'); return { y: sc.scrollHeight - sc.clientHeight, x: sc.scrollWidth - sc.clientWidth, page: document.documentElement.scrollHeight - innerHeight }; });
     assert.ok(r.y <= 1 && r.x <= 1 && r.page <= 1, `${w}x${h} ${lang} ${np}p scrolls: ${JSON.stringify(r)}`);
+    const cap = await page.$eval('#taunt', e => ({ t: e.textContent, h: e.getBoundingClientRect().height, fact: e.classList.contains('fact') }));
+    assert.ok(cap.fact && /Gateway Arch/.test(cap.t) && !/Empires|“/.test(cap.t), `${w}x${h} the caption is the fun fact, not a taunt: ${cap.t}`);
     const dockBottom = await page.$eval('#ctrl', e => e.getBoundingClientRect().bottom);
     assert.ok(dockBottom <= h + 0.5, `${w}x${h} dock fits (${dockBottom})`);
     assert.deepEqual(errors, []);
@@ -683,7 +685,7 @@ test('US STATES: the sold moment fits every screen with the longest fun fact', {
       S.pack.facts[S.items[S.i].id] = { en: longest };
     });
     await toSold(page);
-    const r = await page.evaluate(() => { const q = s => document.querySelector(s).getBoundingClientRect(); const p = q('.plate'), n = q('#n'), t = q('.tray'), l = q('.soldline'), f = q('.fact'); return { plateTop: p.top, nextBottom: n.bottom, nextRight: n.right, trayBottom: t.bottom, soldRight: l.right, factBottom: f.bottom, factTop: f.top, trayTop: t.top, vh: innerHeight, vw: innerWidth }; });
+    const r = await page.evaluate(() => { const q = s => document.querySelector(s).getBoundingClientRect(); const p = q('.plate'), n = q('#n'), t = q('.tray'), l = q('.soldline'), f = q('#sold .fact'); return { plateTop: p.top, nextBottom: n.bottom, nextRight: n.right, trayBottom: t.bottom, soldRight: l.right, factBottom: f.bottom, factTop: f.top, trayTop: t.top, vh: innerHeight, vw: innerWidth }; });
     assert.ok(r.plateTop >= 0, `${w}x${h} SOLD plate clipped (${r.plateTop})`);
     assert.ok(r.nextBottom <= h + 0.5 && r.nextRight <= w + 0.5, `${w}x${h} Next lot clipped (${JSON.stringify(r)})`);
     assert.ok(r.trayBottom <= h && r.soldRight <= w + 0.5, `${w}x${h} collection/line clipped`);
@@ -715,7 +717,7 @@ test('US STATES: how to play, setup and record say states and dollars in every l
     await page.waitForSelector('.sheetbox');
     const t1 = await page.textContent('.sheetbox');
     assert.ok(!bad.test(t1) && !(lang === 'fr' && badFr.test(t1)), `${lang} how-to-play: ` + (t1.match(bad) || t1.match(badFr)));
-    assert.match(t1, /\$85[^$]+\$165[^$]+\$180[^$]+\$210/, lang + ' how-to-play lists the real budgets');
+    assert.match(t1, /\$20[^$]+\$35[^$]+\$50[^$]+\$70/, lang + ' how-to-play lists the real budgets');
     assert.match(t1, /\$/, lang + ' how-to-play shows dollars');
     await page.keyboard.press('Escape');
     await page.click('#m1'); await page.waitForSelector('#start');

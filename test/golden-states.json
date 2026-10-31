@@ -1,205 +1,205 @@
 {
- "note": "Accepted US States prices [ideal, max] in whole dollars at price scale 3 (average lot $30). A change to the pricing curve, the price scale or the Census numbers must regenerate this file on purpose.",
+ "note": "Accepted US States prices [ideal, max] in whole dollars at price scale 1 (average lot $10, about $1.5 per million people; v43, it was scale 3 / $30). A change to the pricing curve, the price scale or the Census numbers must regenerate this file on purpose.",
  "prices": {
   "AL": [
-   23,
-   35
+   8,
+   12
   ],
   "AK": [
-   3,
-   6
+   1,
+   2
   ],
   "AZ": [
-   34,
-   49
+   11,
+   16
   ],
   "AR": [
-   14,
-   22
+   5,
+   8
   ],
   "CA": [
-   173,
-   234
+   57,
+   77
   ],
   "CO": [
-   26,
-   39
+   9,
+   13
   ],
   "CT": [
-   16,
-   25
+   5,
+   8
   ],
   "DE": [
-   5,
-   9
+   2,
+   4
   ],
   "FL": [
-   103,
-   140
+   34,
+   46
   ],
   "GA": [
-   50,
-   70
+   17,
+   24
   ],
   "HI": [
-   6,
-   11
+   2,
+   4
   ],
   "ID": [
-   9,
-   15
+   3,
+   5
   ],
   "IL": [
-   56,
-   78
+   19,
+   27
   ],
   "IN": [
-   31,
-   45
+   10,
+   15
   ],
   "IA": [
-   14,
-   22
+   5,
+   8
   ],
   "KS": [
-   13,
-   21
+   4,
+   6
   ],
   "KY": [
-   20,
-   30
+   7,
+   11
   ],
   "LA": [
-   20,
-   30
+   7,
+   11
   ],
   "ME": [
-   6,
-   11
+   2,
+   4
   ],
   "MD": [
-   28,
-   41
+   9,
+   13
   ],
   "MA": [
-   31,
-   45
+   10,
+   15
   ],
   "MI": [
-   45,
-   64
-  ],
-  "MN": [
-   26,
-   39
-  ],
-  "MS": [
-   13,
+   15,
    21
   ],
+  "MN": [
+   9,
+   13
+  ],
+  "MS": [
+   4,
+   6
+  ],
   "MO": [
-   28,
-   41
+   9,
+   13
   ],
   "MT": [
-   5,
-   9
+   2,
+   4
   ],
   "NE": [
-   9,
-   15
+   3,
+   5
   ],
   "NV": [
-   14,
-   22
+   5,
+   8
   ],
   "NH": [
-   6,
-   11
+   2,
+   4
   ],
   "NJ": [
-   42,
-   60
+   14,
+   20
   ],
   "NM": [
-   9,
-   15
+   3,
+   5
   ],
   "NY": [
-   88,
-   120
+   29,
+   40
   ],
   "NC": [
-   49,
-   69
+   16,
+   23
   ],
   "ND": [
-   4,
-   8
+   1,
+   2
   ],
   "OH": [
-   52,
-   73
+   17,
+   24
   ],
   "OK": [
-   18,
-   28
-  ],
-  "OR": [
-   19,
-   29
-  ],
-  "PA": [
-   57,
-   80
-  ],
-  "RI": [
-   5,
+   6,
    9
   ],
+  "OR": [
+   6,
+   9
+  ],
+  "PA": [
+   19,
+   27
+  ],
+  "RI": [
+   2,
+   4
+  ],
   "SC": [
-   24,
-   36
+   8,
+   12
   ],
   "SD": [
-   4,
-   8
+   1,
+   2
   ],
   "TN": [
-   32,
-   47
+   11,
+   16
   ],
   "TX": [
-   139,
-   188
+   46,
+   62
   ],
   "UT": [
-   16,
-   25
+   5,
+   8
   ],
   "VT": [
-   3,
-   6
+   1,
+   2
   ],
   "VA": [
-   39,
-   56
+   13,
+   19
   ],
   "WA": [
-   35,
-   51
+   12,
+   17
   ],
   "WV": [
-   8,
-   14
+   3,
+   5
   ],
   "WI": [
-   26,
-   39
+   9,
+   13
   ],
   "WY": [
-   3,
-   6
+   1,
+   2
   ]
  }
 }
