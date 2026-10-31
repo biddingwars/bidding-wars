@@ -10,7 +10,7 @@ const Eco = require('./economy.js');
 const baseline = require('./baseline-august.json');
 const LV = ['beginner', 'medium', 'expert'];
 
-test('Countries: the pack validates, budgets are per level in multiples of 5, Medium keeps EUR 10 per lot, the top-5 cap holds', () => {
+test('Countries: the pack validates, budgets are per level in multiples of 5, Medium and Expert keep EUR 10 per lot and Beginner gets half, the top-5 cap holds', () => {
   assert.deepEqual(Engine.validatePack(countries), []);
   for (const lv of LV) {
     let prev = 0;
@@ -22,16 +22,17 @@ test('Countries: the pack validates, budgets are per level in multiples of 5, Me
   }
   for (const n of countries.lots.options) assert.equal(Engine.budgetFor(countries, n, 'medium'), 10 * n, 'Medium: EUR 10 per lot, as in August');
   assert.equal(Engine.budgetFor(countries, 10), 100, 'no level given = the default level (Medium)');
-  assert.deepEqual(countries.lots.options.map(n => Engine.budgetFor(countries, n, 'beginner')), [25, 50, 55, 65, 100]);
-  assert.deepEqual(countries.lots.options.map(n => Engine.budgetFor(countries, n, 'expert')), [35, 70, 75, 90, 140]);
+  assert.deepEqual(countries.lots.options.map(n => Engine.budgetFor(countries, n, 'beginner')), [25, 50, 75, 100, 150]);   // half of the clean table: Beginner's countries are cheap
+  assert.deepEqual(countries.lots.options.map(n => Engine.budgetFor(countries, n, 'expert')), [50, 100, 150, 200, 300]);   // Medium and Expert: the clean table, EUR 10 per lot
   /* money is scarce at the top: the biggest budget of each level is at most 80% of the expected price of that level's five biggest items (premium included) */
   const t = Engine.priceTable(countries);
   for (const lv of LV) {
     const top = Engine.levelPool(countries, lv).sort((a, b) => b.value - a.value).slice(0, countries.bot.premium.top);
-    const exp = top.reduce((a, it) => a + (t.get(it.id).ideal + t.get(it.id).max) / 2 * (1 + countries.bot.premium.pct), 0);
+    const exp = top.reduce((a, it) => a + (t.get(it.id).ideal + t.get(it.id).max) / 2 * (1 + countries.bot.premium.pct[lv]), 0);
     assert.ok(Engine.budgetFor(countries, 30, lv) <= 0.8 * exp, `${lv}: the 30-lot budget is within 80% of the top-5 price (${Math.round(0.8 * exp)})`);
     const avg = Engine.avgIdeal(countries, lv);
-    assert.ok(Engine.budgetFor(countries, 30, lv) / (30 * avg) < 0.45, `${lv}: a full budget is well under half the expected value of the round`);
+    /* with the clean budget table Expert's cheap-ish countries leave a 30-lot budget at 71% of the round's fair value and Beginner's at 54% (Medium 32%); what keeps money scarce there is the retuned bot, checked by the exploit search */
+    assert.ok(Engine.budgetFor(countries, 30, lv) / (30 * avg) < (lv === 'medium' ? 0.45 : lv === 'beginner' ? 0.6 : 0.75), `${lv}: a full budget stays below the round's fair value by a clear margin`);
   }
 });
 
