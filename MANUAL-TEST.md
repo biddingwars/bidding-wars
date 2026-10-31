@@ -182,3 +182,6 @@ I could not play these on a device. The harness covers the numbers (`node test/e
 - [ ] Playing "+1 until the bot gives up" still loses (Medium 10 lots: about 14% wins).
 - [ ] Menu shows `v35`; after a full close and reopen the new build is the one running.
 - [ ] Draw is fully random: play 20 Expert rounds of 10 lots; countries repeat across rounds with no pattern, and similar-sized countries (e.g. Spain and Italy) can appear in the same round. (Revert: `sampling: 'systematic'` in `pack-countries.js`.)
+- [ ] Setup sheet: choosing 5 lots shows a one-line note that 5-lot rounds are mostly luck (all five languages); choosing 10 or more hides it.
+- [ ] States fun facts: the SOLD screen shows the reworded Missouri, New Jersey, North Carolina and Rhode Island facts.
+- [ ] States, 30 or 50 lots: bidding "+1 up to about 80% of what you think a state is worth" and otherwise passing should be a fair fight now (about 50/50), no longer an easy win.

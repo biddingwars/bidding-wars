@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v35';   // increment this, every time
+const CACHE = 'bidding-wars-v36';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v35` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v36` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -248,7 +248,8 @@ Census-boundary centroids, taunts, fun facts).
   random start, fixed interval, then shuffle the order) so the total value of a round
   swings far less (10 lots: SD 18.6% instead of 31.8%); every state keeps exactly the
   chance n/50. Lot options 5/10/15/20/30/40 and 50 ("All 50 states", `lots.all`), where every
-  state comes up exactly once, shuffled. No difficulty levels (`levels` has one
+  state comes up exactly once, shuffled. (Measured: every state keeps the chance n/50, but two states of similar size — KY and LA — never share a round, 0.000% against 3.7% for independent draws;
+  a fully random draw would widen the swing of a 10-lot round's total value from SD 18.6% to 31.5%. Countries switched to `'random'`; States stays systematic until the bot is re-tuned for the wider swing — set `economy.sampling` in `test/make-pack-states.js` to try it.) No difficulty levels (`levels` has one
   entry and the setup hides the section when there is only one).
 - **Pricing.** Prices run at **3× the original scale** (`economy.priceScale`; an average
   lot is $30, CA $173, TX $139, WY $3, the smallest states $3–6 instead of $1–2).
@@ -262,8 +263,9 @@ Census-boundary centroids, taunts, fun facts).
 - **Fun facts.** `pack.facts[id] = { en }`, one per state, shown on the SOLD screen
   and in the results "Fun facts" sheet; must not hint at population or rank;
   other languages fall back to English. `FACTS-SOURCES.md` lists every fact with
-  where to verify it — **the facts are currently marked unverified**; do not
-  remove that label until they have been checked.
+  where it was checked — **37 of 50 were checked online (Oct 2026), 13 plain landmark facts only from
+  general knowledge, and the file says which**; four were reworded after the check. Keep each row's status honest
+  (`test/states.test.js` enforces the two allowed wordings); look up the remaining 13 before claiming more.
 - **Look (only while States is the pack on screen).**
   - *Flag backdrop*: `body.pk-states` (set by `syncPackTheme()` in `go()`) turns on two
     fixed pseudo-element layers in `app.css` — stripes + canton, and the stars as a mask; straight (never tilted), sized from `--fw` so it covers the screen width —
@@ -284,6 +286,19 @@ Census-boundary centroids, taunts, fun facts).
 - **Selection.** The pack picked on the menu is `SELPACK`; it is remembered as `last` inside
   the one `record:v1` value (privacy: still exactly four keys, and the copy says so). The record is per pack inside
   `record:v1`.
+
+- **The stingy-player exploit (found and mostly closed in v36).** `node test/exploit.js states all` showed that a player who bids "+1 up to 0.8× the fair price" and otherwise passes beat
+  the old States bot in long rounds (best blind 76 / 99 / 100 / 100% at 15 / 20 / 30 / 40 / 50 lots; 46% at the default 10). Why: the bot's walk-away swings from lot to lot (a roll between ideal and max),
+  so it wins the lots on which it pays the rival's constant limit and hands the rest to the rival at its own low draws; it also spends first and the stingy player then takes the big states for a
+  broke rival's last few dollars. Every state costs the same per million people, so the Countries "efficiency" block has nothing to rank here.
+  **Fix: a narrower roll and lower limits for 15+ lots** — `bot.rollSpan: 0.4` (the roll uses the first 40% of [ideal, max]), `bot.noise: 0.15`, `limitMul` 0.72 / 0.62 / 0.6 / 0.63 / 0.68 for 15 / 20 / 30 / 40 / 50 lots
+  (5 and 10 lots keep 1.0 / 0.925). Result: best blind strategy 42 / 37 / 59 / 55 / 53 / 53 / 53% at 5 / 10 / 15 / 20 / 30 / 40 / 50 lots — **no cell above the limit**.
+  Costs (measured): the creeper wins 28 / 31 / 28 / 22 / 17% at 15 / 20 / 30 / 40 / 50 lots (was 15 / 11 / 7 / 5 / 4%; its share of the points stays under 51%), 42% at 5 lots and 26% at 10 (was 35 / 19);
+  B and C win 16-35% from 10 lots; a ±10% budget now moves a reference player by 14-16 points at 30 lots (a slope, no cliff).
+  Less random: the drop-out price of a mid-size state in a 30-lot round has SD 8-9% of the fair price (was 17%) and the most common price shows up in about 20% of games. A learner that remembers
+  the bot's drop-outs still loses to the smart player by 18-29 points, so this is not exploitable the way the fixed-limit player was.
+  Tried first and rejected (each measured): the Countries efficiency / decisive / creeperGuard blocks with parameter searches of 150+ steps, stronger pacing, a rival-learning cap, a per-lot house price when a rival
+  cannot really bid, a minimum sale price, bidding by money lead, a reserve for the biggest state to come, matching the rival's raise size. None closed it.
 
 ### Economy and bot (`pack.economy`, `pack.bot`: US States and Countries)
 
@@ -308,7 +323,7 @@ knife-edge (50 lots: creeper 2% at 60% budget, 99% at 70%). Measured on the real
   reproduces a game; a pack without a `bot` block keeps the original `botDecision` path byte for byte). Tables such as `economy.budgets`,
   `limitMul` and `temperaments.spread` may be per level: `{ beginner: {5:…}, medium: {…} }` (`Engine.byLots(table, lots, level)`); "the biggest items"
   (`premium`, `bigRank`) and the average price used for pacing (`Engine.avgIdeal(pack, level)`) are those of the level's own pool. Parameters:
-  - `limitMul[lots]` — calibration multiplier on every walk-away roll (1.0, 0.925, 0.9, 0.975, 1.075, 1.125, 1.135 for 5…50 lots).
+  - `limitMul[lots]` — calibration multiplier on every walk-away roll (States: 1.0, 0.925, 0.72, 0.62, 0.6, 0.63, 0.68 for 5…50 lots since v36; before that 1.0, 0.925, 0.9, 0.975, 1.075, 1.125, 1.135).
   - `premium { top: 4, pct: 0.15 }` — the four biggest items get +15% on the roll.
   - `pacing { gamma: 0.5, lo: 0.7, hi: 1.5 }` — walk-away × (budget ÷ value left ÷ the opening budget ratio)^gamma, clamped: the bot spends evenly.
   - `knockout { kappa: 1.5 }` — K = the rival's budget, the price it can no longer top. At its own limit, with the rival holding
@@ -321,6 +336,7 @@ knife-edge (50 lots: creeper 2% at 60% budget, 99% at 70%). Measured on the real
     Conservative: raise steps ×0.75, ×0.95 on the 10 biggest. Aggressive: steps ×1.25, ×1.05 on the 10 biggest, reserve capped at $3 (spends deep).
     `Engine.newAuction({ …, temper })` can force one (the harness does).
   - `reserve` is the original one ($1 per remaining lot outside the last three).
+  - `rollSpan` (States) — the walk-away roll uses only the first share of [ideal, max] (0.4); see "The stingy-player exploit" above. Absent = the full range, as for Countries.
   - `wallet { lo: 0.7 }` (Countries) — when the walk-away reaches into the top of the bot's purse (above `lo` × what it can spend), the ceiling is
     a random 70–100% of what it can spend (one roll per lot), so a giant that costs about its whole purse never ends at "wallet minus reserve" to the euro.
   - `noise: 0.45` (Countries) — a per-lot triangular jitter of ±45% on the walk-away (SD about 18%); it is what keeps the Learner from reading the bot.
@@ -498,6 +514,7 @@ counters inside the single `record:v1` value.
 - `node --test test/countries-economy.test.js` — the Countries economy on the real engine: per-level budgets and the top-5 rule, smooth monotone prices and the
   level averages, the draw per level pool (random and systematic: equal chance per country, per position and per pair, no duplicates), house-price endgame, knockout (a)/(b)/(c), calibration bands per level and
   temperament, the frozen baseline, the unpredictability tests (repeat test, parity, wallet-bound giants, the Learner), the rules text in five languages.
+- `node --test test/fuzz.test.js` — a 600-game slice of `node test/fuzz.js` (hostile and random humans against both bots; invariants after every move). `node test/exploit.js [pack] [level|all]` is the strategy search (dev-only, minutes).
 - `node --test test/usmap.test.js` — the generated US map data (48 + AK + HI), the files being in
   the offline cache, and the label layout (no overlaps, callouts inside the map).
 - `node --test test/contrast.test.js` — WCAG contrast of the real design tokens

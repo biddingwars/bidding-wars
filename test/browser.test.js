@@ -913,3 +913,20 @@ test('menu globe halo: it is the image\'s own gradient and ends inside the scrol
     }
   }
 });
+
+test('setup: a 5-lot round shows the luck hint, 10 or more hides it (Countries and States)', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open();
+  for (const id of ['countries', 'states']) {
+    await pickPack(page, id);
+    await page.click('#m1'); await page.waitForSelector('#start');
+    await pick(page, 'lots', 5);
+    assert.ok(await page.isVisible('#lotHint'), id + ': hint visible at 5 lots');
+    const txt = await page.textContent('#lotHint');
+    assert.match(txt, /5/); assert.ok(!/€|euro|country/i.test(id === 'states' ? txt : ''), 'no country/euro wording in States');
+    await pick(page, 'lots', 10);
+    assert.ok(!(await page.isVisible('#lotHint')), id + ': hint hidden at 10 lots');
+    await page.keyboard.press('Escape'); await page.waitForSelector('#start', { state: 'detached' });
+  }
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});

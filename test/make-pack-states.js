@@ -50,7 +50,9 @@ const pack = `/* ===============================================================
     /* The bot: Big-4 premium, paced spending, knockout awareness, temperament + mood. limitMul and spread are the
        calibration tables by lot count (test/economy.js re-measures them on the real engine). */
     bot: {
-      limitMul: { 5: 1.0, 10: 0.925, 15: 0.9, 20: 0.975, 30: 1.075, 40: 1.125, 50: 1.135 },
+      limitMul: { 5: 1.0, 10: 0.925, 15: 0.72, 20: 0.62, 30: 0.6, 40: 0.63, 50: 0.68 },   // 15+ lots are tuned together with rollSpan (below): a player who never pays more than ~0.8x the fair price beat the old limits 76-100% of long rounds (see CLAUDE.md)
+      rollSpan: 0.4,                                   // the walk-away roll uses the first 40% of [ideal, max]: less lot-to-lot swing in the bot's limit, so no fixed-limit player out-earns it
+      noise: 0.15,                                     // a little per-lot jitter on top, so the narrower roll does not make the drop-out point easy to read (0.15 keeps the exploit search under its limit; 0.25+ does not)
       premium: { top: 4, pct: 0.15 },
       pacing: { gamma: 0.5, lo: 0.7, hi: 1.5 },
       knockout: { kappa: 1.5 },

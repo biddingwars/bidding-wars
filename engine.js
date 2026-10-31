@@ -196,6 +196,7 @@
         if (b.efficiency !== undefined && !(isObj(b.efficiency) && numOk(b.efficiency.gamma, v => v >= 0) && numOk(b.efficiency.lo, v => v > 0) && numOk(b.efficiency.hi, v => v > 0) && (b.efficiency.pick === undefined || numOk(b.efficiency.pick, v => v > 0)))) e('bot.efficiency needs { gamma >= 0, lo > 0, hi > 0, pick > 0 } (numbers, or per level)');
         if (b.creeperGuard !== undefined && !(b.creeperGuard.raises >= 1)) e('bot.creeperGuard needs { raises >= 1 }');
         if (b.decisive !== undefined && !(isObj(b.decisive) && numOk(b.decisive.share, v => v > 0 && v <= 1))) e('bot.decisive needs { share: 0 < share <= 1 } (a number, or per level)');
+        if (b.rollSpan !== undefined && !numOk(b.rollSpan, v => v >= 0 && v <= 1)) e('bot.rollSpan must be 0..1 (a number, or per level / per lots)');
         if (b.noise !== undefined && !numOk(b.noise, v => v >= 0 && v < 1)) e('bot.noise must be 0 <= noise < 1 (a number, or per level)');
         if (b.premium !== undefined && !(isPosInt(b.premium.top) && b.premium.pct >= 0)) e('bot.premium needs { top: positive int, pct >= 0 }');
         if (b.pacing !== undefined && !(b.pacing.gamma >= 0 && b.pacing.lo > 0 && b.pacing.hi >= b.pacing.lo)) e('bot.pacing needs { gamma >= 0, 0 < lo <= hi }');
@@ -526,7 +527,9 @@
     const rivalIdx = S.players.findIndex((p, i) => i !== L.turn), rival = S.players[rivalIdx];
     const pr = priceOf(S.pack, item);
     if (!S._ceil || S._ceilLot !== S.i) {
-      const roll = pr.ideal + rng(pr.max - pr.ideal + 1);          // same draw as botCeiling
+      /* rollSpan < 1 narrows the walk-away roll to the first share of [ideal, max]: a bot whose limit swings widely from lot to lot wins the lots on which it pays the rival's constant limit and
+         lets the rival have the rest at its own low draws, so a player with one fixed limit out-earns it. Same draw as botCeiling when absent. */
+      const roll = pr.ideal + rng(Math.floor((pr.max - pr.ideal) * (B.rollSpan == null ? 1 : lvVal(B.rollSpan, S))) + 1);
       S._ceil = { ideal: pr.ideal, max: pr.max, walk: botWalk(S, item, S.i, roll, me, rival) }; S._ceilLot = S.i;
       if (B.wallet) S._ceil.wf = B.wallet.lo + (1 - B.wallet.lo) * rng(1001) / 1000;   // one roll per lot, only drawn when the pack asks for it
     }
