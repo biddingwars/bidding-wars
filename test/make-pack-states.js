@@ -41,7 +41,7 @@ const pack = `/* ===============================================================
     economy: {
       priceScale: 3,
       budgets: { 5: 85, 10: 165, 15: 180, 20: 210, 30: 315, 40: 420, 50: 525 },
-      endgame: { rule: 'house', price: 0.8 },   // when only one player has money left: the rest sells at 80% of fair price while it lasts
+      /* no endgame block: when only one player has money left, that player takes every remaining lot for $1 each (the walkover in startLot) - going all in is a risk on purpose */
       sampling: 'systematic',
       /* the five raise buttons grow with the current price (the item's fair price would leak its size) */
       bidSteps: [[12, [1, 2, 5, 10, 25]], [40, [2, 5, 10, 25, 50]], [100, [5, 10, 25, 50, 100]], [null, [10, 25, 50, 100, 200]]],

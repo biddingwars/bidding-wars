@@ -185,3 +185,6 @@ I could not play these on a device. The harness covers the numbers (`node test/e
 - [ ] Setup sheet: choosing 5 lots shows a one-line note that 5-lot rounds are mostly luck (all five languages); choosing 10 or more hides it.
 - [ ] States fun facts: the SOLD screen shows the reworded Missouri, New Jersey, North Carolina and Rhode Island facts.
 - [ ] States, 30 or 50 lots: bidding "+1 up to about 80% of what you think a state is worth" and otherwise passing should be a fair fight now (about 50/50), no longer an easy win.
+- [ ] US States theme: with States selected the main buttons (Open the auction, Done, Menu, Raise) are red, the second kind (Back, Drop out, Play again) dark blue, English shows the American flag in the language chip and sheet; with Countries selected everything is brass gold and English shows the Union Jack again.
+- [ ] Run out of money in a 1v1 (go all in on India or China): the other player takes every remaining country for 1 each, and the how-to-play text says so in all five languages.
+- [ ] India and China cost about a whole budget (about 158); USA, Brazil, Pakistan, Indonesia, Nigeria cost about 40% more than before.
