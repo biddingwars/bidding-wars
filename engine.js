@@ -179,7 +179,7 @@
           (perLevel ? lvIds : [null]).forEach(id => {
             const b = perLevel ? ec.budgets[id][big] : ec.budgets[big]; if (!isPosInt(b)) return;
             const pool = id ? levelPool(pack, id) : pack.items, top = pool.slice().sort((a, b2) => b2.value - a.value).slice(0, pack.bot.premium.top);
-            const expected = top.reduce((a, it) => { const p = t.get(it.id); return a + (p.ideal + p.max) / 2 * (1 + pack.bot.premium.pct); }, 0);
+            const expected = top.reduce((a, it) => { const p = t.get(it.id); return a + (p.ideal + p.max) / 2 * (1 + (typeof pack.bot.premium.pct === 'number' ? pack.bot.premium.pct : pack.bot.premium.pct[id])); }, 0);
             if (b > 0.8 * expected) e('economy.budgets' + (id ? '.' + id : '') + '[' + big + '] must be at most 80% of the expected price of the ' + pack.bot.premium.top + ' biggest items (' + Math.round(0.8 * expected) + ')');
           });
         }
@@ -198,7 +198,7 @@
         if (b.decisive !== undefined && !(isObj(b.decisive) && numOk(b.decisive.share, v => v > 0 && v <= 1))) e('bot.decisive needs { share: 0 < share <= 1 } (a number, or per level)');
         if (b.rollSpan !== undefined && !numOk(b.rollSpan, v => v >= 0 && v <= 1)) e('bot.rollSpan must be 0..1 (a number, or per level / per lots)');
         if (b.noise !== undefined && !numOk(b.noise, v => v >= 0 && v < 1)) e('bot.noise must be 0 <= noise < 1 (a number, or per level)');
-        if (b.premium !== undefined && !(isPosInt(b.premium.top) && b.premium.pct >= 0)) e('bot.premium needs { top: positive int, pct >= 0 }');
+        if (b.premium !== undefined && !(isPosInt(b.premium.top) && numOk(b.premium.pct, v => v >= 0))) e('bot.premium needs { top: positive int, pct >= 0 (a number, or per level) }');
         if (b.pacing !== undefined && !(b.pacing.gamma >= 0 && b.pacing.lo > 0 && b.pacing.hi >= b.pacing.lo)) e('bot.pacing needs { gamma >= 0, 0 < lo <= hi }');
         if (b.knockout !== undefined && !(isObj(b.knockout) && numOk(b.knockout.kappa, v => v > 0))) e('bot.knockout needs { kappa > 0 } (a number, or per level)');
         if (b.mood !== undefined && !(b.mood.k >= 0 && b.mood.up >= 0 && b.mood.down >= 0)) e('bot.mood needs { k, up, down } >= 0');
@@ -497,7 +497,7 @@
   function botWalk(S, item, idx, roll, me, rival) {
     const B = S.pack.bot, T = S.bot.temper, n = S.items.length, rankDesc = S.bot.rank.get(item.id);
     let w = roll * (B.limitMul ? byLots(B.limitMul, n, S.level) : 1);
-    if (B.premium && rankDesc <= B.premium.top) w *= 1 + B.premium.pct;
+    if (B.premium && rankDesc <= B.premium.top) w *= 1 + lvVal(B.premium.pct, S);   // pct may be per level: Beginner's bot pays more for its biggest countries
     if (T) { w *= T.limit; if (rankDesc <= B.temperaments.bigRank) w *= T.big; }
     if (B.efficiency) {
       /* Points per euro differ hugely between lots (a giant gives 10-15x the points per euro of a small country at fair price). The bot plans like a

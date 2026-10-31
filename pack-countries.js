@@ -54,9 +54,9 @@
        rounded to multiples of 5. The expected value of a round at fair prices stays within ~4% of the August game. */
     economy: {
       budgets: {
-        beginner: { 5: 25, 10: 50, 15: 55, 20: 65, 30: 100 },
+        beginner: { 5: 25, 10: 50, 15: 75, 20: 100, 30: 150 },
         medium:   { 5: 50, 10: 100, 15: 150, 20: 200, 30: 300 },
-        expert:   { 5: 35, 10: 70, 15: 75, 20: 90, 30: 140 }
+        expert:   { 5: 50, 10: 100, 15: 150, 20: 200, 30: 300 }
       },
       /* no `endgame`: when only one player has money left, that player takes every remaining lot for 1 each (the walkover in startLot) - going all in is a risk on purpose */
       sampling: 'random',   /* 'systematic' restores the variance-reduced draw (items of similar size never share a round) */
@@ -66,8 +66,8 @@
     /* The bot: the August walk-away roll (between ideal and max), randomised raise step and rank-based valuation, plus the shared
        States machinery. limitMul is the per-level, per-lot-count calibration (re-measured with `node test/economy.js`). */
     bot: {
-      limitMul: { beginner: { 5: 1.28, 10: 1.178, 15: 1.097, 20: 0.974, 30: 0.812 }, medium: { 5: 0.817, 10: 0.817, 15: 0.817, 20: 0.817, 30: 0.864 }, expert: { 5: 0.567, 10: 0.926, 15: 0.663, 20: 0.698, 30: 0.605 } },
-      premium: { top: 5, pct: 0.15 },
+      limitMul: { beginner: { 5: 2.5, 10: 1.5, 15: 1.1, 20: 1.25, 30: 1.1 }, medium: { 5: 0.817, 10: 0.817, 15: 0.817, 20: 0.817, 30: 0.864 }, expert: { 5: 1.5, 10: 1.25, 15: 1.25, 20: 1.25, 30: 1.5 } },
+      premium: { top: 5, pct: { beginner: 0.5, medium: 0.15, expert: 0.15 } },   // Beginner's bot pays 50% more for its five biggest (European) countries
       pacing: { gamma: 0.5, lo: 0.7, hi: 1.5 },
       knockout: { kappa: { beginner: 1.5, medium: 0.777, expert: 0.584 } },
       mood: { k: 0.25, up: 0.2, down: 0.15 },
