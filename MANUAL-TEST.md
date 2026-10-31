@@ -125,8 +125,8 @@ SOLD screen and tell me any that look wrong.
 ## 8. US States pack — look, map, sound (PR B)
 
 Assumed, not verified on a device: GPU smoothness of the flag layer on an older
-iPhone/iPad; how the synthesised eagle cry actually *sounds*; the satellite imagery is a
-Natural Earth stand-in (NASA Blue Marble was unreachable from my environment).
+iPhone/iPad; how the synthesised eagle cry actually *sounds*. The map imagery is NASA Blue Marble
+(July, v41): check on a device that the gold states, pins and labels read well over it, in Dark and Light.
 
 - [ ] Menu: the **US States** tile shows a US flag when selected (no map on the menu; the globe stays).
 - [ ] A dimmed, stylised US flag sits behind the menu, setup, auction and results while States

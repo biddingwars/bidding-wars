@@ -57,3 +57,12 @@ test('layout: labels never overlap and callouts stay inside the map, at phone an
     assert.equal(L.callouts.length, main.filter(i => View.CROWDED.includes(i)).length);
   }
 });
+
+test('the map imagery is NASA Blue Marble (credited, small, in the offline cache): three webp files under 150 KB together', () => {
+  const sum = ['us-map.webp', 'us-ak.webp', 'us-hi.webp'].reduce((a, f) => a + fs.statSync(path.join(root, f)).size, 0);
+  assert.ok(sum < 150 * 1024, 'imagery is ' + Math.round(sum / 1024) + ' KB');
+  const notice = fs.readFileSync(path.join(root, 'NOTICE.md'), 'utf8');
+  assert.ok(/NASA Earth Observatory/.test(notice) && /73751/.test(notice) && /not implying endorsement/.test(notice), 'NOTICE.md credits NASA and says what the file is');
+  const app = fs.readFileSync(path.join(root, 'app.js'), 'utf8');
+  assert.equal((app.match(/creditsImg:'[^']*NASA Earth Observatory/g) || []).length, 5, 'the in-app credit names NASA in all five languages');
+});

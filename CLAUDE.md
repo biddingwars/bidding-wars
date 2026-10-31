@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v40';   // increment this, every time
+const CACHE = 'bidding-wars-v41';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v40` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v41` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -276,8 +276,8 @@ Census-boundary centroids, taunts, fun facts).
     Hawaii insets **only when the winner owns them**. (On the menu the world globe is shown only for Countries; with States selected the flag backdrop stands alone, and a US flag emoji marks the tile.) Labels that cannot fit without overlapping are
     dropped (the pin stays). The pack opts in with `map: 'us'`; other packs keep the globe.
     **Regenerate** with `test/build-us-map.js` (dev-only, needs `us-atlas topojson-client d3-geo sharp`);
-    it takes any equirectangular world image — the imagery in the repo is a Natural Earth stand-in, to be
-    replaced by NASA Blue Marble (see `NOTICE.md`).
+    it takes any equirectangular world image — the imagery in the repo is NASA Blue Marble Next Generation (July, 21600×10800;
+    exact file, checksum and credit text in `NOTICE.md`; July because December's snow hides the gold highlight).
   - *Celebration colours*: the red accent, the second (dark blue) button, the SOLD slab (white lettering on a red gradient), the burst rays and sparks and the confetti (red, white and blue) are tokens on `html[data-pack=states]`
     (`--gold1/2`, `--btn2a/b`, `--slab1..3`, `--rays`, `--spark`, `--conf`), all contrast-tested; the results map keeps the winner's states in gold (`--map-edge`) for contrast on the imagery.
   - *Win sound*: `Snd.eagle()` (synthesised raptor cry) replaces the fanfare on a States win; a loss
