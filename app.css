@@ -184,6 +184,7 @@ h1.title span{display:block}
 .pack[data-pack]::before{position:absolute;left:10px;top:8px;font-size:17px;letter-spacing:2px}   /* a pack's flags show whether or not it is the selected one */
 .pack[data-pack=countries]::before{content:"🇯🇵🇧🇷🇰🇪🇲🇽"}
 .pack[data-pack=states]::before{content:"🇺🇸";letter-spacing:0}
+.pack[data-pack=capitals]::before{content:"🏛️";letter-spacing:0}
 .pack.off{background:var(--glass);border:1px solid var(--stroke)}
 .pack.off i{position:absolute;right:10px;top:10px;font-style:normal;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--goldink);background:var(--goldtint);padding:3px 7px;border-radius:8px}
 .modes{display:flex;flex-direction:column;gap:10px;flex:none}
