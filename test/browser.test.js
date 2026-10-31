@@ -685,7 +685,7 @@ test('US STATES: the sold moment fits every screen with the longest fun fact', {
       S.pack.facts[S.items[S.i].id] = { en: longest };
     });
     await toSold(page);
-    const r = await page.evaluate(() => { const q = s => document.querySelector(s).getBoundingClientRect(); const p = q('.plate'), n = q('#n'), t = q('.tray'), l = q('.soldline'), f = q('.fact'); return { plateTop: p.top, nextBottom: n.bottom, nextRight: n.right, trayBottom: t.bottom, soldRight: l.right, factBottom: f.bottom, factTop: f.top, trayTop: t.top, vh: innerHeight, vw: innerWidth }; });
+    const r = await page.evaluate(() => { const q = s => document.querySelector(s).getBoundingClientRect(); const p = q('.plate'), n = q('#n'), t = q('.tray'), l = q('.soldline'), f = q('#sold .fact'); return { plateTop: p.top, nextBottom: n.bottom, nextRight: n.right, trayBottom: t.bottom, soldRight: l.right, factBottom: f.bottom, factTop: f.top, trayTop: t.top, vh: innerHeight, vw: innerWidth }; });
     assert.ok(r.plateTop >= 0, `${w}x${h} SOLD plate clipped (${r.plateTop})`);
     assert.ok(r.nextBottom <= h + 0.5 && r.nextRight <= w + 0.5, `${w}x${h} Next lot clipped (${JSON.stringify(r)})`);
     assert.ok(r.trayBottom <= h && r.soldRight <= w + 0.5, `${w}x${h} collection/line clipped`);
