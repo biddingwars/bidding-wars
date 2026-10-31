@@ -42,9 +42,9 @@ test('PACK: validates, is registered in META with the right size and currency sy
   assert.ok(meta === undefined || true);
 });
 
-test('LOTS: 5, 10, 15, 20, 30, 40 and "All 50 states"; no difficulty filters', () => {
-  assert.deepEqual(states.lots.options, [5, 10, 15, 20, 30, 40, 50]);
-  assert.equal(states.lots.all, 50); assert.equal(states.lots.default, 10);
+test('LOTS: 5, 10, 15 and 20 only (capped in v40: a fixed-cap player beats the bot in 30-50-lot rounds); no difficulty filters', () => {
+  assert.deepEqual(states.lots.options, [5, 10, 15, 20]);
+  assert.equal(states.lots.all, undefined); assert.equal(states.lots.default, 10);
   assert.equal(states.levels.length, 1); assert.equal(Engine.levelPool(states, 'all').length, 50);
   assert.equal(Engine.levelPool(states, 'anything-else').length, 50, 'an unknown level still means all states');
 });
