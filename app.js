@@ -182,7 +182,7 @@ en:{
  multi:'Multiplayer', multiDesc:'2 to 4 players sharing one phone. Two-player is the default. Works offline.',
  online:'Online 1 vs 1', onlineDesc:'Share a room code and bid against one other person.', onlineOff:'Needs a connection — currently unavailable.',
  before:'Before you start', how:'How to play', language:'Language',
- lots:'Lots', budget:'Budget each', budgetNote:'Scales with the auction — €10 per lot.',
+ lots:'Lots', shortHint:"A 5-lot round is mostly luck: one big lot can decide it. Play 10 or more lots for a game of skill.", budget:'Budget each', budgetNote:'Scales with the auction — €10 per lot.',
  difficulty:'Difficulty', lvBeginner:'Beginner — Europe only', lvMedium:'Medium — over 15 million', lvExpert:'Expert — all 196 countries',
  seconds:'Seconds per decision', noClock:'No clock',
  nickOne:'Your nickname (optional)', nickMany:'Nicknames (optional)', playersN:'Players',
@@ -282,7 +282,7 @@ de:{
  multi:'Mehrspieler', multiDesc:'2 bis 4 Spieler an einem Handy. Zwei Spieler sind der Normalfall. Läuft offline.',
  online:'Online 1 gegen 1', onlineDesc:'Raum-Code teilen und gegen eine andere Person bieten.', onlineOff:'Braucht Internet — gerade nicht verfügbar.',
  before:'Vor dem Start', how:'Spielregeln', language:'Sprache',
- lots:'Lose', budget:'Budget pro Spieler', budgetNote:'Wächst mit der Auktion — 10 € pro Los.',
+ lots:'Lose', shortHint:"Eine Runde mit 5 Losen hängt meist vom Glück ab: ein einziges großes Los kann alles entscheiden. Ab 10 Losen zählt das Können.", budget:'Budget pro Spieler', budgetNote:'Wächst mit der Auktion — 10 € pro Los.',
  difficulty:'Schwierigkeit', lvBeginner:'Anfänger — nur Europa', lvMedium:'Mittel — über 15 Millionen', lvExpert:'Experte — alle 196 Länder',
  seconds:'Sekunden pro Entscheidung', noClock:'Ohne Uhr',
  nickOne:'Dein Spitzname (optional)', nickMany:'Spitznamen (optional)', playersN:'Spieler',
@@ -382,7 +382,7 @@ it:{
  multi:'Multigiocatore', multiDesc:'Da 2 a 4 giocatori su un solo telefono. Due giocatori è il caso normale. Funziona offline.',
  online:'Online 1 contro 1', onlineDesc:'Condividi un codice stanza e fai offerte contro un altro giocatore.', onlineOff:'Serve una connessione — non disponibile ora.',
  before:'Prima di iniziare', how:'Come si gioca', language:'Lingua',
- lots:'Lotti', budget:'Budget a testa', budgetNote:"Cresce con l'asta — 10 € per lotto.",
+ lots:'Lotti', shortHint:"Con 5 lotti conta soprattutto la fortuna: un solo lotto grande può decidere tutto. Da 10 lotti in su conta l'abilità.", budget:'Budget a testa', budgetNote:"Cresce con l'asta — 10 € per lotto.",
  difficulty:'Difficoltà', lvBeginner:'Principiante — solo Europa', lvMedium:'Medio — oltre 15 milioni', lvExpert:'Esperto — tutti i 196 paesi',
  seconds:'Secondi per decidere', noClock:'Senza tempo',
  nickOne:'Il tuo soprannome (facoltativo)', nickMany:'Soprannomi (facoltativi)', playersN:'Giocatori',
@@ -482,7 +482,7 @@ es:{
  multi:'Multijugador', multiDesc:'De 2 a 4 jugadores en un mismo móvil. Dos jugadores es lo normal. Funciona sin conexión.',
  online:'Online 1 contra 1', onlineDesc:'Comparte un código de sala y puja contra otra persona.', onlineOff:'Necesita conexión — no disponible ahora.',
  before:'Antes de empezar', how:'Cómo se juega', language:'Idioma',
- lots:'Lotes', budget:'Presupuesto por jugador', budgetNote:'Crece con la subasta — 10 € por lote.',
+ lots:'Lotes', shortHint:"Con 5 lotes manda sobre todo la suerte: un solo lote grande puede decidirlo todo. Desde 10 lotes cuenta la habilidad.", budget:'Presupuesto por jugador', budgetNote:'Crece con la subasta — 10 € por lote.',
  difficulty:'Dificultad', lvBeginner:'Principiante — solo Europa', lvMedium:'Medio — más de 15 millones', lvExpert:'Experto — los 196 países',
  seconds:'Segundos por decisión', noClock:'Sin reloj',
  nickOne:'Tu apodo (opcional)', nickMany:'Apodos (opcionales)', playersN:'Jugadores',
@@ -582,7 +582,7 @@ fr:{
  multi:'Multijoueur', multiDesc:'2 à 4 joueurs sur un même téléphone. Deux joueurs, c’est le cas normal. Fonctionne hors ligne.',
  online:'En ligne 1 contre 1', onlineDesc:'Partage un code de salon et enchéris contre une autre personne.', onlineOff:'Nécessite une connexion — indisponible pour le moment.',
  before:'Avant de commencer', how:'Comment jouer', language:'Langue',
- lots:'Lots', budget:'Budget par joueur', budgetNote:'Augmente avec la vente — 10 € par lot.',
+ lots:'Lots', shortHint:"À 5 lots, la chance compte surtout : un seul gros lot peut tout décider. À partir de 10 lots, l'adresse l'emporte.", budget:'Budget par joueur', budgetNote:'Augmente avec la vente — 10 € par lot.',
  difficulty:'Difficulté', lvBeginner:'Débutant — Europe seulement', lvMedium:'Moyen — plus de 15 millions', lvExpert:'Expert — les 196 pays',
  seconds:'Secondes par décision', noClock:'Sans chrono',
  nickOne:'Ton pseudo (facultatif)', nickMany:'Pseudos (facultatifs)', playersN:'Joueurs',
@@ -930,7 +930,7 @@ async function setup(kind, packId = SELPACK) {
   const lvl = l => (l.label[LANG] || l.label.en), lvlParts = l => { const p = lvl(l).split(' — '); return [p[0], p[1] || '']; };
   h.set(`
     ${kind === 'solo' ? `<p class="sm">${t('rivalDesc')}</p>` : `<p class="sm">${esc(t('multiDesc'))}</p>`}
-    <div class="fld"><span class="label">${esc(t('lots'))}</span>${seg('lots', t('lots'), pack.lots.options.map(n => [n, n === pack.lots.all ? t('lotsAll', { n }) : n]), lots)}</div>
+    <div class="fld"><span class="label">${esc(t('lots'))}</span>${seg('lots', t('lots'), pack.lots.options.map(n => [n, n === pack.lots.all ? t('lotsAll', { n }) : n]), lots)}<p class="sm" id="lotHint" role="note"${lots <= 5 ? '' : ' hidden'}>${esc(t('shortHint'))}</p></div>
     <div class="budget"><span><span class="label">${esc(t('budget'))}</span><small>${esc(t('budgetNote'))}</small></span><b class="num" id="bud">${Engine.formatMoney(pack, Engine.budgetFor(pack, lots, level))}</b></div>
     ${pack.levels.length > 1 ? `<div class="fld"><span class="label">${esc(t('difficulty'))}</span><div class="lvls" role="radiogroup" aria-label="${esc(t('difficulty'))}" data-g="level">${pack.levels.map(l => { const [a, b] = lvlParts(l); return `<button type="button" class="lvl" role="radio" data-v="${l.id}" aria-checked="${l.id === level}"><span class="tt">${esc(a)}${b ? `<small>${esc(b)}</small>` : ''}</span><span class="ck" aria-hidden="true"></span></button>`; }).join('')}</div></div>` : ''}
     <div class="fld"><span class="label">${esc(t('seconds'))}</span>${seg('clock', t('seconds'), [[10, '10'], [15, '15'], [20, '20'], [30, '30'], [0, t('noClock')]], clock)}</div>
@@ -945,6 +945,7 @@ async function setup(kind, packId = SELPACK) {
     $$('[role=radio]', grp).forEach(x => x.setAttribute('aria-checked', 'false')); b.setAttribute('aria-checked', 'true');
     Snd.ui(); Haptics.light();
     if (grp.dataset.g === 'lots' || grp.dataset.g === 'level') sync();
+    if (grp.dataset.g === 'lots') $('#lotHint', box).hidden = +b.dataset.v > 5;
     if (grp.dataset.g === 'players') [2, 3, 4].forEach(i => { const el = $('#p' + (i + 0), box); if (el) el.hidden = false; }), [3, 4].forEach(i => { const el = $('#p' + i, box); if (el) el.hidden = i > +b.dataset.v; });
   }));
   sync();

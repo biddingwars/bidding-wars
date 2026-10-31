@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v35';   // increment this, every time
+const CACHE = 'bidding-wars-v36';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v35` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v36` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -248,7 +248,8 @@ Census-boundary centroids, taunts, fun facts).
   random start, fixed interval, then shuffle the order) so the total value of a round
   swings far less (10 lots: SD 18.6% instead of 31.8%); every state keeps exactly the
   chance n/50. Lot options 5/10/15/20/30/40 and 50 ("All 50 states", `lots.all`), where every
-  state comes up exactly once, shuffled. No difficulty levels (`levels` has one
+  state comes up exactly once, shuffled. (Measured: every state keeps the chance n/50, but two states of similar size — KY and LA — never share a round, 0.000% against 3.7% for independent draws;
+  a fully random draw would widen the swing of a 10-lot round's total value from SD 18.6% to 31.5%. Countries switched to `'random'`; States stays systematic until the bot is re-tuned for the wider swing — set `economy.sampling` in `test/make-pack-states.js` to try it.) No difficulty levels (`levels` has one
   entry and the setup hides the section when there is only one).
 - **Pricing.** Prices run at **3× the original scale** (`economy.priceScale`; an average
   lot is $30, CA $173, TX $139, WY $3, the smallest states $3–6 instead of $1–2).
@@ -262,8 +263,9 @@ Census-boundary centroids, taunts, fun facts).
 - **Fun facts.** `pack.facts[id] = { en }`, one per state, shown on the SOLD screen
   and in the results "Fun facts" sheet; must not hint at population or rank;
   other languages fall back to English. `FACTS-SOURCES.md` lists every fact with
-  where to verify it — **the facts are currently marked unverified**; do not
-  remove that label until they have been checked.
+  where it was checked — **37 of 50 were checked online (Oct 2026), 13 plain landmark facts only from
+  general knowledge, and the file says which**; four were reworded after the check. Keep each row's status honest
+  (`test/states.test.js` enforces the two allowed wordings); look up the remaining 13 before claiming more.
 - **Look (only while States is the pack on screen).**
   - *Flag backdrop*: `body.pk-states` (set by `syncPackTheme()` in `go()`) turns on two
     fixed pseudo-element layers in `app.css` — stripes + canton, and the stars as a mask; straight (never tilted), sized from `--fw` so it covers the screen width —
@@ -284,6 +286,13 @@ Census-boundary centroids, taunts, fun facts).
 - **Selection.** The pack picked on the menu is `SELPACK`; it is remembered as `last` inside
   the one `record:v1` value (privacy: still exactly four keys, and the copy says so). The record is per pack inside
   `record:v1`.
+
+- **Known weakness (found by `node test/exploit.js states all`, not fixed).** A *stingy* player who bids "+1 up to 0.8× (or 1.0×) the fair price" and otherwise passes beats the States bot
+  at 20–50 lots (best blind 76 / 99 / 100 / 100% at 15 / 20 / 30 / 40 / 50 lots; at the default 10 lots it is 46%). Why: the bot buys early at about the fair price, runs out of money
+  first, and the stingy player then takes the big states for a broke rival's last few dollars; because every state costs the same per million people, the "efficiency" fix that
+  works for Countries has nothing to rank. Tried and rejected (each measured, none closed it without breaking the creeper limit): the Countries efficiency / decisive / creeperGuard blocks with a
+  several parameter searches of 150+ steps, stronger pacing, a rival-learning cap on the walk-away, a per-lot house price when a rival cannot really bid, a reserve held back for the biggest state still to come.
+  A real fix needs a rule decision (for example a reserve price per lot, or a smaller late-game advantage for the last solvent player), not a parameter change.
 
 ### Economy and bot (`pack.economy`, `pack.bot`: US States and Countries)
 
@@ -498,6 +507,7 @@ counters inside the single `record:v1` value.
 - `node --test test/countries-economy.test.js` — the Countries economy on the real engine: per-level budgets and the top-5 rule, smooth monotone prices and the
   level averages, the draw per level pool (random and systematic: equal chance per country, per position and per pair, no duplicates), house-price endgame, knockout (a)/(b)/(c), calibration bands per level and
   temperament, the frozen baseline, the unpredictability tests (repeat test, parity, wallet-bound giants, the Learner), the rules text in five languages.
+- `node --test test/fuzz.test.js` — a 600-game slice of `node test/fuzz.js` (hostile and random humans against both bots; invariants after every move). `node test/exploit.js [pack] [level|all]` is the strategy search (dev-only, minutes).
 - `node --test test/usmap.test.js` — the generated US map data (48 + AK + HI), the files being in
   the offline cache, and the label layout (no overlaps, callouts inside the map).
 - `node --test test/contrast.test.js` — WCAG contrast of the real design tokens

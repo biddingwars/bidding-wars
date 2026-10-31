@@ -195,7 +195,11 @@ test('FACTS: one per state, short, never about population, falls back to English
   assert.equal(Engine.factFor(countries, countries.items[0], 'en'), '', 'packs without facts return nothing');
   const sources = fs.readFileSync(path.join(__dirname, '..', 'FACTS-SOURCES.md'), 'utf8');
   states.items.forEach(i => assert.ok(sources.includes(i.name.en), 'FACTS-SOURCES.md lists ' + i.name.en));
-  assert.match(sources, /unverified/i);
+  /* every row says how far it was checked: online (with the source) or from general knowledge only; nothing may claim more than that */
+  const rows = sources.split('\n').filter(l => /^\| [A-Z]/.test(l) && !l.startsWith('| State |'));
+  assert.equal(rows.length, 50);
+  rows.forEach(r => assert.match(r, /\| (checked online \(Oct 2026\)|well-known landmark fact; checked from general knowledge only, not looked up) \|$/, r.slice(0, 40)));
+  assert.match(sources, /checked from general knowledge only/i, 'the file still says which facts were not looked up');
 });
 
 test('SIMULATION: States pack, every lot option, 2-4 players, all policies — no exception, NaN or stuck state', () => {
