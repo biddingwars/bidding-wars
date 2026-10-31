@@ -206,7 +206,7 @@ The numbers are covered by `node --test`, `node test/economy.js capitals`, `node
 
 
 
-## Settings (v44)
+## Settings (v45)
 
 - [ ] The **gear** on the menu opens Settings: Currency, Bot style, Appearance (Dark/Light, text size), Language, Accessibility, Practice helpers; **Done** returns to the menu.
 - [ ] Pick **SEK**: the setup budget reads `100 kr` (Medium, 10 lots), the How to play text shows kr amounts and no "euro"; in US States the budget reads `35 kr` and nothing says "dollar". Pick **CHF**: `CHF 100`. **Automatic** brings €/$ back. Check one other language.

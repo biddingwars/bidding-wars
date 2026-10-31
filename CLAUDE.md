@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v44';   // increment this, every time
+const CACHE = 'bidding-wars-v45';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v44` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v45` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -86,7 +86,7 @@ device only, via the `Store` helper in `platform.js`:
   to Countries and looked as if the States record had vanished). It is absent until a pack is picked. Adding a pack adds
   nothing to what is stored beyond its own counters inside this one value.
 - `name:v1` — the last-entered player name
-- `settings:v1` (v44) — the Settings page: a small JSON of only the choices that differ from the defaults (`Engine.stringifySettings`; all defaults = the key is absent): `cur` (currency id), `aggr` (bot style 0-4, default 2),
+- `settings:v1` (v45) — the Settings page: a small JSON of only the choices that differ from the defaults (`Engine.stringifySettings`; all defaults = the key is absent): `cur` (currency id), `aggr` (bot style 0-4, default 2),
   `tz` (text step), `motion` (`reduce`), `shapes`, `fair`, `confirm`, `quiet`. Nothing else, no history. `Engine.parseSettings` drops anything unknown.
 
 All five are described in `privacy.html` and the in-app
@@ -235,7 +235,7 @@ stacked the country names down the page); a plain wheel/scroll over the globe
 belongs to the page (only ctrl+wheel/pinch zooms); the results screen must fit
 iPad landscape without scrolling.
 
-## Settings (v44)
+## Settings (v45)
 
 The gear on the menu opens one sheet (`settingsSheet()` in `app.js`; choices live in `SET`, stored as `settings:v1`, parsed and written by `Engine.parseSettings` / `stringifySettings`, so they are unit-tested in `test/settings.test.js`).
 
