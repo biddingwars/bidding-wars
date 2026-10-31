@@ -140,3 +140,29 @@ test('Capitals exploit search (small): no strategy of the family beats the bot a
     assert.ok(best <= 68, `${lv} ${n}: ${who} wins ${best}% on a small scan (the full confirmed search is node test/exploit.js capitals)`);
   }
 });
+
+test('Capitals: the bot goes all-in only for a lot that costs a real share of its purse (Delhi yes, Washington D.C. at the start of a 5-lot round no)', () => {
+  const near = (id, lv) => { const { ds, avail } = Eco.probe(pack, lv, id, 400, 5, 1000); return { atWallet: ds.filter(d => d >= avail).length / ds.length, median: ds.slice().sort((a, b) => a - b)[ds.length >> 1], avail }; };
+  for (const lv of ['medium', 'expert']) {
+    const dc = near('US', lv), delhi = near('IN', lv);
+    assert.ok(dc.atWallet < 0.1, `${lv}: Washington D.C. ends at the whole purse in ${Math.round(dc.atWallet * 100)}% of games`);
+    assert.ok(dc.median < 0.8 * dc.avail, `${lv}: Washington D.C. median drop-out ${dc.median} against a purse of ${dc.avail}`);
+    assert.ok(delhi.atWallet > 0.8, `${lv}: Delhi is worth the whole purse (${Math.round(delhi.atWallet * 100)}%)`);
+  }
+  assert.ok(pack.bot.decisive.minPrice > 0, 'the capitals pack sets decisive.minPrice');
+});
+
+test('Engine: bot.decisive.minPrice must be a positive share (validatePack)', () => {
+  const bad = Object.assign({}, pack, { bot: Object.assign({}, pack.bot, { decisive: Object.assign({}, pack.bot.decisive, { minPrice: -1 }) }) });
+  assert.ok(Engine.validatePack(bad).some(m => /minPrice/.test(m)));
+  assert.deepEqual(Engine.validatePack(pack), []);
+});
+
+test('The globe texture is NASA Blue Marble (credited in NOTICE.md and in all five languages), 4096x2048, under 1.5 MB', () => {
+  const buf = fs.readFileSync(path.join(__dirname, '..', 'earth.jpg'));
+  let i = 2, w = 0, h = 0;
+  while (i < buf.length) { if (buf[i] !== 0xFF) { i++; continue; } const m = buf[i + 1]; if (m >= 0xC0 && m <= 0xC3) { h = buf.readUInt16BE(i + 5); w = buf.readUInt16BE(i + 7); break; } i += 2 + buf.readUInt16BE(i + 2); }
+  assert.deepEqual([w, h], [4096, 2048]); assert.ok(buf.length < 1.5 * 1024 * 1024, 'size ' + buf.length);
+  assert.ok(/Globe texture[^\n]*Blue Marble/.test(fs.readFileSync(path.join(__dirname, '..', 'NOTICE.md'), 'utf8')));
+  assert.equal((fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8').match(/creditsGlobe:'[^']*NASA Earth Observatory/g) || []).length, 5);
+});
