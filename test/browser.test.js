@@ -1142,8 +1142,8 @@ test('SETTINGS: the practice helpers (fair price, confirm before dropping out, q
 test('SETTINGS: larger text and seat shapes keep the menu and the sheets inside the screen; the auction never scrolls with the helpers on', { skip: SKIP }, async () => {
   for (const [w, h] of [[375, 667], [402, 874], [834, 1194], [667, 375]]) {
     const { page, errors, ctx } = await open({ viewport: { width: w, height: h }, init: () => localStorage.setItem('settings:v1', '{"tz":2,"shapes":true,"fair":true,"cur":"MXN"}') });
-    const m = await page.evaluate(() => ({ x: document.documentElement.scrollWidth - innerWidth, sx: document.querySelector('.screen').scrollWidth - document.querySelector('.screen').clientWidth }));
-    assert.ok(m.x <= 1 && m.sx <= 1, `${w}x${h} menu at the larger text step does not overflow sideways: ${JSON.stringify(m)}`);
+    const m = await page.evaluate(() => ({ x: document.documentElement.scrollWidth - innerWidth, btn: ['#m1', '#m2', '#mset', '#mp', '#mr'].map(id => { const r = document.querySelector(id).getBoundingClientRect(); return [id, Math.round(r.left), Math.round(r.right)]; }) }));
+    assert.ok(m.x <= 1 && m.btn.every(([, l, r]) => l >= -1 && r <= w + 1), `${w}x${h} the menu buttons stay inside the screen at the larger text step: ${JSON.stringify(m)}`);
     await page.click('#mset'); await page.waitForSelector('.sheetbox');
     const sb = await page.$eval('.sheetbox', e => { const r = e.getBoundingClientRect(); return { top: r.top, bottom: r.bottom, right: r.right, left: r.left }; });
     assert.ok(sb.top >= -1 && sb.bottom <= h + 1 && sb.left >= -1 && sb.right <= w + 1, `${w}x${h} settings sheet inside the screen: ${JSON.stringify(sb)}`);

@@ -204,3 +204,14 @@ The numbers are covered by `node --test`, `node test/economy.js capitals`, `node
 - [ ] Bot feel: Beginner should be easiest (the bot fights for the big European capitals), Medium the most demanding, Expert in between; a +1 creeper should lose most 15+ lot rounds; with only 5 lots one big city decides it (that is said in the rules).
 - [ ] Offline (airplane mode, after one online visit and a full close/reopen): Capitals plays; privacy still lists exactly four stored values; Privacy -> Delete all data clears the Capitals record too.
 
+
+
+## Settings (v44)
+
+- [ ] The **gear** on the menu opens Settings: Currency, Bot style, Appearance (Dark/Light, text size), Language, Accessibility, Practice helpers; **Done** returns to the menu.
+- [ ] Pick **SEK**: the setup budget reads `100 kr` (Medium, 10 lots), the How to play text shows kr amounts and no "euro"; in US States the budget reads `35 kr` and nothing says "dollar". Pick **CHF**: `CHF 100`. **Automatic** brings €/$ back. Check one other language.
+- [ ] Slide **Bot style** to Fierce: the line under it says it is a practice game; play a solo game: the results say "Practice game" and the record does not move. Back on **Balanced** the record counts again.
+- [ ] **Show the fair price** puts "Fair price about …" under the top-bid chip and the lot still fits without scrolling on your smallest phone, also with **Larger** text and long names.
+- [ ] **Confirm before dropping out** asks once; **Quiet bot** hides the rival's one-liners (Countries / Capitals); **Seat shapes** puts a circle / square / diamond / triangle on the player colours; **Reduce motion** makes everything land instantly.
+- [ ] **Larger** text: the menu, results and sheets grow; the auction screen does not change.
+- [ ] Privacy says *five* things; **Delete all data** also resets Settings.

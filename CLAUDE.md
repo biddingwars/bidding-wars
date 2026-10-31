@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v41';   // increment this, every time
+const CACHE = 'bidding-wars-v44';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v41` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v44` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -73,7 +73,7 @@ and fails is an App Store rejection under Guideline 2.1.
 ## Privacy
 
 No accounts, no sign-in, no analytics, no tracking, no ad SDK, no
-third-party SDKs of any kind. Exactly four things are stored, locally on
+third-party SDKs of any kind. Exactly five things are stored, locally on
 device only, via the `Store` helper in `platform.js`:
 
 - `lang:v1` — chosen language
@@ -86,12 +86,14 @@ device only, via the `Store` helper in `platform.js`:
   to Countries and looked as if the States record had vanished). It is absent until a pack is picked. Adding a pack adds
   nothing to what is stored beyond its own counters inside this one value.
 - `name:v1` — the last-entered player name
+- `settings:v1` (v44) — the Settings page: a small JSON of only the choices that differ from the defaults (`Engine.stringifySettings`; all defaults = the key is absent): `cur` (currency id), `aggr` (bot style 0-4, default 2),
+  `tz` (text step), `motion` (`reduce`), `shapes`, `fair`, `confirm`, `quiet`. Nothing else, no history. `Engine.parseSettings` drops anything unknown.
 
-All four are described in `privacy.html`, `support.html`, and the in-app
+All five are described in `privacy.html` and the in-app
 privacy screen (`privacy()` in `app.js`, `privP1`–`privP4` strings, in all
 5 languages) — these must always agree with each other and with what
 the code actually stores. The "Delete all data" button (also in
-`privacy()`) must clear all four; this has drifted out of sync before
+`privacy()`) must clear all five (`settings:v1` included, and `SET` reset in memory); this has drifted out of sync before
 (name persistence shipped without updating the wipe flow or the copy — fixed,
 but watch for it happening again with any future locally-stored value).
 
@@ -173,8 +175,7 @@ toggle (`#theme`, dark ↔ light) chose Daylight, which is stored in `theme:v1`.
 - **System fonts only.** `--font` is `-apple-system … system-ui …`; titles and
   numerals use `--round` (`ui-rounded` first). Do not bundle or hotlink fonts
   (SF is not redistributable) and do not add a `fonts.css`. Numerals use
-  `tabular-nums`. Text sizes are rem-based so the browser's text-size setting
-  scales them; auction geometry is not.
+  `tabular-nums`. Most text sizes are px (only the base is rem), so the optional larger text step uses `zoom` on the menu, results and sheets (see "Settings"); auction geometry is not scaled.
 - **Secondary screens are sheets** (`sheet()` in `app.js`: record, privacy, how
   to play, language, setup, confirmations via `ask()`). A sheet traps focus,
   closes on Escape/backdrop, makes `#app` `inert`, and pauses the decision clock
@@ -233,6 +234,25 @@ globe's `.glabel`/`.gload` rules live in `app.css` (they were lost once, which
 stacked the country names down the page); a plain wheel/scroll over the globe
 belongs to the page (only ctrl+wheel/pinch zooms); the results screen must fit
 iPad landscape without scrolling.
+
+## Settings (v44)
+
+The gear on the menu opens one sheet (`settingsSheet()` in `app.js`; choices live in `SET`, stored as `settings:v1`, parsed and written by `Engine.parseSettings` / `stringifySettings`, so they are unit-tested in `test/settings.test.js`).
+
+- **Currency** (`SET.cur`, 20 currencies in `Engine.CURRENCIES`, Automatic = the pack's own): changes only how money is *written*. Numbers never change and there are no exchange rates (a $70 budget is shown as 70 kr or CHF 70).
+  `money()`, `cur()`, `Engine.formatMoney(pack, n, curId)` do the numbers; `writeIn()` in `app.js` rewrites the amounts inside texts ("€50", "50 €", "$20") and the words euro / dollar ("one euro" -> "£1", "euros per million" -> "£ per million")
+  in all five languages. Money already formatted must never go through `t()` again (a symbol like `C$` would be rewritten twice): fill such values in after `t()` with `.replace('{p}', …)`. Picking the pack's own currency changes nothing.
+- **Bot style** (`SET.aggr`, 0-4: Cautious, Careful, **Balanced** = default, Bold, Fierce): the slider forces a temperament (`Engine.AGGR_TEMPER`); Balanced is the usual hidden 25/50/25 draw. Careful and Bold are the calibrated `conservative` / `aggressive`;
+  Cautious and Fierce are those two pushed twice as far (`pickTemper`: spread doubled, raise-step and big-item factors squared, reserve cap halved) and are never drawn at random. **Only Balanced counts for the record**: any other step, or the fair price on screen, makes
+  the solo game a practice game (`S.practice`, `Engine.isPractice`): it plays normally, `recordGame` is skipped and the results show "Practice game". Measured on the real engine (300 games a cell, creeper / fair-value / best fixed cap): States 10 lots
+  Cautious 51 / 54 / 54, Careful 37 / 40 / 40, mix 35 / 39 / 44, Bold 37 / 39 / 47, Fierce 41 / 42 / 57; States 20 lots Cautious 46 / 51 / 55 … Fierce 28 / 30 / 59; Countries Medium 10 lots 29 / 52 / 60 … 25 / 55 / 59; Capitals Medium 10 lots 16 / 44 / 61 … 17 / 43 / 50. The outer steps are
+  a style, not a difficulty ladder: a cautious bot is easier for a creeper, a fierce bot overpays but its limit is easier for a fixed-cap player; none of it touches the calibrated default.
+- **Accessibility**: *Reduce motion* (`FX.forceReduced` plus `html[data-motion=reduce]` in the stylesheet, on top of the phone's own setting), *Seat shapes* (`html[data-shapes="1"]`: a circle, square, diamond or triangle next to each seat colour, orbs and the "top bid" dot),
+  *Text size* (`html[data-tz]`: `zoom` 1.12 / 1.25 on the menu, results and sheets; **never on the auction screen**, which keeps its fitted pixel sizes — most text sizes in `app.css` are px, not rem).
+- **Practice helpers**: *Confirm before dropping out* (an `ask()` sheet), *Quiet bot* (`showTaunt` returns early), *Show the fair price* (a `.fairp` line under the holder; reveals the lot's value, so it makes the game a practice game).
+- Language and the Light/Dark switch appear on the page too (their own stored keys are unchanged).
+- Tests: `test/settings.test.js` (parse / stringify / practice / currencies / five steps on every pack / whole games per step), the `SETTINGS:` tests in `test/browser.test.js` (all five languages for the currency, practice flow, helpers, the auction fit with every helper on at four sizes,
+  privacy text, wipe). Not done on purpose: converting amounts at exchange rates, a free (continuous) aggression slider (the bot's limits sit in a narrow calibrated valley), Sound/haptics and game-default settings (not asked for).
 
 ## US States pack
 
