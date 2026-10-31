@@ -593,8 +593,8 @@ test('US STATES: pick it on the menu, setup offers 5-20 lots and no difficulty, 
   assert.deepEqual(await page.$$eval('[data-g="lots"] [data-v]', e => e.map(x => x.dataset.v)), ['5', '10', '15', '20']);
   assert.equal(await page.$('[data-g="lots"] [data-v="30"]'), null, 'States stops at 20 lots (v40)');
   assert.equal(await page.$('[data-g="level"]'), null, 'no difficulty filter for States');
-  assert.equal((await page.textContent('#bud')).trim(), '$165', '10 lots: the budget table, not lots x $10');
-  await pick(page, 'lots', 20); assert.equal((await page.textContent('#bud')).trim(), '$210');
+  assert.equal((await page.textContent('#bud')).trim(), '$35', '10 lots: the budget table, not lots x $10');
+  await pick(page, 'lots', 20); assert.equal((await page.textContent('#bud')).trim(), '$70');
   await pick(page, 'lots', 5); await pick(page, 'clock', 0);
   await page.click('#start'); await page.waitForSelector('#ctrl');
   assert.ok(requests.includes('pack-states.js'), 'pack file loaded lazily');
@@ -717,7 +717,7 @@ test('US STATES: how to play, setup and record say states and dollars in every l
     await page.waitForSelector('.sheetbox');
     const t1 = await page.textContent('.sheetbox');
     assert.ok(!bad.test(t1) && !(lang === 'fr' && badFr.test(t1)), `${lang} how-to-play: ` + (t1.match(bad) || t1.match(badFr)));
-    assert.match(t1, /\$85[^$]+\$165[^$]+\$180[^$]+\$210/, lang + ' how-to-play lists the real budgets');
+    assert.match(t1, /\$20[^$]+\$35[^$]+\$50[^$]+\$70/, lang + ' how-to-play lists the real budgets');
     assert.match(t1, /\$/, lang + ' how-to-play shows dollars');
     await page.keyboard.press('Escape');
     await page.click('#m1'); await page.waitForSelector('#start');

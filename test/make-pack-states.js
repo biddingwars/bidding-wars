@@ -9,8 +9,8 @@ const C = JSON.parse(fs.readFileSync(path.join(__dirname, 'states-content.json')
 /* CAL = the calibration numbers (the committed ones). STATES_CAL (json) overrides them for a scratch run. */
 const CAL = Object.assign({
   priceScale: 1,                                        // v43: an average lot is $10 (about $1.5 per million people at the fair price); it was 3 (an average lot $30)
-  budgets: { 5: 17, 10: 34, 15: 51, 20: 68 },          // $3.4 per lot = $170 for all 50 states, i.e. one dollar per million people for the two players together (owner)
-  limitMul: { 5: 0.7, 10: 0.52, 15: 0.55, 20: 0.55 },
+  budgets: { 5: 20, 10: 35, 15: 50, 20: 70 },          // the clean table (owner): about $3.4 per lot, $170 for all 50 states = one dollar per million people for the two players together
+  limitMul: { 5: 0.8, 10: 0.55, 15: 0.55, 20: 0.55 },
   spread: { 5: 0.06, 10: 0.06, 15: 0.05, 20: 0.04 },
   rollSpan: 0.4, noise: 0.15
 }, JSON.parse(process.env.STATES_CAL || '{}'));
@@ -42,8 +42,8 @@ const pack = `/* ===============================================================
     budgetPerLot: 10,                       // nominal only: the real budgets are the table in economy.budgets
     lots: { options: [5, 10, 15, 20], default: 10 },    // capped at 20 on purpose (v40): a fixed-cap player beats the bot in 30-50-lot rounds (CLAUDE.md, "The stingy-player exploit"); the engine still draws any count
 
-    /* ECONOMY (see CLAUDE.md "US States economy"). v43, owner: one dollar per million people. A player has $170 for all 50 states
-       ($3.4 per lot: $17 / $34 / $51 / $68 for 5 / 10 / 15 / 20 lots) and prices run at the original scale (priceScale 1: an average lot is $10,
+    /* ECONOMY (see CLAUDE.md "US States economy"). v43, owner: one dollar per million people. A player has $170 for all 50 states, so
+       $20 / $35 / $50 / $70 for 5 / 10 / 15 / 20 lots (the clean table) and prices run at the original scale (priceScale 1: an average lot is $10,
        the smallest states $1-2, California $58). The money is scarce on purpose: the budget is about a third of the round's fair value, and the bot's
        limits (limitMul, below) were re-found for that ratio with the fine fixed-cap search of test/exploit.js. */
     economy: {

@@ -16,13 +16,13 @@
     budgetPerLot: 10,                       // nominal only: the real budgets are the table in economy.budgets
     lots: { options: [5, 10, 15, 20], default: 10 },    // capped at 20 on purpose (v40): a fixed-cap player beats the bot in 30-50-lot rounds (CLAUDE.md, "The stingy-player exploit"); the engine still draws any count
 
-    /* ECONOMY (see CLAUDE.md "US States economy"). v43, owner: one dollar per million people. A player has $170 for all 50 states
-       ($3.4 per lot: $17 / $34 / $51 / $68 for 5 / 10 / 15 / 20 lots) and prices run at the original scale (priceScale 1: an average lot is $10,
+    /* ECONOMY (see CLAUDE.md "US States economy"). v43, owner: one dollar per million people. A player has $170 for all 50 states, so
+       $20 / $35 / $50 / $70 for 5 / 10 / 15 / 20 lots (the clean table) and prices run at the original scale (priceScale 1: an average lot is $10,
        the smallest states $1-2, California $58). The money is scarce on purpose: the budget is about a third of the round's fair value, and the bot's
        limits (limitMul, below) were re-found for that ratio with the fine fixed-cap search of test/exploit.js. */
     economy: {
       priceScale: 1,
-      budgets: {"5":17,"10":34,"15":51,"20":68},
+      budgets: {"5":20,"10":35,"15":50,"20":70},
       /* no endgame block: when only one player has money left, that player takes every remaining lot for $1 each (the walkover in startLot) - going all in is a risk on purpose */
       sampling: 'systematic',
       /* the five raise buttons grow with the current price (the item's fair price would leak its size) */
@@ -32,7 +32,7 @@
     /* The bot: Big-4 premium, paced spending, knockout awareness, temperament + mood. limitMul and spread are the
        calibration tables by lot count (test/economy.js re-measures them on the real engine). */
     bot: {
-      limitMul: {"5":0.7,"10":0.52,"15":0.55,"20":0.55},   // 15+ lots are tuned together with rollSpan (below): a player who never pays more than ~0.8x the fair price beat the old limits 76-100% of long rounds (see CLAUDE.md)
+      limitMul: {"5":0.8,"10":0.55,"15":0.55,"20":0.55},   // 15+ lots are tuned together with rollSpan (below): a player who never pays more than ~0.8x the fair price beat the old limits 76-100% of long rounds (see CLAUDE.md)
       rollSpan: 0.4,                                   // the walk-away roll uses the first 40% of [ideal, max]: less lot-to-lot swing in the bot's limit, so no fixed-limit player out-earns it
       noise: 0.15,                                     // a little per-lot jitter on top, so the narrower roll does not make the drop-out point easy to read (0.15 keeps the exploit search under its limit; 0.25+ does not)
       premium: { top: 4, pct: 0.15 },
