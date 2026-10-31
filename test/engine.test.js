@@ -5,6 +5,7 @@ const createRegistry = require('../packs.js');
 const real = require('../pack-countries.js');            // the shipped Countries pack (smooth prices, extended bot)
 const countries = require('./pack-countries-august.js');   // the August pack: same items, percentile bands, flat budget, ORIGINAL bot (the legacy path stays tested byte for byte)
 const statesPack = require('../pack-states.js');
+const capitalsPack = require('../pack-capitals.js');
 const banter = require('../banter.js');
 const fixture = require('./fixture-pack.js');
 const golden = require('./golden-countries.json');                 // today's pinned prices
@@ -377,11 +378,11 @@ test('records: applyGame keeps streaks, best game and per-level counts, per pack
 });
 
 /* ================================================================ SIMULATION */
-test('SIMULATION: 4,000 seeded games, all three packs, modes, levels, player counts, policies — no exception, NaN or stuck state', () => {
+test('SIMULATION: 5,000 seeded games, all four packs, modes, levels, player counts, policies — no exception, NaN or stuck state', () => {
   const rng = Engine.seededRng(2024);
   const stats = { games: 0, walkovers: 0, broke: 0, byPack: {}, lots: 0 };
-  for (let k = 0; k < 4000; k++) {
-    const pack = [countries, fixture, statesPack][rng(3)];
+  for (let k = 0; k < 5000; k++) {
+    const pack = [countries, fixture, statesPack, capitalsPack][rng(4)];
     const level = pack.levels[rng(pack.levels.length)].id;
     const kind = rng(2) ? 'solo' : 'multi';
     const n = kind === 'solo' ? 2 : 2 + rng(3);
@@ -395,7 +396,7 @@ test('SIMULATION: 4,000 seeded games, all three packs, modes, levels, player cou
     if (g.reason === 'walkover') stats.walkovers++;
     if (g.reason === 'broke') stats.broke++;
   }
-  assert.ok(stats.byPack.countries > 1000 && stats.byPack.fixture > 1000 && stats.byPack.states > 1000);
+  assert.ok(stats.byPack.countries > 1000 && stats.byPack.fixture > 1000 && stats.byPack.states > 1000 && stats.byPack.capitals > 1000);
   assert.ok(stats.walkovers > 0 && stats.broke >= 0, 'edge endings were exercised: ' + JSON.stringify(stats));
   console.log('   simulated', JSON.stringify(stats));
 });

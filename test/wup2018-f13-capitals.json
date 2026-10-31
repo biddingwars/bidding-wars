@@ -1,0 +1,2713 @@
+{
+ "source": "United Nations, Department of Economic and Social Affairs, Population Division (2018). World Urbanization Prospects: The 2018 Revision, Online Edition.",
+ "table": "File 13: Population of Capital Cities in 2018 (thousands), POP/DB/WUP/Rev.2018/1/F13",
+ "vintage": "2018 Revision (population of the capital city in 2018, urban agglomeration, in thousands)",
+ "url": "https://population.un.org/wup/assets/Download/Archive/WUP2018-Excel-files.zip (file WUP2018-F13-Capital_Cities.xls)",
+ "page": "https://population.un.org/wup/ (Downloads > Archive)",
+ "license": "Copyright (c) 2018 by United Nations, made available under a Creative Commons license CC BY 3.0 IGO (http://creativecommons.org/licenses/by/3.0/igo/)",
+ "sha256_xls": "0a7932e6ab30b3c8ba0d518d5f84072f162bad6553769c2a05d654bea99de6a6",
+ "sha256_zip": "80eb71bbabb46cb2e1599b51b16133bf28b0a99a541d72de20a1248ec6170a75",
+ "fetched": "2026-10-31",
+ "note": "popThousands is copied unchanged from the UN file; the pack divides by 1,000 (1 point = 1 million). lat/lon are the UN file's own coordinates. Rows not used for a country with several capitals are listed in \"alternates\".",
+ "lots": [
+  {
+   "id": "AF",
+   "m49": 4,
+   "name": "Kabul",
+   "unCountry": "Afghanistan",
+   "unCity": "Kabul",
+   "cityCode": 20002,
+   "unCapitalType": "Capital",
+   "popThousands": 4011.77,
+   "lat": 34.52889,
+   "lon": 69.17246
+  },
+  {
+   "id": "AL",
+   "m49": 8,
+   "name": "Tirana",
+   "unCountry": "Albania",
+   "unCity": "Tiranë (Tirana)",
+   "cityCode": 20005,
+   "unCapitalType": "Capital",
+   "popThousands": 475.577,
+   "lat": 41.3275,
+   "lon": 19.81889
+  },
+  {
+   "id": "DZ",
+   "m49": 12,
+   "name": "Algiers",
+   "unCountry": "Algeria",
+   "unCity": "El Djazaïr (Algiers)",
+   "cityCode": 20006,
+   "unCapitalType": "Capital",
+   "popThousands": 2693.542,
+   "lat": 36.7525,
+   "lon": 3.04197,
+   "unNote": {
+    "n": 1,
+    "text": "Refers to the Governorate of Grand Algiers."
+   }
+  },
+  {
+   "id": "AD",
+   "m49": 20,
+   "name": "Andorra la Vella",
+   "unCountry": "Andorra",
+   "unCity": "Andorra la Vella",
+   "cityCode": 20048,
+   "unCapitalType": "Capital",
+   "popThousands": 22.614,
+   "lat": 42.50779,
+   "lon": 1.52109
+  },
+  {
+   "id": "AO",
+   "m49": 24,
+   "name": "Luanda",
+   "unCountry": "Angola",
+   "unCity": "Luanda",
+   "cityCode": 20049,
+   "unCapitalType": "Capital",
+   "popThousands": 7774.2,
+   "lat": -8.83682,
+   "lon": 13.23432,
+   "unNote": {
+    "n": 2,
+    "text": "Estimate for 2014 refers to the urban population of the province of Luanda."
+   }
+  },
+  {
+   "id": "AG",
+   "m49": 28,
+   "name": "Saint John's",
+   "unCountry": "Antigua and Barbuda",
+   "unCity": "St. John's",
+   "cityCode": 20052,
+   "unCapitalType": "Capital",
+   "popThousands": 20.764,
+   "lat": 17.11717,
+   "lon": -61.84573
+  },
+  {
+   "id": "AR",
+   "m49": 32,
+   "name": "Buenos Aires",
+   "unCountry": "Argentina",
+   "unCity": "Buenos Aires",
+   "cityCode": 20058,
+   "unCapitalType": "Capital",
+   "popThousands": 14966.53,
+   "lat": -34.60508,
+   "lon": -58.40037,
+   "unNote": {
+    "n": 3,
+    "text": "Refers to Gran Buenos Aires. Data for 2001 and 2010 refer to the urban agglomeration including Buenos Aires city, 24 districts of Gran Buenos Aires and some districts of the suburbs."
+   }
+  },
+  {
+   "id": "AM",
+   "m49": 51,
+   "name": "Yerevan",
+   "unCountry": "Armenia",
+   "unCity": "Yerevan",
+   "cityCode": 20140,
+   "unCapitalType": "Capital",
+   "popThousands": 1080.324,
+   "lat": 40.182,
+   "lon": 44.51462
+  },
+  {
+   "id": "AU",
+   "m49": 36,
+   "name": "Canberra",
+   "unCountry": "Australia",
+   "unCity": "Canberra",
+   "cityCode": 206175,
+   "unCapitalType": "Capital",
+   "popThousands": 447.692,
+   "lat": -35.28346,
+   "lon": 149.12807,
+   "unNote": {
+    "n": 4,
+    "text": "Refers to Significant Urban Areas as of 2001."
+   }
+  },
+  {
+   "id": "AT",
+   "m49": 40,
+   "name": "Vienna",
+   "unCountry": "Austria",
+   "unCity": "Wien (Vienna)",
+   "cityCode": 20107,
+   "unCapitalType": "Capital",
+   "popThousands": 1900.547,
+   "lat": 48.20644,
+   "lon": 16.37073
+  },
+  {
+   "id": "AZ",
+   "m49": 31,
+   "name": "Baku",
+   "unCountry": "Azerbaijan",
+   "unCity": "Baku",
+   "cityCode": 20053,
+   "unCapitalType": "Capital",
+   "popThousands": 2285.729,
+   "lat": 40.37767,
+   "lon": 49.89201,
+   "unNote": {
+    "n": 5,
+    "text": "The data include communities under the authority of the Town Council. The 1989 census produced data referring to the city proper only; the population of the urban agglomeration for that date was estimated by assuming that the ratio of the population of the urban agglomeration to that of the city proper was the same as in 1979."
+   }
+  },
+  {
+   "id": "BS",
+   "m49": 44,
+   "name": "Nassau",
+   "unCountry": "Bahamas",
+   "unCity": "Nassau",
+   "cityCode": 20108,
+   "unCapitalType": "Capital",
+   "popThousands": 279.668,
+   "lat": 25.05823,
+   "lon": -77.34306
+  },
+  {
+   "id": "BH",
+   "m49": 48,
+   "name": "Manama",
+   "unCountry": "Bahrain",
+   "unCity": "Al-Manamah (Manama)",
+   "cityCode": 20109,
+   "unCapitalType": "Capital",
+   "popThousands": 564.631,
+   "lat": 26.21536,
+   "lon": 50.5832,
+   "unNote": {
+    "n": 6,
+    "text": "Refers to the urban area of the municipality of Al-Manamah."
+   }
+  },
+  {
+   "id": "BD",
+   "m49": 50,
+   "name": "Dhaka",
+   "unCountry": "Bangladesh",
+   "unCity": "Dhaka",
+   "cityCode": 20119,
+   "unCapitalType": "Capital",
+   "popThousands": 19578.421,
+   "lat": 23.7104,
+   "lon": 90.40744,
+   "unNote": {
+    "n": 7,
+    "text": "Refers to the Mega city."
+   }
+  },
+  {
+   "id": "BB",
+   "m49": 52,
+   "name": "Bridgetown",
+   "unCountry": "Barbados",
+   "unCity": "Bridgetown",
+   "cityCode": 20141,
+   "unCapitalType": "Capital",
+   "popThousands": 89.201,
+   "lat": 13.1,
+   "lon": -59.61667
+  },
+  {
+   "id": "BY",
+   "m49": 112,
+   "name": "Minsk",
+   "unCountry": "Belarus",
+   "unCity": "Minsk",
+   "cityCode": 20348,
+   "unCapitalType": "Capital",
+   "popThousands": 2004.672,
+   "lat": 53.9,
+   "lon": 27.56667,
+   "unNote": {
+    "n": 5,
+    "text": "The data include communities under the authority of the Town Council. The 1989 census produced data referring to the city proper only; the population of the urban agglomeration for that date was estimated by assuming that the ratio of the population of the urban agglomeration to that of the city proper was the same as in 1979."
+   }
+  },
+  {
+   "id": "BE",
+   "m49": 56,
+   "name": "Brussels",
+   "unCountry": "Belgium",
+   "unCity": "Bruxelles-Brussel",
+   "cityCode": 20144,
+   "unCapitalType": "Capital",
+   "popThousands": 2049.51,
+   "lat": 50.84674,
+   "lon": 4.34992,
+   "unNote": {
+    "n": 8,
+    "text": "Data refer to the population of Brussels-Capital Region and \"communes\" of the agglomeration and suburbs."
+   }
+  },
+  {
+   "id": "BZ",
+   "m49": 84,
+   "name": "Belmopan",
+   "unCountry": "Belize",
+   "unCity": "Belmopan",
+   "cityCode": 20310,
+   "unCapitalType": "Capital",
+   "popThousands": 22.964,
+   "lat": 17.25,
+   "lon": -88.76667
+  },
+  {
+   "id": "BJ",
+   "m49": 204,
+   "name": "Cotonou",
+   "unCountry": "Benin",
+   "unCity": "Cotonou",
+   "cityCode": 20888,
+   "unCapitalType": "Economic Capital",
+   "popThousands": 685.458,
+   "lat": 6.36536,
+   "lon": 2.41833
+  },
+  {
+   "id": "BT",
+   "m49": 64,
+   "name": "Thimphu",
+   "unCountry": "Bhutan",
+   "unCity": "Thimphu",
+   "cityCode": 20151,
+   "unCapitalType": "Capital",
+   "popThousands": 203.297,
+   "lat": 27.46609,
+   "lon": 89.64191
+  },
+  {
+   "id": "BO",
+   "m49": 68,
+   "name": "La Paz",
+   "unCountry": "Bolivia (Plurinational State of)",
+   "unCity": "La Paz",
+   "cityCode": 20153,
+   "unCapitalType": "Seat of Government",
+   "popThousands": 1814.087,
+   "lat": -16.5,
+   "lon": -68.15,
+   "unNote": {
+    "n": 9,
+    "text": "Refers to the urban population of the municipalities (municipios) of La Paz, El Alto, Viacha and Achocalla."
+   }
+  },
+  {
+   "id": "BA",
+   "m49": 70,
+   "name": "Sarajevo",
+   "unCountry": "Bosnia and Herzegovina",
+   "unCity": "Sarajevo",
+   "cityCode": 20164,
+   "unCapitalType": "Capital",
+   "popThousands": 342.577,
+   "lat": 43.84864,
+   "lon": 18.35644,
+   "unNote": {
+    "n": 10,
+    "text": "Refers to the muniicipalities of Stari Grad Sarajevo, Centar Sarajevo, Novo Sarajevo, Novi Grad Sarajevo and Ilidza."
+   }
+  },
+  {
+   "id": "BW",
+   "m49": 72,
+   "name": "Gaborone",
+   "unCountry": "Botswana",
+   "unCity": "Gaborone",
+   "cityCode": 20167,
+   "unCapitalType": "Capital",
+   "popThousands": 269.338,
+   "lat": -24.65451,
+   "lon": 25.90859
+  },
+  {
+   "id": "BR",
+   "m49": 76,
+   "name": "Brasília",
+   "unCountry": "Brazil",
+   "unCity": "Brasília",
+   "cityCode": 20187,
+   "unCapitalType": "Capital",
+   "popThousands": 4469.585,
+   "lat": -15.77972,
+   "lon": -47.92972,
+   "unNote": {
+    "n": 11,
+    "text": "Refers to the \"Região Integrada de Desenvolvimento do Distrito Federal e Entorno\"."
+   }
+  },
+  {
+   "id": "BN",
+   "m49": 96,
+   "name": "Bandar Seri Begawan",
+   "unCountry": "Brunei Darussalam",
+   "unCity": "Bandar Seri Begawan",
+   "cityCode": 20314,
+   "unCapitalType": "Capital",
+   "popThousands": 40.781,
+   "lat": 4.94029,
+   "lon": 114.94806
+  },
+  {
+   "id": "BG",
+   "m49": 100,
+   "name": "Sofia",
+   "unCountry": "Bulgaria",
+   "unCity": "Sofia",
+   "cityCode": 20327,
+   "unCapitalType": "Capital",
+   "popThousands": 1272.418,
+   "lat": 42.69751,
+   "lon": 23.32415
+  },
+  {
+   "id": "BF",
+   "m49": 854,
+   "name": "Ouagadougou",
+   "unCountry": "Burkina Faso",
+   "unCity": "Ouagadougou",
+   "cityCode": 23192,
+   "unCapitalType": "Capital",
+   "popThousands": 2531.381,
+   "lat": 12.36423,
+   "lon": -1.53834
+  },
+  {
+   "id": "BI",
+   "m49": 108,
+   "name": "Bujumbura",
+   "unCountry": "Burundi",
+   "unCity": "Bujumbura",
+   "cityCode": 20340,
+   "unCapitalType": "Capital",
+   "popThousands": 898.968,
+   "lat": -3.3822,
+   "lon": 29.3644
+  },
+  {
+   "id": "CV",
+   "m49": 132,
+   "name": "Praia",
+   "unCountry": "Cabo Verde",
+   "unCity": "Praia",
+   "cityCode": 20408,
+   "unCapitalType": "Capital",
+   "popThousands": 167.504,
+   "lat": 14.92148,
+   "lon": -23.50868
+  },
+  {
+   "id": "KH",
+   "m49": 116,
+   "name": "Phnom Penh",
+   "unCountry": "Cambodia",
+   "unCity": "Phnum Pénh (Phnom Penh)",
+   "cityCode": 20357,
+   "unCapitalType": "Capital",
+   "popThousands": 1952.329,
+   "lat": 11.56245,
+   "lon": 104.91601,
+   "unNote": {
+    "n": 12,
+    "text": "Refers to the municipality of Phnon Penh including suburban areas."
+   }
+  },
+  {
+   "id": "CM",
+   "m49": 120,
+   "name": "Yaoundé",
+   "unCountry": "Cameroon",
+   "unCity": "Yaoundé",
+   "cityCode": 20365,
+   "unCapitalType": "Capital",
+   "popThousands": 3655.656,
+   "lat": 3.86667,
+   "lon": 11.51667
+  },
+  {
+   "id": "CA",
+   "m49": 124,
+   "name": "Ottawa",
+   "unCountry": "Canada",
+   "unCity": "Ottawa-Gatineau",
+   "cityCode": 20387,
+   "unCapitalType": "Capital",
+   "popThousands": 1363.159,
+   "lat": 45.4166,
+   "lon": -75.698,
+   "unNote": {
+    "n": 13,
+    "text": "Refers to the Census Metropolitan Area. The capital is Ottawa."
+   }
+  },
+  {
+   "id": "CF",
+   "m49": 140,
+   "name": "Bangui",
+   "unCountry": "Central African Republic",
+   "unCity": "Bangui",
+   "cityCode": 20410,
+   "unCapitalType": "Capital",
+   "popThousands": 850.946,
+   "lat": 4.36122,
+   "lon": 18.55496
+  },
+  {
+   "id": "TD",
+   "m49": 148,
+   "name": "N'Djamena",
+   "unCountry": "Chad",
+   "unCity": "N'Djaména",
+   "cityCode": 20420,
+   "unCapitalType": "Capital",
+   "popThousands": 1322.679,
+   "lat": 12.10672,
+   "lon": 15.0444
+  },
+  {
+   "id": "CL",
+   "m49": 152,
+   "name": "Santiago",
+   "unCountry": "Chile",
+   "unCity": "Santiago",
+   "cityCode": 20439,
+   "unCapitalType": "Capital",
+   "popThousands": 6680.371,
+   "lat": -33.45694,
+   "lon": -70.64827,
+   "unNote": {
+    "n": 17,
+    "text": "Data from 1952 to 1992 refer to Gran Santiago. Data for 2002 and 2012 refer to the urban population of Santiago Metropolitan Area Region."
+   }
+  },
+  {
+   "id": "CN",
+   "m49": 156,
+   "name": "Beijing",
+   "unCountry": "China",
+   "unCity": "Beijing",
+   "cityCode": 20464,
+   "unCapitalType": "Capital",
+   "popThousands": 19617.963,
+   "lat": 39.9075,
+   "lon": 116.39723,
+   "unNote": {
+    "n": 18,
+    "text": "For the 1982 and 1990 censuses, the data reflect all residents of urban areas of the city (excluding Yanqing District). For the 2000 and 2010 censuses, the population of the city is composed of population in all city districts (excluding Yanqing District) meeting the criteria such as contiguous built-up areas, being the location of the local government, being a Street or Having a Resident Committee."
+   }
+  },
+  {
+   "id": "CO",
+   "m49": 170,
+   "name": "Bogotá",
+   "unCountry": "Colombia",
+   "unCity": "Bogotá",
+   "cityCode": 20837,
+   "unCapitalType": "Capital",
+   "popThousands": 10574.409,
+   "lat": 4.60971,
+   "lon": -74.08175,
+   "unNote": {
+    "n": 21,
+    "text": "Data refer to the urban population of the Distrito Especial de Bogotá, and the capitals of the municipalities of Chia, Funza and Soacha (cabeceras municipales)."
+   }
+  },
+  {
+   "id": "KM",
+   "m49": 174,
+   "name": "Moroni",
+   "unCountry": "Comoros",
+   "unCity": "Moroni",
+   "cityCode": 20847,
+   "unCapitalType": "Capital",
+   "popThousands": 62.351,
+   "lat": -11.70216,
+   "lon": 43.25506
+  },
+  {
+   "id": "CG",
+   "m49": 178,
+   "name": "Brazzaville",
+   "unCountry": "Congo",
+   "unCity": "Brazzaville",
+   "cityCode": 20848,
+   "unCapitalType": "Capital",
+   "popThousands": 2229.693,
+   "lat": -4.26583,
+   "lon": 15.28318
+  },
+  {
+   "id": "CD",
+   "m49": 180,
+   "name": "Kinshasa",
+   "unCountry": "Democratic Republic of the Congo",
+   "unCity": "Kinshasa",
+   "cityCode": 20853,
+   "unCapitalType": "Capital",
+   "popThousands": 13171.256,
+   "lat": -4.32758,
+   "lon": 15.31357
+  },
+  {
+   "id": "CR",
+   "m49": 188,
+   "name": "San José",
+   "unCountry": "Costa Rica",
+   "unCity": "San José",
+   "cityCode": 20861,
+   "unCapitalType": "Capital",
+   "popThousands": 1357.745,
+   "lat": 9.92782,
+   "lon": -84.08069,
+   "unNote": {
+    "n": 23,
+    "text": "Refers to the urban population of the cantons."
+   }
+  },
+  {
+   "id": "CI",
+   "m49": 384,
+   "name": "Abidjan",
+   "unCountry": "Côte d'Ivoire",
+   "unCity": "Abidjan",
+   "cityCode": 21602,
+   "unCapitalType": "Administrative Capital",
+   "popThousands": 4920.776,
+   "lat": 5.34534,
+   "lon": -4.02679
+  },
+  {
+   "id": "HR",
+   "m49": 191,
+   "name": "Zagreb",
+   "unCountry": "Croatia",
+   "unCity": "Zagreb",
+   "cityCode": 20865,
+   "unCapitalType": "Capital",
+   "popThousands": 685.587,
+   "lat": 45.81444,
+   "lon": 15.97798,
+   "unNote": {
+    "n": 24,
+    "text": "Refers to the settlement of Zagreb."
+   }
+  },
+  {
+   "id": "CU",
+   "m49": 192,
+   "name": "Havana",
+   "unCountry": "Cuba",
+   "unCity": "La Habana (Havana)",
+   "cityCode": 20870,
+   "unCapitalType": "Capital",
+   "popThousands": 2136.468,
+   "lat": 23.11954,
+   "lon": -82.37849
+  },
+  {
+   "id": "CY",
+   "m49": 196,
+   "name": "Nicosia",
+   "unCountry": "Cyprus",
+   "unCity": "Lefkosia (Nicosia)",
+   "cityCode": 20880,
+   "unCapitalType": "Capital",
+   "popThousands": 269.469,
+   "lat": 35.15951,
+   "lon": 33.36693
+  },
+  {
+   "id": "CZ",
+   "m49": 203,
+   "name": "Prague",
+   "unCountry": "Czechia",
+   "unCity": "Praha (Prague)",
+   "cityCode": 20887,
+   "unCapitalType": "Capital",
+   "popThousands": 1291.552,
+   "lat": 50.08804,
+   "lon": 14.42076
+  },
+  {
+   "id": "KP",
+   "m49": 408,
+   "name": "Pyongyang",
+   "unCountry": "Dem. People's Republic of Korea",
+   "unCity": "P'yongyang",
+   "cityCode": 21722,
+   "unCapitalType": "Capital",
+   "popThousands": 3037.862,
+   "lat": 39.03385,
+   "lon": 125.75432
+  },
+  {
+   "id": "DK",
+   "m49": 208,
+   "name": "Copenhagen",
+   "unCountry": "Denmark",
+   "unCity": "København (Copenhagen)",
+   "cityCode": 20894,
+   "unCapitalType": "Capital",
+   "popThousands": 1320.826,
+   "lat": 55.67594,
+   "lon": 12.56553,
+   "unNote": {
+    "n": 26,
+    "text": "Refers to the Greater Copenhagen Region as defined from 1999 onward consisting of (parts of) 16 municipalities. The limits of the urban agglomeration have been modified between 1970 and 1976."
+   }
+  },
+  {
+   "id": "DJ",
+   "m49": 262,
+   "name": "Djibouti",
+   "unCountry": "Djibouti",
+   "unCity": "Djibouti",
+   "cityCode": 21005,
+   "unCapitalType": "Capital",
+   "popThousands": 561.564,
+   "lat": 11.58767,
+   "lon": 43.14468,
+   "unNote": {
+    "n": 27,
+    "text": "Data refer to the population of the “cercle”."
+   }
+  },
+  {
+   "id": "DM",
+   "m49": 212,
+   "name": "Roseau",
+   "unCountry": "Dominica",
+   "unCity": "Roseau",
+   "cityCode": 20896,
+   "unCapitalType": "Capital",
+   "popThousands": 14.942,
+   "lat": 15.30174,
+   "lon": -61.38808
+  },
+  {
+   "id": "DO",
+   "m49": 214,
+   "name": "Santo Domingo",
+   "unCountry": "Dominican Republic",
+   "unCity": "Santo Domingo",
+   "cityCode": 20898,
+   "unCapitalType": "Capital",
+   "popThousands": 3172.152,
+   "lat": 18.48959,
+   "lon": -69.9018,
+   "unNote": {
+    "n": 28,
+    "text": "Data for 2002 and 2010 refer to the urban population of the Municipalities of Santo Domingo de Guzmán, Santo Domingo Este, Santo Domingo Oeste, and Santo Domingo Norte, as of 2010."
+   }
+  },
+  {
+   "id": "EC",
+   "m49": 218,
+   "name": "Quito",
+   "unCountry": "Ecuador",
+   "unCity": "Quito",
+   "cityCode": 20910,
+   "unCapitalType": "Capital",
+   "popThousands": 1822.397,
+   "lat": -0.22985,
+   "lon": -78.52495
+  },
+  {
+   "id": "EG",
+   "m49": 818,
+   "name": "Cairo",
+   "unCountry": "Egypt",
+   "unCity": "Al-Qahirah (Cairo)",
+   "cityCode": 22812,
+   "unCapitalType": "Capital",
+   "popThousands": 20076.002,
+   "lat": 30.03917,
+   "lon": 31.23941,
+   "unNote": {
+    "n": 29,
+    "text": "Data from 1960 to 1986 refer to the Governorate of Al-Qahirah (Cairo) and the cities of Al-Jizah (Giza) and Shubra al-Khaymah (Shubra-El-Khema). Data for 1996 and 2006 refer to Greater Cairo as the sum of the Governorate of Al-Qahirah (Cairo) and the surrounding districts of the Governorates of Al-Jizah (Giza) and Al-Qalyübyah (Qalyubia)."
+   }
+  },
+  {
+   "id": "SV",
+   "m49": 222,
+   "name": "San Salvador",
+   "unCountry": "El Salvador",
+   "unCity": "San Salvador",
+   "cityCode": 20917,
+   "unCapitalType": "Capital",
+   "popThousands": 1106.698,
+   "lat": 13.68935,
+   "lon": -89.18718,
+   "unNote": {
+    "n": 30,
+    "text": "Refers to the urban population of the municipios of San Salvador, Mejicanos, Soyapango, Delgado, Ilopango, Cuscatancingo, Ayutuxtepeque, and San Marcos."
+   }
+  },
+  {
+   "id": "GQ",
+   "m49": 226,
+   "name": "Malabo",
+   "unCountry": "Equatorial Guinea",
+   "unCity": "Malabo",
+   "cityCode": 20920,
+   "unCapitalType": "Capital",
+   "popThousands": 296.77,
+   "lat": 3.75,
+   "lon": 8.78333
+  },
+  {
+   "id": "ER",
+   "m49": 232,
+   "name": "Asmara",
+   "unCountry": "Eritrea",
+   "unCity": "Asmara",
+   "cityCode": 20931,
+   "unCapitalType": "Capital",
+   "popThousands": 895.863,
+   "lat": 15.33333,
+   "lon": 38.93333
+  },
+  {
+   "id": "EE",
+   "m49": 233,
+   "name": "Tallinn",
+   "unCountry": "Estonia",
+   "unCity": "Tallinn",
+   "cityCode": 20932,
+   "unCapitalType": "Capital",
+   "popThousands": 437.027,
+   "lat": 59.43696,
+   "lon": 24.75353
+  },
+  {
+   "id": "SZ",
+   "m49": 748,
+   "name": "Mbabane",
+   "unCountry": "Swaziland",
+   "unCity": "Mbabane",
+   "cityCode": 22588,
+   "unCapitalType": "Capital",
+   "popThousands": 68.01,
+   "lat": -26.31667,
+   "lon": 31.13333,
+   "unNote": {
+    "n": 72,
+    "text": "Mbabane is the administrative capital and Lobamba is the legislative capital."
+   }
+  },
+  {
+   "id": "ET",
+   "m49": 231,
+   "name": "Addis Ababa",
+   "unCountry": "Ethiopia",
+   "unCity": "Addis Ababa",
+   "cityCode": 20921,
+   "unCapitalType": "Capital",
+   "popThousands": 4399.674,
+   "lat": 9.02497,
+   "lon": 38.74689
+  },
+  {
+   "id": "FJ",
+   "m49": 242,
+   "name": "Suva",
+   "unCountry": "Fiji",
+   "unCity": "Suva",
+   "cityCode": 20936,
+   "unCapitalType": "Capital",
+   "popThousands": 178.339,
+   "lat": -18.14161,
+   "lon": 178.44149
+  },
+  {
+   "id": "FI",
+   "m49": 246,
+   "name": "Helsinki",
+   "unCountry": "Finland",
+   "unCity": "Helsinki",
+   "cityCode": 20937,
+   "unCapitalType": "Capital",
+   "popThousands": 1279.096,
+   "lat": 60.16925,
+   "lon": 24.94022
+  },
+  {
+   "id": "FR",
+   "m49": 250,
+   "name": "Paris",
+   "unCountry": "France",
+   "unCity": "Paris",
+   "cityCode": 20985,
+   "unCapitalType": "Capital",
+   "popThousands": 10900.952,
+   "lat": 48.85341,
+   "lon": 2.3488
+  },
+  {
+   "id": "GA",
+   "m49": 266,
+   "name": "Libreville",
+   "unCountry": "Gabon",
+   "unCity": "Libreville",
+   "cityCode": 21006,
+   "unCapitalType": "Capital",
+   "popThousands": 813.489,
+   "lat": 0.3925,
+   "lon": 9.45365
+  },
+  {
+   "id": "GM",
+   "m49": 270,
+   "name": "Banjul",
+   "unCountry": "Gambia",
+   "unCity": "Banjul",
+   "cityCode": 21012,
+   "unCapitalType": "Capital",
+   "popThousands": 437.161,
+   "lat": 13.4531,
+   "lon": -16.67943,
+   "unNote": {
+    "n": 33,
+    "text": "Refers to the local government areas of Banjul and Kanifing."
+   }
+  },
+  {
+   "id": "GE",
+   "m49": 268,
+   "name": "Tbilisi",
+   "unCountry": "Georgia",
+   "unCity": "Tbilisi",
+   "cityCode": 21011,
+   "unCapitalType": "Capital",
+   "popThousands": 1077.333,
+   "lat": 41.69411,
+   "lon": 44.83368
+  },
+  {
+   "id": "DE",
+   "m49": 276,
+   "name": "Berlin",
+   "unCountry": "Germany",
+   "unCity": "Berlin",
+   "cityCode": 204296,
+   "unCapitalType": "Capital",
+   "popThousands": 3552.123,
+   "lat": 52.52437,
+   "lon": 13.41053
+  },
+  {
+   "id": "GH",
+   "m49": 288,
+   "name": "Accra",
+   "unCountry": "Ghana",
+   "unCity": "Accra",
+   "cityCode": 21107,
+   "unCapitalType": "Capital",
+   "popThousands": 2439.389,
+   "lat": 5.55602,
+   "lon": -0.1969
+  },
+  {
+   "id": "GR",
+   "m49": 300,
+   "name": "Athens",
+   "unCountry": "Greece",
+   "unCity": "Athínai (Athens)",
+   "cityCode": 21113,
+   "unCapitalType": "Capital",
+   "popThousands": 3155.6,
+   "lat": 37.95342,
+   "lon": 23.74897,
+   "unNote": {
+    "n": 34,
+    "text": "Data refer to the localities of Calithèa, Peristérion and Piraeus, among others."
+   }
+  },
+  {
+   "id": "GD",
+   "m49": 308,
+   "name": "Saint George's",
+   "unCountry": "Grenada",
+   "unCity": "St.George's",
+   "cityCode": 21120,
+   "unCapitalType": "Capital",
+   "popThousands": 39.297,
+   "lat": 12.05644,
+   "lon": -61.74849,
+   "unNote": {
+    "n": 35,
+    "text": "Refers to St. George Parish."
+   }
+  },
+  {
+   "id": "GT",
+   "m49": 320,
+   "name": "Guatemala City",
+   "unCountry": "Guatemala",
+   "unCity": "Ciudad de Guatemala (Guatemala City)",
+   "cityCode": 21124,
+   "unCapitalType": "Capital",
+   "popThousands": 2851.104,
+   "lat": 14.61265,
+   "lon": -90.53075
+  },
+  {
+   "id": "GN",
+   "m49": 324,
+   "name": "Conakry",
+   "unCountry": "Guinea",
+   "unCity": "Conakry",
+   "cityCode": 21126,
+   "unCapitalType": "Capital",
+   "popThousands": 1843.121,
+   "lat": 9.57164,
+   "lon": -13.6476
+  },
+  {
+   "id": "GW",
+   "m49": 624,
+   "name": "Bissau",
+   "unCountry": "Guinea-Bissau",
+   "unCity": "Bissau",
+   "cityCode": 22171,
+   "unCapitalType": "Capital",
+   "popThousands": 558.399,
+   "lat": 11.86357,
+   "lon": -15.59767
+  },
+  {
+   "id": "GY",
+   "m49": 328,
+   "name": "Georgetown",
+   "unCountry": "Guyana",
+   "unCity": "Georgetown",
+   "cityCode": 21131,
+   "unCapitalType": "Capital",
+   "popThousands": 109.934,
+   "lat": 6.80448,
+   "lon": -58.15527
+  },
+  {
+   "id": "HT",
+   "m49": 332,
+   "name": "Port-au-Prince",
+   "unCountry": "Haiti",
+   "unCity": "Port-au-Prince",
+   "cityCode": 21133,
+   "unCapitalType": "Capital",
+   "popThousands": 2636.763,
+   "lat": 18.53917,
+   "lon": -72.335,
+   "unNote": {
+    "n": 36,
+    "text": "Data for 1971 and later refer to urban agglomeration. Data for 1950 refer to city proper. 1999 estimate refers to the urban agglomeration of Port-au-Prince, Delmas and Carrefour. As of 1 February 2010, the impact of the earthquake on 12 January 2010 is estimated with the data from the Government of Haiti and the United Nations Office for the Coordination of Humanitarian Affairs (OCHA)."
+   }
+  },
+  {
+   "id": "VA",
+   "m49": 336,
+   "name": "Vatican City",
+   "unCountry": "Holy See",
+   "unCity": "Vatican City",
+   "cityCode": 21134,
+   "unCapitalType": "Capital",
+   "popThousands": 0.801,
+   "lat": 41.90236,
+   "lon": 12.45332
+  },
+  {
+   "id": "HN",
+   "m49": 340,
+   "name": "Tegucigalpa",
+   "unCountry": "Honduras",
+   "unCity": "Tegucigalpa",
+   "cityCode": 21136,
+   "unCapitalType": "Capital",
+   "popThousands": 1363.041,
+   "lat": 14.0818,
+   "lon": -87.20681
+  },
+  {
+   "id": "HU",
+   "m49": 348,
+   "name": "Budapest",
+   "unCountry": "Hungary",
+   "unCity": "Budapest",
+   "cityCode": 21138,
+   "unCapitalType": "Capital",
+   "popThousands": 1759.497,
+   "lat": 47.49801,
+   "lon": 19.03991
+  },
+  {
+   "id": "IS",
+   "m49": 352,
+   "name": "Reykjavik",
+   "unCountry": "Iceland",
+   "unCity": "Reykjavík",
+   "cityCode": 21147,
+   "unCapitalType": "Capital",
+   "popThousands": 216.364,
+   "lat": 64.13548,
+   "lon": -21.89541
+  },
+  {
+   "id": "IN",
+   "m49": 356,
+   "name": "Delhi",
+   "unCountry": "India",
+   "unCity": "Delhi",
+   "cityCode": 21228,
+   "unCapitalType": "Capital",
+   "popThousands": 28513.682,
+   "lat": 28.66667,
+   "lon": 77.21667,
+   "unNote": {
+    "n": 37,
+    "text": "Data for 1991, 2001 and 2011 refer to the metropolitan area that is not restricted to state boundaries (National Capital Territory). Contiguous suburban cities and towns, such as Faridabad, Gurgaon, and Ghaziabad are included in Dehli. The capital is New Delhi. The official estimates for New Delhi and Delhi Urban Agglomeration were 257,803 and 16,349,831 in the year 2011, respectively."
+   }
+  },
+  {
+   "id": "ID",
+   "m49": 360,
+   "name": "Jakarta",
+   "unCountry": "Indonesia",
+   "unCity": "Jakarta",
+   "cityCode": 21454,
+   "unCapitalType": "Capital",
+   "popThousands": 10516.927,
+   "lat": -6.21183,
+   "lon": 106.84165,
+   "unNote": {
+    "n": 38,
+    "text": "Data refer to the functional urban area, that is, contiguous areas which are consistently urban in character as indicated by levels of population density, economic functions and facilities. Jakarta covers five municipalities (kotamadya): Jakarta Selatan, Jakarta Timur, Jakarta Pusat, Jakarta Barat, and Jakarta Utara. Data for 1990 does not refer to the functional urban area. Appropriate estimates were derived by using the ratio of the population in the functional urban area to that of the population in the relevant municipalities as derived from the 1980 census."
+   }
+  },
+  {
+   "id": "IR",
+   "m49": 364,
+   "name": "Tehran",
+   "unCountry": "Iran (Islamic Republic of)",
+   "unCity": "Tehran",
+   "cityCode": 21523,
+   "unCapitalType": "Capital",
+   "popThousands": 8895.947,
+   "lat": 35.69439,
+   "lon": 51.42151
+  },
+  {
+   "id": "IQ",
+   "m49": 368,
+   "name": "Baghdad",
+   "unCountry": "Iraq",
+   "unCity": "Baghdad",
+   "cityCode": 21529,
+   "unCapitalType": "Capital",
+   "popThousands": 6811.955,
+   "lat": 33.34058,
+   "lon": 44.40088
+  },
+  {
+   "id": "IE",
+   "m49": 372,
+   "name": "Dublin",
+   "unCountry": "Ireland",
+   "unCity": "Dublin",
+   "cityCode": 21542,
+   "unCapitalType": "Capital",
+   "popThousands": 1201.426,
+   "lat": 53.33306,
+   "lon": -6.24889
+  },
+  {
+   "id": "IL",
+   "m49": 376,
+   "name": "Jerusalem",
+   "unCountry": "Israel",
+   "unCity": "Jerusalem",
+   "cityCode": 21547,
+   "unCapitalType": "Capital",
+   "popThousands": 907.062,
+   "lat": 31.76904,
+   "lon": 35.21633,
+   "unNote": {
+    "n": 39,
+    "text": "Designation and data provided by Israel. The position of the United Nations on the question of Jerusalem is contained in General Assembly resolution 181 (II) and subsequent resolutions of the General Assembly and the Security Council concerning this question. Including data for East Jerusalem."
+   }
+  },
+  {
+   "id": "IT",
+   "m49": 380,
+   "name": "Rome",
+   "unCountry": "Italy",
+   "unCity": "Roma (Rome)",
+   "cityCode": 21588,
+   "unCapitalType": "Capital",
+   "popThousands": 4209.71,
+   "lat": 41.89474,
+   "lon": 12.48114,
+   "unNote": {
+    "n": 40,
+    "text": "Since 1991, the official Metropolitan City."
+   }
+  },
+  {
+   "id": "JM",
+   "m49": 388,
+   "name": "Kingston",
+   "unCountry": "Jamaica",
+   "unCity": "Kingston",
+   "cityCode": 21607,
+   "unCapitalType": "Capital",
+   "popThousands": 589.083,
+   "lat": 17.99702,
+   "lon": -76.79358
+  },
+  {
+   "id": "JP",
+   "m49": 392,
+   "name": "Tokyo",
+   "unCountry": "Japan",
+   "unCity": "Tokyo",
+   "cityCode": 21671,
+   "unCapitalType": "Capital",
+   "popThousands": 37468.302,
+   "lat": 35.6895,
+   "lon": 139.69171,
+   "unNote": {
+    "n": 41,
+    "text": "Major Metropolitan areas (M.M.A.) are defined by the Statistics Bureau of Japan. Census figures for 2005, 2010 and 2015 refer to the Kanto M.M.A.; figures from 1990 to 2000 are based on the Keihinyo M.M.A., and figures from 1960 to 1985 are based on the Keihin M.M.A. As a reference, the population of Tokyo-to was estimated at 12.1 million persons and of the Tokyo Ku-area at 8.1 million in 2000."
+   }
+  },
+  {
+   "id": "JO",
+   "m49": 400,
+   "name": "Amman",
+   "unCountry": "Jordan",
+   "unCity": "Amman",
+   "cityCode": 21700,
+   "unCapitalType": "Capital",
+   "popThousands": 2064.582,
+   "lat": 31.95522,
+   "lon": 35.94503
+  },
+  {
+   "id": "KZ",
+   "m49": 398,
+   "name": "Astana",
+   "unCountry": "Kazakhstan",
+   "unCity": "Astana",
+   "cityCode": 21679,
+   "unCapitalType": "Capital",
+   "popThousands": 1068.113,
+   "lat": 51.1801,
+   "lon": 71.44598
+  },
+  {
+   "id": "KE",
+   "m49": 404,
+   "name": "Nairobi",
+   "unCountry": "Kenya",
+   "unCity": "Nairobi",
+   "cityCode": 21711,
+   "unCapitalType": "Capital",
+   "popThousands": 4385.853,
+   "lat": -1.28333,
+   "lon": 36.81667
+  },
+  {
+   "id": "KI",
+   "m49": 296,
+   "name": "Tarawa",
+   "unCountry": "Kiribati",
+   "unCity": "Tarawa",
+   "cityCode": 21112,
+   "unCapitalType": "Capital",
+   "popThousands": 64.011,
+   "lat": 1.32722,
+   "lon": 172.9813,
+   "unNote": {
+    "n": 42,
+    "text": "Refers to the island of Tarawa. The capital is Bairiki, located on that island. The population of Bairiki was estimated at 3,218 in the year 2015."
+   }
+  },
+  {
+   "id": "KW",
+   "m49": 414,
+   "name": "Kuwait City",
+   "unCountry": "Kuwait",
+   "unCity": "Al Kuwayt (Kuwait City)",
+   "cityCode": 21769,
+   "unCapitalType": "Capital",
+   "popThousands": 2989.27,
+   "lat": 29.36972,
+   "lon": 47.9783,
+   "unNote": {
+    "n": 43,
+    "text": "Data for 2005 and 2011 refer to the Governorates of Capital, Hawalli, Al-Farwaniya and Mubarak Al-Kabeer. Data for 1985 and 1995 refer to the Governorates of Capital, Hawalli and Al-Farwaniya. The number and names of governorates have changed over time as well as the limits of the urban agglomeration."
+   }
+  },
+  {
+   "id": "KG",
+   "m49": 417,
+   "name": "Bishkek",
+   "unCountry": "Kyrgyzstan",
+   "unCity": "Bishkek",
+   "cityCode": 21770,
+   "unCapitalType": "Capital",
+   "popThousands": 996.319,
+   "lat": 42.87,
+   "lon": 74.59
+  },
+  {
+   "id": "LA",
+   "m49": 418,
+   "name": "Vientiane",
+   "unCountry": "Lao People's Democratic Republic",
+   "unCity": "Vientiane",
+   "cityCode": 21772,
+   "unCapitalType": "Capital",
+   "popThousands": 664.754,
+   "lat": 17.96667,
+   "lon": 102.6
+  },
+  {
+   "id": "LV",
+   "m49": 428,
+   "name": "Riga",
+   "unCountry": "Latvia",
+   "unCity": "Riga",
+   "cityCode": 21778,
+   "unCapitalType": "Capital",
+   "popThousands": 637.089,
+   "lat": 56.946,
+   "lon": 24.10589
+  },
+  {
+   "id": "LB",
+   "m49": 422,
+   "name": "Beirut",
+   "unCountry": "Lebanon",
+   "unCity": "Bayrut (Beirut)",
+   "cityCode": 21773,
+   "unCapitalType": "Capital",
+   "popThousands": 2385.271,
+   "lat": 33.9,
+   "lon": 35.48333,
+   "unNote": {
+    "n": 44,
+    "text": "There is some level of uncertainty with respect to the estimates for Bayrut. Excluding Syrian Refugees."
+   }
+  },
+  {
+   "id": "LS",
+   "m49": 426,
+   "name": "Maseru",
+   "unCountry": "Lesotho",
+   "unCity": "Maseru",
+   "cityCode": 21775,
+   "unCapitalType": "Capital",
+   "popThousands": 201.851,
+   "lat": -29.31667,
+   "lon": 27.48333
+  },
+  {
+   "id": "LR",
+   "m49": 430,
+   "name": "Monrovia",
+   "unCountry": "Liberia",
+   "unCity": "Monrovia",
+   "cityCode": 21779,
+   "unCapitalType": "Capital",
+   "popThousands": 1418.3,
+   "lat": 6.30054,
+   "lon": -10.7969
+  },
+  {
+   "id": "LY",
+   "m49": 434,
+   "name": "Tripoli",
+   "unCountry": "Libya",
+   "unCity": "Tarabulus (Tripoli)",
+   "cityCode": 21782,
+   "unCapitalType": "Capital",
+   "popThousands": 1157.746,
+   "lat": 32.87519,
+   "lon": 13.18746
+  },
+  {
+   "id": "LI",
+   "m49": 438,
+   "name": "Vaduz",
+   "unCountry": "Liechtenstein",
+   "unCity": "Vaduz",
+   "cityCode": 21783,
+   "unCapitalType": "Capital",
+   "popThousands": 5.47,
+   "lat": 47.14151,
+   "lon": 9.52154
+  },
+  {
+   "id": "LT",
+   "m49": 440,
+   "name": "Vilnius",
+   "unCountry": "Lithuania",
+   "unCity": "Vilnius",
+   "cityCode": 21789,
+   "unCapitalType": "Capital",
+   "popThousands": 536.055,
+   "lat": 54.68916,
+   "lon": 25.2798
+  },
+  {
+   "id": "LU",
+   "m49": 442,
+   "name": "Luxembourg",
+   "unCountry": "Luxembourg",
+   "unCity": "Luxembourg",
+   "cityCode": 21790,
+   "unCapitalType": "Capital",
+   "popThousands": 119.752,
+   "lat": 49.61167,
+   "lon": 6.13
+  },
+  {
+   "id": "MG",
+   "m49": 450,
+   "name": "Antananarivo",
+   "unCountry": "Madagascar",
+   "unCity": "Antananarivo",
+   "cityCode": 21792,
+   "unCapitalType": "Capital",
+   "popThousands": 3058.387,
+   "lat": -18.91368,
+   "lon": 47.53613
+  },
+  {
+   "id": "MW",
+   "m49": 454,
+   "name": "Lilongwe",
+   "unCountry": "Malawi",
+   "unCity": "Lilongwe",
+   "cityCode": 21799,
+   "unCapitalType": "Capital",
+   "popThousands": 1029.639,
+   "lat": -13.96692,
+   "lon": 33.78725
+  },
+  {
+   "id": "MY",
+   "m49": 458,
+   "name": "Kuala Lumpur",
+   "unCountry": "Malaysia",
+   "unCity": "Kuala Lumpur",
+   "cityCode": 206411,
+   "unCapitalType": "Capital",
+   "popThousands": 7563.912,
+   "lat": 3.1412,
+   "lon": 101.68653,
+   "unNote": {
+    "n": 45,
+    "text": "Refers to the Greater Kuala Lumpur. Kuuala Lumpur is the capital and Putrajaya is the administrative capital."
+   }
+  },
+  {
+   "id": "MV",
+   "m49": 462,
+   "name": "Malé",
+   "unCountry": "Maldives",
+   "unCity": "Male",
+   "cityCode": 21817,
+   "unCapitalType": "Capital",
+   "popThousands": 176.851,
+   "lat": 4.1748,
+   "lon": 73.50888
+  },
+  {
+   "id": "ML",
+   "m49": 466,
+   "name": "Bamako",
+   "unCountry": "Mali",
+   "unCity": "Bamako",
+   "cityCode": 21818,
+   "unCapitalType": "Capital",
+   "popThousands": 2446.749,
+   "lat": 12.65,
+   "lon": -8.0
+  },
+  {
+   "id": "MT",
+   "m49": 470,
+   "name": "Valletta",
+   "unCountry": "Malta",
+   "unCity": "Valletta",
+   "cityCode": 21819,
+   "unCapitalType": "Capital",
+   "popThousands": 212.768,
+   "lat": 35.89972,
+   "lon": 14.51472,
+   "unNote": {
+    "n": 46,
+    "text": "Refers to the localities of the Northern Harbour and Southern Harbour."
+   }
+  },
+  {
+   "id": "MH",
+   "m49": 584,
+   "name": "Majuro",
+   "unCountry": "Marshall Islands",
+   "unCity": "Majuro",
+   "cityCode": 22033,
+   "unCapitalType": "Capital",
+   "popThousands": 30.661,
+   "lat": 7.08971,
+   "lon": 171.38027
+  },
+  {
+   "id": "MR",
+   "m49": 478,
+   "name": "Nouakchott",
+   "unCountry": "Mauritania",
+   "unCity": "Nouakchott",
+   "cityCode": 21821,
+   "unCapitalType": "Capital",
+   "popThousands": 1205.414,
+   "lat": 18.08581,
+   "lon": -15.9785
+  },
+  {
+   "id": "MU",
+   "m49": 480,
+   "name": "Port Louis",
+   "unCountry": "Mauritius",
+   "unCity": "Port Louis",
+   "cityCode": 21822,
+   "unCapitalType": "Capital",
+   "popThousands": 149.365,
+   "lat": -20.16194,
+   "lon": 57.49889
+  },
+  {
+   "id": "MX",
+   "m49": 484,
+   "name": "Mexico City",
+   "unCountry": "Mexico",
+   "unCity": "Ciudad de México (Mexico City)",
+   "cityCode": 21853,
+   "unCapitalType": "Capital",
+   "popThousands": 21580.827,
+   "lat": 19.42732,
+   "lon": -99.14187,
+   "unNote": {
+    "n": 47,
+    "text": "Refers to the total population in seventy-six municipalities of the Metropolitan Area of Mexico City."
+   }
+  },
+  {
+   "id": "FM",
+   "m49": 583,
+   "name": "Palikir",
+   "unCountry": "Micronesia (Fed. States of)",
+   "unCity": "Palikir",
+   "cityCode": 22032,
+   "unCapitalType": "Capital",
+   "popThousands": 6.996,
+   "lat": 6.91742,
+   "lon": 158.15879
+  },
+  {
+   "id": "MC",
+   "m49": 492,
+   "name": "Monaco",
+   "unCountry": "Monaco",
+   "unCity": "Monaco",
+   "cityCode": 21881,
+   "unCapitalType": "Capital",
+   "popThousands": 38.897,
+   "lat": 43.73333,
+   "lon": 7.41667
+  },
+  {
+   "id": "MN",
+   "m49": 496,
+   "name": "Ulaanbaatar",
+   "unCountry": "Mongolia",
+   "unCity": "Ulaanbaatar",
+   "cityCode": 21882,
+   "unCapitalType": "Capital",
+   "popThousands": 1520.381,
+   "lat": 47.90771,
+   "lon": 106.88324
+  },
+  {
+   "id": "ME",
+   "m49": 499,
+   "name": "Podgorica",
+   "unCountry": "Montenegro",
+   "unCity": "Podgorica",
+   "cityCode": 23256,
+   "unCapitalType": "Capital",
+   "popThousands": 177.177,
+   "lat": 42.44111,
+   "lon": 19.26361,
+   "unNote": {
+    "n": 48,
+    "text": "Refers to the urban population of Podgorica municipality."
+   }
+  },
+  {
+   "id": "MA",
+   "m49": 504,
+   "name": "Rabat",
+   "unCountry": "Morocco",
+   "unCity": "Rabat",
+   "cityCode": 21899,
+   "unCapitalType": "Capital",
+   "popThousands": 1846.661,
+   "lat": 34.01325,
+   "lon": -6.83255,
+   "unNote": {
+    "n": 50,
+    "text": "Includes Salé and Temara."
+   }
+  },
+  {
+   "id": "MZ",
+   "m49": 508,
+   "name": "Maputo",
+   "unCountry": "Mozambique",
+   "unCity": "Maputo",
+   "cityCode": 21910,
+   "unCapitalType": "Capital",
+   "popThousands": 1101.771,
+   "lat": -25.96528,
+   "lon": 32.58917
+  },
+  {
+   "id": "MM",
+   "m49": 104,
+   "name": "Nay Pyi Taw",
+   "unCountry": "Myanmar",
+   "unCity": "Nay Pyi Taw",
+   "cityCode": 205588,
+   "unCapitalType": "Capital",
+   "popThousands": 500.218,
+   "lat": 19.745,
+   "lon": 96.12972
+  },
+  {
+   "id": "NA",
+   "m49": 516,
+   "name": "Windhoek",
+   "unCountry": "Namibia",
+   "unCity": "Windhoek",
+   "cityCode": 21925,
+   "unCapitalType": "Capital",
+   "popThousands": 404.28,
+   "lat": -22.55941,
+   "lon": 17.08323
+  },
+  {
+   "id": "NR",
+   "m49": 520,
+   "name": "Yaren",
+   "unCountry": "Nauru",
+   "unCity": "Nauru",
+   "cityCode": 21926,
+   "unCapitalType": "Capital",
+   "popThousands": 11.312,
+   "lat": -0.5308,
+   "lon": 166.91119
+  },
+  {
+   "id": "NP",
+   "m49": 524,
+   "name": "Kathmandu",
+   "unCountry": "Nepal",
+   "unCity": "Kathmandu",
+   "cityCode": 21928,
+   "unCapitalType": "Capital",
+   "popThousands": 1329.732,
+   "lat": 27.70169,
+   "lon": 85.3206,
+   "unNote": {
+    "n": 51,
+    "text": "Data refer to the municipality."
+   }
+  },
+  {
+   "id": "NL",
+   "m49": 528,
+   "name": "The Hague",
+   "unCountry": "Netherlands",
+   "unCity": "s-Gravenhage (The Hague)",
+   "cityCode": 205146,
+   "unCapitalType": "Seat of Government",
+   "popThousands": 685.14,
+   "lat": 52.0767,
+   "lon": 4.2986,
+   "unNote": {
+    "n": 52,
+    "text": "Refers to the municipalities of s-Gravenhage, Leidschendam, Leidschendam-Voorburg, Rijswijk, Voorburg, Wassenaar, Wateringen."
+   }
+  },
+  {
+   "id": "NZ",
+   "m49": 554,
+   "name": "Wellington",
+   "unCountry": "New Zealand",
+   "unCity": "Wellington",
+   "cityCode": 21962,
+   "unCapitalType": "Capital",
+   "popThousands": 411.346,
+   "lat": -41.28664,
+   "lon": 174.77557,
+   "unNote": {
+    "n": 53,
+    "text": "The limits of the urban agglomeration have been modified between 2001 and 2006."
+   }
+  },
+  {
+   "id": "NI",
+   "m49": 558,
+   "name": "Managua",
+   "unCountry": "Nicaragua",
+   "unCity": "Managua",
+   "cityCode": 21967,
+   "unCapitalType": "Capital",
+   "popThousands": 1047.923,
+   "lat": 12.13282,
+   "lon": -86.2504
+  },
+  {
+   "id": "NE",
+   "m49": 562,
+   "name": "Niamey",
+   "unCountry": "Niger",
+   "unCity": "Niamey",
+   "cityCode": 21972,
+   "unCapitalType": "Capital",
+   "popThousands": 1213.781,
+   "lat": 13.51366,
+   "lon": 2.1098
+  },
+  {
+   "id": "NG",
+   "m49": 566,
+   "name": "Abuja",
+   "unCountry": "Nigeria",
+   "unCity": "Abuja",
+   "cityCode": 21976,
+   "unCapitalType": "Capital",
+   "popThousands": 2918.518,
+   "lat": 9.05735,
+   "lon": 7.48976,
+   "unNote": {
+    "n": 54,
+    "text": "Data for 1953 and 1963 refer to city proper. Data for 1991, 2006 and 2013 refer to urban agglomeration."
+   }
+  },
+  {
+   "id": "MK",
+   "m49": 807,
+   "name": "Skopje",
+   "unCountry": "TFYR Macedonia",
+   "unCity": "Skopje",
+   "cityCode": 22802,
+   "unCapitalType": "Capital",
+   "popThousands": 584.208,
+   "lat": 42.0,
+   "lon": 21.43333
+  },
+  {
+   "id": "NO",
+   "m49": 578,
+   "name": "Oslo",
+   "unCountry": "Norway",
+   "unCity": "Oslo",
+   "cityCode": 22028,
+   "unCapitalType": "Capital",
+   "popThousands": 1012.225,
+   "lat": 59.91273,
+   "lon": 10.74609
+  },
+  {
+   "id": "OM",
+   "m49": 512,
+   "name": "Muscat",
+   "unCountry": "Oman",
+   "unCity": "Masqat (Muscat)",
+   "cityCode": 21922,
+   "unCapitalType": "Capital",
+   "popThousands": 1446.563,
+   "lat": 23.61387,
+   "lon": 58.5922,
+   "unNote": {
+    "n": 56,
+    "text": "Refers to Muscat governorate, which consists of the Wilayas of Muscat, Mutrah, Bawshar, As Seeb, and Al Amrat (excluding Wilaya of Qurayyat).  For the year 2016, refers to the sum of Muscat, Mutrah, Bawshar and As Seeb."
+   }
+  },
+  {
+   "id": "PK",
+   "m49": 586,
+   "name": "Islamabad",
+   "unCountry": "Pakistan",
+   "unCity": "Islamabad",
+   "cityCode": 22042,
+   "unCapitalType": "Capital",
+   "popThousands": 1061.412,
+   "lat": 33.70351,
+   "lon": 73.05937
+  },
+  {
+   "id": "PW",
+   "m49": 585,
+   "name": "Koror",
+   "unCountry": "Palau",
+   "unCity": "Koror",
+   "cityCode": 22034,
+   "unCapitalType": "Capital",
+   "popThousands": 11.41,
+   "lat": 7.34257,
+   "lon": 134.47888
+  },
+  {
+   "id": "PA",
+   "m49": 591,
+   "name": "Panama City",
+   "unCountry": "Panama",
+   "unCity": "Ciudad de Panamá (Panama City)",
+   "cityCode": 22063,
+   "unCapitalType": "Capital",
+   "popThousands": 1783.49,
+   "lat": 8.99582,
+   "lon": -79.51957,
+   "unNote": {
+    "n": 57,
+    "text": "Refers to the metropolitan area of Panama City, made up of the population of urban localities in the districts of Panamá, Arraijan, La Chorrera and San Miguelito. Data for 1980 includes the urban population in the district of Balboa."
+   }
+  },
+  {
+   "id": "PG",
+   "m49": 598,
+   "name": "Port Moresby",
+   "unCountry": "Papua New Guinea",
+   "unCity": "Port Moresby",
+   "cityCode": 22064,
+   "unCapitalType": "Capital",
+   "popThousands": 366.862,
+   "lat": -9.44314,
+   "lon": 147.17972
+  },
+  {
+   "id": "PY",
+   "m49": 600,
+   "name": "Asunción",
+   "unCountry": "Paraguay",
+   "unCity": "Asunción",
+   "cityCode": 22065,
+   "unCapitalType": "Capital",
+   "popThousands": 3222.199,
+   "lat": -25.30066,
+   "lon": -57.63591,
+   "unNote": {
+    "n": 58,
+    "text": "Refers to the district of Asunción and the 19 districts of Central Department."
+   }
+  },
+  {
+   "id": "PE",
+   "m49": 604,
+   "name": "Lima",
+   "unCountry": "Peru",
+   "unCity": "Lima",
+   "cityCode": 22078,
+   "unCapitalType": "Capital",
+   "popThousands": 10390.607,
+   "lat": -12.04318,
+   "lon": -77.02824,
+   "unNote": {
+    "n": 59,
+    "text": "Refers to the Province of Lima and the Constitutional Province of Callao."
+   }
+  },
+  {
+   "id": "PH",
+   "m49": 608,
+   "name": "Manila",
+   "unCountry": "Philippines",
+   "unCity": "Manila",
+   "cityCode": 22109,
+   "unCapitalType": "Capital",
+   "popThousands": 13482.468,
+   "lat": 14.6042,
+   "lon": 120.9822,
+   "unNote": {
+    "n": 60,
+    "text": "Refers to the National Capital Region."
+   }
+  },
+  {
+   "id": "PL",
+   "m49": 616,
+   "name": "Warsaw",
+   "unCountry": "Poland",
+   "unCity": "Warszawa (Warsaw)",
+   "cityCode": 22161,
+   "unCapitalType": "Capital",
+   "popThousands": 1767.798,
+   "lat": 52.22977,
+   "lon": 21.01178
+  },
+  {
+   "id": "PT",
+   "m49": 620,
+   "name": "Lisbon",
+   "unCountry": "Portugal",
+   "unCity": "Lisboa (Lisbon)",
+   "cityCode": 22167,
+   "unCapitalType": "Capital",
+   "popThousands": 2927.316,
+   "lat": 38.71686,
+   "lon": -9.13987,
+   "unNote": {
+    "n": 61,
+    "text": "Refers to Grande Lisboa, the Peninsula of Setúbal, and the municipality Azambuja."
+   }
+  },
+  {
+   "id": "QA",
+   "m49": 634,
+   "name": "Doha",
+   "unCountry": "Qatar",
+   "unCity": "Ad-Dawhah (Doha)",
+   "cityCode": 22179,
+   "unCapitalType": "Capital",
+   "popThousands": 633.401,
+   "lat": 25.27472,
+   "lon": 51.52447,
+   "unNote": {
+    "n": 63,
+    "text": "Does not include the populations from the industrial area and zone 58."
+   }
+  },
+  {
+   "id": "KR",
+   "m49": 410,
+   "name": "Seoul",
+   "unCountry": "Republic of Korea",
+   "unCity": "Seoul",
+   "cityCode": 21758,
+   "unCapitalType": "Capital",
+   "popThousands": 9963.497,
+   "lat": 37.56826,
+   "lon": 126.97783,
+   "unNote": {
+    "n": 64,
+    "text": "Refers to Seoul Special City. Data refer to the urban population of the city."
+   }
+  },
+  {
+   "id": "MD",
+   "m49": 498,
+   "name": "Chișinău",
+   "unCountry": "Republic of Moldova",
+   "unCity": "Chişinău",
+   "cityCode": 21885,
+   "unCapitalType": "Capital",
+   "popThousands": 509.707,
+   "lat": 47.00556,
+   "lon": 28.8575
+  },
+  {
+   "id": "RO",
+   "m49": 642,
+   "name": "Bucharest",
+   "unCountry": "Romania",
+   "unCity": "Bucuresti (Bucharest)",
+   "cityCode": 22191,
+   "unCapitalType": "Capital",
+   "popThousands": 1821.38,
+   "lat": 44.43279,
+   "lon": 26.1043
+  },
+  {
+   "id": "RU",
+   "m49": 643,
+   "name": "Moscow",
+   "unCountry": "Russian Federation",
+   "unCity": "Moskva (Moscow)",
+   "cityCode": 22299,
+   "unCapitalType": "Capital",
+   "popThousands": 12409.738,
+   "lat": 55.755,
+   "lon": 37.62185
+  },
+  {
+   "id": "RW",
+   "m49": 646,
+   "name": "Kigali",
+   "unCountry": "Rwanda",
+   "unCity": "Kigali",
+   "cityCode": 22404,
+   "unCapitalType": "Capital",
+   "popThousands": 1057.836,
+   "lat": -1.94736,
+   "lon": 30.0579
+  },
+  {
+   "id": "KN",
+   "m49": 659,
+   "name": "Basseterre",
+   "unCountry": "Saint Kitts and Nevis",
+   "unCity": "Basseterre",
+   "cityCode": 22406,
+   "unCapitalType": "Capital",
+   "popThousands": 14.434,
+   "lat": 17.29484,
+   "lon": -62.7261
+  },
+  {
+   "id": "LC",
+   "m49": 662,
+   "name": "Castries",
+   "unCountry": "Saint Lucia",
+   "unCity": "Castries",
+   "cityCode": 22408,
+   "unCapitalType": "Capital",
+   "popThousands": 22.258,
+   "lat": 14.00602,
+   "lon": -60.99096
+  },
+  {
+   "id": "VC",
+   "m49": 670,
+   "name": "Kingstown",
+   "unCountry": "Saint Vincent and the Grenadines",
+   "unCity": "Kingstown",
+   "cityCode": 22410,
+   "unCapitalType": "Capital",
+   "popThousands": 26.636,
+   "lat": 13.15872,
+   "lon": -61.22475
+  },
+  {
+   "id": "WS",
+   "m49": 882,
+   "name": "Apia",
+   "unCountry": "Samoa",
+   "unCity": "Apia",
+   "cityCode": 23236,
+   "unCapitalType": "Capital",
+   "popThousands": 36.066,
+   "lat": -13.83333,
+   "lon": -171.76666
+  },
+  {
+   "id": "SM",
+   "m49": 674,
+   "name": "San Marino",
+   "unCountry": "San Marino",
+   "unCity": "San Marino",
+   "cityCode": 22411,
+   "unCapitalType": "Capital",
+   "popThousands": 4.465,
+   "lat": 43.93333,
+   "lon": 12.45
+  },
+  {
+   "id": "ST",
+   "m49": 678,
+   "name": "São Tomé",
+   "unCountry": "Sao Tome and Principe",
+   "unCity": "São Tomé",
+   "cityCode": 22412,
+   "unCapitalType": "Capital",
+   "popThousands": 80.099,
+   "lat": 0.33654,
+   "lon": 6.72732
+  },
+  {
+   "id": "SA",
+   "m49": 682,
+   "name": "Riyadh",
+   "unCountry": "Saudi Arabia",
+   "unCity": "Ar-Riyadh (Riyadh)",
+   "cityCode": 22432,
+   "unCapitalType": "Capital",
+   "popThousands": 6906.595,
+   "lat": 24.69047,
+   "lon": 46.70957
+  },
+  {
+   "id": "SN",
+   "m49": 686,
+   "name": "Dakar",
+   "unCountry": "Senegal",
+   "unCity": "Dakar",
+   "cityCode": 22439,
+   "unCapitalType": "Capital",
+   "popThousands": 2978.419,
+   "lat": 14.6937,
+   "lon": -17.44406,
+   "unNote": {
+    "n": 65,
+    "text": "Refers to the sum of the Departments of Dakar, Pikinie and Guédiawaye, in Dakar Region."
+   }
+  },
+  {
+   "id": "RS",
+   "m49": 688,
+   "name": "Belgrade",
+   "unCountry": "Serbia",
+   "unCity": "Beograd (Belgrade)",
+   "cityCode": 23241,
+   "unCapitalType": "Capital",
+   "popThousands": 1389.351,
+   "lat": 44.81765,
+   "lon": 20.46331,
+   "unNote": {
+    "n": 66,
+    "text": "Refers to the urban population of Belgrade area."
+   }
+  },
+  {
+   "id": "SC",
+   "m49": 690,
+   "name": "Victoria",
+   "unCountry": "Seychelles",
+   "unCity": "Victoria",
+   "cityCode": 22444,
+   "unCapitalType": "Capital",
+   "popThousands": 28.091,
+   "lat": -4.61667,
+   "lon": 55.45
+  },
+  {
+   "id": "SL",
+   "m49": 694,
+   "name": "Freetown",
+   "unCountry": "Sierra Leone",
+   "unCity": "Freetown",
+   "cityCode": 22445,
+   "unCapitalType": "Capital",
+   "popThousands": 1135.949,
+   "lat": 8.484,
+   "lon": -13.22994
+  },
+  {
+   "id": "SG",
+   "m49": 702,
+   "name": "Singapore",
+   "unCountry": "Singapore",
+   "unCity": "Singapore",
+   "cityCode": 22447,
+   "unCapitalType": "Capital",
+   "popThousands": 5791.901,
+   "lat": 1.28967,
+   "lon": 103.85007
+  },
+  {
+   "id": "SK",
+   "m49": 703,
+   "name": "Bratislava",
+   "unCountry": "Slovakia",
+   "unCity": "Bratislava",
+   "cityCode": 22448,
+   "unCapitalType": "Capital",
+   "popThousands": 429.92,
+   "lat": 48.14816,
+   "lon": 17.10674
+  },
+  {
+   "id": "SI",
+   "m49": 705,
+   "name": "Ljubljana",
+   "unCountry": "Slovenia",
+   "unCity": "Ljubljana",
+   "cityCode": 22474,
+   "unCapitalType": "Capital",
+   "popThousands": 286.491,
+   "lat": 46.05108,
+   "lon": 14.50513
+  },
+  {
+   "id": "SB",
+   "m49": 90,
+   "name": "Honiara",
+   "unCountry": "Solomon Islands",
+   "unCity": "Honiara",
+   "cityCode": 20311,
+   "unCapitalType": "Capital",
+   "popThousands": 81.801,
+   "lat": -9.43333,
+   "lon": 159.95
+  },
+  {
+   "id": "SO",
+   "m49": 706,
+   "name": "Mogadishu",
+   "unCountry": "Somalia",
+   "unCity": "Muqdisho (Mogadishu)",
+   "cityCode": 22477,
+   "unCapitalType": "Capital",
+   "popThousands": 2081.624,
+   "lat": 2.04164,
+   "lon": 45.34349,
+   "unNote": {
+    "n": 68,
+    "text": "Refers to the urban agglomeration of 1972."
+   }
+  },
+  {
+   "id": "ZA",
+   "m49": 710,
+   "name": "Pretoria",
+   "unCountry": "South Africa",
+   "unCity": "Pretoria",
+   "cityCode": 22501,
+   "unCapitalType": "Administrative Capital",
+   "popThousands": 2378.35,
+   "lat": -25.74486,
+   "lon": 28.18783
+  },
+  {
+   "id": "SS",
+   "m49": 728,
+   "name": "Juba",
+   "unCountry": "South Sudan",
+   "unCity": "Juba",
+   "cityCode": 22577,
+   "unCapitalType": "Capital",
+   "popThousands": 368.914,
+   "lat": 4.85165,
+   "lon": 31.58247
+  },
+  {
+   "id": "ES",
+   "m49": 724,
+   "name": "Madrid",
+   "unCountry": "Spain",
+   "unCity": "Madrid",
+   "cityCode": 22549,
+   "unCapitalType": "Capital",
+   "popThousands": 6497.124,
+   "lat": 40.4165,
+   "lon": -3.70256
+  },
+  {
+   "id": "LK",
+   "m49": 144,
+   "name": "Colombo",
+   "unCountry": "Sri Lanka",
+   "unCity": "Colombo",
+   "cityCode": 20414,
+   "unCapitalType": "Capital",
+   "popThousands": 599.821,
+   "lat": 6.93194,
+   "lon": 79.84778,
+   "unNote": {
+    "n": 69,
+    "text": "The 2012 census enumeration was done on the de jure basis, while the 2001 census enumeration was done on de facto basis."
+   }
+  },
+  {
+   "id": "SD",
+   "m49": 729,
+   "name": "Khartoum",
+   "unCountry": "Sudan",
+   "unCity": "Al-Khartum (Khartoum)",
+   "cityCode": 22579,
+   "unCapitalType": "Capital",
+   "popThousands": 5534.079,
+   "lat": 15.55177,
+   "lon": 32.53241
+  },
+  {
+   "id": "SR",
+   "m49": 740,
+   "name": "Paramaribo",
+   "unCountry": "Suriname",
+   "unCity": "Paramaribo",
+   "cityCode": 22587,
+   "unCapitalType": "Capital",
+   "popThousands": 239.457,
+   "lat": 5.86638,
+   "lon": -55.16682,
+   "unNote": {
+    "n": 71,
+    "text": "Refers to the total population of District of Paramaribo."
+   }
+  },
+  {
+   "id": "SE",
+   "m49": 752,
+   "name": "Stockholm",
+   "unCountry": "Sweden",
+   "unCity": "Stockholm",
+   "cityCode": 22597,
+   "unCapitalType": "Capital",
+   "popThousands": 1582.968,
+   "lat": 59.33258,
+   "lon": 18.0649,
+   "unNote": {
+    "n": 73,
+    "text": "Refers to \"tätort\" (According to the administrative divisions of 2015)."
+   }
+  },
+  {
+   "id": "CH",
+   "m49": 756,
+   "name": "Bern",
+   "unCountry": "Switzerland",
+   "unCity": "Bern",
+   "cityCode": 22601,
+   "unCapitalType": "Capital",
+   "popThousands": 422.153,
+   "lat": 46.94809,
+   "lon": 7.44744
+  },
+  {
+   "id": "SY",
+   "m49": 760,
+   "name": "Damascus",
+   "unCountry": "Syrian Arab Republic",
+   "unCity": "Dimashq (Damascus)",
+   "cityCode": 22610,
+   "unCapitalType": "Capital",
+   "popThousands": 2319.545,
+   "lat": 33.50859,
+   "lon": 36.30844,
+   "unNote": {
+    "n": 74,
+    "text": "Considering the situation in the country, recent estimates should be used with caution as they are not based on solid evidence."
+   }
+  },
+  {
+   "id": "TJ",
+   "m49": 762,
+   "name": "Dushanbe",
+   "unCountry": "Tajikistan",
+   "unCity": "Dushanbe",
+   "cityCode": 22615,
+   "unCapitalType": "Capital",
+   "popThousands": 872.653,
+   "lat": 38.53575,
+   "lon": 68.77905
+  },
+  {
+   "id": "TH",
+   "m49": 764,
+   "name": "Bangkok",
+   "unCountry": "Thailand",
+   "unCity": "Krung Thep (Bangkok)",
+   "cityCode": 22617,
+   "unCapitalType": "Capital",
+   "popThousands": 10156.316,
+   "lat": 13.72196,
+   "lon": 100.52525
+  },
+  {
+   "id": "TL",
+   "m49": 626,
+   "name": "Dili",
+   "unCountry": "Timor-Leste",
+   "unCity": "Dili",
+   "cityCode": 22172,
+   "unCapitalType": "Capital",
+   "popThousands": 281.135,
+   "lat": -8.5601,
+   "lon": 125.56685
+  },
+  {
+   "id": "TG",
+   "m49": 768,
+   "name": "Lomé",
+   "unCountry": "Togo",
+   "unCity": "Lomé",
+   "cityCode": 22628,
+   "unCapitalType": "Capital",
+   "popThousands": 1745.744,
+   "lat": 6.13748,
+   "lon": 1.21227
+  },
+  {
+   "id": "TO",
+   "m49": 776,
+   "name": "Nuku'alofa",
+   "unCountry": "Tonga",
+   "unCity": "Nuku'alofa",
+   "cityCode": 22630,
+   "unCapitalType": "Capital",
+   "popThousands": 22.904,
+   "lat": -21.13944,
+   "lon": -175.20325
+  },
+  {
+   "id": "TT",
+   "m49": 780,
+   "name": "Port of Spain",
+   "unCountry": "Trinidad and Tobago",
+   "unCity": "Port of Spain",
+   "cityCode": 22631,
+   "unCapitalType": "Capital",
+   "popThousands": 544.417,
+   "lat": 10.66617,
+   "lon": -61.51657,
+   "unNote": {
+    "n": 76,
+    "text": "The populaiton of Port of Spain defined as \"city proper\" was estimated at 37, 522 inhabitants in 2011."
+   }
+  },
+  {
+   "id": "TN",
+   "m49": 788,
+   "name": "Tunis",
+   "unCountry": "Tunisia",
+   "unCity": "Tunis",
+   "cityCode": 22646,
+   "unCapitalType": "Capital",
+   "popThousands": 2290.777,
+   "lat": 36.81897,
+   "lon": 10.16579,
+   "unNote": {
+    "n": 77,
+    "text": "Refers to Grand Tunis, which consists of the communal (urban) populations in the Governorates of Tunis, Ariana and Ben Arous."
+   }
+  },
+  {
+   "id": "TR",
+   "m49": 792,
+   "name": "Ankara",
+   "unCountry": "Turkey",
+   "unCity": "Ankara",
+   "cityCode": 22656,
+   "unCapitalType": "Capital",
+   "popThousands": 4919.074,
+   "lat": 39.91987,
+   "lon": 32.85427,
+   "unNote": {
+    "n": 78,
+    "text": "Refers to Altindag, Cankaya, Etimesgut, Golbasi, Keçioren, Mamak, Sincan and Yenimahalle."
+   }
+  },
+  {
+   "id": "TM",
+   "m49": 795,
+   "name": "Ashgabat",
+   "unCountry": "Turkmenistan",
+   "unCity": "Ashgabat",
+   "cityCode": 22739,
+   "unCapitalType": "Capital",
+   "popThousands": 810.186,
+   "lat": 37.95,
+   "lon": 58.38333
+  },
+  {
+   "id": "TV",
+   "m49": 798,
+   "name": "Funafuti",
+   "unCountry": "Tuvalu",
+   "unCity": "Funafuti",
+   "cityCode": 22743,
+   "unCapitalType": "Capital",
+   "popThousands": 7.042,
+   "lat": -8.51889,
+   "lon": 179.1991
+  },
+  {
+   "id": "UG",
+   "m49": 800,
+   "name": "Kampala",
+   "unCountry": "Uganda",
+   "unCity": "Kampala",
+   "cityCode": 22744,
+   "unCapitalType": "Capital",
+   "popThousands": 2986.352,
+   "lat": 0.31628,
+   "lon": 32.58219,
+   "unNote": {
+    "n": 80,
+    "text": "Data for 2014 also includes Kira, Makindye Ssabagabo and Nansana. The population of Kampala (city proper) was reported as 1,507,080 in 2014."
+   }
+  },
+  {
+   "id": "UA",
+   "m49": 804,
+   "name": "Kyiv",
+   "unCountry": "Ukraine",
+   "unCity": "Kyiv (Kiev)",
+   "cityCode": 22765,
+   "unCapitalType": "Capital",
+   "popThousands": 2956.706,
+   "lat": 50.44537,
+   "lon": 30.51863
+  },
+  {
+   "id": "AE",
+   "m49": 784,
+   "name": "Abu Dhabi",
+   "unCountry": "United Arab Emirates",
+   "unCity": "Abu Zaby (Abu Dhabi)",
+   "cityCode": 22632,
+   "unCapitalType": "Capital",
+   "popThousands": 1419.699,
+   "lat": 24.46478,
+   "lon": 54.36178
+  },
+  {
+   "id": "GB",
+   "m49": 826,
+   "name": "London",
+   "unCountry": "United Kingdom",
+   "unCity": "London",
+   "cityCode": 22860,
+   "unCapitalType": "Capital",
+   "popThousands": 9046.485,
+   "lat": 51.50853,
+   "lon": -0.12574,
+   "unNote": {
+    "n": 81,
+    "text": "Data for 1951, 1961 and 1971 refer to \"Conurbation\". Data from 1981 onwards refer to \"Urban area\" (Greater London)."
+   }
+  },
+  {
+   "id": "TZ",
+   "m49": 834,
+   "name": "Dodoma",
+   "unCountry": "United Republic of Tanzania",
+   "unCity": "Dodoma",
+   "cityCode": 22895,
+   "unCapitalType": "Capital",
+   "popThousands": 261.645,
+   "lat": -6.17221,
+   "lon": 35.73947
+  },
+  {
+   "id": "US",
+   "m49": 840,
+   "name": "Washington, D.C.",
+   "unCountry": "United States of America",
+   "unCity": "Washington, D.C.",
+   "cityCode": 23174,
+   "unCapitalType": "Capital",
+   "popThousands": 5206.593,
+   "lat": 38.89511,
+   "lon": -77.03637
+  },
+  {
+   "id": "UY",
+   "m49": 858,
+   "name": "Montevideo",
+   "unCountry": "Uruguay",
+   "unCity": "Montevideo",
+   "cityCode": 23193,
+   "unCapitalType": "Capital",
+   "popThousands": 1736.989,
+   "lat": -34.83346,
+   "lon": -56.16735,
+   "unNote": {
+    "n": 82,
+    "text": "Data from 1963 to 1985 refer to the department of Montevideo and localities of the department of Canelones. Data from 1996 to 2011 refer to the department of Montevideo and localities of the departments of Canelones and San José (Cerámicas del Sur and Ciudad del Plata)."
+   }
+  },
+  {
+   "id": "UZ",
+   "m49": 860,
+   "name": "Tashkent",
+   "unCountry": "Uzbekistan",
+   "unCity": "Tashkent",
+   "cityCode": 23209,
+   "unCapitalType": "Capital",
+   "popThousands": 2463.969,
+   "lat": 41.26465,
+   "lon": 69.21627
+  },
+  {
+   "id": "VU",
+   "m49": 548,
+   "name": "Port Vila",
+   "unCountry": "Vanuatu",
+   "unCity": "Port Vila",
+   "cityCode": 21956,
+   "unCapitalType": "Capital",
+   "popThousands": 52.69,
+   "lat": -17.73381,
+   "lon": 168.32188
+  },
+  {
+   "id": "VE",
+   "m49": 862,
+   "name": "Caracas",
+   "unCountry": "Venezuela (Bolivarian Republic of)",
+   "unCity": "Caracas",
+   "cityCode": 23217,
+   "unCapitalType": "Capital",
+   "popThousands": 2934.56,
+   "lat": 10.48801,
+   "lon": -66.87919,
+   "unNote": {
+    "n": 83,
+    "text": "Refers to the Municipality of El Libertador in the Federal District, the Municipality of Sucre in the State of Miranda, and the parishes of Carrizal (Municipality of Carrizal), Cecilio Acosta (Municipality of Guaicaipuro), and San Antonio (Municipality of Las Salias) in the State of Miranda."
+   }
+  },
+  {
+   "id": "VN",
+   "m49": 704,
+   "name": "Hanoi",
+   "unCountry": "Viet Nam",
+   "unCity": "Hà Noi",
+   "cityCode": 22457,
+   "unCapitalType": "Capital",
+   "popThousands": 4282.738,
+   "lat": 21.0245,
+   "lon": 105.84117,
+   "unNote": {
+    "n": 84,
+    "text": "Data refer to urban population in the city districts. Data after 2008 include urban population in former Ha Tay Province."
+   }
+  },
+  {
+   "id": "YE",
+   "m49": 887,
+   "name": "Sana'a",
+   "unCountry": "Yemen",
+   "unCity": "Sana'a'",
+   "cityCode": 23239,
+   "unCapitalType": "Capital",
+   "popThousands": 2779.317,
+   "lat": 15.35312,
+   "lon": 44.20782,
+   "unNote": {
+    "n": 85,
+    "text": "Data for 1950,1960 and 1975 refer to city proper. Data for 1986,1994 ,2004 and 2009 refer to urban agglomeration."
+   }
+  },
+  {
+   "id": "ZM",
+   "m49": 894,
+   "name": "Lusaka",
+   "unCountry": "Zambia",
+   "unCity": "Lusaka",
+   "cityCode": 23277,
+   "unCapitalType": "Capital",
+   "popThousands": 2523.844,
+   "lat": -15.41337,
+   "lon": 28.27715
+  },
+  {
+   "id": "ZW",
+   "m49": 716,
+   "name": "Harare",
+   "unCountry": "Zimbabwe",
+   "unCity": "Harare",
+   "cityCode": 22513,
+   "unCapitalType": "Capital",
+   "popThousands": 1515.016,
+   "lat": -17.82935,
+   "lon": 31.05389
+  },
+  {
+   "id": "TW",
+   "m49": 158,
+   "name": "Taipei",
+   "unCountry": "China, Taiwan Province of China",
+   "unCity": "Taibei",
+   "cityCode": 895000149,
+   "unCapitalType": "Others",
+   "popThousands": 2705.791,
+   "lat": 25.04701,
+   "lon": 121.54568
+  }
+ ],
+ "alternates": [
+  {
+   "id": "BJ",
+   "m49": 204,
+   "unCountry": "Benin",
+   "unCity": "Porto-Novo",
+   "cityCode": 20891,
+   "unCapitalType": "Constitutional Capital",
+   "popThousands": 285.328,
+   "lat": 6.49646,
+   "lon": 2.60359
+  },
+  {
+   "id": "BO",
+   "m49": 68,
+   "unCountry": "Bolivia (Plurinational State of)",
+   "unCity": "Sucre",
+   "cityCode": 20158,
+   "unCapitalType": "Constitutional Capital",
+   "popThousands": 277.91,
+   "lat": -19.03332,
+   "lon": -65.26274
+  },
+  {
+   "id": "CI",
+   "m49": 384,
+   "unCountry": "Côte d'Ivoire",
+   "unCity": "Yamoussoukro",
+   "cityCode": 21606,
+   "unCapitalType": "Capital",
+   "popThousands": 231.072,
+   "lat": 6.82055,
+   "lon": -5.27674
+  },
+  {
+   "id": "NL",
+   "m49": 528,
+   "unCountry": "Netherlands",
+   "unCity": "Amsterdam",
+   "cityCode": 21930,
+   "unCapitalType": "Capital",
+   "popThousands": 1131.69,
+   "lat": 52.37403,
+   "lon": 4.88969
+  },
+  {
+   "id": "ZA",
+   "m49": 710,
+   "unCountry": "South Africa",
+   "unCity": "Bloemfontein",
+   "cityCode": 22479,
+   "unCapitalType": "Judiciary Capital",
+   "popThousands": 545.875,
+   "lat": -29.12106,
+   "lon": 26.214
+  },
+  {
+   "id": "ZA",
+   "m49": 710,
+   "unCountry": "South Africa",
+   "unCity": "Cape Town",
+   "cityCode": 22481,
+   "unCapitalType": "Legislative Capital",
+   "popThousands": 4430.367,
+   "lat": -33.92584,
+   "lon": 18.42322
+  },
+  {
+   "id": "LK",
+   "m49": 144,
+   "unCountry": "Sri Lanka",
+   "unCity": "Sri Jayewardenepura Kotte",
+   "cityCode": 20418,
+   "unCapitalType": "Legislative Capital",
+   "popThousands": 103.248,
+   "lat": 6.90278,
+   "lon": 79.90833
+  }
+ ]
+}

@@ -19,7 +19,7 @@
                     (E1: median + 1; E2: median + 1 but never above the fair cap)
    The US States benchmark is the frozen August Countries Medium (test/baseline-august.json), not today's Countries. */
 const Engine = require('../engine.js');
-const countries = require('../pack-countries.js'), states = require('../pack-states.js'), august = require('./pack-countries-august.js');
+const countries = require('../pack-countries.js'), capitals = require('../pack-capitals.js'), states = require('../pack-states.js'), august = require('./pack-countries-august.js');
 const baseline = require('./baseline-august.json');
 
 const fairCap = S => Math.floor(1.25 * Engine.priceOf(S.pack, S.items[S.i]).ideal);
@@ -135,11 +135,11 @@ function giantsAtWallet(pack, lots, level, who, games, seed0) {
   }
   return { giants: n, nearWallet: +(100 * near / Math.max(1, n)).toFixed(1) };
 }
-module.exports = { play, run, POL, REF, runLearner, probe, dropStats, giantsAtWallet, august };
+module.exports = { capitals, play, run, POL, REF, runLearner, probe, dropStats, giantsAtWallet, august };
 
 /* ================================================================================================ the report (CLI only) */
 if (require.main === module && !process.env.NODE_TEST_CONTEXT) {   // `node --test` must not start the long report
-  const args = process.argv.slice(2), cmd = ['countries', 'states', 'learner', 'unpredictable', 'baseline'].includes(args[0]) ? args.shift() : 'all';
+  const args = process.argv.slice(2), cmd = ['countries', 'capitals', 'states', 'learner', 'unpredictable', 'baseline'].includes(args[0]) ? args.shift() : 'all';
   const num = (v, d) => (v !== undefined && !Number.isNaN(+v) ? +v : d);
   const pad = (v, n = 6) => String(v).padStart(n);
   const LV = ['beginner', 'medium', 'expert'];
@@ -161,15 +161,15 @@ if (require.main === module && !process.env.NODE_TEST_CONTEXT) {   // `node --te
       console.log(`${pad(n, 4)} ${(mode || 'mix').slice(0, 5).padEnd(5)} | ${pad(r.A.win)} ${pad(r.A.share)} ${pad(r.A.botLeft)} | ${pad(r.B.win)} | ${pad(r.C.win)} | ${pad(r.D.win)} | ${pad(r.C1.win)} | ${pad(r.C2.win)} | ${pad(r.C3.win)} | ${r.A.unsold}`);
     }
   };
-  const reportCountries = games => {
+  const reportCountries = (games, pk = countries) => {
     const seed = num(args[1], 50000);
-    console.log(`COUNTRIES — win % (A creeper / B fair / C smart-EUR1 / Cs smart-scaled / D rationer), A's share of the pool %, bot money left vs A %, unsold %  ${games} games per cell`);
+    console.log(`${pk.id.toUpperCase()} — win % (A creeper / B fair / C smart-EUR1 / Cs smart-scaled / D rationer), A's share of the pool %, bot money left vs A %, unsold %  ${games} games per cell`);
     console.log('target: Medium within +-10 of the frozen August numbers; Beginner A <= 35 and B, Cs 45-65; Expert within +-10 of Medium; every temperament keeps B, C 15-75; A <= 60% of the points');
     for (const lv of LV) {
       console.log(`\n${lv}`);
       console.log('lots mode  |  A win share left |  B  |  C  | Cs  |  D  | vs frozen August Medium (A/B/C)');
-      for (const n of countries.lots.options) for (const mode of [null, 'conservative', 'balanced', 'aggressive']) {
-        const r = {}; for (const p of ['A', 'B', 'C', 'Cs', 'D']) r[p] = run(countries, n, lv, p, games, seed, mode);
+      for (const n of pk.lots.options) for (const mode of [null, 'conservative', 'balanced', 'aggressive']) {
+        const r = {}; for (const p of ['A', 'B', 'C', 'Cs', 'D']) r[p] = run(pk, n, lv, p, games, seed, mode);
         const ref = baseline.levels.medium[n], d = ['A', 'B', 'C'].map(k => (r[k].win - ref[k].win).toFixed(0)).join('/');
         console.log(`${pad(n, 4)} ${(mode || 'mix').slice(0, 5).padEnd(5)} | ${pad(r.A.win)} ${pad(r.A.share)} ${pad(r.A.botLeft)} | ${pad(r.B.win)} | ${pad(r.C.win)} | ${pad(r.Cs.win)} | ${pad(r.D.win)} | ${d}   (unsold ${r.A.unsold}%)`);
       }
@@ -198,5 +198,6 @@ if (require.main === module && !process.env.NODE_TEST_CONTEXT) {   // `node --te
   if (cmd === 'baseline') reportBaseline(games);
   else if (cmd === 'learner') reportLearner();
   else if (cmd === 'unpredictable') reportUnpredictable();
+  else if (cmd === 'capitals') reportCountries(games, capitals);
   else { if (cmd !== 'states') reportCountries(games); if (cmd !== 'countries') { if (cmd === 'all') console.log(''); reportStates(games); } }
 }
