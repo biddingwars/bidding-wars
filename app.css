@@ -297,6 +297,7 @@ button.row{width:100%;text-align:left}
 .holder{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;background:var(--glass);border:1px solid var(--stroke);border-radius:14px;padding:5px 12px 5px 9px;margin-top:8px;max-width:100%}
 .holder span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .taunt{font-size:13px;color:var(--ink2);font-style:italic;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:none;margin-top:6px;padding:0 6px;height:1.4em;max-width:100%}
+.taunt.fact{font-style:normal;white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;height:auto;max-height:4.3em;line-height:1.4;text-wrap:balance}
 .orbs{display:grid;grid-template-columns:repeat(var(--n,4),1fr);gap:6px;flex:none;padding-top:20px}
 .po{display:flex;flex-direction:column;align-items:center;position:relative;min-width:0}
 .po .o,.lbr .o{border-radius:50%;display:grid;place-items:center;font-weight:800;color:#fff;flex:none;border:2px solid rgba(255,255,255,.35);box-shadow:0 8px 20px rgba(0,0,0,.3),inset 0 2px 0 rgba(255,255,255,.3)}
@@ -334,6 +335,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   .cname.n3{font-size:18px}
   .holder{margin-top:4px;padding:3px 10px 3px 8px;font-size:12px}
   .taunt{margin-top:2px;font-size:12px}
+  .taunt.fact{font-size:12px}
   .orbs{padding-top:16px}
   .po .o{width:44px;height:44px;font-size:17px}
   .po .rl{display:none}

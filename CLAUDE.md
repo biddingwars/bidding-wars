@@ -116,7 +116,7 @@ fails if the States screens contain `€`, "euro" or "country" in any language.
 - Drop out and whoever holds the top bid buys it at that price.
 - Budget. Countries: a table per level and lot count — Medium and Expert €10 per lot (€50 / 100 / 150 / 200 / 300 for 5 / 10 / 15 / 20 / 30 lots),
   Beginner half of that (€25 / 50 / 75 / 100 / 150; see "Countries"). US States: a budget *table* by lot
-  count ($85 / $165 / $180 / $210 for 5 / 10 / 15 / 20 lots; **States stops at 20 lots since v40**, see "The stingy-player exploit"). Money is deliberately scarce in both —
+  count ($17 / $34 / $51 / $68 for 5 / 10 / 15 / 20 lots since v43 — $170 for all 50 states, one dollar per million people for the two players together; **States stops at 20 lots since v40**, see "The stingy-player exploit"). Money is deliberately scarce in both —
   see "Economy and bot".
 - Default 10 seconds per decision; timeout = automatic drop out.
 - The opening €1 bid rotates seat by seat each lot.
@@ -251,8 +251,8 @@ Census-boundary centroids, taunts, fun facts).
   state comes up exactly once, shuffled. (Measured: every state keeps the chance n/50, but two states of similar size — KY and LA — never share a round, 0.000% against 3.7% for independent draws;
   a fully random draw would widen the swing of a 10-lot round's total value from SD 18.6% to 31.5%. Countries switched to `'random'`; States stays systematic until the bot is re-tuned for the wider swing — set `economy.sampling` in `test/make-pack-states.js` to try it.) No difficulty levels (`levels` has one
   entry and the setup hides the section when there is only one).
-- **Pricing.** Prices run at **3× the original scale** (`economy.priceScale`; an average
-  lot is $30, CA $173, TX $139, WY $3, the smallest states $3–6 instead of $1–2).
+- **Pricing.** Since v43 (owner: "the prices are way too high for way too little population") prices run at the **original scale** (`economy.priceScale: 1`; an average
+  lot is $10, about $1.5 per million at the fair price: CA $57, TX $46, FL $34, NY $29, the smallest states $1–2; it was 3×: lot $30, CA $173).
   Ideal = the state's share of the 50-state total × (10 × priceScale × 50), in whole dollars
   (floor $1); a scale factor `k` makes the whole-dollar ideals sum to 50 average lots.
   `max` = ideal × a multiplier that eases from about 2.0 (smallest) to 1.35 (largest). Both
@@ -320,8 +320,9 @@ knife-edge (50 lots: creeper 2% at 60% budget, 99% at 70%). Measured on the real
 
 - **Budget = f × lots × average ideal price** (`economy.budgets` is the resulting table in dollars).
   f = 0.57 (5 lots) and 0.55 (10 lots) — so few lots that one state decides the round — then 0.40 (15),
-  and **0.35 at 20 lots** ($210; the former 30 / 40 / 50-lot budgets were $315 / $420 / $525). `validatePack` refuses a budget for the biggest lot option above 80% of the
-  expected price of the four biggest states (midpoint of ideal and max, plus the bot's 15% premium): $525 vs a cap of $545.
+  and **0.35 at 20 lots** — **replaced in v43** (owner: "for 50 lots everyone should have 170 USD, that is 1 USD per million population; adjust the other rounds") by **$3.4 per lot: $17 / $34 / $51 / $68 for 5 / 10 / 15 / 20 lots**
+  (f = 0.34 of the round's fair value at every lot count, since the price scale dropped to 1; before v43 $85 / $165 / $180 / $210). `validatePack` refuses a budget for the biggest lot option above 80% of the
+  expected price of the four biggest states (midpoint of ideal and max, plus the bot's 15% premium): $68 against a cap of about $200.
 - **End-of-round rule** (the walkover in `startLot`; both packs, since v37): when only one player has money left, that player takes **every remaining lot for $1 each** (free once their money is gone).
   Going all in is a deliberate risk: it hands the rest of the round to the rival. v36 and earlier sold the rest at 80% of the fair price ("house price", `economy.endgame { rule: 'house', price }`, which the
   engine still supports and `test/economy.js` can still use on a scratch pack); the owner asked for the $1 sweep back. Measured effect of the switch: almost none on the exploit search or the win-rate

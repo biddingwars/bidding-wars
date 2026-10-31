@@ -720,7 +720,7 @@ const STRP={ countries:{
  en:{ budgetNote:'Set by the round length — scarce on purpose.',
   rivalDesc:'The <b>bot</b> prices every state by population, spends its money evenly across the round and rolls a fresh walk-away limit for each lot. Each game it is in a different mood — cautious, balanced or bold — and you are not told which. If you run low on money it may go all-in to knock you out.',
   rulesP1:'Random states come up one at a time, each one at most once per round. <b>1 point = 1 million people</b>, and the population stays blacked out until the very end.',
-  rulesP4:'Everyone starts with the same budget, set by the round length: <b>$85 for 5 states, $165 for 10, $180 for 15, $210 for 20</b>. Money is scarce on purpose: even the biggest budget cannot buy the four biggest states.',
+  rulesP4:'Everyone starts with the same budget, set by the round length: <b>$17 for 5 states, $34 for 10, $51 for 15, $68 for 20</b>. Money is scarce on purpose: even the biggest budget cannot buy the four biggest states.',
   rulesP5:'The bot values every state by population and rolls a fresh walk-away limit for each lot, so you can never quite read it. It spends evenly, pays a little extra for the biggest states, and each game it is cautious, balanced or bold. If it has far more money than you, it bids the amount you can no longer top. Beat its limit by one dollar and the lot is yours — unless it can knock you out.',
   rulesP6:'Every state is equally likely to come up, and a state never comes up twice in the same round. Pick 5, 10, 15 or 20 states. Short rounds are luck-heavy: with 5 or 10 states one big draw can decide the game. The longer the round, the more skill counts.',
   rulesP8:'<b>Out of money?</b> When only one player still has money, that player takes every remaining state for $1 each. Going all in is a real risk: it hands the rest of the round to your rival.',
@@ -730,7 +730,7 @@ const STRP={ countries:{
  de:{ budgetNote:'Hängt von der Rundenlänge ab – mit Absicht knapp.',
   rivalDesc:'Der <b>Bot</b> bewertet jeden Bundesstaat nach Einwohnerzahl, verteilt sein Geld gleichmäßig über die Runde und würfelt pro Los eine neue Schmerzgrenze. In jedem Spiel hat er eine andere Laune – vorsichtig, ausgewogen oder mutig – und du erfährst nicht, welche. Wird dein Geld knapp, geht er womöglich aufs Ganze, um dich auszustechen.',
   rulesP1:'Nacheinander kommen zufällige Bundesstaaten auf den Tisch, jeder höchstens einmal pro Runde. <b>1 Punkt = 1 Million Einwohner</b>, und die Einwohnerzahl bleibt bis ganz zum Schluss geschwärzt.',
-  rulesP4:'Alle starten mit demselben Budget, das von der Rundenlänge abhängt: <b>$85 für 5 Bundesstaaten, $165 für 10, $180 für 15, $210 für 20</b>. Das Geld ist absichtlich knapp: Selbst das größte Budget reicht nicht für die vier größten Bundesstaaten.',
+  rulesP4:'Alle starten mit demselben Budget, das von der Rundenlänge abhängt: <b>$17 für 5 Bundesstaaten, $34 für 10, $51 für 15, $68 für 20</b>. Das Geld ist absichtlich knapp: Selbst das größte Budget reicht nicht für die vier größten Bundesstaaten.',
   rulesP5:'Der Bot bewertet jeden Bundesstaat nach Einwohnerzahl und würfelt pro Los eine neue Schmerzgrenze, du kannst ihn also nie ganz durchschauen. Er verteilt sein Geld gleichmäßig, zahlt für die größten Staaten etwas mehr und ist in jedem Spiel vorsichtig, ausgewogen oder mutig. Hat er viel mehr Geld als du, bietet er den Betrag, den du nicht mehr überbieten kannst. Überbiete seine Grenze um einen Dollar und das Los gehört dir – es sei denn, er kann dich ausstechen.',
   rulesP6:'Jeder Bundesstaat kommt mit der gleichen Wahrscheinlichkeit dran, und keiner kommt in derselben Runde zweimal vor. Wähle 5, 10, 15 oder 20 Bundesstaaten. Kurze Runden sind glückslastig: Bei 5 oder 10 Bundesstaaten kann ein großer Treffer das Spiel entscheiden. Je länger die Runde, desto mehr zählt Können.',
   rulesP8:'<b>Kein Geld mehr?</b> Hat nur noch ein Spieler Geld, bekommt er alle übrigen Bundesstaaten für je $1. Alles auf eine Karte zu setzen ist ein echtes Risiko: Es schenkt deinem Gegner den Rest der Runde.',
@@ -740,7 +740,7 @@ const STRP={ countries:{
  it:{ budgetNote:'Dipende dalla lunghezza della partita — scarso di proposito.',
   rivalDesc:'Il <b>bot</b> valuta ogni stato in base alla popolazione, distribuisce i soldi in modo uniforme lungo la partita e tira un nuovo limite di rinuncia per ogni lotto. Ogni partita ha un umore diverso – prudente, equilibrato o audace – e non ti dice quale. Se i tuoi soldi scarseggiano, può giocare il tutto per tutto per metterti fuori gioco.',
   rulesP1:'Escono stati a caso, uno alla volta e al massimo una volta per partita. <b>1 punto = 1 milione di abitanti</b>, e la popolazione resta oscurata fino alla fine.',
-  rulesP4:'Tutti partono con lo stesso budget, deciso dalla lunghezza della partita: <b>$85 per 5 stati, $165 per 10, $180 per 15, $210 per 20</b>. Il denaro è scarso di proposito: nemmeno il budget più alto basta per i quattro stati più grandi.',
+  rulesP4:'Tutti partono con lo stesso budget, deciso dalla lunghezza della partita: <b>$17 per 5 stati, $34 per 10, $51 per 15, $68 per 20</b>. Il denaro è scarso di proposito: nemmeno il budget più alto basta per i quattro stati più grandi.',
   rulesP5:'Il bot valuta ogni stato in base alla popolazione e tira un nuovo limite di rinuncia per ogni lotto, quindi non riesci mai a leggerlo. Spende in modo uniforme, paga un po’ di più per gli stati più grandi ed è, partita per partita, prudente, equilibrato o audace. Se ha molti più soldi di te, offre la cifra che non puoi più superare. Supera il suo limite di un dollaro e il lotto è tuo, a meno che non possa metterti fuori gioco.',
   rulesP6:'Ogni stato ha la stessa probabilità di uscire e nessuno esce due volte nella stessa partita. Scegli 5, 10, 15 o 20 stati. Le partite corte dipendono molto dalla fortuna: con 5 o 10 stati una sola estrazione può decidere tutto. Più la partita è lunga, più conta l’abilità.',
   rulesP8:'<b>Senza soldi?</b> Quando solo un giocatore ha ancora denaro, si prende tutti gli stati rimasti a $1 ciascuno. Puntare tutto è un vero rischio: regala il resto della partita al rivale.',
@@ -750,7 +750,7 @@ const STRP={ countries:{
  es:{ budgetNote:'Depende de la duración de la partida — escaso a propósito.',
   rivalDesc:'El <b>bot</b> valora cada estado por su población, reparte su dinero de forma pareja a lo largo de la partida y saca un nuevo límite de retirada para cada lote. Cada partida tiene otro humor —prudente, equilibrado o audaz— y no te dice cuál. Si te quedas sin dinero, puede jugárselo todo para dejarte fuera.',
   rulesP1:'Salen estados al azar, uno a uno y como máximo una vez por partida. <b>1 punto = 1 millón de habitantes</b>, y la población permanece tachada hasta el final.',
-  rulesP4:'Todos empiezan con el mismo presupuesto, que depende de la duración de la partida: <b>$85 para 5 estados, $165 para 10, $180 para 15, $210 para 20</b>. El dinero escasea a propósito: ni el presupuesto más grande alcanza para los cuatro estados más grandes.',
+  rulesP4:'Todos empiezan con el mismo presupuesto, que depende de la duración de la partida: <b>$17 para 5 estados, $34 para 10, $51 para 15, $68 para 20</b>. El dinero escasea a propósito: ni el presupuesto más grande alcanza para los cuatro estados más grandes.',
   rulesP5:'El bot valora cada estado por su población y saca un nuevo límite de retirada para cada lote, así que nunca puedes leerlo del todo. Gasta de forma pareja, paga algo más por los estados más grandes y en cada partida es prudente, equilibrado o audaz. Si tiene mucho más dinero que tú, ofrece la cantidad que ya no puedes superar. Supera su límite por un dólar y el lote es tuyo, salvo que pueda dejarte fuera.',
   rulesP6:'Todos los estados tienen la misma probabilidad de salir y ninguno sale dos veces en la misma partida. Elige 5, 10, 15 o 20 estados. Las partidas cortas dependen mucho de la suerte: con 5 o 10 estados, un solo sorteo puede decidirlo todo. Cuanto más larga es la partida, más cuenta la habilidad.',
   rulesP8:'<b>¿Sin dinero?</b> Cuando solo un jugador conserva dinero, se lleva todos los estados restantes por $1 cada uno. Jugárselo todo es un riesgo real: le regala el resto de la ronda a tu rival.',
@@ -760,7 +760,7 @@ const STRP={ countries:{
  fr:{ budgetNote:'Dépend de la longueur de la partie — rare exprès.',
   rivalDesc:'Le <b>bot</b> évalue chaque État selon sa population, répartit son argent régulièrement sur la partie et tire une nouvelle limite d’abandon à chaque lot. À chaque partie il est d’une humeur différente — prudent, équilibré ou audacieux — sans te dire laquelle. Si ton argent s’épuise, il peut tout jouer pour t’éliminer.',
   rulesP1:'Des États tombent au hasard, un par un et au plus une fois par partie. <b>1 point = 1 million d’habitants</b>, et la population reste masquée jusqu’à la fin.',
-  rulesP4:'Tout le monde commence avec le même budget, fixé par la longueur de la partie : <b>$85 pour 5 États, $165 pour 10, $180 pour 15, $210 pour 20</b>. L’argent est rare exprès : même le plus gros budget ne suffit pas pour les quatre plus grands États.',
+  rulesP4:'Tout le monde commence avec le même budget, fixé par la longueur de la partie : <b>$17 pour 5 États, $34 pour 10, $51 pour 15, $68 pour 20</b>. L’argent est rare exprès : même le plus gros budget ne suffit pas pour les quatre plus grands États.',
   rulesP5:'Le bot évalue chaque État selon sa population et tire une nouvelle limite d’abandon à chaque lot, impossible donc de le lire complètement. Il dépense régulièrement, paye un peu plus pour les plus grands États et, à chaque partie, est prudent, équilibré ou audacieux. S’il a bien plus d’argent que toi, il mise la somme que tu ne peux plus dépasser. Dépasse sa limite d’un dollar et le lot est à toi, sauf s’il peut t’éliminer.',
   rulesP6:'Chaque État a autant de chances de sortir, et aucun ne sort deux fois dans la même partie. Choisis 5, 10, 15 ou 20 États. Les parties courtes dépendent beaucoup de la chance : avec 5 ou 10 États, un seul tirage peut tout décider. Plus la partie est longue, plus l’habileté compte.',
   rulesP8:'<b>Plus d’argent ?</b> Quand un seul joueur a encore de l’argent, il rafle tous les États restants pour $1 chacun. Tout miser est un vrai risque : cela offre le reste de la manche à votre rival.',
@@ -1046,7 +1046,7 @@ function paintLot() {
             <circle cx="100" cy="100" r="92" fill="none" stroke="var(--track)" stroke-width="9"/><circle class="prog" cx="100" cy="100" r="92" fill="none" stroke="url(#rg)" stroke-width="9" stroke-linecap="round"/></svg>
           <div class="in" id="bump"><div class="lbl">${esc(t('standing'))}</div><div class="price"><sup>${esc(cur())}</sup><span id="price">${L.price}</span></div></div><span class="secs num" id="secs" aria-hidden="true"></span></div>
         <div class="holder"><span class="dot s${L.holder % 4}" id="hd"></span><span id="hn"></span></div>
-        <div class="taunt" id="taunt" aria-hidden="true">&nbsp;</div>
+        <div class="taunt${PACK.captionFacts ? ' fact' : ''}" id="taunt" aria-hidden="true">${PACK.captionFacts ? esc(Engine.factFor(S.pack, c, LANG)) : '&nbsp;'}</div>
       </div></div>
       <div class="aud-r">
         <div class="orbs" id="players" style="--n:${S.players.length}">${S.players.map(tileHtml).join('')}</div>
@@ -1167,7 +1167,7 @@ function showPrice(prev) {
 }
 
 function showTaunt(text) {
-  const el = $('#taunt'); if (!el) return;
+  const el = $('#taunt'); if (!el || (PACK && PACK.captionFacts)) return;   // US States: the caption is the state's fun fact (set in paintLot), never the rival's one-liners
   el.textContent = text ? '“' + text + '”' : ' ';
   if (text && !FX.reduced) el.animate([{ opacity: 0, transform: 'translateY(4px)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'ease-out' });
   if (text) live(text);

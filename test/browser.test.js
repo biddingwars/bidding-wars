@@ -647,7 +647,7 @@ test('US STATES: 2 to 4 players in every language, light and dark, never a euro 
   }
 });
 
-test('US STATES: the auction never scrolls with the longest names, 4 seats, a 3-digit price and a long taunt', { skip: SKIP }, async () => {
+test('US STATES: the auction never scrolls with the longest names, 4 seats, a 3-digit price and the longest fun-fact caption', { skip: SKIP }, async () => {
   const sizes = [[402, 720], [375, 560], [393, 700], [375, 667], [430, 932], [834, 1194], [1194, 834], [507, 1024], [844, 390]];
   for (const [w, h] of sizes) for (const lang of ['de', 'fr']) for (const np of [2, 4]) {
     const { page, errors, ctx } = await open({ viewport: { width: w, height: h }, init: l => localStorage.setItem('lang:v1', l), initArg: lang });
@@ -657,14 +657,16 @@ test('US STATES: the auction never scrolls with the longest names, 4 seats, a 3-
       const names = ['Maximiliane-Sophie', 'Bartholomäus-Jan', 'Wolfeschlegelstein', 'Ägidius-Konstantin'];
       S = Engine.newAuction({ pack, kind: np === 2 ? 'solo' : 'multi', level: 'all', lots: 50, clock: 30, players: np === 2 ? [{ name: names[0] }, { name: 'Bot', ai: true }] : names.map(n => ({ name: n })), rng: rnd });
       Engine.startLot(S);
-      S.items[S.i] = pack.items.find(i => i.id === 'NC');
+      S.items[S.i] = pack.items.find(i => i.id === 'MO');
       S.players.forEach((p, i) => { p.budget = 500 - i; p.bought = new Array(20).fill({}); });
       S.L.price = 289; S.L.holder = np - 1; S.L.turn = 0;
-      S._taunt = 'Empires are built on lots like this one. Yours is built on islands of regret and spreadsheets.';
+      S._taunt = 'Empires are built on lots like this one. Yours is built on islands of regret and spreadsheets.';   // must NOT show: the States caption is the fun fact
       paintLot(); showTaunt(S._taunt); controls();
     }, np);
     const r = await page.evaluate(() => { const sc = document.querySelector('.screen'); return { y: sc.scrollHeight - sc.clientHeight, x: sc.scrollWidth - sc.clientWidth, page: document.documentElement.scrollHeight - innerHeight }; });
     assert.ok(r.y <= 1 && r.x <= 1 && r.page <= 1, `${w}x${h} ${lang} ${np}p scrolls: ${JSON.stringify(r)}`);
+    const cap = await page.$eval('#taunt', e => ({ t: e.textContent, h: e.getBoundingClientRect().height, fact: e.classList.contains('fact') }));
+    assert.ok(cap.fact && /Gateway Arch/.test(cap.t) && !/Empires|“/.test(cap.t), `${w}x${h} the caption is the fun fact, not a taunt: ${cap.t}`);
     const dockBottom = await page.$eval('#ctrl', e => e.getBoundingClientRect().bottom);
     assert.ok(dockBottom <= h + 0.5, `${w}x${h} dock fits (${dockBottom})`);
     assert.deepEqual(errors, []);

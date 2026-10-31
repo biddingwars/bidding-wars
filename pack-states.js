@@ -16,13 +16,13 @@
     budgetPerLot: 10,                       // nominal only: the real budgets are the table in economy.budgets
     lots: { options: [5, 10, 15, 20], default: 10 },    // capped at 20 on purpose (v40): a fixed-cap player beats the bot in 30-50-lot rounds (CLAUDE.md, "The stingy-player exploit"); the engine still draws any count
 
-    /* ECONOMY (see CLAUDE.md "US States economy"). Prices run at 3x the old scale (an average lot is $30, the smallest
-       states $3-6) and the money is scarce: budget = f x lots x average ideal price, f = 0.30-0.45 for short rounds
-       and 0.35 at 20 lots ($210; the 30-50-lot budgets 315 / 420 / 525 were dropped with those lot options in v40). 5 and 10 lots are
-       deliberately looser (f = 0.57 / 0.55): with so few lots one state decides the round, and any tighter budget makes the creeper win more. */
+    /* ECONOMY (see CLAUDE.md "US States economy"). v43, owner: one dollar per million people. A player has $170 for all 50 states
+       ($3.4 per lot: $17 / $34 / $51 / $68 for 5 / 10 / 15 / 20 lots) and prices run at the original scale (priceScale 1: an average lot is $10,
+       the smallest states $1-2, California $58). The money is scarce on purpose: the budget is about a third of the round's fair value, and the bot's
+       limits (limitMul, below) were re-found for that ratio with the fine fixed-cap search of test/exploit.js. */
     economy: {
-      priceScale: 3,
-      budgets: { 5: 85, 10: 165, 15: 180, 20: 210 },
+      priceScale: 1,
+      budgets: {"5":17,"10":34,"15":51,"20":68},
       /* no endgame block: when only one player has money left, that player takes every remaining lot for $1 each (the walkover in startLot) - going all in is a risk on purpose */
       sampling: 'systematic',
       /* the five raise buttons grow with the current price (the item's fair price would leak its size) */
@@ -32,7 +32,7 @@
     /* The bot: Big-4 premium, paced spending, knockout awareness, temperament + mood. limitMul and spread are the
        calibration tables by lot count (test/economy.js re-measures them on the real engine). */
     bot: {
-      limitMul: { 5: 1.0, 10: 0.925, 15: 0.72, 20: 0.62 },   // 15+ lots are tuned together with rollSpan (below): a player who never pays more than ~0.8x the fair price beat the old limits 76-100% of long rounds (see CLAUDE.md)
+      limitMul: {"5":0.7,"10":0.52,"15":0.55,"20":0.55},   // 15+ lots are tuned together with rollSpan (below): a player who never pays more than ~0.8x the fair price beat the old limits 76-100% of long rounds (see CLAUDE.md)
       rollSpan: 0.4,                                   // the walk-away roll uses the first 40% of [ideal, max]: less lot-to-lot swing in the bot's limit, so no fixed-limit player out-earns it
       noise: 0.15,                                     // a little per-lot jitter on top, so the narrower roll does not make the drop-out point easy to read (0.15 keeps the exploit search under its limit; 0.25+ does not)
       premium: { top: 4, pct: 0.15 },
@@ -42,7 +42,7 @@
       temperaments: {
         weights: [25, 50, 25],                       // conservative / balanced / aggressive
         bigRank: 10,
-        spread: { 5: 0.06, 10: 0.06, 15: 0.05, 20: 0.04 },   // +-% on the walk-away
+        spread: {"5":0.06,"10":0.06,"15":0.05,"20":0.04},   // +-% on the walk-away
         conservative: { step: 0.75, big: 0.95 },      // smaller raises, a little less for the biggest states
         aggressive: { step: 1.25, big: 1.05, reserveCap: 3 }   // bigger raises, more for the biggest states, spends deep
       }
@@ -58,6 +58,7 @@
     defaultLevel: 'all',
     globe: { borders: false, claimBorders: false },
     map: 'us',                              // results show the US map (us-view.js) instead of the globe
+    captionFacts: true,                     // the auction caption under the lot shows the state's fun fact instead of the rival's taunts and one-liners (owner, v43)
 
     /* Smooth pricing, no bands. Ideal = the state's share of the 50-state total x (10 x priceScale x 50),
        so the ideals of all 50 states add up to 50 average lots and the average lot is worth
