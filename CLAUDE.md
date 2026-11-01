@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v51';   // increment this, every time
+const CACHE = 'bidding-wars-v52';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v51` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v52` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -58,7 +58,7 @@ asset the game needs to actually play is bundled locally:
 - every content pack (`pack-*.js`) — they load lazily, but must be in `sw.js`'s `SHELL` so they are cached for offline
 - `earth.jpg` (the globe's satellite texture, NASA Blue Marble July at 4096×2048 since v44, see `NOTICE.md` — same file whether online or offline)
 - `countries-110m.json` (map borders)
-- `globe-hero.webp` (the menu's planet, also the results card's placeholder)
+- `globe-hero.webp` (the menu's planet, also the results card's placeholder; v52: re-rendered from the NASA Blue Marble texture by the real `globe()` code, 460×460, transparent, no stars or pins; the globe lights were lowered in v52 because the sun blew out North America: ambient 0.85, key 0.95)
 - `logo.svg` (the logo: a brass map pin holding a globe, a ripple beneath; the favicon, and the source the `icon-*.png` app icons are rendered from — v46, original artwork; the maskable icon is the same art scaled into the safe zone)
 - sound is synthesised in `sound.js` with Web Audio — there are no audio files
 - **no web fonts**: the UI uses the system stack only (see "Look and feel")
