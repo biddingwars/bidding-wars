@@ -73,7 +73,7 @@
       mood: { k: 0.25, up: 0.2, down: 0.15 },
       wallet: { lo: 0.7 },
       noise: { beginner: 0.491, medium: 0.622, expert: 0.505 },
-      crowd: { beginner: 0.15, medium: 0.07, expert: 0.2 },                // v49: the walk-away grows by this share per extra seat at a table of 3-4 (never in a duel); found with a fair-value human against 2-3 bots
+      crowd: { beginner: 0.15, medium: 0.07, expert: 0.2 },                // v50: the walk-away grows by this share per extra seat at a table of 3-4 (never in a duel); found with a fair-value human against 2-3 bots
 
       efficiency: { gamma: { beginner: 0.697, medium: 0.777, expert: 0.538 }, lo: { beginner: 0.36, medium: 0.335, expert: 0.27 }, hi: { beginner: 3, medium: 2.884, expert: 2.522 }, pick: { beginner: 1.627, medium: 2, expert: 1.912 } },
       decisive: { share: { beginner: 0.299, medium: 0.211, expert: 0.23 } },

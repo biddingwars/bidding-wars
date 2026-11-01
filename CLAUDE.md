@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v49';   // increment this, every time
+const CACHE = 'bidding-wars-v50';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v49` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v50` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -90,11 +90,15 @@ device only, via the `Store` helper in `platform.js`:
 - `settings:v1` (v45) — the Settings page: a small JSON of only the choices that differ from the defaults (`Engine.stringifySettings`; all defaults = the key is absent): `cur` (currency id), `aggr` (bot style 0-4, default 2),
   `tz` (text step), `motion` (`reduce`), `shapes`, `fair`, `confirm`, `quiet`. Nothing else, no history. `Engine.parseSettings` drops anything unknown.
 
-All five are described in `privacy.html` and the in-app
+- `log:v1` (**v49, optional, owner request "for the time being"**) — the game log: only exists if the player switched on Settings → "Record my games" (off by default; `settings:v1.log`). A JSON array of the last 100 finished **solo** games (`Engine.gameLog` / `addToLog` / `parseLog`, capped at 1.5 M characters): per game the pack, level, lots, budget, the bot's hidden temperament and style step,
+  and per lot every raise / pass `[seat, 'r'|'p', amount]`, the winner and price, the bot's secret walk-away limit (`walk`), whether the lot was a decisive (all-in) one (`dec`), the money left; no names, no network. The engine only notes this when the app sets `S.trace = []`, and a test proves a traced game plays exactly like an untraced one.
+  Export = Settings → Export (a sheet with the text to copy), Clear log, and Delete all data removes it. It is a **sixth value, but never present by default**, so the "five values" statement in `privacy.html` and the privacy screen carries the sentence about it in all five languages. Meant to be removed when no longer needed.
+
+All five (plus the optional log) are described in `privacy.html` and the in-app
 privacy screen (`privacy()` in `app.js`, `privP1`–`privP4` strings, in all
 5 languages) — these must always agree with each other and with what
 the code actually stores. The "Delete all data" button (also in
-`privacy()`) must clear all five (`settings:v1` included, and `SET` reset in memory); this has drifted out of sync before
+`privacy()`) must clear all of them (`settings:v1` and `log:v1` included, and `SET` reset in memory); this has drifted out of sync before
 (name persistence shipped without updating the wipe flow or the copy — fixed,
 but watch for it happening again with any future locally-stored value).
 
@@ -236,7 +240,7 @@ stacked the country names down the page); a plain wheel/scroll over the globe
 belongs to the page (only ctrl+wheel/pinch zooms); the results screen must fit
 iPad landscape without scrolling.
 
-## Several bots at one table (v49)
+## Several bots at one table (v50)
 
 Solo is **you against 1, 2 or 3 bots**; Multiplayer is **2-4 people plus 0-2 bots**, at most four seats (`setup()` in `app.js`: a *People* seg `data-g="players"`, a *Bots* seg `data-g="bots"`; with N people the bot counts above 4 - N are `disabled` and a choice that no longer fits is lowered). Bots sit in the last seats and are called `Bot` (one) or `Bot 1..3`; the tile initial is `B1..B3` (`ini()`). Still one device, still offline, still nothing stored for it (five keys).
 
@@ -247,6 +251,7 @@ Solo is **you against 1, 2 or 3 bots**; Multiplayer is **2-4 people plus 0-2 bot
   fair-value human wins (share of 4 seats = 25%, of 3 = 33%): States 33 / 39, Countries Medium 20 / 32, Capitals Medium 28 / 38 with 3 / 2 bots; creeper wins 8-10% (Countries, Capitals Medium) and 33-37% (States) with 2-3 bots. The three bot styles win within a few points of each other (distinct styles 100%).
 - **Known weak spots (accepted, not hidden)**: Countries Expert and Capitals Beginner/Expert bots are strong at a full table (Countries Expert, fair-value human with 3 bots wins 8%, with 2 bots 12%; Capitals Beginner stingy human 3-4%); States stays sensitive to `crowd` (the stingy-player valley of "Exploit" above: crowd 0.1 keeps the stingy human at 28-30%, and the stingy human wins less than its seat share at every `crowd` tried, but the other policies moved a lot with it, so it was tuned on the fair-value human); the fair-value policy is not a typical human; nothing was played on a device. The exploit search (`test/exploit.js`) is a duel tool and has **not** been extended to several bots.
 - **Record**: only a *solo duel against one bot* counts (`S.practice` / `Engine.isPractice` as before); against 2-3 bots `S.noRecord` is set and the results say so (`noRecordBots`). Multiplayer never recorded.
+- **Game log (v49 feature)**: the optional log only records a solo duel against one bot (`S.trace` is set only when `bots === 1`); games with several bots are not logged.
 - **Pace**: with 2+ bots they "think" 0.9-1.6 s instead of 1.9-3 s so a table of mostly bots does not drag.
 - **Tests**: `test/multibots.test.js` (duel identity, distinct styles, per-seat walk-aways, whole games at 3-4 seats on every pack and level with money conserved, `crowd` sanity bands, `validatePack`), `BOTS:` tests in `test/browser.test.js` (seat arithmetic, names, styles, record, five languages, the auction fits one screen with 1-3 bots at four sizes on every pack), `test/fuzz.js` now seats 1-3 bots (cautious / fierce / bogus styles too).
 
@@ -264,6 +269,7 @@ The gear on the menu opens one sheet (`settingsSheet()` in `app.js`; choices liv
   a style, not a difficulty ladder: a cautious bot is easier for a creeper, a fierce bot overpays but its limit is easier for a fixed-cap player; none of it touches the calibrated default.
 - **Accessibility**: *Reduce motion* (`FX.forceReduced` plus `html[data-motion=reduce]` in the stylesheet, on top of the phone's own setting), *Seat shapes* (`html[data-shapes="1"]`: a circle, square, diamond or triangle next to each seat colour, orbs and the "top bid" dot),
   *Text size* (`html[data-tz]`: `zoom` 1.12 / 1.25 on the menu, results and sheets; **never on the auction screen**, which keeps its fitted pixel sizes — most text sizes in `app.css` are px, not rem). **Small (`tz: -1`, v48, owner: "an SE user could play without scrolling")**: `zoom` 0.70 plus a smaller globe on the results (`html[data-tz="-1"] .gl .globe`); measured with `node`-driven Chromium, menu, game setup and results of an iPhone SE 2/3 (375×667) need no scrolling in all three packs (`test/browser.test.js`), the 1st-generation SE (320×568) still scrolls a little in setup (about 120 px inside the sheet) and results (about 50 px). The auction fits every size by itself. At 0.70 tap targets are about 31 px: it is opt-in.
+- **Game log** (v49): *Record my games* switch, Export (copyable text) and Clear log; see "Privacy" for what is stored. Tests: `test/gamelog.test.js`, `GAME LOG:` in `test/browser.test.js`.
 - **Practice helpers**: *Confirm before dropping out* (an `ask()` sheet), *Quiet bot* (`showTaunt` returns early), *Show the fair price* (a `.fairp` line under the holder; reveals the lot's value, so it makes the game a practice game).
 - Language and the Light/Dark switch appear on the page too (their own stored keys are unchanged).
 - Tests: `test/settings.test.js` (parse / stringify / practice / currencies / five steps on every pack / whole games per step), the `SETTINGS:` tests in `test/browser.test.js` (all five languages for the currency, practice flow, helpers, the auction fit with every helper on at four sizes,

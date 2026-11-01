@@ -216,7 +216,7 @@ The numbers are covered by `node --test`, `node test/economy.js capitals`, `node
 - [ ] **Larger** text: the menu, results and sheets grow; the auction screen does not change.
 - [ ] Privacy says *five* things; **Delete all data** also resets Settings.
 
-## Several bots at one table (v49) — nothing here has been played on a real device
+## Several bots at one table (v50) — nothing here has been played on a real device
 
 - [ ] **Solo**: the setup has a *Bots* row, 1 / 2 / 3 (1 is the default). Pick 3: the hint "Each bot plays its own style, and you never see which." appears, the auction shows four seats (You, B1, B2, B3) and fits one screen on your smallest phone, portrait and landscape.
 - [ ] With 3 bots the bots answer quicker than in a duel (about a second), and they do not all drop out at the same price; over a few games you can tell them apart (one raises in small steps and gives up early, one pushes hard).

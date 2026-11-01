@@ -1,4 +1,4 @@
-/* Several bots at one table (v49): each bot plays its own style, the walk-away is per seat, the duel is exactly what it was, and the bots stay in a sane range against a human. */
+/* Several bots at one table (v50): each bot plays its own style, the walk-away is per seat, the duel is exactly what it was, and the bots stay in a sane range against a human. */
 const test = require('node:test'), assert = require('node:assert/strict');
 const crypto = require('node:crypto');
 const Engine = require('../engine.js');
