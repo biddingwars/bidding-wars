@@ -10,7 +10,7 @@ Everything lives flat at the repo root. No `js/`, `css/`, `data/`, `img/`,
 `fonts/`, or `vendor/` subfolders — `index.html`, `app.css`, `app.js`,
 `engine.js`, `packs.js`, `banter.js`, `pack-countries.js`, `pack-capitals.js`, `CAPITALS-SOURCES.md`, `globe.js`, `us-view.js`, `us-map.js`, `us-map.webp`, `us-ak.webp`, `us-hi.webp`, `NOTICE.md`,
 `platform.js`, `sound.js`, `fx.js`, `sw.js`, `manifest.json`, every icon,
-`globe-hero.webp`, `three.min.js`, `earth.jpg`, `countries-110m.json`,
+`globe-hero.webp`, `logo.svg`, `three.min.js`, `earth.jpg`, `countries-110m.json`,
 `privacy.html`, `support.html` all sit at the root, referenced by plain
 relative paths (`"app.css"`, not `"css/app.css"`).
 
@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v45';   // increment this, every time
+const CACHE = 'bidding-wars-v46';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v45` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v46` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -59,6 +59,7 @@ asset the game needs to actually play is bundled locally:
 - `earth.jpg` (the globe's satellite texture, NASA Blue Marble July at 4096×2048 since v44, see `NOTICE.md` — same file whether online or offline)
 - `countries-110m.json` (map borders)
 - `globe-hero.webp` (the menu's planet, also the results card's placeholder)
+- `logo.svg` (the logo: a brass map pin holding a globe, a ripple beneath; the favicon, and the source the `icon-*.png` app icons are rendered from — v46, original artwork; the maskable icon is the same art scaled into the safe zone)
 - sound is synthesised in `sound.js` with Web Audio — there are no audio files
 - **no web fonts**: the UI uses the system stack only (see "Look and feel")
 
