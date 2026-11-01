@@ -559,3 +559,75 @@ English is the source. Please check de / it / es / fr for correctness, natural w
 | it | {n}: da qualche parte, tre persone stanno guardando. Ciao.<br>{n} entra in un ascensore. Anche il tuo punteggio.<br>Potrei comprare {n} con gli spiccioli del cappotto.<br>{n} intero starebbe nella mia lista dei desideri.<br>{n} si arrotonda a zero, e ti rilancio lo stesso. |
 | es | En algún lugar de {n}, tres personas están viendo esto. Hola.<br>{n} cabe en un ascensor. Tu puntuación también.<br>Podría comprar {n} con el cambio del abrigo.<br>{n} entero cabría en mi lista corta.<br>{n} se redondea a cero, y aun así te supero. |
 | fr | Quelque part à {n}, trois personnes regardent ça. Bonjour.<br>{n} tient dans un ascenseur. Ton score aussi.<br>Je pourrais acheter {n} avec la monnaie de mon manteau.<br>Ma liste courte pourrait contenir {n} en entier.<br>{n} s'arrondit à zéro, et je te surenchérirai quand même. |
+
+## Several bots at one table (menu, setup, results)
+
+### `soloShort`
+
+| | text |
+|---|---|
+| en | You against 1 to 3 bots. Works offline. |
+| de | Du gegen 1 bis 3 Bots. Läuft offline. |
+| it | Tu contro 1-3 bot. Funziona offline. |
+| es | Tú contra 1 a 3 bots. Funciona sin conexión. |
+| fr | Toi contre 1 à 3 bots. Fonctionne hors ligne. |
+
+### `multiShort`
+
+| | text |
+|---|---|
+| en | 2 to 4 players, bots can join. |
+| de | 2 bis 4 Spieler, Bots können mitspielen. |
+| it | Da 2 a 4 giocatori, i bot possono unirsi. |
+| es | De 2 a 4 jugadores, los bots pueden unirse. |
+| fr | 2 à 4 joueurs, les bots peuvent se joindre. |
+
+### `multiDesc`
+
+| | text |
+|---|---|
+| en | 2 to 4 people sharing one phone, with up to 2 bots at the same table (4 seats at most). Works offline. |
+| de | 2 bis 4 Menschen an einem Handy, dazu bis zu 2 Bots am selben Tisch (höchstens 4 Plätze). Läuft offline. |
+| it | Da 2 a 4 persone su un solo telefono, con fino a 2 bot allo stesso tavolo (al massimo 4 posti). Funziona offline. |
+| es | De 2 a 4 personas en un mismo móvil, con hasta 2 bots en la misma mesa (4 plazas como máximo). Funciona sin conexión. |
+| fr | 2 à 4 personnes sur un même téléphone, avec jusqu’à 2 bots à la même table (4 places au maximum). Fonctionne hors ligne. |
+
+### `peopleN`
+
+| | text |
+|---|---|
+| en | People |
+| de | Menschen |
+| it | Persone |
+| es | Personas |
+| fr | Personnes |
+
+### `botsN`
+
+| | text |
+|---|---|
+| en | Bots |
+| de | Bots |
+| it | Bot |
+| es | Bots |
+| fr | Bots |
+
+### `botsHint`
+
+| | text |
+|---|---|
+| en | Each bot plays its own style, and you never see which. |
+| de | Jeder Bot spielt seinen eigenen Stil, und du siehst nie, welchen. |
+| it | Ogni bot ha un suo stile di gioco, e non vedi mai quale. |
+| es | Cada bot juega a su manera y nunca ves cuál es su estilo. |
+| fr | Chaque bot a son propre style de jeu, et tu ne vois jamais lequel. |
+
+### `noRecordBots`
+
+| | text |
+|---|---|
+| en | Only a game against one bot changes your record. |
+| de | Nur ein Spiel gegen einen Bot ändert deine Bilanz. |
+| it | Solo una partita contro un bot cambia il tuo bilancio. |
+| es | Solo una partida contra un bot cambia tu balance. |
+| fr | Seule une partie contre un seul bot modifie ton bilan. |

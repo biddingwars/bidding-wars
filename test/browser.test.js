@@ -1264,3 +1264,115 @@ test('GAME LOG: the privacy text and privacy.html say the optional sixth value e
   }
   assert.match(fs.readFileSync(path.join(__dirname, '..', 'privacy.html'), 'utf8'), /Record my games/);
 });
+
+/* ============ SEVERAL BOTS AT ONE TABLE (v50) ============ */
+const radios = (page, g) => page.$$eval(`[data-g="${g}"] [role=radio]`, e => e.map(x => [x.dataset.v, x.disabled, x.getAttribute('aria-checked')].join(':')));
+
+test('BOTS: solo offers 1 to 3 bots (1 by default); more than one shows the hint; the bots take the last seats with their own names', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open();
+  await page.click('#m1'); await page.waitForSelector('#start');
+  assert.deepEqual(await radios(page, 'bots'), ['1:false:true', '2:false:false', '3:false:false']);
+  assert.equal(await page.isHidden('#botsHint'), true, 'one bot: no hint');
+  await pick(page, 'bots', 3); assert.equal(await page.isVisible('#botsHint'), true); assert.match(await page.textContent('#botsHint'), /own style/);
+  await pick(page, 'lots', 5); await pick(page, 'clock', 0);
+  await page.click('#start'); await page.waitForSelector('#ctrl');
+  const g = await page.evaluate(() => ({ names: S.players.map(p => p.name + (p.ai ? '*' : '')), styles: Object.values(S.bot.byseat).map(t => t.name).sort(), tiles: document.querySelectorAll('.po').length, ini: [...document.querySelectorAll('.po .o')].map(e => e.textContent), practice: S.practice, noRecord: S.noRecord }));
+  assert.deepEqual(g.names, ['You', 'Bot 1*', 'Bot 2*', 'Bot 3*']);
+  assert.deepEqual(g.styles, ['aggressive', 'balanced', 'conservative'], 'three bots, three different styles');
+  assert.equal(g.tiles, 4); assert.deepEqual(g.ini, ['Y', 'B1', 'B2', 'B3']); assert.equal(g.practice, false); assert.equal(g.noRecord, true);
+  /* the bots really play, to the end */
+  await autoplay(page); await reveal(page);
+  assert.equal(await page.$$eval('#lb > *', e => e.length) >= 4, true, 'four rows on the results');
+  assert.equal(await page.evaluate(() => localStorage.getItem('record:v1')), null, 'a game against several bots does not touch the record');
+  await page.waitForSelector('#extra:not([hidden])', { timeout: 6000 }).catch(() => {});
+  assert.match(await page.textContent('body'), /Only a game against one bot changes your record/);
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('BOTS: one bot is still the duel - called "Bot", counted for the record', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open();
+  await startSolo(page, 5, 0);
+  const g = await page.evaluate(() => ({ names: S.players.map(p => p.name), byseat: S.bot.byseat === undefined, noRecord: S.noRecord }));
+  assert.deepEqual(g.names, ['You', 'Bot']); assert.equal(g.byseat, true); assert.equal(g.noRecord, false);
+  await autoplay(page); await reveal(page);
+  assert.equal(await page.evaluate(() => RECS.packs.countries.played), 1);
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('BOTS: multiplayer seats at most four - with N people only 4-N bots can join, a choice that no longer fits is lowered', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open();
+  await page.click('#m2'); await page.waitForSelector('#start');
+  assert.deepEqual(await radios(page, 'bots'), ['0:false:true', '1:false:false', '2:false:false'], '2 people: up to 2 bots');
+  await pick(page, 'bots', 2);
+  await pick(page, 'players', 3);
+  assert.deepEqual(await radios(page, 'bots'), ['0:false:false', '1:false:true', '2:true:false'], '3 people: 2 bots no longer fit, the choice drops to 1');
+  await pick(page, 'players', 4);
+  assert.deepEqual(await radios(page, 'bots'), ['0:false:true', '1:true:false', '2:true:false'], '4 people: no bots');
+  assert.equal(await page.$eval('[data-g="bots"] [data-v="2"]', e => e.getAttribute('aria-disabled')), 'true');
+  await page.click('[data-g="bots"] [data-v="2"]', { force: true }).catch(() => {});
+  assert.equal(await page.$eval('[data-g="bots"] [data-v="2"]', e => e.getAttribute('aria-checked')), 'false', 'a disabled bot count cannot be chosen');
+  await pick(page, 'players', 2); await pick(page, 'bots', 2);
+  assert.equal(await page.isVisible('#botsHint'), true);
+  await pick(page, 'lots', 5); await pick(page, 'clock', 0);
+  await page.fill('#p1', 'Ann'); await page.fill('#p2', 'Ben');
+  await page.click('#start'); await page.waitForSelector('#ctrl');
+  const g = await page.evaluate(() => ({ names: S.players.map(p => p.name + (p.ai ? '*' : '')), kind: S.kind, styles: Object.values(S.bot.byseat).map(t => t.name) }));
+  assert.deepEqual(g.names, ['Ann', 'Ben', 'Bot 1*', 'Bot 2*']); assert.equal(g.kind, 'multi'); assert.equal(new Set(g.styles).size, 2, 'two bots, two different styles');
+  /* people tap for themselves, the bots answer on their own - the whole game through */
+  await autoplay(page); await reveal(page);
+  assert.equal(await page.evaluate(() => localStorage.getItem('record:v1')), null, 'multiplayer never touches the record');
+  /* play again keeps the table as it was */
+  await page.evaluate(() => { const b = document.querySelector('#again'); if (b) b.click(); });
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('BOTS: multiplayer with one bot, and the bot copy, in every language (no errors, no overflow of the sheet)', { skip: SKIP }, async () => {
+  for (const [lang, np, nb] of [['en', 2, 2], ['de', 3, 1], ['it', 2, 1], ['es', 2, 2], ['fr', 3, 1]]) {
+    const { page, errors, ctx } = await open({ init: l => localStorage.setItem('lang:v1', l), initArg: lang });
+    await page.click('#m2'); await page.waitForSelector('#start');
+    await pick(page, 'players', np); await pick(page, 'bots', nb); await pick(page, 'lots', 5); await pick(page, 'clock', 0);
+    const lab = await page.$$eval('.sheetbox .label', e => e.map(x => x.textContent.trim()));
+    assert.ok(lab.length >= 5 && lab.every(x => x && !/^(peopleN|botsN)$/.test(x)), lang + ' labels are translated: ' + lab);
+    const box = await page.$eval('.sheetbox', e => { const r = e.getBoundingClientRect(); return [r.top, r.bottom, innerHeight]; });
+    assert.ok(box[0] >= -1 && box[1] <= box[2] + 1, lang + ' setup sheet inside the screen');
+    await page.click('#start'); await page.waitForSelector('#ctrl');
+    assert.equal(await page.$$eval('.po', e => e.length), np + nb);
+    await autoplay(page); await reveal(page);
+    assert.deepEqual(errors, [], lang);
+    await ctx.close();
+  }
+});
+
+test('BOTS: the auction fits one screen with four seats that include bots, at four sizes, on every pack', { skip: SKIP }, async () => {
+  for (const [w, h] of [[375, 667], [402, 874], [834, 1194], [667, 375]]) {
+    const { page, errors, ctx } = await open({ viewport: { width: w, height: h } });
+    for (const pk of ['states', 'countries', 'capitals']) for (const nb of [1, 2, 3]) {
+      await page.evaluate(async ([pk, nb]) => {
+        window.think = () => new Promise(() => {}); const pack = await Packs.load(pk); PACK = pack; SELPACK = pk;
+        const humans = ['Maximiliane-Sophie', 'Bartholomäus-Jan', 'Wolfeschlegelstein'].slice(0, 4 - nb).map(n => ({ name: n }));
+        const bots = [1, 2, 3].slice(0, nb).map(k => ({ name: nb === 1 ? 'Bot' : 'Bot ' + k, ai: true }));
+        S = Engine.newAuction({ pack, kind: humans.length > 1 ? 'multi' : 'solo', level: pack.defaultLevel, lots: 10, clock: 30, players: humans.concat(bots), rng: rnd });
+        Engine.startLot(S); S.items[S.i] = pack.items.slice().sort((a, b) => cname(b).length - cname(a).length)[0];
+        S.players.forEach((p, i) => { p.budget = 295 - i; p.bought = new Array(10).fill({}); }); S.L.price = 289; S.L.holder = 3; S.L.turn = 0; paintLot(); controls();
+      }, [pk, nb]);
+      const r = await page.evaluate(() => { const sc = document.querySelector('.screen'); return { y: sc.scrollHeight - sc.clientHeight, x: sc.scrollWidth - sc.clientWidth, page: document.documentElement.scrollHeight - innerHeight, tiles: document.querySelectorAll('.po').length }; });
+      assert.ok(r.y <= 1 && r.x <= 1 && r.page <= 1, `${w}x${h} ${pk} with ${nb} bots scrolls: ${JSON.stringify(r)}`);
+      assert.equal(r.tiles, 4);
+    }
+    assert.deepEqual(errors, []);
+    await ctx.close();
+  }
+});
+
+test('BOTS: the privacy copy and the wipe are unchanged (still five stored values, nothing new for bots)', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open();
+  await page.click('#m1'); await page.waitForSelector('#start');
+  await pick(page, 'bots', 2); await pick(page, 'lots', 5); await pick(page, 'clock', 0); await page.click('#start'); await page.waitForSelector('#ctrl');
+  const keys = await page.evaluate(() => Object.keys(localStorage));
+  assert.ok(keys.every(k => ['lang:v1', 'theme:v1', 'record:v1', 'name:v1', 'settings:v1'].includes(k)), 'stored: ' + keys);
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});

@@ -33,14 +33,14 @@ function oneGame(packName, seed) {
   const level = [pack.levels[rng(pack.levels.length)].id, pack.levels[rng(pack.levels.length)].id, 'bogus', undefined, null][rng(8) < 6 ? 0 : rng(5)];
   const lotsPool = pack.lots.options.concat([1, 2, 3, 4, 6, 7, 11, 33, 47, 60, 500]);
   const lots = lotsPool[rng(lotsPool.length)];
-  const nPl = rng(10) === 0 ? 3 + rng(2) : 2;
+  const nBots = rng(4) === 0 ? 2 + rng(2) : 1, nPl = Math.max(rng(10) === 0 ? 3 + rng(2) : 2, nBots + 1);      // 1 bot (as before) or 2-3 bots at a table of 3-4: each seat that is a bot has its own style
   const temper = rng(4) === 0 ? ['conservative', 'balanced', 'aggressive', 'cautious', 'fierce', 'bogus'][rng(6)] : undefined;
   const pol = ['junk', 'random', 'creeper', 'passer', 'allin', 'fair'][rng(6)];
-  const ctx = { packName, seed, level, lots, nPl, temper, pol };
+  const ctx = { packName, seed, level, lots, nPl, nBots, temper, pol };
   const gameRng = Engine.seededRng(seed);
   let S;
   try {
-    S = Engine.newAuction({ pack, kind: 'solo', level, lots, players: Array.from({ length: nPl }, (_, i) => i === 1 ? { name: 'Bot', ai: true } : { name: 'P' + i }), rng: gameRng, temper });
+    S = Engine.newAuction({ pack, kind: 'solo', level, lots, players: Array.from({ length: nPl }, (_, i) => (nBots === 1 ? i === 1 : i >= nPl - nBots) ? { name: 'Bot' + i, ai: true } : { name: 'P' + i }), rng: gameRng, temper });
   } catch (e) { return ['newAuction threw ' + e.message + ' ' + JSON.stringify(ctx)]; }
   const start = S.players.map(p => p.budget);
   check(S.players.every(p => Number.isInteger(p.budget) && p.budget > 0), 'bad starting budget', { ctx, start }, fails);

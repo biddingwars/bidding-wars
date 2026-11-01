@@ -211,6 +211,7 @@
         if (b.decisive !== undefined && !(isObj(b.decisive) && numOk(b.decisive.share, v => v > 0 && v <= 1))) e('bot.decisive needs { share: 0 < share <= 1 } (a number, or per level)');
         if (b.decisive && b.decisive.minPrice !== undefined && !numOk(b.decisive.minPrice, v => v > 0 && v <= 2)) e('bot.decisive.minPrice must be 0 < x <= 2 (a share of the current budget of the bot, a number or per level)');
         if (b.rollSpan !== undefined && !numOk(b.rollSpan, v => v >= 0 && v <= 1)) e('bot.rollSpan must be 0..1 (a number, or per level / per lots)');
+        if (b.crowd !== undefined && !numOk(b.crowd, v => v >= -0.5 && v <= 1)) e('bot.crowd must be -0.5..1 (a number, or per level): the walk-away change per extra seat beyond a duel');
         if (b.noise !== undefined && !numOk(b.noise, v => v >= 0 && v < 1)) e('bot.noise must be 0 <= noise < 1 (a number, or per level)');
         if (b.premium !== undefined && !(isPosInt(b.premium.top) && numOk(b.premium.pct, v => v >= 0))) e('bot.premium needs { top: positive int, pct >= 0 (a number, or per level) }');
         if (b.pacing !== undefined && !(b.pacing.gamma >= 0 && b.pacing.lo > 0 && b.pacing.hi >= b.pacing.lo)) e('bot.pacing needs { gamma >= 0, 0 < lo <= hi }');
@@ -385,7 +386,17 @@
     if (pack.bot) {                                               // the bot rolls its temperament once, from the injected rng; never shown
       /* "the biggest items" (premium, bigRank) are the biggest of THIS level's pool, so Beginner's giants are Europe's, not the world's */
       const pool = levelPool(pack, level).slice().sort((a, b) => priceOf(pack, b).rank - priceOf(pack, a).rank);
-      S.bot = { temper: pickTemper(pack.bot, lots, opts.temper || null, rng, level), paceTarget: budget / (S.items.length * avgIdeal(pack, level)), rank: new Map(pool.map((it, i) => [it.id, i + 1])) };
+      const aiSeats = S.players.map((p, i) => p.ai ? i : -1).filter(i => i >= 0);
+      S.bot = { temper: aiSeats.length > 1 ? null : pickTemper(pack.bot, lots, opts.temper || null, rng, level), paceTarget: budget / (S.items.length * avgIdeal(pack, level)), rank: new Map(pool.map((it, i) => [it.id, i + 1])) };
+      if (aiSeats.length > 1) {
+        /* Several bots at one table: each plays its own style. Unless the player forced one, the styles are all different (up to three bots: careful, balanced, bold, dealt to the seats at random
+           from the injected rng) and, like the single bot's, never shown. byseat[seat] is that seat's temperament; bot.temper stays the first bot's, for code that reads one. */
+        const names = ['conservative', 'balanced', 'aggressive'];
+        for (let k = names.length - 1; k > 0; k--) { const j = rng(k + 1), x = names[k]; names[k] = names[j]; names[j] = x; }
+        S.bot.byseat = {};
+        aiSeats.forEach((seat, k) => { S.bot.byseat[seat] = pickTemper(pack.bot, lots, opts.temper || names[k % names.length], rng, level); });
+        S.bot.temper = S.bot.byseat[aiSeats[0]];
+      }
     }
     return S;
   }
@@ -433,7 +444,7 @@
     const opener = eligible[S.i % eligible.length];
     S.L = { price: 1, holder: opener, active: eligible.slice(), turn: null };
     S.L.turn = nextAfter(S, opener);
-    S._ceil = null;
+    S._ceil = null; S._cm = null;
     if (S.trace) { const pr = priceOf(S.pack, S.items[S.i]); S._tl = { i: S.i, id: S.items[S.i].id, v: S.items[S.i].value, ideal: pr.ideal, max: pr.max, open: opener, bids: [] }; S.trace.push(S._tl); S._dec = false; }   // optional game log (app turns it on); nothing changes when absent
     return { state: 'lot' };
   }
@@ -517,11 +528,13 @@
   const sumFrom = (S, from, f) => { let a = 0; for (let k = from; k < S.items.length; k++) a += f(S.items[k]); return a; };
   const ptsOf = p => p.bought.reduce((a, b) => a + b.value, 0);
 
-  function botWalk(S, item, idx, roll, me, rival) {
-    const B = S.pack.bot, T = S.bot.temper, n = S.items.length, rankDesc = S.bot.rank.get(item.id);
+  function botWalk(S, item, idx, roll, me, rival, T) {
+    const B = S.pack.bot, n = S.items.length, rankDesc = S.bot.rank.get(item.id);
     let w = roll * (B.limitMul ? byLots(B.limitMul, n, S.level) : 1);
     if (B.premium && rankDesc <= B.premium.top) w *= 1 + lvVal(B.premium.pct, S);   // pct may be per level: Beginner's bot pays more for its biggest countries
     if (T) { w *= T.limit; if (rankDesc <= B.temperaments.bigRank) w *= T.big; }
+    /* More bidders at the table (a 3 or 4 seat game): every extra seat beyond the duel pushes prices up, so the bot's walk-away grows by `crowd` per extra seat (absent: no change; never applies to a duel) */
+    if (B.crowd && S.players.length > 2) w *= 1 + lvVal(B.crowd, S) * (S.players.length - 2);
     if (B.efficiency) {
       /* Points per euro differ hugely between lots (a giant gives 10-15x the points per euro of a small country at fair price). The bot plans like a
          knapsack: with the money it can spend on the lots still to come, the marginal lot it could afford sets a shadow price (points per euro); a lot
@@ -546,14 +559,19 @@
   }
 
   function botDecisionExt(S) {
-    const rng = S.rng, L = S.L, item = S.items[S.i], me = S.players[L.turn], B = S.pack.bot, T = S.bot.temper;
-    const rivalIdx = S.players.findIndex((p, i) => i !== L.turn), rival = S.players[rivalIdx];
+    const rng = S.rng, L = S.L, item = S.items[S.i], me = S.players[L.turn], B = S.pack.bot, T = (S.bot.byseat && S.bot.byseat[L.turn]) || S.bot.temper;
+    /* The rival is the richest other player still in this lot (the only one in a duel): K, "the price nobody can top", is its purse. The points leader among the others sets the mood. */
+    const others = S.players.map((p, i) => i).filter(i => i !== L.turn), live = others.filter(i => L.active.includes(i)), pool = live.length ? live : others;
+    let rivalIdx = pool[0]; for (const i of pool) if (S.players[i].budget > S.players[rivalIdx].budget) rivalIdx = i;
+    const rival = S.players[rivalIdx];
+    let leader = S.players[others[0]]; for (const i of others) if (ptsOf(S.players[i]) > ptsOf(leader)) leader = S.players[i];
     const pr = priceOf(S.pack, item);
-    if (!S._ceil || S._ceilLot !== S.i) {
+    if (!S._cm || S._cmLot !== S.i) { S._cm = {}; S._cmLot = S.i; if (S._ceil && S._ceilLot === S.i) S._cm[L.turn] = S._ceil; }          // each bot at the table keeps its own walk-away for the lot (a ceiling already set for this lot is adopted)
+    if (S._cm[L.turn]) S._ceil = S._cm[L.turn]; else {
       /* rollSpan < 1 narrows the walk-away roll to the first share of [ideal, max]: a bot whose limit swings widely from lot to lot wins the lots on which it pays the rival's constant limit and
          lets the rival have the rest at its own low draws, so a player with one fixed limit out-earns it. Same draw as botCeiling when absent. */
       const roll = pr.ideal + rng(Math.floor((pr.max - pr.ideal) * (B.rollSpan == null ? 1 : lvVal(B.rollSpan, S))) + 1);
-      S._ceil = { ideal: pr.ideal, max: pr.max, walk: botWalk(S, item, S.i, roll, me, rival) }; S._ceilLot = S.i;
+      S._ceil = { ideal: pr.ideal, max: pr.max, walk: botWalk(S, item, S.i, roll, me, leader, T) }; S._ceilLot = S.i; S._cm[L.turn] = S._ceil;
       if (B.wallet) S._ceil.wf = B.wallet.lo + (1 - B.wallet.lo) * rng(1001) / 1000;   // one roll per lot, only drawn when the pack asks for it
     }
     const lotsAfter = S.items.length - S.i - 1;
@@ -575,12 +593,12 @@
       const K = rival.budget, afford = me.budget - reserve;
       if (K >= 1 && afford >= K) {
         const sweep = afford >= K * (lotsAfter + 1);
-        const lead = ptsOf(me) - ptsOf(rival), after = lead + item.value, restPts = sumFrom(S, S.i, i => i.value) - item.value;
+        const lead = ptsOf(me) - ptsOf(leader), after = lead + item.value, restPts = sumFrom(S, S.i, i => i.value) - item.value;
         const decisive = (lead <= 0 && after > 0) || after > restPts;
         const m = Math.floor(afford / K);
         let rankV = 1; for (let q = S.i + 1; q < S.items.length; q++) if (S.items[q].value > item.value) rankV++;
         if (sweep || rankV <= m || (decisive && K <= lvVal(B.knockout.kappa, S) * pr.max)) {
-          if (L.holder === rivalIdx && L.price >= Math.min(me.budget - reserve, lim)) {
+          if (L.holder !== L.turn && L.price >= Math.min(me.budget - reserve, lim)) {
             const target = L.price < K ? K : K + 1;
             if (target <= afford) { lim = Math.max(lim, target); jump = target; }
           }
@@ -615,7 +633,9 @@
   function botDecision(S) {
     if (S.bot) return botDecisionExt(S);
     const rng = S.rng, L = S.L, item = S.items[S.i], me = S.players[L.turn];
-    if (!S._ceil || S._ceilLot !== S.i) { S._ceil = botCeiling(S.pack, item, rng); S._ceilLot = S.i; }
+    if (!S._cm || S._cmLot !== S.i) { S._cm = {}; S._cmLot = S.i; if (S._ceil && S._ceilLot === S.i) S._cm[L.turn] = S._ceil; }
+    if (!S._cm[L.turn]) S._cm[L.turn] = botCeiling(S.pack, item, rng);
+    S._ceil = S._cm[L.turn]; S._ceilLot = S.i;
     /* Outside the closing three lots the bot keeps a euro in hand for every lot still
        to come, so it can never bid itself out of the auction early. */
     const lotsAfter = S.items.length - S.i - 1;

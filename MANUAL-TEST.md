@@ -215,3 +215,15 @@ The numbers are covered by `node --test`, `node test/economy.js capitals`, `node
 - [ ] **Confirm before dropping out** asks once; **Quiet bot** hides the rival's one-liners (Countries / Capitals); **Seat shapes** puts a circle / square / diamond / triangle on the player colours; **Reduce motion** makes everything land instantly.
 - [ ] **Larger** text: the menu, results and sheets grow; the auction screen does not change.
 - [ ] Privacy says *five* things; **Delete all data** also resets Settings.
+
+## Several bots at one table (v50) — nothing here has been played on a real device
+
+- [ ] **Solo**: the setup has a *Bots* row, 1 / 2 / 3 (1 is the default). Pick 3: the hint "Each bot plays its own style, and you never see which." appears, the auction shows four seats (You, B1, B2, B3) and fits one screen on your smallest phone, portrait and landscape.
+- [ ] With 3 bots the bots answer quicker than in a duel (about a second), and they do not all drop out at the same price; over a few games you can tell them apart (one raises in small steps and gives up early, one pushes hard).
+- [ ] At the end of a game against 2 or 3 bots the results say "Only a game against one bot changes your record." and the record does not move. A game against **one** bot still counts, as before.
+- [ ] **Multiplayer**: the setup has *People* (2 / 3 / 4) and *Bots* (0 / 1 / 2). With 3 people only 0 or 1 bots can be picked (2 is greyed out), with 4 people no bots; choosing more people lowers a bot choice that no longer fits.
+- [ ] Two people and two bots on one phone: the people take turns tapping, the bots answer on their own, nobody can tap for a bot, and the results list four players.
+- [ ] Settings -> **Bot style** applies to every bot when it is not Balanced (all bots then play that style and the solo game is a practice game only when there is one bot).
+- [ ] German, Italian, Spanish, French: the new labels (People, Bots, hint, record note) read naturally (nobody has proofread them yet).
+- [ ] Privacy still says *five* things; nothing new is stored for bots.
+

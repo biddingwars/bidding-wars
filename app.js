@@ -27,7 +27,7 @@ const nativeSym = () => (PACK ? PACK.currency.symbol : ((Packs.meta(SELPACK) || 
 const chosenCur = () => { const c = Engine.currencyById(SET.cur); return c && c.sym !== nativeSym() ? c : null; };   // null = write it the pack's own way
 const cur = () => { const c = chosenCur(); return c ? c.sym : nativeSym(); };
 const money = n => { const c = chosenCur(); return c ? Engine.formatMoney(PACK, n, c.id) : (PACK ? Engine.formatMoney(PACK, n) : nativeSym() + n); };   // "$1,234" for US States, "€12" for Countries, "70 kr" when kr is picked
-const ini = n => (Array.from(String(n || '?').trim())[0] || '?').toUpperCase();
+const ini = n => { const t = String(n || '?').trim(), m = t.match(/^(.*\S)\s+(\d)$/); return ((Array.from(m ? m[1] : t)[0] || '?') + (m ? m[2] : '')).toUpperCase(); };   // "Bot 2" -> B2, so seats with the same first letter can be told apart
 const IC = (id, cls) => `<svg class="i ${cls || ''}" aria-hidden="true" focusable="false"><use href="#i-${id}"/></svg>`;
 const isOnline = () => navigator.onLine !== false;
 
@@ -198,7 +198,7 @@ en:{
  lotsAll:'All {n}', funFacts:'Fun facts', factsIntro:'Every state in this round.',
  tagline:'Use your knowledge to beat your rivals',
  solo:'Solo', soloDesc:'One rival, the bot. It has a price in mind for every country and walks away the moment you beat it. Works offline.',
- multi:'Multiplayer', multiDesc:'2 to 4 players sharing one phone. Two-player is the default. Works offline.',
+ multi:'Multiplayer', multiDesc:'2 to 4 people sharing one phone, with up to 2 bots at the same table (4 seats at most). Works offline.',
  online:'Online 1 vs 1', onlineDesc:'Share a room code and bid against one other person.', onlineOff:'Needs a connection — currently unavailable.',
  before:'Before you start', how:'How to play', language:'Language',
  lots:'Lots', shortHint:"A 5-lot round is mostly luck: one big lot can decide it. Play 10 or more lots for a game of skill.", budget:'Budget each', budgetNote:'Scales with the auction — €10 per lot.',
@@ -290,7 +290,7 @@ en:{
  cancel:'Cancel',
  freeLot:'free',
  soldTo:'{item} sold to {name} for {cur}{n}.',
- soloShort:'One rival, the bot. Works offline.', multiShort:'2 to 4 players, one device.', onlineShort:'Share a room code and bid.',
+ soloShort:'You against 1 to 3 bots. Works offline.', multiShort:'2 to 4 players, bots can join.', onlineShort:'Share a room code and bid.',
  smartestU:'<b>{name}</b> shopped smartest at {v} {unit}.'
 },
 de:{
@@ -298,7 +298,7 @@ de:{
  lotsAll:'Alle {n}', funFacts:'Wissenswertes', factsIntro:'Alle Bundesstaaten dieser Runde.',
  tagline:'Nutze dein Wissen und schlag deine Rivalen',
  solo:'Solo', soloDesc:'Ein Gegner, der Bot. Er hat für jedes Land einen Preis im Kopf und steigt aus, sobald du ihn überbietest. Läuft offline.',
- multi:'Mehrspieler', multiDesc:'2 bis 4 Spieler an einem Handy. Zwei Spieler sind der Normalfall. Läuft offline.',
+ multi:'Mehrspieler', multiDesc:'2 bis 4 Menschen an einem Handy, dazu bis zu 2 Bots am selben Tisch (höchstens 4 Plätze). Läuft offline.',
  online:'Online 1 gegen 1', onlineDesc:'Raum-Code teilen und gegen eine andere Person bieten.', onlineOff:'Braucht Internet — gerade nicht verfügbar.',
  before:'Vor dem Start', how:'Spielregeln', language:'Sprache',
  lots:'Lose', shortHint:"Eine Runde mit 5 Losen hängt meist vom Glück ab: ein einziges großes Los kann alles entscheiden. Ab 10 Losen zählt das Können.", budget:'Budget pro Spieler', budgetNote:'Wächst mit der Auktion — 10 € pro Los.',
@@ -390,7 +390,7 @@ de:{
  cancel:'Abbrechen',
  freeLot:'gratis',
  soldTo:'{item} verkauft an {name} für {n} {cur}.',
- soloShort:'Ein Gegner, der Bot. Läuft offline.', multiShort:'2 bis 4 Spieler, ein Gerät.', onlineShort:'Raum-Code teilen und bieten.',
+ soloShort:'Du gegen 1 bis 3 Bots. Läuft offline.', multiShort:'2 bis 4 Spieler, Bots können mitspielen.', onlineShort:'Raum-Code teilen und bieten.',
  smartestU:'<b>{name}</b> hat am klügsten eingekauft: {v} {unit}.'
 },
 it:{
@@ -398,7 +398,7 @@ it:{
  lotsAll:'Tutti {n}', funFacts:'Curiosità', factsIntro:'Tutti gli stati di questa partita.',
  tagline:'Usa le tue conoscenze per battere i rivali',
  solo:'Solo', soloDesc:'Un rivale, il bot. Ha un prezzo in mente per ogni paese e si ritira appena lo superi. Funziona offline.',
- multi:'Multigiocatore', multiDesc:'Da 2 a 4 giocatori su un solo telefono. Due giocatori è il caso normale. Funziona offline.',
+ multi:'Multigiocatore', multiDesc:'Da 2 a 4 persone su un solo telefono, con fino a 2 bot allo stesso tavolo (al massimo 4 posti). Funziona offline.',
  online:'Online 1 contro 1', onlineDesc:'Condividi un codice stanza e fai offerte contro un altro giocatore.', onlineOff:'Serve una connessione — non disponibile ora.',
  before:'Prima di iniziare', how:'Come si gioca', language:'Lingua',
  lots:'Lotti', shortHint:"Con 5 lotti conta soprattutto la fortuna: un solo lotto grande può decidere tutto. Da 10 lotti in su conta l'abilità.", budget:'Budget a testa', budgetNote:"Cresce con l'asta — 10 € per lotto.",
@@ -490,7 +490,7 @@ it:{
  cancel:'Annulla',
  freeLot:'gratis',
  soldTo:'{item} venduto a {name} per {cur}{n}.',
- soloShort:'Un rivale, il bot. Funziona offline.', multiShort:'Da 2 a 4 giocatori, un dispositivo.', onlineShort:'Condividi un codice stanza e fai le tue offerte.',
+ soloShort:'Tu contro 1-3 bot. Funziona offline.', multiShort:'Da 2 a 4 giocatori, i bot possono unirsi.', onlineShort:'Condividi un codice stanza e fai le tue offerte.',
  smartestU:'<b>{name}</b> ha comprato nel modo più furbo: {v} {unit}.'
 },
 es:{
@@ -498,7 +498,7 @@ es:{
  lotsAll:'Todos {n}', funFacts:'Curiosidades', factsIntro:'Todos los estados de esta partida.',
  tagline:'Usa tus conocimientos para vencer a tus rivales',
  solo:'Solo', soloDesc:'Un rival, el bot. Tiene un precio en mente para cada país y se retira en cuanto lo superas. Funciona sin conexión.',
- multi:'Multijugador', multiDesc:'De 2 a 4 jugadores en un mismo móvil. Dos jugadores es lo normal. Funciona sin conexión.',
+ multi:'Multijugador', multiDesc:'De 2 a 4 personas en un mismo móvil, con hasta 2 bots en la misma mesa (4 plazas como máximo). Funciona sin conexión.',
  online:'Online 1 contra 1', onlineDesc:'Comparte un código de sala y puja contra otra persona.', onlineOff:'Necesita conexión — no disponible ahora.',
  before:'Antes de empezar', how:'Cómo se juega', language:'Idioma',
  lots:'Lotes', shortHint:"Con 5 lotes manda sobre todo la suerte: un solo lote grande puede decidirlo todo. Desde 10 lotes cuenta la habilidad.", budget:'Presupuesto por jugador', budgetNote:'Crece con la subasta — 10 € por lote.',
@@ -590,7 +590,7 @@ es:{
  cancel:'Cancelar',
  freeLot:'gratis',
  soldTo:'{item} vendido a {name} por {cur}{n}.',
- soloShort:'Un rival, el bot. Funciona sin conexión.', multiShort:'De 2 a 4 jugadores, un dispositivo.', onlineShort:'Comparte un código de sala y puja.',
+ soloShort:'Tú contra 1 a 3 bots. Funciona sin conexión.', multiShort:'De 2 a 4 jugadores, los bots pueden unirse.', onlineShort:'Comparte un código de sala y puja.',
  smartestU:'<b>{name}</b> compró de la forma más lista: {v} {unit}.'
 },
 fr:{
@@ -598,7 +598,7 @@ fr:{
  lotsAll:'Tous {n}', funFacts:'Le saviez-vous ?', factsIntro:'Tous les États de cette partie.',
  tagline:'Utilise tes connaissances pour battre tes rivaux',
  solo:'Solo', soloDesc:'Un rival, le bot. Il a un prix en tête pour chaque pays et se retire dès que tu le dépasses. Fonctionne hors ligne.',
- multi:'Multijoueur', multiDesc:'2 à 4 joueurs sur un même téléphone. Deux joueurs, c’est le cas normal. Fonctionne hors ligne.',
+ multi:'Multijoueur', multiDesc:'2 à 4 personnes sur un même téléphone, avec jusqu’à 2 bots à la même table (4 places au maximum). Fonctionne hors ligne.',
  online:'En ligne 1 contre 1', onlineDesc:'Partage un code de salon et enchéris contre une autre personne.', onlineOff:'Nécessite une connexion — indisponible pour le moment.',
  before:'Avant de commencer', how:'Comment jouer', language:'Langue',
  lots:'Lots', shortHint:"À 5 lots, la chance compte surtout : un seul gros lot peut tout décider. À partir de 10 lots, l'adresse l'emporte.", budget:'Budget par joueur', budgetNote:'Augmente avec la vente — 10 € par lot.',
@@ -690,7 +690,7 @@ fr:{
  cancel:'Annuler',
  freeLot:'gratuit',
  soldTo:'{item} adjugé à {name} pour {cur}{n}.',
- soloShort:'Un rival, le bot. Fonctionne hors ligne.', multiShort:'2 à 4 joueurs, un seul appareil.', onlineShort:'Partage un code de salon et enchéris.',
+ soloShort:'Toi contre 1 à 3 bots. Fonctionne hors ligne.', multiShort:'2 à 4 joueurs, les bots peuvent se joindre.', onlineShort:'Partage un code de salon et enchéris.',
  smartestU:'<b>{name}</b> a acheté le plus malin : {v} {unit}.'
 }
 };
@@ -757,7 +757,11 @@ const STR_SET = {
   "practiceNote": "Your record was not changed.",
   "fairHint": "Fair price about {p}",
   "dropAskTitle": "Drop out?",
-  "dropAskBody": "You keep your money, and whoever holds the top bid buys this lot."
+  "dropAskBody": "You keep your money, and whoever holds the top bid buys this lot.",
+  "peopleN": "People",
+  "botsN": "Bots",
+  "botsHint": "Each bot plays its own style, and you never see which.",
+  "noRecordBots": "Only a game against one bot changes your record."
  },
  "de": {
   "settings": "Einstellungen",
@@ -817,7 +821,11 @@ const STR_SET = {
   "practiceNote": "Deine Bilanz wurde nicht geändert.",
   "fairHint": "Fairer Preis etwa {p}",
   "dropAskTitle": "Aussteigen?",
-  "dropAskBody": "Du behältst dein Geld, und wer das höchste Gebot hält, kauft dieses Los."
+  "dropAskBody": "Du behältst dein Geld, und wer das höchste Gebot hält, kauft dieses Los.",
+  "peopleN": "Menschen",
+  "botsN": "Bots",
+  "botsHint": "Jeder Bot spielt seinen eigenen Stil, und du siehst nie, welchen.",
+  "noRecordBots": "Nur ein Spiel gegen einen Bot ändert deine Bilanz."
  },
  "it": {
   "settings": "Impostazioni",
@@ -877,7 +885,11 @@ const STR_SET = {
   "practiceNote": "Il tuo bilancio non è cambiato.",
   "fairHint": "Prezzo equo circa {p}",
   "dropAskTitle": "Ritirarti?",
-  "dropAskBody": "Tieni i tuoi soldi e chi ha l’offerta più alta compra questo lotto."
+  "dropAskBody": "Tieni i tuoi soldi e chi ha l’offerta più alta compra questo lotto.",
+  "peopleN": "Persone",
+  "botsN": "Bot",
+  "botsHint": "Ogni bot ha un suo stile di gioco, e non vedi mai quale.",
+  "noRecordBots": "Solo una partita contro un bot cambia il tuo bilancio."
  },
  "es": {
   "settings": "Ajustes",
@@ -937,7 +949,11 @@ const STR_SET = {
   "practiceNote": "Tu balance no ha cambiado.",
   "fairHint": "Precio justo: unos {p}",
   "dropAskTitle": "¿Retirarte?",
-  "dropAskBody": "Conservas tu dinero y quien tenga la puja más alta compra este lote."
+  "dropAskBody": "Conservas tu dinero y quien tenga la puja más alta compra este lote.",
+  "peopleN": "Personas",
+  "botsN": "Bots",
+  "botsHint": "Cada bot juega a su manera y nunca ves cuál es su estilo.",
+  "noRecordBots": "Solo una partida contra un bot cambia tu balance."
  },
  "fr": {
   "settings": "Réglages",
@@ -997,7 +1013,11 @@ const STR_SET = {
   "practiceNote": "Ton bilan n’a pas changé.",
   "fairHint": "Prix juste : environ {p}",
   "dropAskTitle": "Abandonner ?",
-  "dropAskBody": "Tu gardes ton argent, et celui qui détient la meilleure enchère remporte ce lot."
+  "dropAskBody": "Tu gardes ton argent, et celui qui détient la meilleure enchère remporte ce lot.",
+  "peopleN": "Personnes",
+  "botsN": "Bots",
+  "botsHint": "Chaque bot a son propre style de jeu, et tu ne vois jamais lequel.",
+  "noRecordBots": "Seule une partie contre un seul bot modifie ton bilan."
  }
 };
 Object.keys(STR_SET).forEach(l => Object.assign(STR[l], STR_SET[l]));
@@ -1381,14 +1401,16 @@ async function setup(kind, packId = SELPACK) {
   const level = pack.levels.some(l => l.id === c0.level) ? c0.level : pack.defaultLevel;
   const clock = [10, 15, 20, 30, 0].includes(c0.clock) ? c0.clock : 10;
   const nPl = [2, 3, 4].includes(c0.players) ? c0.players : 2;
+  const nBots = kind === 'solo' ? ([1, 2, 3].includes(c0.bots) ? c0.bots : 1) : ([0, 1, 2].includes(c0.bots) && nPl + c0.bots <= 4 ? c0.bots : 0);   // solo: you against 1-3 bots; multiplayer: 2-4 people plus 0-2 bots, at most 4 seats
   const lvl = l => (l.label[LANG] || l.label.en), lvlParts = l => { const p = lvl(l).split(' — '); return [p[0], p[1] || '']; };
   h.set(`
     ${kind === 'solo' ? `<p class="sm">${t('rivalDesc')}</p>` : `<p class="sm">${esc(t('multiDesc'))}</p>`}
+    ${kind === 'multi' ? `<div class="fld inl"><span class="label">${esc(t('peopleN'))}</span>${seg('players', t('peopleN'), [[2, '2'], [3, '3'], [4, '4']], nPl)}</div>` : ''}
+    <div class="fld inl"><span class="label">${esc(t('botsN'))}</span>${seg('bots', t('botsN'), (kind === 'solo' ? [1, 2, 3] : [0, 1, 2]).map(n => [n, String(n)]), nBots)}<p class="sm" id="botsHint" role="note"${nBots > 1 ? '' : ' hidden'}>${esc(t('botsHint'))}</p></div>
     <div class="fld"><span class="label">${esc(t('lots'))}</span>${seg('lots', t('lots'), pack.lots.options.map(n => [n, n === pack.lots.all ? t('lotsAll', { n }) : n]), lots)}<p class="sm" id="lotHint" role="note"${lots <= 5 ? '' : ' hidden'}>${esc(t('shortHint'))}</p></div>
     <div class="budget"><span><span class="label">${esc(t('budget'))}</span><small>${esc(t('budgetNote'))}</small></span><b class="num" id="bud">${Engine.formatMoney(pack, Engine.budgetFor(pack, lots, level), SET.cur && chosenCur() ? SET.cur : undefined)}</b></div>
     ${pack.levels.length > 1 ? `<div class="fld"><span class="label">${esc(t('difficulty'))}</span><div class="lvls" role="radiogroup" aria-label="${esc(t('difficulty'))}" data-g="level">${pack.levels.map(l => { const [a, b] = lvlParts(l); return `<button type="button" class="lvl" role="radio" data-v="${l.id}" aria-checked="${l.id === level}"><span class="tt">${esc(a)}${b ? `<small>${esc(b)}</small>` : ''}</span><span class="ck" aria-hidden="true"></span></button>`; }).join('')}</div></div>` : ''}
     <div class="fld"><span class="label">${esc(t('seconds'))}</span>${seg('clock', t('seconds'), [[10, '10'], [15, '15'], [20, '20'], [30, '30'], [0, t('noClock')]], clock)}</div>
-    ${kind === 'multi' ? `<div class="fld"><span class="label">${esc(t('playersN'))}</span>${seg('players', t('playersN'), [[2, '2'], [3, '3'], [4, '4']], nPl)}</div>` : ''}
     <div class="fld"><span class="label">${esc(kind === 'solo' ? t('nickOne') : t('nickMany'))}</span>
       <div class="names">${(kind === 'solo' ? [1] : [1, 2, 3, 4]).map(i => `<input class="field" id="p${i}" maxlength="16" autocomplete="off" autocapitalize="words" aria-label="${esc(t('player'))} ${i}" placeholder="${esc(t('player'))} ${i}" ${kind === 'multi' && i > nPl ? 'hidden' : ''}>`).join('')}</div></div>`,
     `<button class="btn gold big" id="start">${esc(t('open'))}</button><button class="btn ghost" id="back">${esc(t('back'))}</button>`);
@@ -1401,23 +1423,34 @@ async function setup(kind, packId = SELPACK) {
     if (grp.dataset.g === 'lots' || grp.dataset.g === 'level') sync();
     if (grp.dataset.g === 'lots') $('#lotHint', box).hidden = +b.dataset.v > 5;
     if (grp.dataset.g === 'players') [2, 3, 4].forEach(i => { const el = $('#p' + (i + 0), box); if (el) el.hidden = false; }), [3, 4].forEach(i => { const el = $('#p' + i, box); if (el) el.hidden = i > +b.dataset.v; });
+    if (grp.dataset.g === 'players' || grp.dataset.g === 'bots') seats();
   }));
-  sync();
+  /* at most four seats: with N people only 4 - N bots can join (multiplayer); the bots hint shows when there is more than one */
+  const seats = () => {
+    if (kind !== 'multi') { const hb = $('#botsHint', box); if (hb) hb.hidden = !(+pick('bots') > 1); return; }
+    const people = +pick('players') || 2, grp = $('[data-g="bots"]', box);
+    $$('[role=radio]', grp).forEach(x => { const over = people + +x.dataset.v > 4; x.disabled = over; x.setAttribute('aria-disabled', String(over)); });
+    if (people + (+pick('bots') || 0) > 4) { const keep = $(`[role=radio][data-v="${4 - people}"]`, grp); $$('[role=radio]', grp).forEach(x => x.setAttribute('aria-checked', String(x === keep))); }
+    const hb = $('#botsHint', box); if (hb) hb.hidden = !(+pick('bots') > 1);
+  };
+  sync(); seats();
   Store.get('name:v1').then(n => { const el = $('#p1', box); if (n && el && !el.value) el.value = String(n).slice(0, 16); });
   on('back', () => { Snd.ui(); h.close(); });
   on('start', () => {
     Snd.unlock(); Snd.ui(); Haptics.medium();
     const p1val = val('p1').slice(0, 16); if (p1val) Store.set('name:v1', p1val);
-    const count = kind === 'solo' ? 1 : +pick('players') || 2;
+    const count = kind === 'solo' ? 1 : +pick('players') || 2, bots = Math.max(kind === 'solo' ? 1 : 0, Math.min(kind === 'solo' ? 3 : 4 - count, +pick('bots') || 0));
     let players;
-    if (kind === 'solo') players = [{ name: p1val || t('you') }, { name: t('bot'), ai: true }];
+    if (kind === 'solo') players = [{ name: p1val || t('you') }];
     else players = [1, 2, 3, 4].slice(0, count).map(i => ({ name: val('p' + i).slice(0, 16) || `${t('player')} ${i}` }));
-    LASTCFG = { packId: pack.id, kind, lots: +pick('lots'), level: pick('level'), clock: +pick('clock'), players: count };
+    for (let k = 1; k <= bots; k++) players.push({ name: bots === 1 ? t('bot') : `${t('bot')} ${k}`, ai: true });           // the bots sit in the last seats; with several, each plays its own style (never shown)
+    LASTCFG = { packId: pack.id, kind, lots: +pick('lots'), level: pick('level'), clock: +pick('clock'), players: count, bots };
     h.close(true);
-    S = Engine.newAuction({ pack, kind, level: pick('level') || pack.defaultLevel, lots: +pick('lots') || pack.lots.default, clock: +pick('clock'), players, rng: rnd, temper: kind === 'solo' ? (Engine.AGGR_TEMPER[SET.aggr] || undefined) : undefined });
+    S = Engine.newAuction({ pack, kind, level: pick('level') || pack.defaultLevel, lots: +pick('lots') || pack.lots.default, clock: +pick('clock'), players, rng: rnd, temper: bots ? (Engine.AGGR_TEMPER[SET.aggr] || undefined) : undefined });
     S.packId = pack.id;
-    if (SET.log && kind === 'solo') S.trace = [];                  // the optional game log (Settings, off by default): the engine notes every raise / pass / award
-    S.practice = kind === 'solo' && Engine.isPractice(SET);          // another bot style or the fair price on screen: it plays like any game but does not change the record
+    if (SET.log && kind === 'solo' && bots === 1) S.trace = [];     // the optional game log (Settings, off by default): the engine notes every raise / pass / award; only a duel against one bot is logged
+    S.practice = kind === 'solo' && bots === 1 && Engine.isPractice(SET);   // another bot style or the fair price on screen: it plays like any game but does not change the record
+    S.noRecord = kind === 'solo' && bots > 1;                         // only a duel against one bot counts for the record
     lot();
   });
 }
@@ -1621,7 +1654,7 @@ function think(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 async function aiTurn() {
   const S0 = S, L = S.L, c = S.items[S.i], me = S.players[L.turn];
-  await think(1900 + rnd(1100));
+  await think(S.players.filter(p => p.ai).length > 1 ? 900 + rnd(700) : 1900 + rnd(1100));       // several bots at the table: each one thinks a little faster so a lot does not drag
   if (S !== S0 || S.L !== L || L.turn === null || S.players[L.turn] !== me || !$('#ctrl')) return;   // the player left or the lot moved on while it was thinking
   const d = Engine.botDecision(S);                   // walk-away roll, reserve, uncontested +1 and the random step: all in the engine
   if (d.type === 'raise') {
@@ -1756,7 +1789,7 @@ async function reveal(sec, rows, best, bestEff, REC) {
   });
   /* the card with the world and the record */
   const ex = $('#extra', sec);
-  const recHtml = outcome ? `<div class="glass recpill" style="padding:8px 14px;order:0"><div class="big num" style="font-size:24px">${REC.won}<i>–</i>${REC.lost}${REC.drawn ? `<i>–</i>${REC.drawn}` : ''}</div><div class="m"><b>${esc(outcome.record ? t('newRecord') : t('record'))}</b><br>${REC.played} ${esc(t('games'))}${REC.streak ? ` · ${esc(t('streak'))} ${REC.streak > 0 ? '+' : ''}${REC.streak}` : ''}</div></div>` : S.practice ? `<div class="glass recpill" style="padding:8px 14px;order:0"><div class="m"><b>${esc(t('practiceTitle'))}</b><br>${esc(t('practiceNote'))}</div></div>` : '';
+  const recHtml = outcome ? `<div class="glass recpill" style="padding:8px 14px;order:0"><div class="big num" style="font-size:24px">${REC.won}<i>–</i>${REC.lost}${REC.drawn ? `<i>–</i>${REC.drawn}` : ''}</div><div class="m"><b>${esc(outcome.record ? t('newRecord') : t('record'))}</b><br>${REC.played} ${esc(t('games'))}${REC.streak ? ` · ${esc(t('streak'))} ${REC.streak > 0 ? '+' : ''}${REC.streak}` : ''}</div></div>` : S.practice ? `<div class="glass recpill" style="padding:8px 14px;order:0"><div class="m"><b>${esc(t('practiceTitle'))}</b><br>${esc(t('practiceNote'))}</div></div>` : S.noRecord ? `<div class="glass recpill" style="padding:8px 14px;order:0"><div class="m">${esc(t('noRecordBots'))}</div></div>` : '';
   const usMode = S.pack.map === 'us' && window.USView;                  // States: the map of the US instead of the globe
   ex.innerHTML = `${lots.length ? `<div class="glass gl${usMode ? ' gl-us' : ''}">${usMode ? `<div class="usm" id="gl"><img class="gph" src="us-map.webp" alt="" decoding="async"></div>` : `<div class="globe" id="gl"><img class="gph" src="globe-hero.webp" alt="" decoding="async"></div>`}
       <div class="cap"><b>${esc(t('worldTitle'))}</b>${t('world', { name: esc(best.p.name) })}</div>
