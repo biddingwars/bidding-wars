@@ -5,7 +5,7 @@ const packs = { countries: require('../pack-countries.js'), states: require('../
 
 test('settings: defaults, junk and unknown values fall back to the defaults; only valid fields are taken', () => {
   assert.deepEqual(Engine.parseSettings(null), Engine.DEFAULT_SETTINGS);
-  for (const bad of ['', 'x', '[]', '7', 'null', '{"cur":"XXX","aggr":9,"tz":-1,"motion":"x","shapes":"yes","fair":1}', { cur: 5 }]) assert.deepEqual(Engine.parseSettings(bad), Engine.DEFAULT_SETTINGS, JSON.stringify(bad));
+  for (const bad of ['', 'x', '[]', '7', 'null', '{"cur":"XXX","aggr":9,"tz":-2,"motion":"x","shapes":"yes","fair":1}', { cur: 5 }]) assert.deepEqual(Engine.parseSettings(bad), Engine.DEFAULT_SETTINGS, JSON.stringify(bad));
   const s = Engine.parseSettings('{"cur":"SEK","aggr":4,"tz":2,"motion":"reduce","shapes":true,"fair":true,"confirm":true,"quiet":true,"evil":"<script>"}');
   assert.deepEqual(s, { cur: 'SEK', aggr: 4, tz: 2, motion: 'reduce', shapes: true, fair: true, confirm: true, quiet: true });
   assert.ok(!('evil' in s), 'unknown keys are dropped');
@@ -73,4 +73,14 @@ test('every aggression step plays whole games to the end on every pack (money co
     assert.equal(S.players[0].budget + S.players[1].budget + spent, money0, name + ' ' + temper + ' money is conserved');
     assert.ok(S.players.every(p => Number.isInteger(p.budget) && p.budget >= 0));
   }
+});
+
+test('Text size Small (tz -1): accepted, stored only when chosen, never a practice game; -2 and 3 are dropped', () => {
+  assert.equal(Engine.parseSettings('{"tz":-1}').tz, -1);
+  assert.equal(Engine.parseSettings('{"tz":-2}').tz, 0); assert.equal(Engine.parseSettings('{"tz":3}').tz, 0);
+  const d = Engine.DEFAULT_SETTINGS;
+  assert.deepEqual(JSON.parse(Engine.stringifySettings(Object.assign({}, d, { tz: -1 }))), { tz: -1 });
+  assert.equal(Engine.stringifySettings(d), null, 'the default (Normal) stores nothing');
+  assert.equal(Engine.parseSettings(Engine.stringifySettings(Object.assign({}, d, { tz: -1, shapes: true }))).tz, -1);
+  assert.equal(Engine.isPractice(Object.assign({}, d, { tz: -1 })), false);
 });
