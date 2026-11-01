@@ -7,7 +7,7 @@ test('settings: defaults, junk and unknown values fall back to the defaults; onl
   assert.deepEqual(Engine.parseSettings(null), Engine.DEFAULT_SETTINGS);
   for (const bad of ['', 'x', '[]', '7', 'null', '{"cur":"XXX","aggr":9,"tz":-2,"motion":"x","shapes":"yes","fair":1}', { cur: 5 }]) assert.deepEqual(Engine.parseSettings(bad), Engine.DEFAULT_SETTINGS, JSON.stringify(bad));
   const s = Engine.parseSettings('{"cur":"SEK","aggr":4,"tz":2,"motion":"reduce","shapes":true,"fair":true,"confirm":true,"quiet":true,"evil":"<script>"}');
-  assert.deepEqual(s, { cur: 'SEK', aggr: 4, tz: 2, motion: 'reduce', shapes: true, fair: true, confirm: true, quiet: true });
+  assert.deepEqual(s, { cur: 'SEK', aggr: 4, tz: 2, motion: 'reduce', shapes: true, fair: true, confirm: true, quiet: true, log: false });
   assert.ok(!('evil' in s), 'unknown keys are dropped');
 });
 

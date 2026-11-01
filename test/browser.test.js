@@ -1211,3 +1211,56 @@ test('SETTINGS: the Text size control has four steps (Small, Normal, Large, Larg
     await ctx.close();
   }
 });
+
+/* ---------------------------------------------------------------- the optional game log (Settings -> Record my games) */
+test('GAME LOG: off by default (nothing stored), on: a finished solo game is saved on the device, exported as text, cleared, and wiped by Delete all data', { skip: SKIP }, async () => {
+  /* off: a whole game stores no log */
+  let { page, errors, ctx } = await open();
+  await startSolo(page, 5, 0); await autoplay(page); await reveal(page);
+  assert.equal(await page.evaluate(() => localStorage.getItem('log:v1')), null, 'no log unless switched on');
+  await ctx.close();
+  /* on */
+  ({ page, errors, ctx } = await open());
+  await page.evaluate(() => settingsSheet()); await page.waitForSelector('[data-k="log"]');
+  assert.equal(await page.getAttribute('[data-k="log"]', 'aria-checked'), 'false');
+  await page.click('[data-k="log"]');
+  assert.equal(await page.evaluate(() => localStorage.getItem('settings:v1')), '{"log":true}');
+  await page.evaluate(() => { document.querySelectorAll('.overlay').forEach(o => o.remove()); home(); });
+  await page.waitForSelector('#m1');
+  await startSolo(page, 5, 0); await autoplay(page); await reveal(page);
+  await page.waitForFunction(() => localStorage.getItem('log:v1'), null, { timeout: 4000 });
+  const log = JSON.parse(await page.evaluate(() => localStorage.getItem('log:v1')));
+  assert.equal(log.length, 1); assert.equal(log[0].lots, 5); assert.equal(log[0].pack, 'countries'); assert.deepEqual(log[0].seats, ['you', 'bot']);
+  assert.ok(log[0].lotLog.some(e => e.won && Array.isArray(e.bids)), 'lots with bids and a winner');
+  assert.ok(!/"Bot"|"You"/.test(JSON.stringify(log)), 'no names in the log');
+  /* export + clear */
+  await page.evaluate(() => settingsSheet()); await page.waitForSelector('#logx');
+  assert.match(await page.textContent('#logN'), /1/);
+  await page.click('#logx'); await page.waitForSelector('#logta');
+  const shown = await page.$eval('#logta', e => e.value); assert.deepEqual(JSON.parse(shown), log);
+  await page.click('#logdone');
+  await page.evaluate(() => settingsSheet()); await page.waitForSelector('#logc'); await page.click('#logc');
+  await page.click('#dy');
+  await page.waitForFunction(() => localStorage.getItem('log:v1') === null, null, { timeout: 4000 });
+  /* wipe: the setting and any log go with Delete all data */
+  await page.evaluate(() => { localStorage.setItem('log:v1', '[]'); });
+  await page.evaluate(() => { document.querySelectorAll('.overlay').forEach(o => o.remove()); privacy(); });
+  await page.click('#wipe'); await page.click('#dy');
+  await page.waitForFunction(() => localStorage.getItem('log:v1') === null && localStorage.getItem('settings:v1') === null, null, { timeout: 4000 });
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('GAME LOG: the privacy text and privacy.html say the optional sixth value exists, in all five languages', { skip: SKIP }, async () => {
+  const words = { en: /Record my games/, de: /Meine Spiele aufzeichnen/, it: /Registra le mie partite/, es: /Registrar mis partidas/, fr: /Enregistrer mes parties/ };
+  for (const lang of Object.keys(words)) {
+    const { page, errors, ctx } = await open({ init: l => localStorage.setItem('lang:v1', l), initArg: lang });
+    await page.evaluate(() => privacy()); await page.waitForSelector('.sheetbox');
+    assert.match(await page.textContent('.sheetbox'), words[lang], lang + ' privacy text mentions the log');
+    await page.evaluate(() => { document.querySelectorAll('.overlay').forEach(o => o.remove()); settingsSheet(); }); await page.waitForSelector('[data-k="log"]');
+    assert.match(await page.textContent('.sheetbox'), words[lang], lang + ' settings label');
+    assert.deepEqual(errors, [], lang);
+    await ctx.close();
+  }
+  assert.match(fs.readFileSync(path.join(__dirname, '..', 'privacy.html'), 'utf8'), /Record my games/);
+});
