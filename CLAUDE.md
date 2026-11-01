@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v47';   // increment this, every time
+const CACHE = 'bidding-wars-v48';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v47` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v48` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -235,6 +235,20 @@ globe's `.glabel`/`.gload` rules live in `app.css` (they were lost once, which
 stacked the country names down the page); a plain wheel/scroll over the globe
 belongs to the page (only ctrl+wheel/pinch zooms); the results screen must fit
 iPad landscape without scrolling.
+
+## Several bots at one table (v48)
+
+Solo is **you against 1, 2 or 3 bots**; Multiplayer is **2-4 people plus 0-2 bots**, at most four seats (`setup()` in `app.js`: a *People* seg `data-g="players"`, a *Bots* seg `data-g="bots"`; with N people the bot counts above 4 - N are `disabled` and a choice that no longer fits is lowered). Bots sit in the last seats and are called `Bot` (one) or `Bot 1..3`; the tile initial is `B1..B3` (`ini()`). Still one device, still offline, still nothing stored for it (five keys).
+
+- **Each bot has its own style** (`Engine.newAuction`): with more than one AI seat the three temperaments are dealt to the bots in a random order (seeded rng; `S.bot.byseat[seat]`, `S.bot.temper` = the first bot's), so 2 bots always differ and 3 bots are exactly conservative + balanced + aggressive. Never shown. A forced style (Settings -> Bot style) is applied to every bot. One bot keeps the old single, hidden 25/50/25 draw.
+- **Per-seat state**: `botWalk(S, item, idx, roll, me, rival, T)` takes the temperament; every bot rolls its own walk-away per lot (`S._cm[seat]`, reset in `startLot`; a preset `S._ceil` for the same lot is adopted so old tests keep working). Rival = the richest active other seat, "leader" for mood = the best other player on points, the knockout holder test is `L.holder !== L.turn`.
+- **The duel is untouched**: `test/multibots.test.js` hashes 168 seeded duels (every pack and level, two lot counts, creeper and fair-value human) and pins the digest of v47's engine (an earlier scratch comparison of 1,088 duels against main was identical too); any change to a 2-seat game fails it.
+- **`bot.crowd`** (optional, number or per level, -0.5..1, validated): at a table of 3-4 seats the walk-away is multiplied by `1 + crowd x (seats - 2)`, because more bidders push prices up and a duel-calibrated bot would otherwise be a pushover. Values: States 0.1; Countries Beginner 0.15, Medium 0.07, Expert 0.2; Capitals Beginner -0.15, Medium 0.15, Expert 0.2 (generators `test/make-pack-states.js`, `test/make-pack-capitals.js`; Countries is hand-written). Found with a scratch loop (`multi.js`, a fair-value human 1.25x, a +1 creeper and a stingy 0.7x human against 1-3 bots) and then re-measured, 300 games a cell, 10 lots:
+  fair-value human wins (share of 4 seats = 25%, of 3 = 33%): States 33 / 39, Countries Medium 20 / 32, Capitals Medium 28 / 38 with 3 / 2 bots; creeper wins 8-10% (Countries, Capitals Medium) and 33-37% (States) with 2-3 bots. The three bot styles win within a few points of each other (distinct styles 100%).
+- **Known weak spots (accepted, not hidden)**: Countries Expert and Capitals Beginner/Expert bots are strong at a full table (Countries Expert, fair-value human with 3 bots wins 8%, with 2 bots 12%; Capitals Beginner stingy human 3-4%); States stays sensitive to `crowd` (the stingy-player valley of "Exploit" above: crowd 0.1 keeps the stingy human at 28-30%, and the stingy human wins less than its seat share at every `crowd` tried, but the other policies moved a lot with it, so it was tuned on the fair-value human); the fair-value policy is not a typical human; nothing was played on a device. The exploit search (`test/exploit.js`) is a duel tool and has **not** been extended to several bots.
+- **Record**: only a *solo duel against one bot* counts (`S.practice` / `Engine.isPractice` as before); against 2-3 bots `S.noRecord` is set and the results say so (`noRecordBots`). Multiplayer never recorded.
+- **Pace**: with 2+ bots they "think" 0.9-1.6 s instead of 1.9-3 s so a table of mostly bots does not drag.
+- **Tests**: `test/multibots.test.js` (duel identity, distinct styles, per-seat walk-aways, whole games at 3-4 seats on every pack and level with money conserved, `crowd` sanity bands, `validatePack`), `BOTS:` tests in `test/browser.test.js` (seat arithmetic, names, styles, record, five languages, the auction fits one screen with 1-3 bots at four sizes on every pack), `test/fuzz.js` now seats 1-3 bots (cautious / fierce / bogus styles too).
 
 ## Settings (v45)
 
@@ -590,6 +604,7 @@ counters inside the single `record:v1` value.
   the offline cache, and the label layout (no overlaps, callouts inside the map).
 - `node --test test/contrast.test.js` — WCAG contrast of the real design tokens
   in both themes. No dependencies.
+- `node --test test/multibots.test.js` — several bots at one table (see that section): duel identity digest, distinct styles per bot, per-seat walk-aways, whole games at 3-4 seats, `crowd` sanity bands.
 - `node --test test/browser.test.js` — headless Chromium (Playwright; skipped
   if not installed): lazy loading, load-failure recovery, whole games through the
   real UI, the fixture pack, corrupted storage, offline, no web fonts, theme,

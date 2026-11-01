@@ -264,6 +264,7 @@ html[data-tz="1"] .sheetbox,html[data-tz="1"] .screen:not([data-screen=auction])
 html[data-tz="2"] .sheetbox,html[data-tz="2"] .screen:not([data-screen=auction]){zoom:1.25}
 .sg{display:flex;gap:6px;flex-wrap:wrap}
 .sg button{flex:1;min-width:52px;min-height:44px;border-radius:22px;background:var(--glass);border:1px solid var(--stroke);font-weight:700;font-size:15px;color:var(--ink);padding:0 10px}
+.sg button:disabled{opacity:.38;cursor:default}
 .sg button[aria-checked=true]{background:linear-gradient(180deg,var(--gold1),var(--gold2));color:var(--on-gold);border-color:transparent;box-shadow:0 6px 18px var(--goldglow)}
 .lvls{display:flex;flex-direction:column;gap:6px}
 .lvl{display:flex;align-items:center;gap:12px;min-height:50px;padding:8px 14px;border-radius:18px;background:var(--glass);border:1px solid var(--stroke);text-align:left;color:var(--ink)}
