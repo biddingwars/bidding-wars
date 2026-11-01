@@ -260,11 +260,19 @@ html[data-shapes="1"] .dot{width:12px;height:12px}
 html[data-shapes="1"] .dot.s1{border-radius:3px}
 html[data-shapes="1"] .dot.s2{border-radius:0;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
 html[data-shapes="1"] .dot.s3{border-radius:0;clip-path:polygon(50% 0,100% 100%,0 100%)}
+html[data-tz="-1"] .sheetbox,html[data-tz="-1"] .screen:not([data-screen=auction]){zoom:.70}
+html[data-tz="-1"] .gl .globe{width:min(170px,58%)}   /* Small text: a smaller globe, so the results fit an iPhone SE without scrolling */
+html[data-tz="-1"] .gl .gph{width:min(150px,50%)}
+html[data-tz="-1"] .gl-us .usm{width:min(230px,70%)}   /* the US States results map, same reason */
 html[data-tz="1"] .sheetbox,html[data-tz="1"] .screen:not([data-screen=auction]){zoom:1.12}
 html[data-tz="2"] .sheetbox,html[data-tz="2"] .screen:not([data-screen=auction]){zoom:1.25}
 .sg{display:flex;gap:6px;flex-wrap:wrap}
 .sg button{flex:1;min-width:52px;min-height:44px;border-radius:22px;background:var(--glass);border:1px solid var(--stroke);font-weight:700;font-size:15px;color:var(--ink);padding:0 10px}
 .sg button:disabled{opacity:.38;cursor:default}
+.fld.inl{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between}   /* People / Bots: label left, short segment right, hint underneath (keeps the setup short on an iPhone SE) */
+.fld.inl .sg{flex:0 0 auto;flex-wrap:nowrap}
+.fld.inl .sg button{flex:0 0 auto;min-width:56px;min-height:38px}
+.fld.inl .sm{flex:1 0 100%}
 .sg button[aria-checked=true]{background:linear-gradient(180deg,var(--gold1),var(--gold2));color:var(--on-gold);border-color:transparent;box-shadow:0 6px 18px var(--goldglow)}
 .lvls{display:flex;flex-direction:column;gap:6px}
 .lvl{display:flex;align-items:center;gap:12px;min-height:50px;padding:8px 14px;border-radius:18px;background:var(--glass);border:1px solid var(--stroke);text-align:left;color:var(--ink)}

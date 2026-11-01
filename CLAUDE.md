@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v48';   // increment this, every time
+const CACHE = 'bidding-wars-v49';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v48` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v49` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -236,7 +236,7 @@ stacked the country names down the page); a plain wheel/scroll over the globe
 belongs to the page (only ctrl+wheel/pinch zooms); the results screen must fit
 iPad landscape without scrolling.
 
-## Several bots at one table (v48)
+## Several bots at one table (v49)
 
 Solo is **you against 1, 2 or 3 bots**; Multiplayer is **2-4 people plus 0-2 bots**, at most four seats (`setup()` in `app.js`: a *People* seg `data-g="players"`, a *Bots* seg `data-g="bots"`; with N people the bot counts above 4 - N are `disabled` and a choice that no longer fits is lowered). Bots sit in the last seats and are called `Bot` (one) or `Bot 1..3`; the tile initial is `B1..B3` (`ini()`). Still one device, still offline, still nothing stored for it (five keys).
 
@@ -263,7 +263,7 @@ The gear on the menu opens one sheet (`settingsSheet()` in `app.js`; choices liv
   Cautious 51 / 54 / 54, Careful 37 / 40 / 40, mix 35 / 39 / 44, Bold 37 / 39 / 47, Fierce 41 / 42 / 57; States 20 lots Cautious 46 / 51 / 55 … Fierce 28 / 30 / 59; Countries Medium 10 lots 29 / 52 / 60 … 25 / 55 / 59; Capitals Medium 10 lots 16 / 44 / 61 … 17 / 43 / 50. The outer steps are
   a style, not a difficulty ladder: a cautious bot is easier for a creeper, a fierce bot overpays but its limit is easier for a fixed-cap player; none of it touches the calibrated default.
 - **Accessibility**: *Reduce motion* (`FX.forceReduced` plus `html[data-motion=reduce]` in the stylesheet, on top of the phone's own setting), *Seat shapes* (`html[data-shapes="1"]`: a circle, square, diamond or triangle next to each seat colour, orbs and the "top bid" dot),
-  *Text size* (`html[data-tz]`: `zoom` 1.12 / 1.25 on the menu, results and sheets; **never on the auction screen**, which keeps its fitted pixel sizes — most text sizes in `app.css` are px, not rem).
+  *Text size* (`html[data-tz]`: `zoom` 1.12 / 1.25 on the menu, results and sheets; **never on the auction screen**, which keeps its fitted pixel sizes — most text sizes in `app.css` are px, not rem). **Small (`tz: -1`, v48, owner: "an SE user could play without scrolling")**: `zoom` 0.70 plus a smaller globe on the results (`html[data-tz="-1"] .gl .globe`); measured with `node`-driven Chromium, menu, game setup and results of an iPhone SE 2/3 (375×667) need no scrolling in all three packs (`test/browser.test.js`), the 1st-generation SE (320×568) still scrolls a little in setup (about 120 px inside the sheet) and results (about 50 px). The auction fits every size by itself. At 0.70 tap targets are about 31 px: it is opt-in.
 - **Practice helpers**: *Confirm before dropping out* (an `ask()` sheet), *Quiet bot* (`showTaunt` returns early), *Show the fair price* (a `.fairp` line under the holder; reveals the lot's value, so it makes the game a practice game).
 - Language and the Light/Dark switch appear on the page too (their own stored keys are unchanged).
 - Tests: `test/settings.test.js` (parse / stringify / practice / currencies / five steps on every pack / whole games per step), the `SETTINGS:` tests in `test/browser.test.js` (all five languages for the currency, practice flow, helpers, the auction fit with every helper on at four sizes,

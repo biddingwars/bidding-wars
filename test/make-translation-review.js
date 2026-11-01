@@ -22,7 +22,7 @@ md += '\n## Capital Cities: credits line (Privacy -> Credits & licences)\n\n| | 
 md += '\n## Capital Cities: the 195 capital names (blank = same as English)\n\n| id | en | de | it | es | fr |\n|---|---|---|---|---|---|\n' + Object.keys(cap.names).sort().map(id => `| ${id} | ${cap.names[id].en} | ${L.slice(1).map(l => cap.names[id][l] || '').join(' | ')} |`).join('\n') + '\n';
 md += '\n## Capital Cities: taunts (generic, by size of the capital; `{n}` is the capital\'s name)\n';
 for (const tier of Object.keys(cap.taunts.en)) md += `\n### tier \`${tier}\`\n\n| | lines |\n|---|---|\n` + L.map(l => `| ${l} | ${cap.taunts[l][tier].map(strip).join('<br>')} |`).join('\n') + '\n';
-/* several bots at one table (v48): the menu, setup and results strings, taken in file order (en, de, it, es, fr) */
+/* several bots at one table (v49): the menu, setup and results strings, taken in file order (en, de, it, es, fr) */
 const grab = key => { const out = []; for (const line of src) { const m = line.match(new RegExp(key + ":'((?:[^'\\\\]|\\\\.)*)'")) || line.match(new RegExp('"' + key + '": "((?:[^"\\\\]|\\\\.)*)"')); if (m) out.push(m[1].replace(/\\'/g, "'")); } return out; };
 md += '\n## Several bots at one table (menu, setup, results)\n';
 for (const k of ['soloShort', 'multiShort', 'multiDesc', 'peopleN', 'botsN', 'botsHint', 'noRecordBots']) { const v = grab(k); md += `\n### \`${k}\`\n\n| | text |\n|---|---|\n` + L.map((l, i) => `| ${l} | ${strip(v[i] || '')} |`).join('\n') + '\n'; }

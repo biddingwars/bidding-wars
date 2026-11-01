@@ -1175,7 +1175,44 @@ test('SETTINGS: the privacy text says five things in every language', { skip: SK
   }
 });
 
-/* ============ SEVERAL BOTS AT ONE TABLE (v48) ============ */
+/* ---------------------------------------------------------------- Text size "Small" (v48): an iPhone SE without scrolling */
+test('SETTINGS: Text size Small fits the menu, the game setup and the results of an iPhone SE 2/3 (375x667) without scrolling, in every pack', { skip: SKIP }, async () => {
+  const over = page => page.evaluate(() => {
+    const sc = document.querySelector('.screen'), sb = document.querySelector('.sheetbox');
+    const inner = sb && [...sb.querySelectorAll('*')].find(e => e.scrollHeight > e.clientHeight + 1 && /auto|scroll/.test(getComputedStyle(e).overflowY));
+    return { screen: sc ? sc.scrollHeight - sc.clientHeight : 0, sheet: inner ? inner.scrollHeight - inner.clientHeight : 0 };
+  });
+  for (const pk of ['countries', 'capitals', 'states']) {
+    const { page, errors, ctx } = await open({ viewport: { width: 375, height: 667 }, init: () => localStorage.setItem('settings:v1', '{"tz":-1}') });
+    assert.equal(await page.evaluate(() => document.documentElement.dataset.tz), '-1');
+    await pickPack(page, pk);
+    let o = await over(page); assert.ok(o.screen <= 1, `${pk} menu scrolls ${JSON.stringify(o)}`);
+    await page.click('#m1'); await page.waitForSelector('#start'); await page.waitForTimeout(350);
+    o = await over(page); assert.ok(o.sheet <= 1 && o.screen <= 1, `${pk} setup scrolls ${JSON.stringify(o)}`);
+    await pick(page, 'lots', 5); await pick(page, 'clock', 0);
+    await page.click('#start'); await page.waitForSelector('#ctrl');
+    await autoplay(page); await reveal(page); await page.waitForTimeout(1500);
+    o = await over(page); assert.ok(o.screen <= 1, `${pk} results scroll ${JSON.stringify(o)}`);
+    assert.deepEqual(errors, [], pk);
+    await ctx.close();
+  }
+});
+
+test('SETTINGS: the Text size control has four steps (Small, Normal, Large, Larger) in every language and Small is stored as tz -1', { skip: SKIP }, async () => {
+  for (const lang of ['en', 'de', 'it', 'es', 'fr']) {
+    const { page, errors, ctx } = await open({ init: l => localStorage.setItem('lang:v1', l), initArg: lang });
+    await page.click('[aria-label*="ettings"], [aria-label*="instellungen"], [aria-label*="mpostazioni"], [aria-label*="juste"], [aria-label*="églages"], #mset').catch(() => {});
+    await page.evaluate(() => settingsSheet()); await page.waitForSelector('[data-g="tz"]');
+    assert.deepEqual(await page.$$eval('[data-g="tz"] [data-v]', e => e.map(x => x.dataset.v)), ['-1', '0', '1', '2'], lang);
+    await page.click('[data-g="tz"] [data-v="-1"]');
+    assert.equal(await page.evaluate(() => document.documentElement.dataset.tz), '-1');
+    assert.equal(JSON.parse(await page.evaluate(() => localStorage.getItem('settings:v1'))).tz, -1);
+    assert.deepEqual(errors, [], lang);
+    await ctx.close();
+  }
+});
+
+/* ============ SEVERAL BOTS AT ONE TABLE (v49) ============ */
 const radios = (page, g) => page.$$eval(`[data-g="${g}"] [role=radio]`, e => e.map(x => [x.dataset.v, x.disabled, x.getAttribute('aria-checked')].join(':')));
 
 test('BOTS: solo offers 1 to 3 bots (1 by default); more than one shows the hint; the bots take the last seats with their own names', { skip: SKIP }, async () => {

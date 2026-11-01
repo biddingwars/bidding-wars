@@ -34,7 +34,7 @@
     bot: {
       limitMul: {"5":0.8,"10":0.55,"15":0.55,"20":0.55},   // 15+ lots are tuned together with rollSpan (below): a player who never pays more than ~0.8x the fair price beat the old limits 76-100% of long rounds (see CLAUDE.md)
       rollSpan: 0.4,                                   // the walk-away roll uses the first 40% of [ideal, max]: less lot-to-lot swing in the bot's limit, so no fixed-limit player out-earns it
-      crowd: 0.1,                                      // v48: at a table of 3-4 the walk-away grows by this share per extra seat (never in a duel); found with a fair-value human against 2-3 bots
+      crowd: 0.1,                                      // v49: at a table of 3-4 the walk-away grows by this share per extra seat (never in a duel); found with a fair-value human against 2-3 bots
       noise: 0.15,                                     // a little per-lot jitter on top, so the narrower roll does not make the drop-out point easy to read (0.15 keeps the exploit search under its limit; 0.25+ does not)
       premium: { top: 4, pct: 0.15 },
       pacing: { gamma: 0.5, lo: 0.7, hi: 1.5 },

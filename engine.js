@@ -678,7 +678,7 @@
     if (!o || typeof o !== 'object' || Array.isArray(o)) return out;
     if (typeof o.cur === 'string' && currencyById(o.cur)) out.cur = o.cur;
     if (Number.isInteger(o.aggr) && o.aggr >= 0 && o.aggr <= 4) out.aggr = o.aggr;
-    if (Number.isInteger(o.tz) && o.tz >= 0 && o.tz <= 2) out.tz = o.tz;
+    if (Number.isInteger(o.tz) && o.tz >= -1 && o.tz <= 2) out.tz = o.tz;   // -1 = Small (v48), 0 = Normal (default), 1 Large, 2 Larger
     if (o.motion === 'reduce') out.motion = 'reduce';
     ['shapes', 'fair', 'confirm', 'quiet'].forEach(k => { if (o[k] === true) out[k] = true; });
     return out;

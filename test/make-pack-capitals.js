@@ -23,7 +23,7 @@ const CAL = {
     mood: { k: 0.25, up: 0.2, down: 0.15 },
     wallet: { lo: 0.7 },
     noise: { beginner: 0.376, medium: 0.377, expert: 0.471 },
-    crowd: { beginner: -0.15, medium: 0.15, expert: 0.2 },                // v48: the walk-away changes by this share per extra seat at a table of 3-4 (never in a duel); found with a fair-value human against 2-3 bots
+    crowd: { beginner: -0.15, medium: 0.15, expert: 0.2 },                // v49: the walk-away changes by this share per extra seat at a table of 3-4 (never in a duel); found with a fair-value human against 2-3 bots
 
     efficiency: { gamma: { beginner: 0.72, medium: 0.989, expert: 0.598 }, lo: { beginner: 0.4, medium: 0.272, expert: 0.27 }, hi: { beginner: 3.076, medium: 2.623, expert: 2.522 }, pick: { beginner: 1.909, medium: 1.85, expert: 1.903 } },
     decisive: { share: { beginner: 0.251, medium: 0.374, expert: 0.209 }, minPrice: { beginner: 0.8, medium: 1.2, expert: 1.2 } },   // all-in only for a lot whose fair price is at least this share of the bot's current purse (1.2 = one it cannot really afford: Delhi yes; Seoul and Washington no)

@@ -705,10 +705,11 @@ const STR_SET = {
   "themeDarkL": "Dark",
   "themeLightL": "Light",
   "textSize": "Text size",
+  "tzS": "Small",
   "tz0": "Normal",
   "tz1": "Large",
   "tz2": "Larger",
-  "tzNote": "Larger text applies to the menu, the results and the sheets. The auction screen is sized to fit and stays as it is.",
+  "tzNote": "Text size applies to the menu, the results and the sheets. The auction screen is sized to fit and stays as it is. Small fits the menu, the game setup and the results of an iPhone SE (2nd/3rd generation) on one screen.",
   "setCurrency": "Currency",
   "curAuto": "Automatic",
   "curNote": "Only changes how money is written. The numbers stay the same and there are no exchange rates.",
@@ -756,10 +757,11 @@ const STR_SET = {
   "themeDarkL": "Dunkel",
   "themeLightL": "Hell",
   "textSize": "Textgröße",
+  "tzS": "Klein",
   "tz0": "Normal",
   "tz1": "Groß",
   "tz2": "Größer",
-  "tzNote": "Größerer Text gilt für Menü, Ergebnisse und Fenster. Der Auktionsbildschirm ist auf Passgenauigkeit ausgelegt und bleibt unverändert.",
+  "tzNote": "Die Textgröße gilt für Menü, Ergebnisse und Fenster. Der Auktionsbildschirm ist auf Passgenauigkeit ausgelegt und bleibt unverändert. Klein bringt Menü, Spieleinstellungen und Ergebnis eines iPhone SE (2./3. Generation) auf einen Bildschirm.",
   "setCurrency": "Währung",
   "curAuto": "Automatisch",
   "curNote": "Ändert nur, wie Geld geschrieben wird. Die Zahlen bleiben gleich, es gibt keine Wechselkurse.",
@@ -807,10 +809,11 @@ const STR_SET = {
   "themeDarkL": "Scuro",
   "themeLightL": "Chiaro",
   "textSize": "Dimensione del testo",
+  "tzS": "Piccolo",
   "tz0": "Normale",
   "tz1": "Grande",
   "tz2": "Più grande",
-  "tzNote": "Il testo più grande vale per il menu, i risultati e le schede. La schermata dell’asta è dimensionata per entrare e resta com’è.",
+  "tzNote": "La dimensione del testo vale per il menu, i risultati e le schede. La schermata dell’asta è dimensionata per entrare e resta com’è. Piccolo fa stare menu, impostazioni della partita e risultati di un iPhone SE (2ª/3ª generazione) in una sola schermata.",
   "setCurrency": "Valuta",
   "curAuto": "Automatica",
   "curNote": "Cambia solo il modo in cui si scrive il denaro. I numeri restano gli stessi e non ci sono tassi di cambio.",
@@ -858,10 +861,11 @@ const STR_SET = {
   "themeDarkL": "Oscuro",
   "themeLightL": "Claro",
   "textSize": "Tamaño del texto",
+  "tzS": "Pequeño",
   "tz0": "Normal",
   "tz1": "Grande",
   "tz2": "Más grande",
-  "tzNote": "El texto más grande se aplica al menú, los resultados y las hojas. La pantalla de la subasta está medida para caber y no cambia.",
+  "tzNote": "El tamaño del texto se aplica al menú, los resultados y las hojas. La pantalla de la subasta está medida para caber y no cambia. Pequeño hace que el menú, los ajustes de la partida y los resultados de un iPhone SE (2.ª/3.ª generación) quepan en una pantalla.",
   "setCurrency": "Moneda",
   "curAuto": "Automática",
   "curNote": "Solo cambia cómo se escribe el dinero. Los números siguen igual y no hay tipos de cambio.",
@@ -909,10 +913,11 @@ const STR_SET = {
   "themeDarkL": "Sombre",
   "themeLightL": "Clair",
   "textSize": "Taille du texte",
+  "tzS": "Petit",
   "tz0": "Normale",
   "tz1": "Grande",
   "tz2": "Plus grande",
-  "tzNote": "Le texte plus grand s’applique au menu, aux résultats et aux fenêtres. L’écran de la vente est calé pour tenir et ne change pas.",
+  "tzNote": "La taille du texte s’applique au menu, aux résultats et aux fenêtres. L’écran de la vente est calé pour tenir et ne change pas. Petit fait tenir le menu, les réglages de la partie et les résultats d’un iPhone SE (2e/3e génération) sur un écran.",
   "setCurrency": "Devise",
   "curAuto": "Automatique",
   "curNote": "Ne change que la façon d’écrire l’argent. Les chiffres restent les mêmes et il n’y a pas de taux de change.",
@@ -1212,7 +1217,7 @@ function settingsSheet() {
       <p class="sm" id="aggrD"></p></div>
     <div class="fld"><span class="label">${esc(t('setAppear'))}</span>
       ${seg('theme', t('setAppear'), [['dark', t('themeDarkL')], ['light', t('themeLightL')]], THEME)}
-      <div class="sgl">${seg('tz', t('textSize'), [[0, t('tz0')], [1, t('tz1')], [2, t('tz2')]], SET.tz)}</div>
+      <div class="sgl">${seg('tz', t('textSize'), [[-1, t('tzS')], [0, t('tz0')], [1, t('tz1')], [2, t('tz2')]], SET.tz)}</div>
       <p class="sm">${esc(t('tzNote'))}</p></div>
     <div class="fld"><span class="label">${esc(t('language'))}</span><button class="row glass langrow" id="slang"><span class="t"><span aria-hidden="true">${flag(langFlag(LANGS.find(l => l.id === LANG) || LANGS[0]))}</span> ${esc((LANGS.find(l => l.id === LANG) || LANGS[0]).label)}</span>${IC('chev', 'sm')}</button></div>
     <div class="fld"><span class="label">${esc(t('setAccess'))}</span><div class="group">
@@ -1322,8 +1327,8 @@ async function setup(kind, packId = SELPACK) {
   const lvl = l => (l.label[LANG] || l.label.en), lvlParts = l => { const p = lvl(l).split(' — '); return [p[0], p[1] || '']; };
   h.set(`
     ${kind === 'solo' ? `<p class="sm">${t('rivalDesc')}</p>` : `<p class="sm">${esc(t('multiDesc'))}</p>`}
-    ${kind === 'multi' ? `<div class="fld"><span class="label">${esc(t('peopleN'))}</span>${seg('players', t('peopleN'), [[2, '2'], [3, '3'], [4, '4']], nPl)}</div>` : ''}
-    <div class="fld"><span class="label">${esc(t('botsN'))}</span>${seg('bots', t('botsN'), (kind === 'solo' ? [1, 2, 3] : [0, 1, 2]).map(n => [n, String(n)]), nBots)}<p class="sm" id="botsHint" role="note"${nBots > 1 ? '' : ' hidden'}>${esc(t('botsHint'))}</p></div>
+    ${kind === 'multi' ? `<div class="fld inl"><span class="label">${esc(t('peopleN'))}</span>${seg('players', t('peopleN'), [[2, '2'], [3, '3'], [4, '4']], nPl)}</div>` : ''}
+    <div class="fld inl"><span class="label">${esc(t('botsN'))}</span>${seg('bots', t('botsN'), (kind === 'solo' ? [1, 2, 3] : [0, 1, 2]).map(n => [n, String(n)]), nBots)}<p class="sm" id="botsHint" role="note"${nBots > 1 ? '' : ' hidden'}>${esc(t('botsHint'))}</p></div>
     <div class="fld"><span class="label">${esc(t('lots'))}</span>${seg('lots', t('lots'), pack.lots.options.map(n => [n, n === pack.lots.all ? t('lotsAll', { n }) : n]), lots)}<p class="sm" id="lotHint" role="note"${lots <= 5 ? '' : ' hidden'}>${esc(t('shortHint'))}</p></div>
     <div class="budget"><span><span class="label">${esc(t('budget'))}</span><small>${esc(t('budgetNote'))}</small></span><b class="num" id="bud">${Engine.formatMoney(pack, Engine.budgetFor(pack, lots, level), SET.cur && chosenCur() ? SET.cur : undefined)}</b></div>
     ${pack.levels.length > 1 ? `<div class="fld"><span class="label">${esc(t('difficulty'))}</span><div class="lvls" role="radiogroup" aria-label="${esc(t('difficulty'))}" data-g="level">${pack.levels.map(l => { const [a, b] = lvlParts(l); return `<button type="button" class="lvl" role="radio" data-v="${l.id}" aria-checked="${l.id === level}"><span class="tt">${esc(a)}${b ? `<small>${esc(b)}</small>` : ''}</span><span class="ck" aria-hidden="true"></span></button>`; }).join('')}</div></div>` : ''}
