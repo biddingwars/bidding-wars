@@ -24,7 +24,7 @@ const CAL = {
     wallet: { lo: 0.7 },
     noise: { beginner: 0.376, medium: 0.377, expert: 0.471 },
     efficiency: { gamma: { beginner: 0.72, medium: 0.989, expert: 0.598 }, lo: { beginner: 0.4, medium: 0.272, expert: 0.27 }, hi: { beginner: 3.076, medium: 2.623, expert: 2.522 }, pick: { beginner: 1.909, medium: 1.85, expert: 1.903 } },
-    decisive: { share: { beginner: 0.251, medium: 0.374, expert: 0.209 }, minPrice: 0.8 }, // all-in only for a lot whose fair price is at least 80% of the bot's current purse (Delhi yes, Washington at the start of a 5-lot round no)
+    decisive: { share: { beginner: 0.251, medium: 0.374, expert: 0.209 }, minPrice: { beginner: 0.8, medium: 1.2, expert: 1.2 } },   // all-in only for a lot whose fair price is at least this share of the bot's current purse (1.2 = one it cannot really afford: Delhi yes; Seoul and Washington no)
     creeperGuard: { raises: 3 },
     temperaments: { weights: [25, 50, 25], bigRank: 10, spread: { 5: 0.06, 10: 0.06, 15: 0.05, 20: 0.04, 30: 0.04 }, conservative: { step: 0.75, big: 0.95 }, aggressive: { step: 1.25, big: 1.05, reserveCap: 3 } }
   }
