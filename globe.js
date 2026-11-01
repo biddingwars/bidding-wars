@@ -379,8 +379,8 @@ function globe3d(host, owned, pack){
   }));
   atmo.scale.setScalar(1.13); scene.add(atmo);
 
-  scene.add(new THREE.AmbientLight(0x9FB4D0, 0.85));
-  const key=new THREE.DirectionalLight(0xfff6e8, 0.95); key.position.set(-3,2.2,3.4); scene.add(key);
+  scene.add(new THREE.AmbientLight(0x9FB4D0, 1.0));
+  const key=new THREE.DirectionalLight(0xfff6e8, 0.9); key.position.set(-3,2.2,3.4); scene.add(key);
   const rim=new THREE.DirectionalLight(0xC9953C, 0.45); rim.position.set(3.5,-1.5,-2.5); scene.add(rim);
 
   /* ---- the winner's lots: pillars + glow ---- */

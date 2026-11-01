@@ -160,11 +160,11 @@ test('Engine: bot.decisive.minPrice must be a positive share (validatePack)', ()
   assert.deepEqual(Engine.validatePack(pack), []);
 });
 
-test('The globe texture is NASA Blue Marble (credited in NOTICE.md and in all five languages), 4096x2048, under 1.5 MB', () => {
+test('The globe texture is NASA Blue Marble (credited in NOTICE.md and in all five languages), 6144x3072, under 3 MB', () => {
   const buf = fs.readFileSync(path.join(__dirname, '..', 'earth.jpg'));
   let i = 2, w = 0, h = 0;
   while (i < buf.length) { if (buf[i] !== 0xFF) { i++; continue; } const m = buf[i + 1]; if (m >= 0xC0 && m <= 0xC3) { h = buf.readUInt16BE(i + 5); w = buf.readUInt16BE(i + 7); break; } i += 2 + buf.readUInt16BE(i + 2); }
-  assert.deepEqual([w, h], [4096, 2048]); assert.ok(buf.length < 1.5 * 1024 * 1024, 'size ' + buf.length);
+  assert.deepEqual([w, h], [6144, 3072]); assert.ok(buf.length < 3 * 1024 * 1024, 'size ' + buf.length);
   assert.ok(/Globe texture[^\n]*Blue Marble/.test(fs.readFileSync(path.join(__dirname, '..', 'NOTICE.md'), 'utf8')));
   assert.equal((fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8').match(/creditsGlobe:'[^']*NASA Earth Observatory/g) || []).length, 5);
 });
