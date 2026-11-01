@@ -571,3 +571,5 @@ html[data-motion=reduce] .rays,html[data-motion=reduce] .confetti{display:none}
 .um-l{z-index:2;opacity:1}
 .um-c{font-size:10px;padding:1px 6px;line-height:1.3}
 @media (prefers-reduced-motion:reduce){.um-wins>g{animation:none}}
+
+.logta{width:100%;min-height:150px;background:var(--glass);color:var(--ink);border:1px solid var(--stroke);border-radius:14px;padding:10px;font:12px/1.35 ui-monospace,Menlo,monospace;resize:none}

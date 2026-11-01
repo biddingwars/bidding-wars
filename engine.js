@@ -399,12 +399,12 @@
 
   /* Opens the next lot. → { state:'lot' } or { state:'done', reason } */
   function startLot(S) {
-    if (S.i >= S.items.length) return { state: 'done', reason: 'end' };
+    if (S.i >= S.items.length) return (S.reason = 'end', { state: 'done', reason: 'end' });
     const eligible = S.players.map((p, i) => i).filter(i => S.players[i].budget >= 1);
     if (eligible.length === 0) {                         // nobody can pay for anything anymore
       if (S.unsold) S.items.slice(S.i).forEach(it => S.unsold.push(it));
       S.i = S.items.length;
-      return { state: 'done', reason: 'broke' };
+      return (S.reason = 'broke', { state: 'done', reason: 'broke' });
     }
     if (eligible.length === 1 && S.players.length > 1 && S.pack.economy && S.pack.economy.endgame && S.pack.economy.endgame.rule === 'house') {
       /* House price: the last player with money may buy each remaining lot at a fixed share of its fair price while
@@ -415,17 +415,18 @@
         if (w.budget >= price) { w.budget -= price; w.bought.push({ ...it, price }); } else S.unsold.push(it);
         S.i++;
       }
-      return { state: 'done', reason: 'house' };
+      return (S.reason = 'house', { state: 'done', reason: 'house' });
     }
     if (eligible.length === 1 && S.players.length > 1) { // walkover: the rest goes to the last solvent bidder
       const w = S.players[eligible[0]];
+      if (S.trace) S.trace.push({ i: S.i, walkover: S.items.length - S.i, by: eligible[0], money: w.budget });
       while (S.i < S.items.length) {
         const it = S.items[S.i];
         if (w.budget >= 1) { w.budget -= 1; w.bought.push({ ...it, price: 1 }); }
         else w.bought.push({ ...it, price: 0, free: true });
         S.i++;
       }
-      return { state: 'done', reason: 'walkover' };
+      return (S.reason = 'walkover', { state: 'done', reason: 'walkover' });
     }
     /* The opening €1 bid rotates seat by seat: seat 1 opens the first lot, seat 2 the
        second, and so on. Seats with no money left are skipped. */
@@ -433,6 +434,7 @@
     S.L = { price: 1, holder: opener, active: eligible.slice(), turn: null };
     S.L.turn = nextAfter(S, opener);
     S._ceil = null;
+    if (S.trace) { const pr = priceOf(S.pack, S.items[S.i]); S._tl = { i: S.i, id: S.items[S.i].id, v: S.items[S.i].value, ideal: pr.ideal, max: pr.max, open: opener, bids: [] }; S.trace.push(S._tl); S._dec = false; }   // optional game log (app turns it on); nothing changes when absent
     return { state: 'lot' };
   }
 
@@ -447,6 +449,7 @@
     if (!Number.isInteger(amount) || !(amount > L.price)) return { error: 'mustBeat' };
     if (amount > actor.budget) return { error: 'tooMuch' };
     if (S.watch && !actor.ai) S.watch.raises++;
+    if (S.trace && S._tl) S._tl.bids.push([L.turn, 'r', amount]);
     L.price = amount; L.holder = L.turn; L.turn = nextAfter(S, L.holder);
     return { ok: true, next: L.turn === null ? 'award' : 'turn' };
   }
@@ -455,6 +458,7 @@
     if (closed(S)) return { error: 'closed' };
     const L = S.L;
     if (S.watch && !S.players[L.turn].ai && S.players[L.turn].budget >= L.price + 1) S.watch.vol++;
+    if (S.trace && S._tl) S._tl.bids.push([L.turn, 'p', L.price]);
     L.active = L.active.filter(i => i !== L.turn);
     if (L.active.length <= 1) return { ok: true, next: 'award' };
     L.turn = nextAfter(S, L.holder);
@@ -467,6 +471,7 @@
     L.awarded = true;
     w.budget -= L.price;
     w.bought.push({ ...item, price: L.price });
+    if (S.trace && S._tl) Object.assign(S._tl, { won: [L.holder, L.price], walk: S._ceil ? S._ceil.walk : null, dec: !!S._dec, left: S.players.map(p => p.budget) });
     return { winner: L.holder, item, price: L.price, ideal: priceOf(S.pack, item).ideal, ai: w.ai };
   }
 
@@ -557,6 +562,7 @@
        round of small capitals is "decisive" in points but not worth the whole purse (Washington D.C., about EUR 26, at the start of a 5-lot round with EUR 50), whereas Delhi (about EUR 95) is; late in a round, with little money left, a pivotal lot still is. */
     const decisiveLot = !!B.decisive && item.value >= lvVal(B.decisive.share, S) * sumFrom(S, S.i, i => i.value)
       && (B.decisive.minPrice == null || pr.ideal >= lvVal(B.decisive.minPrice, S) * me.budget);
+    if (S.trace) S._dec = decisiveLot;
     if (decisiveLot) reserve = 0;                                                                           // no euro is kept back for it
     if (T && T.cushion && lotsAfter >= 3) reserve += Math.round(T.cushion * (me.budget + me.bought.reduce((a, b) => a + b.price, 0)));
     if (T && T.reserveCap != null) reserve = Math.min(reserve, T.reserveCap);
@@ -647,10 +653,34 @@
        { v:2, packs: { <packId>: { played, won, lost, ... byLevel } } }
      The first version was a single flat record (the countries pack); it migrates
      in place. Anything unreadable falls back to a blank record, never a crash. */
+  /* ---- GAME LOG (optional, off by default, only on this device): a compact record of a finished solo game for the owner's analysis.
+     The app sets S.trace = [] when the player switched "Record my games" on; the engine then notes every raise / pass / award. No names, no network. */
+  const LOG_KEY = 'log:v1', LOG_MAX_GAMES = 100, LOG_MAX_CHARS = 1500000;
+  function gameLog(S, ex) {
+    ex = ex || {};
+    const sb = scoreboard(S);
+    return { v: 1, t: ex.t || null, pack: S.pack.id, level: S.level || null, lots: S.items.length, budget: budgetFor(S.pack, S.items.length, S.level),
+      seats: S.players.map(p => p.ai ? 'bot' : 'you'), temper: S.bot && S.bot.temper ? S.bot.temper.name || null : null, aggr: ex.aggr == null ? 2 : ex.aggr, practice: !!S.practice,
+      clock: S.clock == null ? null : S.clock, end: S.reason || 'end', unsold: (S.unsold || []).length,
+      pts: S.players.map(p => { const r = sb.rows.find(x => x.p === p); return r ? +r.pts.toFixed(3) : 0; }), left: S.players.map(p => p.budget),
+      lotLog: S.trace || [] };
+  }
+  function parseLog(raw) {
+    let a = null; try { a = typeof raw === 'string' ? JSON.parse(raw) : raw; } catch (e) { a = null; }
+    return Array.isArray(a) ? a.filter(g => g && typeof g === 'object' && g.v === 1 && Array.isArray(g.lotLog)) : [];
+  }
+  function addToLog(raw, game) {
+    const a = parseLog(raw); a.push(game);
+    while (a.length > LOG_MAX_GAMES) a.shift();
+    let out = JSON.stringify(a);
+    while (out.length > LOG_MAX_CHARS && a.length > 1) { a.shift(); out = JSON.stringify(a); }
+    return out;
+  }
+
   /* ---- SETTINGS: the one extra value stored on the device (settings:v1), only the choices that differ from the defaults.
      aggr is the bot-aggression step 0..4 (2 = the default mix, the only one that counts for your record). */
   const SETTINGS_KEY = 'settings:v1';
-  const DEFAULT_SETTINGS = { cur: null, aggr: 2, tz: 0, motion: 'auto', shapes: false, fair: false, confirm: false, quiet: false };
+  const DEFAULT_SETTINGS = { cur: null, aggr: 2, tz: 0, motion: 'auto', shapes: false, fair: false, confirm: false, quiet: false, log: false };
   const AGGR_TEMPER = ['cautious', 'conservative', null, 'aggressive', 'fierce'];     // step -> forced temperament (null = the usual hidden 25/50/25 draw)
   function parseSettings(raw) {
     const out = Object.assign({}, DEFAULT_SETTINGS); let o = null;
@@ -660,7 +690,7 @@
     if (Number.isInteger(o.aggr) && o.aggr >= 0 && o.aggr <= 4) out.aggr = o.aggr;
     if (Number.isInteger(o.tz) && o.tz >= -1 && o.tz <= 2) out.tz = o.tz;   // -1 = Small (v48), 0 = Normal (default), 1 Large, 2 Larger
     if (o.motion === 'reduce') out.motion = 'reduce';
-    ['shapes', 'fair', 'confirm', 'quiet'].forEach(k => { if (o[k] === true) out[k] = true; });
+    ['shapes', 'fair', 'confirm', 'quiet', 'log'].forEach(k => { if (o[k] === true) out[k] = true; });
     return out;
   }
   /* only what differs from the defaults is stored; all defaults = nothing stored (null: the caller removes the key) */
@@ -734,7 +764,7 @@
     LANGS, REC_KEY, SETTINGS_KEY, DEFAULT_SETTINGS, AGGR_TEMPER, CURRENCIES, currencyById, currencyText, parseSettings, stringifySettings, isPractice,
     cryptoRng, seededRng, defaultRng, pick,
     itemName, itemIcon, hasCoords, factFor, formatMoney,
-    validatePack, levelPool, draw, priceTable, priceOf, botCeiling,
+    validatePack, levelPool, LOG_KEY, gameLog, parseLog, addToLog, draw, priceTable, priceOf, botCeiling,
     tierOf, tauntFor, passLine, winLine,
     budgetFor, byLots, avgIdeal, bidSteps, drawSystematic, pickTemper, newAuction, startLot, raise, pass, award, advance, nextAfter, botDecision, scoreboard,
     blankPackRecord, parseRecords, stringifyRecords, applyGame
