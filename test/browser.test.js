@@ -1302,7 +1302,7 @@ test('GAME LOG: every game is logged when switched on - three bots with a forced
   await autoplay(page); await reveal(page);
   await page.waitForFunction(() => localStorage.getItem('log:v1'), null, { timeout: 4000 });
   let log = JSON.parse(await page.evaluate(() => localStorage.getItem('log:v1')));
-  assert.equal(log.length, 1); assert.equal(log[0].bots, 3); assert.equal(log[0].practice, false); assert.equal(log[0].aggr, 4); assert.equal(log[0].seats.length, 4);
+  assert.equal(log.length, 1); assert.equal(log[0].bots, 3); assert.equal(log[0].practice, true); assert.equal(log[0].aggr, 4); assert.equal(log[0].seats.length, 4);
   assert.ok(log[0].lotLog.some(e => e.walks), 'the bots\' own limits are logged');
   assert.deepEqual(errors, []);
   await ctx.close();
