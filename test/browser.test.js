@@ -1276,16 +1276,15 @@ test('BOTS: solo offers 1 to 3 bots (1 by default); more than one shows the hint
   await pick(page, 'bots', 3); assert.equal(await page.isVisible('#botsHint'), true); assert.match(await page.textContent('#botsHint'), /own style/);
   await pick(page, 'lots', 5); await pick(page, 'clock', 0);
   await page.click('#start'); await page.waitForSelector('#ctrl');
-  const g = await page.evaluate(() => ({ names: S.players.map(p => p.name + (p.ai ? '*' : '')), styles: Object.values(S.bot.byseat).map(t => t.name).sort(), tiles: document.querySelectorAll('.po').length, ini: [...document.querySelectorAll('.po .o')].map(e => e.textContent), practice: S.practice, noRecord: S.noRecord }));
+  const g = await page.evaluate(() => ({ names: S.players.map(p => p.name + (p.ai ? '*' : '')), styles: Object.values(S.bot.byseat).map(t => t.name).sort(), tiles: document.querySelectorAll('.po').length, ini: [...document.querySelectorAll('.po .o')].map(e => e.textContent), practice: S.practice }));
   assert.deepEqual(g.names, ['You', 'Bot 1*', 'Bot 2*', 'Bot 3*']);
   assert.deepEqual(g.styles, ['aggressive', 'balanced', 'conservative'], 'three bots, three different styles');
-  assert.equal(g.tiles, 4); assert.deepEqual(g.ini, ['Y', 'B1', 'B2', 'B3']); assert.equal(g.practice, false); assert.equal(g.noRecord, true);
+  assert.equal(g.tiles, 4); assert.deepEqual(g.ini, ['Y', 'B1', 'B2', 'B3']); assert.equal(g.practice, false);
   /* the bots really play, to the end */
   await autoplay(page); await reveal(page);
   assert.equal(await page.$$eval('#lb > *', e => e.length) >= 4, true, 'four rows on the results');
-  assert.equal(await page.evaluate(() => localStorage.getItem('record:v1')), null, 'a game against several bots does not touch the record');
+  assert.equal(await page.evaluate(() => RECS.packs.countries.played), 1, 'a game against several bots counts for the record');
   await page.waitForSelector('#extra:not([hidden])', { timeout: 6000 }).catch(() => {});
-  assert.match(await page.textContent('body'), /Only a game against one bot changes your record/);
   assert.deepEqual(errors, []);
   await ctx.close();
 });
@@ -1309,11 +1308,32 @@ test('GAME LOG: every game is logged when switched on - three bots with a forced
   await ctx.close();
 });
 
+test('RECORD: a game against 2 bots counts (you against the best bot); a practice game against 2 bots does not', { skip: SKIP }, async () => {
+  let { page, errors, ctx } = await open();
+  await page.click('#m1'); await page.waitForSelector('#start');
+  await pick(page, 'bots', 2); await pick(page, 'lots', 5); await pick(page, 'clock', 0);
+  await page.click('#start'); await page.waitForSelector('#ctrl');
+  await autoplay(page); await reveal(page);
+  assert.equal(await page.evaluate(() => RECS.packs.countries.played), 1);
+  const r = await page.evaluate(() => { const s = Engine.scoreboard(S).rows; const you = s.find(x => !x.p.ai).pts, bot = Math.max(...s.filter(x => x.p.ai).map(x => x.pts)); const R = RECS.packs.countries; return { won: R.won, lost: R.lost, drawn: R.drawn, expect: you > bot ? 'won' : you < bot ? 'lost' : 'drawn' }; });
+  assert.equal(r[r.expect], 1, 'won / lost is you against the best bot: ' + JSON.stringify(r));
+  assert.deepEqual(errors, []); await ctx.close();
+  ({ page, errors, ctx } = await open());
+  await page.evaluate(() => { SET.fair = true; });
+  await page.click('#m1'); await page.waitForSelector('#start');
+  await pick(page, 'bots', 2); await pick(page, 'lots', 5); await pick(page, 'clock', 0);
+  await page.click('#start'); await page.waitForSelector('#ctrl');
+  assert.equal(await page.evaluate(() => S.practice), true);
+  await autoplay(page); await reveal(page);
+  assert.equal(await page.evaluate(() => localStorage.getItem('record:v1')), null, 'practice games never count');
+  assert.deepEqual(errors, []); await ctx.close();
+});
+
 test('BOTS: one bot is still the duel - called "Bot", counted for the record', { skip: SKIP }, async () => {
   const { page, errors, ctx } = await open();
   await startSolo(page, 5, 0);
-  const g = await page.evaluate(() => ({ names: S.players.map(p => p.name), byseat: S.bot.byseat === undefined, noRecord: S.noRecord }));
-  assert.deepEqual(g.names, ['You', 'Bot']); assert.equal(g.byseat, true); assert.equal(g.noRecord, false);
+  const g = await page.evaluate(() => ({ names: S.players.map(p => p.name), byseat: S.bot.byseat === undefined }));
+  assert.deepEqual(g.names, ['You', 'Bot']); assert.equal(g.byseat, true);
   await autoplay(page); await reveal(page);
   assert.equal(await page.evaluate(() => RECS.packs.countries.played), 1);
   assert.deepEqual(errors, []);

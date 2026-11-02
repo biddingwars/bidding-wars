@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v54';   // increment this, every time
+const CACHE = 'bidding-wars-v55';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v54` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v55` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -250,7 +250,7 @@ Solo is **you against 1, 2 or 3 bots**; Multiplayer is **2-4 people plus 0-2 bot
 - **`bot.crowd`** (optional, number or per level, -0.5..1, validated): at a table of 3-4 seats the walk-away is multiplied by `1 + crowd x (seats - 2)`, because more bidders push prices up and a duel-calibrated bot would otherwise be a pushover. Values: States 0.1; Countries Beginner 0.15, Medium 0.07, Expert 0.2; Capitals Beginner -0.15, Medium 0.15, Expert 0.2 (generators `test/make-pack-states.js`, `test/make-pack-capitals.js`; Countries is hand-written). Found with a scratch loop (`multi.js`, a fair-value human 1.25x, a +1 creeper and a stingy 0.7x human against 1-3 bots) and then re-measured, 300 games a cell, 10 lots:
   fair-value human wins (share of 4 seats = 25%, of 3 = 33%): States 33 / 39, Countries Medium 20 / 32, Capitals Medium 28 / 38 with 3 / 2 bots; creeper wins 8-10% (Countries, Capitals Medium) and 33-37% (States) with 2-3 bots. The three bot styles win within a few points of each other (distinct styles 100%).
 - **Known weak spots (accepted, not hidden)**: Countries Expert and Capitals Beginner/Expert bots are strong at a full table (Countries Expert, fair-value human with 3 bots wins 8%, with 2 bots 12%; Capitals Beginner stingy human 3-4%); States stays sensitive to `crowd` (the stingy-player valley of "Exploit" above: crowd 0.1 keeps the stingy human at 28-30%, and the stingy human wins less than its seat share at every `crowd` tried, but the other policies moved a lot with it, so it was tuned on the fair-value human); the fair-value policy is not a typical human; nothing was played on a device. The exploit search (`test/exploit.js`) is a duel tool and has **not** been extended to several bots.
-- **Record**: only a *solo duel against one bot* counts (`S.practice` / `Engine.isPractice` as before); against 2-3 bots `S.noRecord` is set and the results say so (`noRecordBots`). Multiplayer never recorded.
+- **Record (v55, owner: "make every game count, other than practice games")**: every **solo** game counts, against 1, 2 or 3 bots; with several bots "the bot" in the record is the best-scoring bot (`reveal()` in `app.js`), so won / lost / drawn means you against the strongest of them, in the same counters as duels. A practice game (another bot style, or the fair price on screen) never counts, at any table size. Hot-seat Multiplayer is never recorded (no single "you"). `noRecordBots` / `S.noRecord` are gone.
 - **Game log**: since v54 (owner: "every round gets tracked") the optional log records **every** finished game (`S.trace = []` whenever Settings -> Record my games is on): duel, 2-3 bots, hot-seat multiplayer, practice games and any bot style. Each record says which it was (`kind`, `bots`, `practice`, `aggr`, `temperBy` = style per bot seat) and, with several bots, each lot carries `walks` = every bot's own secret limit by seat (`walk` stays the last bot's). Tests: `test/gamelog.test.js`, `GAME LOG:` in `test/browser.test.js`.
 - **Pace**: with 2+ bots they "think" 0.9-1.6 s instead of 1.9-3 s so a table of mostly bots does not drag.
 - **Tests**: `test/multibots.test.js` (duel identity, distinct styles, per-seat walk-aways, whole games at 3-4 seats on every pack and level with money conserved, `crowd` sanity bands, `validatePack`), `BOTS:` tests in `test/browser.test.js` (seat arithmetic, names, styles, record, five languages, the auction fits one screen with 1-3 bots at four sizes on every pack), `test/fuzz.js` now seats 1-3 bots (cautious / fierce / bogus styles too).
