@@ -528,7 +528,22 @@
   }
   /* a bot parameter may be a plain number or per level ({ beginner: 0.8, medium: 1.2 }, or per level and lot count) */
   const lvVal = (v, S) => { if (typeof v === 'number') return v; const t = v && v[S.level] != null ? v[S.level] : v; return typeof t === 'number' ? t : byLots(t, S.items.length); };
-  const sumFrom = (S, from, f) => { let a = 0; for (let k = from; k < S.items.length; k++) a += f(S.items[k]); return a; };
+  /* WHAT THE BOT MAY KNOW ABOUT THE LOTS TO COME (v56, owner: "the bot knew India was coming and saved its money - it must have no clue what is coming").
+     The lot on the block and the lots already shown are public; the lots after it are NOT. The bot plans with a typical rest-of-round: as many lots as are left (that count is public),
+     taken at evenly spaced quantiles of the pool's items it has not seen yet in this round. Deterministic, uses no randomness and never reads S.items beyond the current lot. */
+  function restView(S) {
+    const i = S.i; if (S._rv && S._rv.i === i) return S._rv.a;
+    const n = S.items.length - i - 1, a = [];
+    if (n > 0) {
+      const seen = new Set(); for (let k = 0; k <= i; k++) seen.add(S.items[k].id);
+      const unseen = levelPool(S.pack, S.level).filter(it => !seen.has(it.id)).sort((x, y) => x.value - y.value);
+      const src = unseen.length ? unseen : levelPool(S.pack, S.level).slice().sort((x, y) => x.value - y.value);
+      for (let j = 0; j < n; j++) a.push(src[Math.min(src.length - 1, Math.floor((j + 0.5) * src.length / n))]);
+    }
+    S._rv = { i, a }; return a;
+  }
+  /* the sum of f over the lot on the block plus the typical lots still to come (used for "what is left" in pacing, mood and the decisive share) */
+  const sumFrom = (S, from, f) => { let a = f(S.items[S.i]); for (const it of restView(S)) a += f(it); return a; };
   const ptsOf = p => p.bought.reduce((a, b) => a + b.value, 0);
 
   function botWalk(S, item, idx, roll, me, rival, T) {
@@ -543,7 +558,7 @@
          knapsack: with the money it can spend on the lots still to come, the marginal lot it could afford sets a shadow price (points per euro); a lot
          that beats it is worth more than its fair price, a lot that does not is worth less. This is what a disciplined human does by hand. */
       const E = { gamma: lvVal(B.efficiency.gamma, S), lo: lvVal(B.efficiency.lo, S), hi: lvVal(B.efficiency.hi, S), pick: B.efficiency.pick == null ? 1 : lvVal(B.efficiency.pick, S) }, money = Math.max(1, me.budget - (n - idx - 1 >= 3 ? n - idx - 1 : 0)), rest = [];
-      for (let k = idx; k < n; k++) { const it = S.items[k], id = priceOf(S.pack, it).ideal; rest.push({ e: it.value / id, id }); }
+      for (const it of [S.items[idx]].concat(restView(S))) { const id = priceOf(S.pack, it).ideal; rest.push({ e: it.value / id, id }); }
       rest.sort((a, b) => b.e - a.e);
       let used = 0, eStar = 0;
       for (const r of rest) { if (used + r.id > money) { eStar = r.e; break; } used += r.id; }
@@ -599,7 +614,7 @@
         const lead = ptsOf(me) - ptsOf(leader), after = lead + item.value, restPts = sumFrom(S, S.i, i => i.value) - item.value;
         const decisive = (lead <= 0 && after > 0) || after > restPts;
         const m = Math.floor(afford / K);
-        let rankV = 1; for (let q = S.i + 1; q < S.items.length; q++) if (S.items[q].value > item.value) rankV++;
+        let rankV = 1; for (const it of restView(S)) if (it.value > item.value) rankV++;
         if (sweep || rankV <= m || (decisive && K <= lvVal(B.knockout.kappa, S) * pr.max)) {
           if (L.holder !== L.turn && L.price >= Math.min(me.budget - reserve, lim)) {
             const target = L.price < K ? K : K + 1;
