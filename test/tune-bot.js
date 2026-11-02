@@ -37,6 +37,7 @@ function evaluate() {
 }
 let rng = Engine.seededRng(SEED * 7919);
 const rnd = () => rng(1e6) / 1e6;
+if (process.env.START) { const P = JSON.parse(require('fs').readFileSync(process.env.START, 'utf8')).params; set(KEYS.map(k => P[k])); }   // continue from an earlier result
 let best = get(), cur = evaluate(), bestLoss = cur.loss;
 console.error(`start loss ${bestLoss.toFixed(1)}`);
 for (let it = 0; it < EVALS && bestLoss > 0; it++) {
