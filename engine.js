@@ -482,7 +482,10 @@
     L.awarded = true;
     w.budget -= L.price;
     w.bought.push({ ...item, price: L.price });
-    if (S.trace && S._tl) Object.assign(S._tl, { won: [L.holder, L.price], walk: S._ceil ? S._ceil.walk : null, dec: !!S._dec, left: S.players.map(p => p.budget) });
+    if (S.trace && S._tl) {
+      Object.assign(S._tl, { won: [L.holder, L.price], walk: S._ceil ? S._ceil.walk : null, dec: !!S._dec, left: S.players.map(p => p.budget) });
+      if (S.players.filter(p => p.ai).length > 1 && S._cm && S._cmLot === S.i) { const ws = {}; for (const k of Object.keys(S._cm)) if (S._cm[k] && typeof S._cm[k].walk === 'number') ws[k] = S._cm[k].walk; S._tl.walks = ws; }   // several bots: each bot's own secret limit for this lot, by seat
+    }
     return { winner: L.holder, item, price: L.price, ideal: priceOf(S.pack, item).ideal, ai: w.ai };
   }
 
@@ -680,7 +683,8 @@
     ex = ex || {};
     const sb = scoreboard(S);
     return { v: 1, t: ex.t || null, pack: S.pack.id, level: S.level || null, lots: S.items.length, budget: budgetFor(S.pack, S.items.length, S.level),
-      seats: S.players.map(p => p.ai ? 'bot' : 'you'), temper: S.bot && S.bot.temper ? S.bot.temper.name || null : null, aggr: ex.aggr == null ? 2 : ex.aggr, practice: !!S.practice,
+      seats: S.players.map(p => p.ai ? 'bot' : 'you'), temper: S.bot && S.bot.temper ? S.bot.temper.name || null : null, kind: S.kind || null, bots: S.players.filter(p => p.ai).length,
+      temperBy: S.bot && S.bot.byseat ? Object.fromEntries(Object.keys(S.bot.byseat).map(k => [k, S.bot.byseat[k].name || null])) : null, aggr: ex.aggr == null ? 2 : ex.aggr, practice: !!S.practice,
       clock: S.clock == null ? null : S.clock, end: S.reason || 'end', unsold: (S.unsold || []).length,
       pts: S.players.map(p => { const r = sb.rows.find(x => x.p === p); return r ? +r.pts.toFixed(3) : 0; }), left: S.players.map(p => p.budget),
       lotLog: S.trace || [] };

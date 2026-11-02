@@ -247,7 +247,7 @@ en:{
  youTag:'you', hostTag:'HOST',
  privacy:'Privacy', soon:'Soon', soonBody:'Online play is not switched on yet. Everything else works without a connection.',
  privP1:'This game has no accounts, no sign-in and no analytics. Nothing you do here is sent anywhere.',
- privP2:'Five things are saved, and only on this device: the language you picked, the appearance you chose, your record against the bot (with the game you last picked), the name you last entered, and your settings (currency, bot style, accessibility and practice choices). Deleting the app deletes all five. If you switch on “Record my games” in Settings (off by default), a sixth value, a log of your finished solo games, is also kept on this device; it is never sent anywhere and “Delete all data” removes it.',
+ privP2:'Five things are saved, and only on this device: the language you picked, the appearance you chose, your record against the bot (with the game you last picked), the name you last entered, and your settings (currency, bot style, accessibility and practice choices). Deleting the app deletes all five. If you switch on “Record my games” in Settings (off by default), a sixth value, a log of your finished games, is also kept on this device; it is never sent anywhere and “Delete all data” removes it.',
  privP3:'Nicknames are optional. They label the players on screen during a round; only your own is remembered on this device, so you do not have to type it again.',
  privP4:'No advertising, no tracking, no third-party software development kits.',
  wipe:'Delete all data', wipeTitle:'Delete everything?', wipeBody:'Your record, your saved name, your language, your appearance and your settings will be removed from this device.', wiped:'Deleted.',
@@ -347,7 +347,7 @@ de:{
  youTag:'du', hostTag:'GASTGEBER',
  privacy:'Datenschutz', soon:'Bald', soonBody:'Online-Spiel ist noch nicht freigeschaltet. Alles andere läuft ohne Verbindung.',
  privP1:'Dieses Spiel hat keine Konten, keine Anmeldung und keine Analyse. Nichts, was du hier tust, wird irgendwohin gesendet.',
- privP2:'Fünf Dinge werden gespeichert, und nur auf diesem Gerät: deine Sprache, die gewählte Darstellung, deine Bilanz gegen den Bot (samt dem zuletzt gewählten Spiel), der zuletzt eingegebene Name und deine Einstellungen (Währung, Bot-Stil, Bedienungshilfen und Übungsoptionen). Beim Löschen der App verschwinden alle fünf. Wenn du in den Einstellungen „Meine Spiele aufzeichnen“ einschaltest (standardmäßig aus), wird zusätzlich ein sechster Wert, ein Protokoll deiner beendeten Solo-Spiele, auf diesem Gerät gehalten; er wird nirgendwohin gesendet und „Alle Daten löschen“ entfernt ihn.',
+ privP2:'Fünf Dinge werden gespeichert, und nur auf diesem Gerät: deine Sprache, die gewählte Darstellung, deine Bilanz gegen den Bot (samt dem zuletzt gewählten Spiel), der zuletzt eingegebene Name und deine Einstellungen (Währung, Bot-Stil, Bedienungshilfen und Übungsoptionen). Beim Löschen der App verschwinden alle fünf. Wenn du in den Einstellungen „Meine Spiele aufzeichnen“ einschaltest (standardmäßig aus), wird zusätzlich ein sechster Wert, ein Protokoll deiner beendeten Spiele, auf diesem Gerät gehalten; er wird nirgendwohin gesendet und „Alle Daten löschen“ entfernt ihn.',
  privP3:'Spitznamen sind freiwillig. Sie beschriften die Spieler während einer Runde; nur dein eigener wird auf diesem Gerät gemerkt, damit du ihn nicht neu eintippen musst.',
  privP4:'Keine Werbung, kein Tracking, keine Fremd-Bausteine.',
  wipe:'Alle Daten löschen', wipeTitle:'Alles löschen?', wipeBody:'Deine Bilanz, dein gespeicherter Name, deine Sprache, deine Darstellung und deine Einstellungen werden von diesem Gerät entfernt.', wiped:'Gelöscht.',
@@ -447,7 +447,7 @@ it:{
  youTag:'tu', hostTag:'HOST',
  privacy:'Privacy', soon:'Presto', soonBody:'Il gioco online non è ancora attivo. Tutto il resto funziona senza connessione.',
  privP1:'Questo gioco non ha account, né accessi, né analisi. Nulla di ciò che fai qui viene inviato da qualche parte.',
- privP2:'Vengono salvate cinque cose, e solo su questo dispositivo: la lingua scelta, l’aspetto scelto, il tuo bilancio contro il bot (con l’ultimo gioco scelto), l’ultimo nome inserito e le tue impostazioni (valuta, stile del bot, accessibilità e opzioni di prova). Disinstallando l’app spariscono tutte e cinque. Se attivi «Registra le mie partite» nelle impostazioni (disattivato di default), sul dispositivo viene conservato anche un sesto valore, un registro delle partite singole concluse; non viene mai inviato da nessuna parte e «Cancella tutti i dati» lo rimuove.',
+ privP2:'Vengono salvate cinque cose, e solo su questo dispositivo: la lingua scelta, l’aspetto scelto, il tuo bilancio contro il bot (con l’ultimo gioco scelto), l’ultimo nome inserito e le tue impostazioni (valuta, stile del bot, accessibilità e opzioni di prova). Disinstallando l’app spariscono tutte e cinque. Se attivi «Registra le mie partite» nelle impostazioni (disattivato di default), sul dispositivo viene conservato anche un sesto valore, un registro delle partite concluse; non viene mai inviato da nessuna parte e «Cancella tutti i dati» lo rimuove.',
  privP3:'I soprannomi sono facoltativi. Servono a identificare i giocatori durante una partita; solo il tuo viene ricordato su questo dispositivo, così non devi riscriverlo.',
  privP4:'Nessuna pubblicità, nessun tracciamento, nessun componente di terze parti.',
  wipe:'Cancella tutti i dati', wipeTitle:'Cancellare tutto?', wipeBody:'Il tuo bilancio, il nome salvato, la lingua, l’aspetto e le impostazioni verranno rimossi da questo dispositivo.', wiped:'Cancellato.',
@@ -547,7 +547,7 @@ es:{
  youTag:'tú', hostTag:'ANFITRIÓN',
  privacy:'Privacidad', soon:'Pronto', soonBody:'El juego en línea aún no está activado. Todo lo demás funciona sin conexión.',
  privP1:'Este juego no tiene cuentas, ni inicio de sesión, ni analíticas. Nada de lo que haces aquí se envía a ningún sitio.',
- privP2:'Se guardan cinco cosas, y solo en este dispositivo: el idioma que elegiste, la apariencia elegida, tu balance contra el bot (con el último juego elegido), el último nombre introducido y tus ajustes (moneda, estilo del bot, accesibilidad y opciones de práctica). Al borrar la app desaparecen las cinco. Si activas «Registrar mis partidas» en los ajustes (desactivado por defecto), también se guarda en este dispositivo un sexto valor, un registro de tus partidas en solitario terminadas; nunca se envía a ninguna parte y «Borrar todos los datos» lo elimina.',
+ privP2:'Se guardan cinco cosas, y solo en este dispositivo: el idioma que elegiste, la apariencia elegida, tu balance contra el bot (con el último juego elegido), el último nombre introducido y tus ajustes (moneda, estilo del bot, accesibilidad y opciones de práctica). Al borrar la app desaparecen las cinco. Si activas «Registrar mis partidas» en los ajustes (desactivado por defecto), también se guarda en este dispositivo un sexto valor, un registro de tus partidas terminadas; nunca se envía a ninguna parte y «Borrar todos los datos» lo elimina.',
  privP3:'Los apodos son opcionales. Sirven para identificar a los jugadores durante una partida; solo el tuyo se recuerda en este dispositivo, para que no tengas que escribirlo otra vez.',
  privP4:'Sin publicidad, sin rastreo, sin componentes de terceros.',
  wipe:'Borrar todos los datos', wipeTitle:'¿Borrar todo?', wipeBody:'Tu balance, tu nombre guardado, tu idioma, tu apariencia y tus ajustes se eliminarán de este dispositivo.', wiped:'Borrado.',
@@ -647,7 +647,7 @@ fr:{
  youTag:'toi', hostTag:'HÔTE',
  privacy:'Confidentialité', soon:'Bientôt', soonBody:'Le jeu en ligne n’est pas encore activé. Tout le reste fonctionne sans connexion.',
  privP1:'Ce jeu n’a ni compte, ni connexion, ni analyse. Rien de ce que tu fais ici n’est envoyé où que ce soit.',
- privP2:'Cinq choses sont enregistrées, uniquement sur cet appareil : la langue choisie, l’apparence choisie, ton bilan face au bot (avec le dernier jeu choisi), le dernier prénom saisi et tes réglages (devise, style du bot, accessibilité et options d’entraînement). Supprimer l’app supprime les cinq. Si tu actives « Enregistrer mes parties » dans les réglages (désactivé par défaut), une sixième valeur, un journal de tes parties solo terminées, est aussi gardée sur cet appareil ; elle n’est jamais envoyée nulle part et « Effacer toutes les données » la retire.',
+ privP2:'Cinq choses sont enregistrées, uniquement sur cet appareil : la langue choisie, l’apparence choisie, ton bilan face au bot (avec le dernier jeu choisi), le dernier prénom saisi et tes réglages (devise, style du bot, accessibilité et options d’entraînement). Supprimer l’app supprime les cinq. Si tu actives « Enregistrer mes parties » dans les réglages (désactivé par défaut), une sixième valeur, un journal de tes parties terminées, est aussi gardée sur cet appareil ; elle n’est jamais envoyée nulle part et « Effacer toutes les données » la retire.',
  privP3:'Les pseudos sont facultatifs. Ils servent à identifier les joueurs pendant une partie ; seul le tien est mémorisé sur cet appareil, pour que tu n’aies pas à le retaper.',
  privP4:'Aucune publicité, aucun suivi, aucun composant tiers.',
  wipe:'Effacer toutes les données', wipeTitle:'Tout effacer ?', wipeBody:'Ton bilan, ton prénom enregistré, ta langue, ton apparence et tes réglages seront retirés de cet appareil.', wiped:'Effacé.',
@@ -733,7 +733,7 @@ const STR_SET = {
   "seatShapesD": "Adds a shape to each player colour.",
   "logHead": "Game log (for analysis)",
   "setLog": "Record my games",
-  "setLogD": "Saves every finished solo game on this device only: the bids, the prices and the bot’s limits. Off by default. Nothing is sent anywhere.",
+  "setLogD": "Saves every finished game (any mode, any number of bots) on this device only: the bids, the prices and the bot’s limits. Off by default. Nothing is sent anywhere.",
   "logExport": "Export",
   "logClear": "Clear log",
   "logCount": "{n} games saved",
@@ -797,7 +797,7 @@ const STR_SET = {
   "seatShapesD": "Ergänzt jede Spielerfarbe um eine Form.",
   "logHead": "Spielprotokoll (zur Auswertung)",
   "setLog": "Meine Spiele aufzeichnen",
-  "setLogD": "Speichert jedes beendete Solo-Spiel nur auf diesem Gerät: die Gebote, die Preise und die Grenzen des Bots. Standardmäßig aus. Nichts wird irgendwohin gesendet.",
+  "setLogD": "Speichert jedes beendete Spiel (jeder Modus, beliebig viele Bots) nur auf diesem Gerät: die Gebote, die Preise und die Grenzen des Bots. Standardmäßig aus. Nichts wird irgendwohin gesendet.",
   "logExport": "Exportieren",
   "logClear": "Protokoll löschen",
   "logCount": "{n} Spiele gespeichert",
@@ -861,7 +861,7 @@ const STR_SET = {
   "seatShapesD": "Aggiunge una forma a ogni colore.",
   "logHead": "Registro delle partite (per l’analisi)",
   "setLog": "Registra le mie partite",
-  "setLogD": "Salva ogni partita singola conclusa solo su questo dispositivo: le offerte, i prezzi e i limiti del bot. Disattivato di default. Nulla viene inviato da nessuna parte.",
+  "setLogD": "Salva ogni partita conclusa (qualsiasi modalità, qualsiasi numero di bot) solo su questo dispositivo: le offerte, i prezzi e i limiti del bot. Disattivato di default. Nulla viene inviato da nessuna parte.",
   "logExport": "Esporta",
   "logClear": "Cancella registro",
   "logCount": "{n} partite salvate",
@@ -925,7 +925,7 @@ const STR_SET = {
   "seatShapesD": "Añade una forma a cada color de jugador.",
   "logHead": "Registro de partidas (para análisis)",
   "setLog": "Registrar mis partidas",
-  "setLogD": "Guarda cada partida en solitario terminada solo en este dispositivo: las pujas, los precios y los límites del bot. Desactivado por defecto. No se envía nada a ninguna parte.",
+  "setLogD": "Guarda cada partida terminada (cualquier modo, cualquier número de bots) solo en este dispositivo: las pujas, los precios y los límites del bot. Desactivado por defecto. No se envía nada a ninguna parte.",
   "logExport": "Exportar",
   "logClear": "Borrar registro",
   "logCount": "{n} partidas guardadas",
@@ -989,7 +989,7 @@ const STR_SET = {
   "seatShapesD": "Ajoute une forme à chaque couleur de joueur.",
   "logHead": "Journal des parties (pour analyse)",
   "setLog": "Enregistrer mes parties",
-  "setLogD": "Enregistre chaque partie solo terminée uniquement sur cet appareil : les enchères, les prix et les limites du bot. Désactivé par défaut. Rien n’est envoyé nulle part.",
+  "setLogD": "Enregistre chaque partie terminée (tous les modes, un nombre quelconque de bots) uniquement sur cet appareil : les enchères, les prix et les limites du bot. Désactivé par défaut. Rien n’est envoyé nulle part.",
   "logExport": "Exporter",
   "logClear": "Effacer le journal",
   "logCount": "{n} parties enregistrées",
@@ -1448,7 +1448,7 @@ async function setup(kind, packId = SELPACK) {
     h.close(true);
     S = Engine.newAuction({ pack, kind, level: pick('level') || pack.defaultLevel, lots: +pick('lots') || pack.lots.default, clock: +pick('clock'), players, rng: rnd, temper: bots ? (Engine.AGGR_TEMPER[SET.aggr] || undefined) : undefined });
     S.packId = pack.id;
-    if (SET.log && kind === 'solo' && bots === 1) S.trace = [];     // the optional game log (Settings, off by default): the engine notes every raise / pass / award; only a duel against one bot is logged
+    if (SET.log) S.trace = [];     // the optional game log (Settings, off by default): the engine notes every raise / pass / award in EVERY game (any mode, any number of bots, practice games too; each game says which it was)
     S.practice = kind === 'solo' && bots === 1 && Engine.isPractice(SET);   // another bot style or the fair price on screen: it plays like any game but does not change the record
     S.noRecord = kind === 'solo' && bots > 1;                         // only a duel against one bot counts for the record
     lot();
@@ -1704,13 +1704,13 @@ async function award() {
 function controls0() { const ctrl = $('#ctrl'); if (ctrl) { ctrl.classList.add('bot'); $$('button,input', ctrl).forEach(x => x.disabled = true); } const tm = $('#timer'); if (tm) tm.classList.add('idle'); }
 
 /* ============ REVEAL — no winner named until every bar is off ============ */
-/* the optional game log: one compact record per finished solo game, on this device only (log:v1) */
+/* the optional game log: one compact record per finished game, on this device only (log:v1) */
 async function saveGameLog() {
   try { await Store.set(Engine.LOG_KEY, Engine.addToLog(await Store.get(Engine.LOG_KEY), Engine.gameLog(S, { t: new Date().toISOString().slice(0, 16), aggr: SET.aggr }))); } catch (e) {}
 }
 function finish() {
   stopClock(); S._taunt = '';
-  if (S.trace && S.kind === 'solo' && !S._logged) { S._logged = true; saveGameLog(); }
+  if (S.trace && !S._logged) { S._logged = true; saveGameLog(); }
   try { speechSynthesis.cancel(); } catch (e) {}
   PACK = S.pack;
   const REC = recFor(S.pack.id);

@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v53';   // increment this, every time
+const CACHE = 'bidding-wars-v54';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v53` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v54` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -90,7 +90,7 @@ device only, via the `Store` helper in `platform.js`:
 - `settings:v1` (v45) — the Settings page: a small JSON of only the choices that differ from the defaults (`Engine.stringifySettings`; all defaults = the key is absent): `cur` (currency id), `aggr` (bot style 0-4, default 2),
   `tz` (text step), `motion` (`reduce`), `shapes`, `fair`, `confirm`, `quiet`. Nothing else, no history. `Engine.parseSettings` drops anything unknown.
 
-- `log:v1` (**v49, optional, owner request "for the time being"**) — the game log: only exists if the player switched on Settings → "Record my games" (off by default; `settings:v1.log`). A JSON array of the last 100 finished **solo** games (`Engine.gameLog` / `addToLog` / `parseLog`, capped at 1.5 M characters): per game the pack, level, lots, budget, the bot's hidden temperament and style step,
+- `log:v1` (**v49, optional, owner request "for the time being"**) — the game log: only exists if the player switched on Settings → "Record my games" (off by default; `settings:v1.log`). A JSON array of the last 100 finished games (`Engine.gameLog` / `addToLog` / `parseLog`, capped at 1.5 M characters): per game the pack, level, lots, budget, the bot's hidden temperament and style step,
   and per lot every raise / pass `[seat, 'r'|'p', amount]`, the winner and price, the bot's secret walk-away limit (`walk`), whether the lot was a decisive (all-in) one (`dec`), the money left; no names, no network. The engine only notes this when the app sets `S.trace = []`, and a test proves a traced game plays exactly like an untraced one.
   Export = Settings → Export (a sheet with the text to copy), Clear log, and Delete all data removes it. It is a **sixth value, but never present by default**, so the "five values" statement in `privacy.html` and the privacy screen carries the sentence about it in all five languages. Meant to be removed when no longer needed.
 
@@ -251,7 +251,7 @@ Solo is **you against 1, 2 or 3 bots**; Multiplayer is **2-4 people plus 0-2 bot
   fair-value human wins (share of 4 seats = 25%, of 3 = 33%): States 33 / 39, Countries Medium 20 / 32, Capitals Medium 28 / 38 with 3 / 2 bots; creeper wins 8-10% (Countries, Capitals Medium) and 33-37% (States) with 2-3 bots. The three bot styles win within a few points of each other (distinct styles 100%).
 - **Known weak spots (accepted, not hidden)**: Countries Expert and Capitals Beginner/Expert bots are strong at a full table (Countries Expert, fair-value human with 3 bots wins 8%, with 2 bots 12%; Capitals Beginner stingy human 3-4%); States stays sensitive to `crowd` (the stingy-player valley of "Exploit" above: crowd 0.1 keeps the stingy human at 28-30%, and the stingy human wins less than its seat share at every `crowd` tried, but the other policies moved a lot with it, so it was tuned on the fair-value human); the fair-value policy is not a typical human; nothing was played on a device. The exploit search (`test/exploit.js`) is a duel tool and has **not** been extended to several bots.
 - **Record**: only a *solo duel against one bot* counts (`S.practice` / `Engine.isPractice` as before); against 2-3 bots `S.noRecord` is set and the results say so (`noRecordBots`). Multiplayer never recorded.
-- **Game log (v49 feature)**: the optional log only records a solo duel against one bot (`S.trace` is set only when `bots === 1`); games with several bots are not logged.
+- **Game log**: since v54 (owner: "every round gets tracked") the optional log records **every** finished game (`S.trace = []` whenever Settings -> Record my games is on): duel, 2-3 bots, hot-seat multiplayer, practice games and any bot style. Each record says which it was (`kind`, `bots`, `practice`, `aggr`, `temperBy` = style per bot seat) and, with several bots, each lot carries `walks` = every bot's own secret limit by seat (`walk` stays the last bot's). Tests: `test/gamelog.test.js`, `GAME LOG:` in `test/browser.test.js`.
 - **Pace**: with 2+ bots they "think" 0.9-1.6 s instead of 1.9-3 s so a table of mostly bots does not drag.
 - **Tests**: `test/multibots.test.js` (duel identity, distinct styles, per-seat walk-aways, whole games at 3-4 seats on every pack and level with money conserved, `crowd` sanity bands, `validatePack`), `BOTS:` tests in `test/browser.test.js` (seat arithmetic, names, styles, record, five languages, the auction fits one screen with 1-3 bots at four sizes on every pack), `test/fuzz.js` now seats 1-3 bots (cautious / fierce / bogus styles too).
 
