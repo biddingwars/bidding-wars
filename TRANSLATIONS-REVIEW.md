@@ -621,13 +621,3 @@ English is the source. Please check de / it / es / fr for correctness, natural w
 | it | Ogni bot ha un suo stile di gioco, e non vedi mai quale. |
 | es | Cada bot juega a su manera y nunca ves cuál es su estilo. |
 | fr | Chaque bot a son propre style de jeu, et tu ne vois jamais lequel. |
-
-### `noRecordBots`
-
-| | text |
-|---|---|
-| en | Only a game against one bot changes your record. |
-| de | Nur ein Spiel gegen einen Bot ändert deine Bilanz. |
-| it | Solo una partita contro un bot cambia il tuo bilancio. |
-| es | Solo una partida contra un bot cambia tu balance. |
-| fr | Seule une partie contre un seul bot modifie ton bilan. |

@@ -760,8 +760,7 @@ const STR_SET = {
   "dropAskBody": "You keep your money, and whoever holds the top bid buys this lot.",
   "peopleN": "People",
   "botsN": "Bots",
-  "botsHint": "Each bot plays its own style, and you never see which.",
-  "noRecordBots": "Only a game against one bot changes your record."
+  "botsHint": "Each bot plays its own style, and you never see which."
  },
  "de": {
   "settings": "Einstellungen",
@@ -824,8 +823,7 @@ const STR_SET = {
   "dropAskBody": "Du behältst dein Geld, und wer das höchste Gebot hält, kauft dieses Los.",
   "peopleN": "Menschen",
   "botsN": "Bots",
-  "botsHint": "Jeder Bot spielt seinen eigenen Stil, und du siehst nie, welchen.",
-  "noRecordBots": "Nur ein Spiel gegen einen Bot ändert deine Bilanz."
+  "botsHint": "Jeder Bot spielt seinen eigenen Stil, und du siehst nie, welchen."
  },
  "it": {
   "settings": "Impostazioni",
@@ -888,8 +886,7 @@ const STR_SET = {
   "dropAskBody": "Tieni i tuoi soldi e chi ha l’offerta più alta compra questo lotto.",
   "peopleN": "Persone",
   "botsN": "Bot",
-  "botsHint": "Ogni bot ha un suo stile di gioco, e non vedi mai quale.",
-  "noRecordBots": "Solo una partita contro un bot cambia il tuo bilancio."
+  "botsHint": "Ogni bot ha un suo stile di gioco, e non vedi mai quale."
  },
  "es": {
   "settings": "Ajustes",
@@ -952,8 +949,7 @@ const STR_SET = {
   "dropAskBody": "Conservas tu dinero y quien tenga la puja más alta compra este lote.",
   "peopleN": "Personas",
   "botsN": "Bots",
-  "botsHint": "Cada bot juega a su manera y nunca ves cuál es su estilo.",
-  "noRecordBots": "Solo una partida contra un bot cambia tu balance."
+  "botsHint": "Cada bot juega a su manera y nunca ves cuál es su estilo."
  },
  "fr": {
   "settings": "Réglages",
@@ -1016,8 +1012,7 @@ const STR_SET = {
   "dropAskBody": "Tu gardes ton argent, et celui qui détient la meilleure enchère remporte ce lot.",
   "peopleN": "Personnes",
   "botsN": "Bots",
-  "botsHint": "Chaque bot a son propre style de jeu, et tu ne vois jamais lequel.",
-  "noRecordBots": "Seule une partie contre un seul bot modifie ton bilan."
+  "botsHint": "Chaque bot a son propre style de jeu, et tu ne vois jamais lequel."
  }
 };
 Object.keys(STR_SET).forEach(l => Object.assign(STR[l], STR_SET[l]));
@@ -1449,8 +1444,7 @@ async function setup(kind, packId = SELPACK) {
     S = Engine.newAuction({ pack, kind, level: pick('level') || pack.defaultLevel, lots: +pick('lots') || pack.lots.default, clock: +pick('clock'), players, rng: rnd, temper: bots ? (Engine.AGGR_TEMPER[SET.aggr] || undefined) : undefined });
     S.packId = pack.id;
     if (SET.log) S.trace = [];     // the optional game log (Settings, off by default): the engine notes every raise / pass / award in EVERY game (any mode, any number of bots, practice games too; each game says which it was)
-    S.practice = kind === 'solo' && bots === 1 && Engine.isPractice(SET);   // another bot style or the fair price on screen: it plays like any game but does not change the record
-    S.noRecord = kind === 'solo' && bots > 1;                         // only a duel against one bot counts for the record
+    S.practice = kind === 'solo' && Engine.isPractice(SET);   // another bot style or the fair price on screen: it plays like any game but does not change the record (every other solo game counts, against 1-3 bots)
     lot();
   });
 }
@@ -1757,8 +1751,8 @@ async function reveal(sec, rows, best, bestEff, REC) {
   if (!sec.isConnected) return;
   const tok = navTok, win = !best.p.ai;
   let outcome = null;
-  if (S.kind === 'solo' && rows.length === 2) {
-    const you = rows.find(r => !r.p.ai), bot = rows.find(r => r.p.ai);
+  if (S.kind === 'solo' && rows.length >= 2) {
+    const you = rows.find(r => !r.p.ai), bot = rows.filter(r => r.p.ai).sort((a, b) => b.pts - a.pts)[0];   // against several bots "the bot" is the best of them
     if (you && bot && !S.practice) outcome = await recordGame(you, bot, S.level || 'expert');
     if (tok !== navTok) return;
   }
@@ -1789,7 +1783,7 @@ async function reveal(sec, rows, best, bestEff, REC) {
   });
   /* the card with the world and the record */
   const ex = $('#extra', sec);
-  const recHtml = outcome ? `<div class="glass recpill" style="padding:8px 14px;order:0"><div class="big num" style="font-size:24px">${REC.won}<i>–</i>${REC.lost}${REC.drawn ? `<i>–</i>${REC.drawn}` : ''}</div><div class="m"><b>${esc(outcome.record ? t('newRecord') : t('record'))}</b><br>${REC.played} ${esc(t('games'))}${REC.streak ? ` · ${esc(t('streak'))} ${REC.streak > 0 ? '+' : ''}${REC.streak}` : ''}</div></div>` : S.practice ? `<div class="glass recpill" style="padding:8px 14px;order:0"><div class="m"><b>${esc(t('practiceTitle'))}</b><br>${esc(t('practiceNote'))}</div></div>` : S.noRecord ? `<div class="glass recpill" style="padding:8px 14px;order:0"><div class="m">${esc(t('noRecordBots'))}</div></div>` : '';
+  const recHtml = outcome ? `<div class="glass recpill" style="padding:8px 14px;order:0"><div class="big num" style="font-size:24px">${REC.won}<i>–</i>${REC.lost}${REC.drawn ? `<i>–</i>${REC.drawn}` : ''}</div><div class="m"><b>${esc(outcome.record ? t('newRecord') : t('record'))}</b><br>${REC.played} ${esc(t('games'))}${REC.streak ? ` · ${esc(t('streak'))} ${REC.streak > 0 ? '+' : ''}${REC.streak}` : ''}</div></div>` : S.practice ? `<div class="glass recpill" style="padding:8px 14px;order:0"><div class="m"><b>${esc(t('practiceTitle'))}</b><br>${esc(t('practiceNote'))}</div></div>` : '';
   const usMode = S.pack.map === 'us' && window.USView;                  // States: the map of the US instead of the globe
   ex.innerHTML = `${lots.length ? `<div class="glass gl${usMode ? ' gl-us' : ''}">${usMode ? `<div class="usm" id="gl"><img class="gph" src="us-map.webp" alt="" decoding="async"></div>` : `<div class="globe" id="gl"><img class="gph" src="globe-hero.webp" alt="" decoding="async"></div>`}
       <div class="cap"><b>${esc(t('worldTitle'))}</b>${t('world', { name: esc(best.p.name) })}</div>
