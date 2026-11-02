@@ -1290,6 +1290,25 @@ test('BOTS: solo offers 1 to 3 bots (1 by default); more than one shows the hint
   await ctx.close();
 });
 
+test('GAME LOG: every game is logged when switched on - three bots with a forced bot style', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open();
+  await page.evaluate(() => settingsSheet()); await page.waitForSelector('[data-k="log"]');
+  await page.click('[data-k="log"]');
+  await page.evaluate(() => { SET.aggr = 4; document.querySelectorAll('.overlay').forEach(o => o.remove()); home(); });
+  await page.waitForSelector('#m1');
+  await page.click('#m1'); await page.waitForSelector('#start');
+  await pick(page, 'bots', 3); await pick(page, 'lots', 5); await pick(page, 'clock', 0);
+  await page.click('#start'); await page.waitForSelector('#ctrl');
+  assert.equal(await page.evaluate(() => !!S.trace), true, '3 bots + a non-default bot style: traced');
+  await autoplay(page); await reveal(page);
+  await page.waitForFunction(() => localStorage.getItem('log:v1'), null, { timeout: 4000 });
+  let log = JSON.parse(await page.evaluate(() => localStorage.getItem('log:v1')));
+  assert.equal(log.length, 1); assert.equal(log[0].bots, 3); assert.equal(log[0].practice, false); assert.equal(log[0].aggr, 4); assert.equal(log[0].seats.length, 4);
+  assert.ok(log[0].lotLog.some(e => e.walks), 'the bots\' own limits are logged');
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
 test('BOTS: one bot is still the duel - called "Bot", counted for the record', { skip: SKIP }, async () => {
   const { page, errors, ctx } = await open();
   await startSolo(page, 5, 0);

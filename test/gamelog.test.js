@@ -53,6 +53,35 @@ test('Game log: the bot\'s secret limit and the all-in flag are recorded (Delhi 
   assert.ok(sawWalk, 'the walk-away limit is logged'); assert.ok(sawDec, 'a decisive (all-in) lot shows up in 200 games');
 });
 
+test('Game log: a table with several bots is logged too, each bot\'s own limit per lot, each bot\'s style, and tracing still changes nothing', () => {
+  const pack = PACKS.countries;
+  const run = (trace, bots, kind) => {
+    const players = kind === 'solo' ? [{ name: 'You' }] : [{ name: 'A' }, { name: 'B' }];
+    for (let k = 0; k < bots; k++) players.push({ name: 'Bot ' + k, ai: true });
+    const S = Engine.newAuction({ pack, kind, level: 'medium', lots: 10, players, rng: Engine.seededRng(4242 + bots) });
+    if (trace) S.trace = [];
+    let r = Engine.startLot(S);
+    while (r.state === 'lot') {
+      let ended = S.L.turn === null;
+      while (!ended) { const me = S.players[S.L.turn]; const a = me.ai ? Engine.botDecision(S) : { type: 'pass' }; const res = a.type === 'raise' ? Engine.raise(S, a.amount) : Engine.pass(S); ended = res.next === 'award' || !!res.error && (Engine.pass(S), true); }
+      Engine.award(S); r = Engine.advance(S);
+    }
+    return S;
+  };
+  for (const [bots, kind] of [[2, 'solo'], [3, 'solo'], [2, 'multi'], [0, 'multi']]) {
+    const a = run(false, bots, kind), b = run(true, bots, kind);
+    assert.equal(fingerprint(a), fingerprint(b), `${kind} ${bots} bots: tracing changes nothing`);
+    const g = Engine.gameLog(b, { t: 'x', aggr: 2 });
+    assert.equal(g.bots, bots); assert.equal(g.kind, kind); assert.equal(g.seats.length, b.players.length);
+    if (bots > 1) {
+      assert.equal(Object.keys(g.temperBy).length, bots, 'a style per bot');
+      const lots = g.lotLog.filter(e => e.won);
+      assert.ok(lots.some(e => e.walks && Object.keys(e.walks).length >= 1), 'lots a bot bid on name the bots\' own limits (a lot nobody contested has none)');
+      for (const e of lots) for (const [seat, w] of Object.entries(e.walks || {})) assert.ok(b.players[seat].ai && w >= 1, 'a limit belongs to a bot seat');
+    }
+  }
+});
+
 test('Game log: storage helpers keep the last 100 games, drop junk, and stay under the size cap', () => {
   assert.deepEqual(Engine.parseLog(null), []); assert.deepEqual(Engine.parseLog('x'), []); assert.deepEqual(Engine.parseLog('{"a":1}'), []);
   assert.deepEqual(Engine.parseLog(JSON.stringify([1, null, { v: 2, lotLog: [] }, { v: 1, lotLog: [] }])).length, 1);
