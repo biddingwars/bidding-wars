@@ -20,12 +20,18 @@ for (const lv of levels) {
   LOTS.forEach((n, k) => {
     const ref = refs[k]; if (ref == null) return;
     const cs = f => { T[n] = base[n] * f; return E.run(pack, n, lv, 'Cs', G, 50000, null).win; };
-    let lo = 0.8, hi = 3.0, flo = cs(lo), fhi = cs(hi);       // Cs win falls as f rises (a stronger bot)
-    let f;
-    if (flo <= ref) f = lo; else if (fhi >= ref) f = hi; else { for (let i = 0; i < 7; i++) { const mid = (lo + hi) / 2, w = cs(mid); if (w > ref) lo = mid; else hi = mid; } f = (lo + hi) / 2; }
-    T[n] = base[n] * f;
-    const A = E.run(pack, n, lv, 'A', G, 50000, null).win, B = E.run(pack, n, lv, 'Cs', G, 70000, null).win;
-    let ex = 0, name = ''; for (const s of X.strategies(pack, lv).filter(s => !s.oracle)) { const w = X.wins(pack, n, lv, s, GX, 100000); if (w > ex) { ex = w; name = s.name; } }
+    /* the response is NOT monotone (a bot that overbids runs dry and hands the round over), so scan a grid instead of bisecting */
+    const grid = [0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.45, 1.6, 1.8].map(f => ({ f, w: cs(f) }));
+    const cands = grid.slice().sort((x, y) => Math.abs(x.w - ref) - Math.abs(y.w - ref)).slice(0, 3);
+    let best = null;
+    for (const c of cands) {
+      T[n] = base[n] * c.f; let ex = 0, name = '';
+      for (const s of X.strategies(pack, lv).filter(s => !s.oracle)) { const w = X.wins(pack, n, lv, s, GX, 100000); if (w > ex) { ex = w; name = s.name; } }
+      c.ex = ex; c.by = name; if (!best || ex < best.ex) best = c;
+    }
+    const f = best.f; T[n] = base[n] * f;
+    const A = E.run(pack, n, lv, 'A', G, 50000, null).win, B = E.run(pack, n, lv, 'Cs', G, 70000, null).win, ex = best.ex, name = best.by;
+    console.error('  grid', lv, n, grid.map(g => g.f + ':' + g.w).join(' '), '| cands', cands.map(c => c.f + '/ex' + c.ex.toFixed(0)).join(' '));
     out[lv][n] = { limitMul: +T[n].toFixed(3), was: base[n], f: +f.toFixed(2), A, B, ref, exploit: +ex.toFixed(1), by: name, limit: X.LIMIT[n] || X.LIMIT.default };
     console.error(lv, n, JSON.stringify(out[lv][n]));
   });
