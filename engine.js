@@ -611,6 +611,8 @@
     /* v57 (owner: "the bot goes all in way too often and way too soon"): the jump to the rival's whole purse (knockout and decisive lots alike) is only allowed once the price has already climbed
        to jumpFrom x that purse (default 0.6, per level possible). Before that the bot raises with its normal random steps, so an all-in comes at the end of a bidding war, never as the first bid. */
     const jumpFrom = B.jumpFrom == null ? 0.6 : lvVal(B.jumpFrom, S);
+    /* no instant all-in (v57): only a jump that commits a big share of the bot's OWN purse is held back (a knockout of a nearly broke rival costs the bot almost nothing and stays instant) */
+    const heavy = (target, K) => target > 0.35 * me.budget && L.price < jumpFrom * K;
     if (B.knockout && rival) {
       const K = rival.budget, afford = me.budget - reserve;
       if (K >= 1 && afford >= K) {
@@ -620,18 +622,18 @@
         const m = Math.floor(afford / K);
         let rankV = 1; for (const it of restView(S)) if (it.value > item.value) rankV++;
         if (sweep || rankV <= m || (decisive && K <= lvVal(B.knockout.kappa, S) * pr.max)) {
-          if (L.holder !== L.turn && L.price >= Math.min(me.budget - reserve, lim) && L.price >= jumpFrom * K) {   // no instant all-in: only once the bidding has climbed (v57)
+          if (L.holder !== L.turn && L.price >= Math.min(me.budget - reserve, lim)) {
             const target = L.price < K ? K : K + 1;
-            if (target <= afford) { lim = Math.max(lim, target); jump = target; }
+            if (target <= afford && !heavy(target, K)) { lim = Math.max(lim, target); jump = target; }
           }
         }
       }
     }
     /* On a lot that decides the game, a bot that holds at least as much money as its rival takes it at once: raising to the rival's whole purse can
        not be topped. (Waiting only lets a rival who moves first jump to the whole purse and win every tie.) */
-    if (decisiveLot && rival && B.decisive.jump !== false && rival.budget >= 1 && me.budget >= rival.budget && L.holder !== L.turn && L.price >= jumpFrom * rival.budget) {
+    if (decisiveLot && rival && B.decisive.jump !== false && rival.budget >= 1 && me.budget >= rival.budget && L.holder !== L.turn) {
       const K = rival.budget, target = L.price < K ? K : (me.budget >= K + 1 ? K + 1 : null);
-      if (target != null && target > L.price) { jump = target; lim = Math.max(lim, target); }
+      if (target != null && target > L.price && !heavy(target, K)) { jump = target; lim = Math.max(lim, target); }
     }
     if (decisiveLot) lim = Math.max(lim, me.budget);     // and no random ceiling either: against a rival who goes all-in on the lot that decides the game, a bot that stops at a random 70-100% of its purse simply loses it
     const hardCap = Math.min(me.budget - reserve, lim);
