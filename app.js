@@ -13,6 +13,13 @@ const esc = s => String(s).replace(/[&<>"]/g, m => ({ '&': '&amp;', '<': '&lt;',
 const $ = (s, r) => (r || document).querySelector(s);
 const $$ = (s, r) => [...(r || document).querySelectorAll(s)];
 const cname = it => Engine.itemName(it, LANG);
+/* What the voice reads aloud. The written name is short ("DR Congo"), and the speech engine says "Doctor Congo"; abbreviations get their full spoken form. */
+const SPOKEN = { CD: { en: 'Democratic Republic of the Congo', de: 'Demokratische Republik Kongo', it: 'Repubblica Democratica del Congo', es: 'República Democrática del Congo', fr: 'République démocratique du Congo' } };
+const spoken = (it, packId) => {
+  let n = cname(it);
+  if (packId === 'countries' && SPOKEN[it.id]) n = SPOKEN[it.id][LANG] || SPOKEN[it.id].en;
+  return n.replace(/^St (?=[A-Z])/, 'Saint ').replace(/\bD\.C\./g, 'D C');
+};
 const flag = code => code.split('').map(ch => String.fromCodePoint(0x1F1E6 + ch.charCodeAt(0) - 65)).join('');
 /* item icon: a flag where the pack has them, otherwise a text badge (or a given emoji) */
 function icon(it) {
@@ -217,7 +224,7 @@ en:{
  sealed:'The books are sealed', nobody:'Nobody knows yet',
  revealHint:'Every population is still blacked out. Tap a bar to lift it, or lift them all at once. The result stands once the last bar is gone.',
  liftAll:'Lift every bar', final:'Final', takesIt:'{name} takes it',
- pointsAgainst:'{a} points against {b}.', smartest:'<b>{name}</b> shopped smartest at {v} € per million.',
+ pointsAgainst:'{a} points against {b}.', smartest:'<b>{name}</b> shopped smartest at €{v} per million.',
  nothing:'Walked away with nothing.', points:'Points', spentEff:'{cur}{n} spent · efficiency',
  playAgain:'Play again', menu:'Menu', world:"{name}'s world · drag to spin and tilt · pinch to zoom",
  leaveTitle:'Leave the auction?', leaveBody:'This round will be lost and you go back to the main menu.',
@@ -250,7 +257,7 @@ en:{
  privP2:'Five things are saved, and only on this device: the language you picked, the appearance you chose, your record against the bot (with the game you last picked), the name you last entered, and your settings (currency, bot style, accessibility and practice choices). Deleting the app deletes all five. If you switch on “Record my games” in Settings (off by default), a sixth value, a log of your finished games, is also kept on this device; it is never sent anywhere and “Delete all data” removes it.',
  privP3:'Nicknames are optional. They label the players on screen during a round; only your own is remembered on this device, so you do not have to type it again.',
  privP4:'No advertising, no tracking, no third-party software development kits.',
- wipe:'Delete all data', wipeTitle:'Delete everything?', wipeBody:'Your record, your saved name, your language, your appearance and your settings will be removed from this device.', wiped:'Deleted.',
+ wipe:'Delete all data', wipeTitle:'Delete everything?', wipeBody:'Your record, your saved name, your language, your appearance, your settings and your game log (if you kept one) will be removed from this device.', wiped:'Deleted.',
  packFail:'Could not load the game data. Check your connection and try again.',
  loadingBorders:'loading borders…',
  packCountries:'Countries',
@@ -350,7 +357,7 @@ de:{
  privP2:'Fünf Dinge werden gespeichert, und nur auf diesem Gerät: deine Sprache, die gewählte Darstellung, deine Bilanz gegen den Bot (samt dem zuletzt gewählten Spiel), der zuletzt eingegebene Name und deine Einstellungen (Währung, Bot-Stil, Bedienungshilfen und Übungsoptionen). Beim Löschen der App verschwinden alle fünf. Wenn du in den Einstellungen „Meine Spiele aufzeichnen“ einschaltest (standardmäßig aus), wird zusätzlich ein sechster Wert, ein Protokoll deiner beendeten Spiele, auf diesem Gerät gehalten; er wird nirgendwohin gesendet und „Alle Daten löschen“ entfernt ihn.',
  privP3:'Spitznamen sind freiwillig. Sie beschriften die Spieler während einer Runde; nur dein eigener wird auf diesem Gerät gemerkt, damit du ihn nicht neu eintippen musst.',
  privP4:'Keine Werbung, kein Tracking, keine Fremd-Bausteine.',
- wipe:'Alle Daten löschen', wipeTitle:'Alles löschen?', wipeBody:'Deine Bilanz, dein gespeicherter Name, deine Sprache, deine Darstellung und deine Einstellungen werden von diesem Gerät entfernt.', wiped:'Gelöscht.',
+ wipe:'Alle Daten löschen', wipeTitle:'Alles löschen?', wipeBody:'Deine Bilanz, dein gespeicherter Name, deine Sprache, deine Darstellung, deine Einstellungen und dein Spielprotokoll (falls du eines führst) werden von diesem Gerät entfernt.', wiped:'Gelöscht.',
  packFail:'Die Spieldaten konnten nicht geladen werden. Prüfe deine Verbindung und versuch es noch einmal.',
  loadingBorders:'Grenzen werden geladen…',
  packCountries:'Länder',
@@ -450,7 +457,7 @@ it:{
  privP2:'Vengono salvate cinque cose, e solo su questo dispositivo: la lingua scelta, l’aspetto scelto, il tuo bilancio contro il bot (con l’ultimo gioco scelto), l’ultimo nome inserito e le tue impostazioni (valuta, stile del bot, accessibilità e opzioni di prova). Disinstallando l’app spariscono tutte e cinque. Se attivi «Registra le mie partite» nelle impostazioni (disattivato di default), sul dispositivo viene conservato anche un sesto valore, un registro delle partite concluse; non viene mai inviato da nessuna parte e «Cancella tutti i dati» lo rimuove.',
  privP3:'I soprannomi sono facoltativi. Servono a identificare i giocatori durante una partita; solo il tuo viene ricordato su questo dispositivo, così non devi riscriverlo.',
  privP4:'Nessuna pubblicità, nessun tracciamento, nessun componente di terze parti.',
- wipe:'Cancella tutti i dati', wipeTitle:'Cancellare tutto?', wipeBody:'Il tuo bilancio, il nome salvato, la lingua, l’aspetto e le impostazioni verranno rimossi da questo dispositivo.', wiped:'Cancellato.',
+ wipe:'Cancella tutti i dati', wipeTitle:'Cancellare tutto?', wipeBody:'Il tuo bilancio, il nome salvato, la lingua, l’aspetto, le impostazioni e il registro delle partite (se ne tieni uno) verranno rimossi da questo dispositivo.', wiped:'Cancellato.',
  packFail:'Impossibile caricare i dati di gioco. Controlla la connessione e riprova.',
  loadingBorders:'caricamento confini…',
  packCountries:'Paesi',
@@ -550,7 +557,7 @@ es:{
  privP2:'Se guardan cinco cosas, y solo en este dispositivo: el idioma que elegiste, la apariencia elegida, tu balance contra el bot (con el último juego elegido), el último nombre introducido y tus ajustes (moneda, estilo del bot, accesibilidad y opciones de práctica). Al borrar la app desaparecen las cinco. Si activas «Registrar mis partidas» en los ajustes (desactivado por defecto), también se guarda en este dispositivo un sexto valor, un registro de tus partidas terminadas; nunca se envía a ninguna parte y «Borrar todos los datos» lo elimina.',
  privP3:'Los apodos son opcionales. Sirven para identificar a los jugadores durante una partida; solo el tuyo se recuerda en este dispositivo, para que no tengas que escribirlo otra vez.',
  privP4:'Sin publicidad, sin rastreo, sin componentes de terceros.',
- wipe:'Borrar todos los datos', wipeTitle:'¿Borrar todo?', wipeBody:'Tu balance, tu nombre guardado, tu idioma, tu apariencia y tus ajustes se eliminarán de este dispositivo.', wiped:'Borrado.',
+ wipe:'Borrar todos los datos', wipeTitle:'¿Borrar todo?', wipeBody:'Tu balance, tu nombre guardado, tu idioma, tu apariencia, tus ajustes y tu registro de partidas (si lo llevas) se eliminarán de este dispositivo.', wiped:'Borrado.',
  packFail:'No se pudieron cargar los datos del juego. Comprueba tu conexión e inténtalo de nuevo.',
  loadingBorders:'cargando fronteras…',
  packCountries:'Países',
@@ -650,7 +657,7 @@ fr:{
  privP2:'Cinq choses sont enregistrées, uniquement sur cet appareil : la langue choisie, l’apparence choisie, ton bilan face au bot (avec le dernier jeu choisi), le dernier prénom saisi et tes réglages (devise, style du bot, accessibilité et options d’entraînement). Supprimer l’app supprime les cinq. Si tu actives « Enregistrer mes parties » dans les réglages (désactivé par défaut), une sixième valeur, un journal de tes parties terminées, est aussi gardée sur cet appareil ; elle n’est jamais envoyée nulle part et « Effacer toutes les données » la retire.',
  privP3:'Les pseudos sont facultatifs. Ils servent à identifier les joueurs pendant une partie ; seul le tien est mémorisé sur cet appareil, pour que tu n’aies pas à le retaper.',
  privP4:'Aucune publicité, aucun suivi, aucun composant tiers.',
- wipe:'Effacer toutes les données', wipeTitle:'Tout effacer ?', wipeBody:'Ton bilan, ton prénom enregistré, ta langue, ton apparence et tes réglages seront retirés de cet appareil.', wiped:'Effacé.',
+ wipe:'Effacer toutes les données', wipeTitle:'Tout effacer ?', wipeBody:'Ton bilan, ton prénom enregistré, ta langue, ton apparence, tes réglages et ton journal de parties (si tu en gardes un) seront retirés de cet appareil.', wiped:'Effacé.',
  packFail:'Impossible de charger les données du jeu. Vérifie ta connexion et réessaie.',
  loadingBorders:'chargement des frontières…',
  packCountries:'Pays',
@@ -1459,7 +1466,7 @@ function lot() {
   const r = Engine.startLot(S);                      // opener rotation, walkover and broke endings live in the engine
   if (r.state === 'done') return finish();
   paintLot();
-  speak(cname(S.items[S.i]));
+  speak(spoken(S.items[S.i], S.pack && S.pack.id));
   turn();
 }
 
@@ -1935,7 +1942,7 @@ function onlineLot(code) {
     shown = room.round;
 
     PACK = Packs.get(DEFAULT_PACK);
-    speak(cname(c));
+    speak(spoken(c, PACK && PACK.id));
     go(`${navBack()}
       <div class="glass panel" style="align-items:center;text-align:center"><div class="orb" style="--orb:64px" aria-hidden="true">${icon(c)}</div><h2>${esc(cname(c))}</h2>
         <span class="label">${esc(t('lot'))} ${room.round + 1} ${esc(t('of'))} ${room.items.length} · ${code}</span></div>
