@@ -16,17 +16,17 @@ const CAL = {
   budgets: { beginner: { 5: 25, 10: 50, 15: 75, 20: 100, 30: 150 }, medium: { 5: 50, 10: 100, 15: 150, 20: 200, 30: 300 }, expert: { 5: 50, 10: 100, 15: 150, 20: 200, 30: 300 } },
   mediumMin: 2, // Medium: capitals over 2 million (70 of 195)
   bot: {
-    limitMul: { beginner: { 5: 1.211, 10: 0.838, 15: 0.769, 20: 0.826, 30: 0.991 }, medium: { 5: 0.796, 10: 0.872, 15: 0.956, 20: 0.88, 30: 0.891 }, expert: { 5: 1.55, 10: 1.419, 15: 1.261, 20: 1.405, 30: 1.782 }},
+    limitMul: { beginner: { 5: 1.211, 10: 1.083, 15: 1.019, 20: 0.981, 30: 0.837 }, medium: { 5: 0.777, 10: 0.976, 15: 0.972, 20: 0.912, 30: 0.922 }, expert: { 5: 1.55, 10: 1.419, 15: 1.261, 20: 1.405, 30: 1.782 }},
     premium: { top: 5, pct: { beginner: 0.5, medium: 0.15, expert: 0.15 } },
     pacing: { gamma: 0.5, lo: 0.7, hi: 1.5 },
-    knockout: { kappa: { beginner: 1.221, medium: 0.484, expert: 0.64 } },
+    knockout: { kappa: { beginner: 0.92, medium: 0.379, expert: 0.64 } },
     mood: { k: 0.25, up: 0.2, down: 0.15 },
     wallet: { lo: 0.7 },
-    noise: { beginner: 0.376, medium: 0.377, expert: 0.471 },
+    noise: { beginner: 0.392, medium: 0.278, expert: 0.471 },
     crowd: { beginner: -0.15, medium: 0.15, expert: 0.2 },                // v50: the walk-away changes by this share per extra seat at a table of 3-4 (never in a duel); found with a fair-value human against 2-3 bots
 
-    efficiency: { gamma: { beginner: 0.72, medium: 0.989, expert: 0.598 }, lo: { beginner: 0.4, medium: 0.272, expert: 0.27 }, hi: { beginner: 3.076, medium: 2.623, expert: 2.522 }, pick: { beginner: 1.909, medium: 1.85, expert: 1.903 } },
-    decisive: { share: { beginner: 0.251, medium: 0.374, expert: 0.209 }, minPrice: { beginner: 0.8, medium: 1.2, expert: 1.2 } },   // all-in only for a lot whose fair price is at least this share of the bot's current purse (1.2 = one it cannot really afford: Delhi yes; Seoul and Washington no)
+    efficiency: { gamma: { beginner: 0.65, medium: 0.989, expert: 0.598 }, lo: { beginner: 0.4, medium: 0.29, expert: 0.27 }, hi: { beginner: 3.281, medium: 3.28, expert: 2.522 }, pick: { beginner: 1.916, medium: 1.85, expert: 1.903 } },
+    decisive: { share: { beginner: 0.233, medium: 0.31, expert: 0.209 }, minPrice: { beginner: 0.8, medium: 1.2, expert: 1.2 } },   // all-in only for a lot whose fair price is at least this share of the bot's current purse (1.2 = one it cannot really afford: Delhi yes; Seoul and Washington no)
     creeperGuard: { raises: 3 },
     temperaments: { weights: [25, 50, 25], bigRank: 10, spread: { 5: 0.06, 10: 0.06, 15: 0.05, 20: 0.04, 30: 0.04 }, conservative: { step: 0.75, big: 0.95 }, aggressive: { step: 1.25, big: 1.05, reserveCap: 3 } }
   }

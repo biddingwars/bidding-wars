@@ -23,7 +23,7 @@ test('a duel against one bot is exactly what it was before several bots existed 
   for (const [name, pack] of Object.entries(packs)) for (const level of pack.levels.map(l => l.id)) for (const lots of [5, pack.lots.options[1]]) for (let g = 0; g < 6; g++) for (const pol of ['creeper', 'fair']) {
     const { S, log } = play(pack, level, lots, [false, true], 4000 + g, pol); h.update(name + level + lots + g + pol + log + '|' + S.players.map(p => p.budget).join('/'));
   }
-  assert.equal(h.digest('hex'), '6ed82fa1b058d4df91a01d3ca126d62ebe4af02c93786ba524fb03072884f3d6', 'the duel changed (digest = the engine of v47 before several bots existed)');
+  assert.equal(h.digest('hex'), 'a8c88a38ba64994dd4196e1037dd1b6484e7a4fa0125b2e57ca23e7b971015b0', 'the duel changed (digest = the engine of v57: blind to the lots to come, tuned, no instant all-in; re-pinned on purpose in v57, it was the v47 engine before)');
 });
 
 test('several bots: every bot has a style of its own (all different for 2 and 3 bots), never drawn twice, a forced style applies to all', () => {
