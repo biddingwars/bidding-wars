@@ -210,6 +210,7 @@
         if (b.creeperGuard !== undefined && !(b.creeperGuard.raises >= 1)) e('bot.creeperGuard needs { raises >= 1 }');
         if (b.decisive !== undefined && !(isObj(b.decisive) && numOk(b.decisive.share, v => v > 0 && v <= 1))) e('bot.decisive needs { share: 0 < share <= 1 } (a number, or per level)');
         if (b.decisive && b.decisive.minPrice !== undefined && !numOk(b.decisive.minPrice, v => v > 0 && v <= 2)) e('bot.decisive.minPrice must be 0 < x <= 2 (a share of the current budget of the bot, a number or per level)');
+        if (b.jumpFrom !== undefined && !numOk(b.jumpFrom, v => v >= 0 && v <= 1)) e('bot.jumpFrom must be 0..1 (the share of the rival\'s purse the price must have reached before the bot jumps to it; a number, or per level)');
         if (b.rollSpan !== undefined && !numOk(b.rollSpan, v => v >= 0 && v <= 1)) e('bot.rollSpan must be 0..1 (a number, or per level / per lots)');
         if (b.crowd !== undefined && !numOk(b.crowd, v => v >= -0.5 && v <= 1)) e('bot.crowd must be -0.5..1 (a number, or per level): the walk-away change per extra seat beyond a duel');
         if (b.noise !== undefined && !numOk(b.noise, v => v >= 0 && v < 1)) e('bot.noise must be 0 <= noise < 1 (a number, or per level)');
@@ -607,6 +608,9 @@
        spending "everything but the reserve" would give the price away. When the walk-away reaches into the top of the purse,
        the ceiling becomes a random 70-100% of what it can spend (bot.wallet.lo) instead of all of it. */
     if (B.wallet && lim > (me.budget - reserve) * B.wallet.lo) lim = Math.min(lim, Math.floor((me.budget - reserve) * S._ceil.wf));
+    /* v57 (owner: "the bot goes all in way too often and way too soon"): the jump to the rival's whole purse (knockout and decisive lots alike) is only allowed once the price has already climbed
+       to jumpFrom x that purse (default 0.6, per level possible). Before that the bot raises with its normal random steps, so an all-in comes at the end of a bidding war, never as the first bid. */
+    const jumpFrom = B.jumpFrom == null ? 0.6 : lvVal(B.jumpFrom, S);
     if (B.knockout && rival) {
       const K = rival.budget, afford = me.budget - reserve;
       if (K >= 1 && afford >= K) {
@@ -616,7 +620,7 @@
         const m = Math.floor(afford / K);
         let rankV = 1; for (const it of restView(S)) if (it.value > item.value) rankV++;
         if (sweep || rankV <= m || (decisive && K <= lvVal(B.knockout.kappa, S) * pr.max)) {
-          if (L.holder !== L.turn && L.price >= Math.min(me.budget - reserve, lim)) {
+          if (L.holder !== L.turn && L.price >= Math.min(me.budget - reserve, lim) && L.price >= jumpFrom * K) {   // no instant all-in: only once the bidding has climbed (v57)
             const target = L.price < K ? K : K + 1;
             if (target <= afford) { lim = Math.max(lim, target); jump = target; }
           }
@@ -625,7 +629,7 @@
     }
     /* On a lot that decides the game, a bot that holds at least as much money as its rival takes it at once: raising to the rival's whole purse can
        not be topped. (Waiting only lets a rival who moves first jump to the whole purse and win every tie.) */
-    if (decisiveLot && rival && B.decisive.jump !== false && rival.budget >= 1 && me.budget >= rival.budget && L.holder !== L.turn) {
+    if (decisiveLot && rival && B.decisive.jump !== false && rival.budget >= 1 && me.budget >= rival.budget && L.holder !== L.turn && L.price >= jumpFrom * rival.budget) {
       const K = rival.budget, target = L.price < K ? K : (me.budget >= K + 1 ? K + 1 : null);
       if (target != null && target > L.price) { jump = target; lim = Math.max(lim, target); }
     }
