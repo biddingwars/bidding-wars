@@ -66,17 +66,17 @@
     /* The bot: the August walk-away roll (between ideal and max), randomised raise step and rank-based valuation, plus the shared
        States machinery. limitMul is the per-level, per-lot-count calibration (re-measured with `node test/economy.js`). */
     bot: {
-      limitMul: { beginner: { 5: 2.5, 10: 1.5, 15: 1.1, 20: 1.25, 30: 1.1 }, medium: { 5: 0.817, 10: 0.817, 15: 0.817, 20: 0.817, 30: 0.864 }, expert: { 5: 1.5, 10: 1.25, 15: 1.25, 20: 1.25, 30: 1.5 } },
+      limitMul: { beginner: { 5: 2.5, 10: 1.5, 15: 1.1, 20: 1.25, 30: 1.1 }, medium: { 5: 0.863, 10: 0.907, 15: 0.815, 20: 0.777, 30: 0.738 }, expert: { 5: 1.5, 10: 1.25, 15: 1.25, 20: 1.25, 30: 1.5 } },
       premium: { top: 5, pct: { beginner: 0.5, medium: 0.15, expert: 0.15 } },   // Beginner's bot pays 50% more for its five biggest (European) countries
       pacing: { gamma: 0.5, lo: 0.7, hi: 1.5 },
-      knockout: { kappa: { beginner: 1.5, medium: 0.777, expert: 0.584 } },
+      knockout: { kappa: { beginner: 1.5, medium: 0.709, expert: 0.584 } },
       mood: { k: 0.25, up: 0.2, down: 0.15 },
       wallet: { lo: 0.7 },
-      noise: { beginner: 0.491, medium: 0.622, expert: 0.505 },
+      noise: { beginner: 0.491, medium: 0.483, expert: 0.505 },
       crowd: { beginner: 0.15, medium: 0.07, expert: 0.2 },                // v50: the walk-away grows by this share per extra seat at a table of 3-4 (never in a duel); found with a fair-value human against 2-3 bots
 
-      efficiency: { gamma: { beginner: 0.697, medium: 0.777, expert: 0.538 }, lo: { beginner: 0.36, medium: 0.335, expert: 0.27 }, hi: { beginner: 3, medium: 2.884, expert: 2.522 }, pick: { beginner: 1.627, medium: 2, expert: 1.912 } },
-      decisive: { share: { beginner: 0.299, medium: 0.211, expert: 0.23 } },
+      efficiency: { gamma: { beginner: 0.697, medium: 0.9, expert: 0.538 }, lo: { beginner: 0.36, medium: 0.45, expert: 0.27 }, hi: { beginner: 3, medium: 3.28, expert: 2.522 }, pick: { beginner: 1.627, medium: 1.726, expert: 1.912 } },
+      decisive: { share: { beginner: 0.299, medium: 0.439, expert: 0.23 } },
       creeperGuard: { raises: 3 },
       temperaments: {
         weights: [25, 50, 25], bigRank: 10,
