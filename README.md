@@ -40,7 +40,7 @@ debugging time before.
 bumped:
 
 ```js
-const CACHE = 'bidding-wars-v59';   // increment this on every deploy
+const CACHE = 'bidding-wars-v60';   // increment this on every deploy
 ```
 
 After bumping, the user must close *all* tabs and reopen — a reload isn't

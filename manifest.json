@@ -2,6 +2,7 @@
   "name": "Bidding Wars",
   "short_name": "Bidding Wars",
   "description": "A country auction game. Population is points, money runs out.",
+  "id": "./index.html",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
