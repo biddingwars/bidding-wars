@@ -1,7 +1,7 @@
 /* Service worker — the whole game is cached on first visit, then served from
    cache. After that it runs with no connection at all, which is the point. */
 
-const CACHE = 'bidding-wars-v58';
+const CACHE = 'bidding-wars-v59';
 
 const SHELL = [
   './',
@@ -37,11 +37,15 @@ const SHELL = [
   './support.html'
 ];
 
-/* A missing optional file must not abort the whole install, so each one is cached on its own and allowed to fail. */
+/* The files the game cannot start without. If one of them cannot be cached (a flaky connection during the first visit), the install FAILS, so the half-filled cache never
+   takes over and the next visit tries again; a missing optional file (an icon, the privacy page) is allowed to fail on its own. */
+const CORE = ['./', './index.html', './app.css', './platform.js', './sound.js', './fx.js', './engine.js', './packs.js', './banter.js', './pack-countries.js', './pack-states.js', './pack-capitals.js', './us-map.js', './us-map.webp', './app.js', './globe.js', './us-view.js', './three.min.js', './countries-110m.json', './earth.jpg', './globe-hero.webp'];
 self.addEventListener('install', e => {
   e.waitUntil((async () => {
     const c = await caches.open(CACHE);
-    await Promise.all(SHELL.map(u => c.add(u).catch(() => null)));
+    const failed = [];
+    await Promise.all(SHELL.map(u => c.add(u).catch(() => failed.push(u))));
+    for (const u of failed.filter(u => CORE.includes(u))) await c.add(u);      // one more try; throws (the install fails) when a core file is still missing
     self.skipWaiting();
   })());
 });
@@ -68,7 +72,8 @@ self.addEventListener('fetch', e => {
       if (res && res.ok) (await caches.open(CACHE)).put(req, res.clone());
       return res;
     } catch (err) {
-      return (await caches.match('./index.html')) || Response.error();
+      /* offline and not cached: a page navigation gets the game; anything else (a script, an image) must fail as itself, never come back as an HTML page */
+      return req.mode === 'navigate' ? ((await caches.match('./index.html')) || Response.error()) : Response.error();
     }
   })());
 });

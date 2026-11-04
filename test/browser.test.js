@@ -1329,6 +1329,27 @@ test('RECORD: a game against 2 bots counts (you against the best bot); a practic
   assert.deepEqual(errors, []); await ctx.close();
 });
 
+test('BACK BUTTON: closes a sheet, asks before leaving an auction, and leaves other screens for the menu; two quick taps on a control are never swallowed', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open();
+  await page.evaluate(() => settingsSheet()); await page.waitForSelector('[data-k="log"]');
+  await page.goBack(); await page.waitForFunction(() => !document.querySelector('.sheetbox'), null, { timeout: 4000 });
+  assert.ok(await page.$('#m1'), 'still on the menu');
+  /* a page other than the menu: Back returns to the menu */
+  await page.click('#m1'); await page.waitForSelector('#start');
+  await page.goBack(); await page.waitForSelector('#m1', { timeout: 4000 });
+  /* an auction: Back asks, a second Back says "stay", a third asks again and Leave goes home */
+  await startSolo(page, 5, 0);
+  await page.goBack(); await page.waitForSelector('#dy', { timeout: 4000 });
+  await page.goBack(); await page.waitForFunction(() => !document.querySelector('#dy'), null, { timeout: 4000 });
+  assert.ok(await page.$('#ctrl'), 'the auction goes on');
+  await page.goBack(); await page.waitForSelector('#dy'); await page.click('#dy'); await page.waitForSelector('#m1');
+  /* the double-tap filter leaves the second quick tap on a button alone */
+  const r = await page.evaluate(() => { const b = document.querySelector('#m1'); const tap = () => { const e = new Event('touchend', { bubbles: true, cancelable: true }); b.dispatchEvent(e); return e.defaultPrevented; }; return [tap(), tap()]; });
+  assert.deepEqual(r, [false, false]);
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
 test('BOTS: one bot is still the duel - called "Bot", counted for the record', { skip: SKIP }, async () => {
   const { page, errors, ctx } = await open();
   await startSolo(page, 5, 0);

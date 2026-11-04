@@ -1960,3 +1960,18 @@ function onlineLot(code) {
   };
   tick(); poll = setInterval(tick, 3000);
 }
+
+/* ============ THE BACK BUTTON (Android system Back, a browser Back, the iOS edge swipe) ============
+   Without this, Back left the game at once, in the middle of an auction. The page keeps one extra history entry and re-arms it after every
+   press: Back closes an open sheet, asks before leaving an auction, returns from any other screen to the menu, and on the menu itself
+   it really goes back (leaves the app). Nothing is stored; it is only the history stack of this page. */
+(function backButton() {
+  try { history.replaceState({ bw: 0 }, ''); history.pushState({ bw: 1 }, ''); } catch (e) { return; }
+  window.addEventListener('popstate', () => {
+    const scr = document.querySelector('#app .screen'), name = scr && scr.dataset.screen;
+    if (sheetH && sheetH.alive) { try { history.pushState({ bw: 1 }, ''); } catch (e) {} sheetH.dismiss(); return; }
+    if (name === 'auction') { try { history.pushState({ bw: 1 }, ''); } catch (e) {} const nb = document.getElementById('nb'); if (nb) nb.click(); return; }
+    if (name && name !== 'menu') { try { history.pushState({ bw: 1 }, ''); } catch (e) {} home(); return; }
+    try { history.back(); } catch (e) {}                       // on the menu: leave, as Back always did
+  });
+})();
