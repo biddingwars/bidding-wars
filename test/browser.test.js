@@ -1350,6 +1350,21 @@ test('BACK BUTTON: closes a sheet, asks before leaving an auction, and leaves ot
   await ctx.close();
 });
 
+test('SETTINGS: Reduce motion can be switched on AND off again (it used to render aria-checked="reduce" and could not be turned off after reopening the sheet)', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open();
+  await page.evaluate(() => settingsSheet()); await page.waitForSelector('[data-k="motion"]');
+  assert.equal(await page.getAttribute('[data-k="motion"]', 'aria-checked'), 'false');
+  await page.click('[data-k="motion"]'); assert.equal(await page.getAttribute('[data-k="motion"]', 'aria-checked'), 'true');
+  await page.evaluate(() => { document.querySelectorAll('.sheetwrap').forEach(x => x.remove()); app.inert = false; settingsSheet(); });
+  await page.waitForSelector('[data-k="motion"]');
+  assert.equal(await page.getAttribute('[data-k="motion"]', 'aria-checked'), 'true', 'reopened: it is on');
+  await page.click('[data-k="motion"]'); assert.equal(await page.getAttribute('[data-k="motion"]', 'aria-checked'), 'false', 'and it can be turned off');
+  assert.equal(await page.evaluate(() => SET.motion), 'auto');
+  for (const k of ['shapes', 'confirm', 'quiet', 'fair', 'log']) assert.ok(['true', 'false'].includes(await page.getAttribute(`[data-k="${k}"]`, 'aria-checked')), k + ' has a boolean aria-checked');
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
 test('BOTS: one bot is still the duel - called "Bot", counted for the record', { skip: SKIP }, async () => {
   const { page, errors, ctx } = await open();
   await startSolo(page, 5, 0);
