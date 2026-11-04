@@ -11,7 +11,7 @@ Everything lives flat at the repo root. No `js/`, `css/`, `data/`, `img/`,
 `engine.js`, `packs.js`, `banter.js`, `pack-countries.js`, `pack-capitals.js`, `CAPITALS-SOURCES.md`, `globe.js`, `us-view.js`, `us-map.js`, `us-map.webp`, `us-ak.webp`, `us-hi.webp`, `NOTICE.md`,
 `platform.js`, `sound.js`, `fx.js`, `sw.js`, `manifest.json`, every icon,
 `globe-hero.webp`, `logo.svg`, `three.min.js`, `earth.jpg`, `countries-110m.json`,
-`privacy.html`, `support.html` all sit at the root, referenced by plain
+`privacy.html`, `support.html`, `STORE-READINESS.md` (App Store / Google Play checklist and audit notes) all sit at the root, referenced by plain
 relative paths (`"app.css"`, not `"css/app.css"`).
 
 This has broken things more than once: `sw.js`, `manifest.json`, and a font
@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v58';   // increment this, every time
+const CACHE = 'bidding-wars-v60';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v58` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v60` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 

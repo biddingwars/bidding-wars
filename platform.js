@@ -5,8 +5,8 @@
 
 const CONFIG = {
   /* The release number shown on the menu so anyone can check they have the latest build.
-     MUST equal the number in sw.js's CACHE ('bidding-wars-v58' -> 58); test/version.test.js enforces it. */
-  version: 58,
+     MUST equal the number in sw.js's CACHE ('bidding-wars-v60' -> 60); test/version.test.js enforces it. */
+  version: 60,
 
   /* Online 1 vs 1 needs a real backend (Firebase, Supabase, PartyKit, …).
      Leave this false until one is wired up in Net.* below — shipping a mode
@@ -154,9 +154,12 @@ const Shell = {
    inside cards. Inputs keep their normal behaviour. */
 (function lockGestures() {
   let last = 0;
+  /* touch-action: manipulation (app.css) already switches double-tap zoom off; this only guards plain areas. It must never cancel the second of two quick taps on a
+     button or a field: raising twice in a row (+1, +1) used to lose the second tap. */
   document.addEventListener('touchend', e => {
     const now = Date.now();
-    if (now - last < 320) e.preventDefault();
+    const control = e.target && e.target.closest && e.target.closest('button,a,input,textarea,select,label,[role=button],[role=radio],[role=switch]');
+    if (now - last < 320 && !control) e.preventDefault();
     last = now;
   }, { passive: false });
 

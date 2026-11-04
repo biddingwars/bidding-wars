@@ -356,9 +356,10 @@ function globe3d(host, owned, pack){
   const earth=new THREE.Mesh(new THREE.SphereGeometry(1,96,64), earthMat);
   rig.add(earth);
 
-  let satelliteOn=false;
+  let satelliteOn=false, dead=false;
   loadEarthTexture(tex=>{
     if(!tex) return;
+    if(dead){ if(tex.dispose) tex.dispose(); return; }   // the screen was left before the texture arrived: free it at once
     satelliteOn=true;
     const old=earthMat.map;
     earthMat.map=tex;
@@ -597,7 +598,21 @@ function globe3d(host, owned, pack){
     if(io) io.disconnect();
     window.removeEventListener('mousemove',onMouseMove);
     window.removeEventListener('mouseup',release);
+    dead=true;
+    /* renderer.dispose() alone frees no textures: the 6144x3072 earth texture (about 100 MB of GPU memory) and every geometry / material of the
+       scene would stay until the page dies, so every "Play again" on a phone piled up another globe. Free them, then release the WebGL context. */
+    try{
+      scene.traverse(o=>{
+        if(o.geometry && o.geometry.dispose) o.geometry.dispose();
+        (Array.isArray(o.material)?o.material:[o.material]).forEach(m=>{
+          if(!m) return;
+          ['map','alphaMap','emissiveMap','specularMap'].forEach(k=>{ if(m[k] && m[k].dispose) m[k].dispose(); });
+          if(m.dispose) m.dispose();
+        });
+      });
+    }catch(e){}
     try{ renderer.dispose(); }catch(e){}
+    try{ renderer.forceContextLoss(); }catch(e){}
   };
 }
 

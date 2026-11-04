@@ -1233,9 +1233,9 @@ function home() {
         </button>
       </div>
       <div class="m-r">
-        <div class="packs" role="list">
-          ${[['countries', 'packCountries'], ['states', 'packStates'], ['capitals', 'packCapitals']].map(([id, k]) => { const pm = Packs.meta(id), sel = id === SELPACK; return `<button class="pack ${sel ? 'on glass2' : 'off'}" data-pack="${id}" role="listitem" ${sel ? 'aria-current="true"' : ''}><b>${esc(t(k))}</b><span class="s">${pm.count} · ${esc(t('popLabel'))}</span></button>`; }).join('')}
-          ${['packWorld'].map(k => `<button class="pack off" data-soon="1" role="listitem" aria-disabled="true"><i>${esc(t('soon'))}</i><b>${esc(t(k))}</b><span class="s">${esc(t('popLabel'))}</span></button>`).join('')}
+        <div class="packs">
+          ${[['countries', 'packCountries'], ['states', 'packStates'], ['capitals', 'packCapitals']].map(([id, k]) => { const pm = Packs.meta(id), sel = id === SELPACK; return `<button class="pack ${sel ? 'on glass2' : 'off'}" data-pack="${id}" ${sel ? 'aria-current="true"' : ''}><b>${esc(t(k))}</b><span class="s">${pm.count} · ${esc(t('popLabel'))}</span></button>`; }).join('')}
+          ${['packWorld'].map(k => `<button class="pack off" data-soon="1" aria-disabled="true"><i>${esc(t('soon'))}</i><b>${esc(t(k))}</b><span class="s">${esc(t('popLabel'))}</span></button>`).join('')}
         </div>
         <div class="modes">
           <button class="glass mode" id="m1"><span class="ic">${IC('person')}</span><span class="t"><b>${esc(t('solo'))}</b><span class="d">${esc(t('soloShort'))}</span></span><span class="go">${IC('chev', 'sm')}</span></button>
@@ -1267,7 +1267,7 @@ function home() {
 /* ============ SETTINGS — one sheet: currency, bot style, accessibility, practice helpers (stored in settings:v1) ============ */
 const AGGR_KEYS = ['aggr0', 'aggr1', 'aggr2', 'aggr3', 'aggr4'];
 function settingsSheet() {
-  const sw = (k, label, desc) => `<button class="row sw" role="switch" aria-checked="${SET[k]}" data-k="${k}"><span class="t">${esc(label)}<small>${esc(desc)}</small></span><span class="knob" aria-hidden="true"></span></button>`;
+  const sw = (k, label, desc) => `<button class="row sw" role="switch" aria-checked="${k === 'motion' ? SET.motion === 'reduce' : SET[k] === true}" data-k="${k}"><span class="t">${esc(label)}<small>${esc(desc)}</small></span><span class="knob" aria-hidden="true"></span></button>`;
   const curList = [['', t('curAuto')]].concat(Engine.CURRENCIES.map(c => [c.id, c.sym.trim() === c.id ? c.id : c.id + ' · ' + c.sym.trim()]));
   const body = () => `
     <div class="fld"><span class="label">${esc(t('setCurrency'))}</span>
@@ -1960,3 +1960,18 @@ function onlineLot(code) {
   };
   tick(); poll = setInterval(tick, 3000);
 }
+
+/* ============ THE BACK BUTTON (Android system Back, a browser Back, the iOS edge swipe) ============
+   Without this, Back left the game at once, in the middle of an auction. The page keeps one extra history entry and re-arms it after every
+   press: Back closes an open sheet, asks before leaving an auction, returns from any other screen to the menu, and on the menu itself
+   it really goes back (leaves the app). Nothing is stored; it is only the history stack of this page. */
+(function backButton() {
+  try { history.replaceState({ bw: 0 }, ''); history.pushState({ bw: 1 }, ''); } catch (e) { return; }
+  window.addEventListener('popstate', () => {
+    const scr = document.querySelector('#app .screen'), name = scr && scr.dataset.screen;
+    if (sheetH && sheetH.alive) { try { history.pushState({ bw: 1 }, ''); } catch (e) {} sheetH.dismiss(); return; }
+    if (name === 'auction') { try { history.pushState({ bw: 1 }, ''); } catch (e) {} const nb = document.getElementById('nb'); if (nb) nb.click(); return; }
+    if (name && name !== 'menu') { try { history.pushState({ bw: 1 }, ''); } catch (e) {} home(); return; }
+    try { history.back(); } catch (e) {}                       // on the menu: leave, as Back always did
+  });
+})();
