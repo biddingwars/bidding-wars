@@ -40,7 +40,7 @@ debugging time before.
 bumped:
 
 ```js
-const CACHE = 'bidding-wars-v59';   // increment this on every deploy, together with CONFIG.version in platform.js
+const CACHE = 'bidding-wars-v60';   // increment this on every deploy, together with CONFIG.version in platform.js
 ```
 
 After bumping, the user must close *all* tabs and reopen — a reload isn't

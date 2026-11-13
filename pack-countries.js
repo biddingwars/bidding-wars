@@ -66,18 +66,22 @@
     /* The bot: the August walk-away roll (between ideal and max), randomised raise step and rank-based valuation, plus the shared
        States machinery. limitMul is the per-level, per-lot-count calibration (re-measured with `node test/economy.js`). */
     bot: {
-      limitMul: { beginner: { 5: 2.167, 10: 1.199, 15: 1.2, 20: 1.25, 30: 1.1 }, medium: { 5: 0.863, 10: 0.907, 15: 0.815, 20: 0.777, 30: 0.738 }, expert: { 5: 1.5, 10: 0.93, 15: 1.14, 20: 1.425, 30: 1.5 } },
+      limitMul: { beginner: { 5: 2.167, 10: 1.199, 15: 0.9, 20: 1.1, 30: 1.0 }, medium: { 5: 0.863, 10: 0.907, 15: 0.815, 20: 0.777, 30: 0.738 }, expert: { 5: 1.5, 10: 0.93, 15: 1.14, 20: 1.425, 30: 1.5 } },
       premium: { top: 5, pct: { beginner: 0.5, medium: 0.15, expert: 0.15 } },   // Beginner's bot pays 50% more for its five biggest (European) countries
       pacing: { gamma: 0.5, lo: 0.7, hi: 1.5 },
       knockout: { kappa: { beginner: 1.383, medium: 0.709, expert: 0.526 } },
       mood: { k: 0.25, up: 0.2, down: 0.15 },
       wallet: { lo: 0.7 },
-      noise: { beginner: 0.432, medium: 0.483, expert: 0.405 },
+      /* v60, Beginner 15-30 lots: a player who bid up to about 1.25 x the fair price on everything won 61-64% (limit 60). The bot's limit swung too much from lot to lot, so that player
+         took the lots of its low draws cheaply and made it pay the cap on the rest. Cure (as in US States): a narrow roll, little jitter and a weaker efficiency factor for those
+         round lengths. A value per lot count uses the nearest listed count at or below the round length. */
+      noise: { beginner: { 5: 0.432, 15: 0.15, 20: 0.108 }, medium: 0.483, expert: 0.405 },
+      rollSpan: { beginner: { 5: 1, 15: 0.3 }, medium: 1, expert: 1 },
       crowd: { beginner: 0.15, medium: 0.07, expert: 0.2 },                // v50: the walk-away grows by this share per extra seat at a table of 3-4 (never in a duel); found with a fair-value human against 2-3 bots
 
-      efficiency: { gamma: { beginner: 0.698, medium: 0.9, expert: 0.488 }, lo: { beginner: 0.304, medium: 0.45, expert: 0.294 }, hi: { beginner: 3, medium: 3.28, expert: 2.248 }, pick: { beginner: 1.627, medium: 1.726, expert: 1.65 } },
+      efficiency: { gamma: { beginner: { 5: 0.698, 15: 0.2, 20: 0.349 }, medium: 0.9, expert: 0.488 }, lo: { beginner: 0.304, medium: 0.45, expert: 0.294 }, hi: { beginner: 3, medium: 3.28, expert: 2.248 }, pick: { beginner: 1.627, medium: 1.726, expert: 1.65 } },
       decisive: { share: { beginner: 0.309, medium: 0.439, expert: 0.326 } },
-      creeperGuard: { raises: 3 },
+      creeperGuard: { raises: 3, window: 8 },   // v60: the guard comes back after 8 lots in a row without a voluntary pass (one pass on purpose used to switch it off for good)
       temperaments: {
         weights: [25, 50, 25], bigRank: 10,
         spread: { 5: 0.06, 10: 0.06, 15: 0.05, 20: 0.04, 30: 0.04 },

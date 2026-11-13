@@ -23,7 +23,7 @@ test('a duel against one bot is exactly what it was before several bots existed 
   for (const [name, pack] of Object.entries(packs)) for (const level of pack.levels.map(l => l.id)) for (const lots of [5, pack.lots.options[1]]) for (let g = 0; g < 6; g++) for (const pol of ['creeper', 'fair']) {
     const { S, log } = play(pack, level, lots, [false, true], 4000 + g, pol); h.update(name + level + lots + g + pol + log + '|' + S.players.map(p => p.budget).join('/'));
   }
-  assert.equal(h.digest('hex'), 'd0951f9855c3a35169449a75c272d1366387603bc6d4a5bf1f4774e7dce9c458', 'the duel changed (digest = the engine of v59: v57 plus two fixes to the bot, it never bids past what the richest rival can top and it does not walk away from the last lot when that lot decides the game; re-pinned on purpose in v59, it was the v57 engine before, and the v47 engine before)');
+  assert.equal(h.digest('hex'), '7b973a8b2f7f0cc289bc1aa61f144b60aadc7909f77e2cc524507938089eb6ad', 'the duel changed (digest = v60: the exploit retune of Countries Beginner 15-30, Capitals Beginner 20-30 / Medium 10-30 / Expert 20-30 and US States 20 lots, plus the creeper-guard window; re-pinned on purpose in v60. Before that the engine of v59: v57 plus two fixes to the bot, it never bids past what the richest rival can top and it does not walk away from the last lot when that lot decides the game; re-pinned on purpose in v59, it was the v57 engine before, and the v47 engine before)');
 });
 
 test('several bots: every bot has a style of its own (all different for 2 and 3 bots), never drawn twice, a forced style applies to all', () => {
@@ -126,4 +126,16 @@ test('the last lot: the bot does not walk away with money in hand when that lot 
     });
   }
   assert.ok(lastLots > 500, 'last lots were played: ' + lastLots);
+});
+
+/* ---- v60: one pass on purpose no longer switches the creeper guard off for the rest of the game ---- */
+test('creeper guard: a +1 creeper that passes once on purpose gains little in a long round (the guard comes back after `window` lots without a pass)', () => {
+  const passOnce = () => { let done = false; return (S, me) => { if (!done && S.i === 0) { done = true; return { type: 'pass' }; } return go(S, me, 1e9); }; };
+  const rate = (pack, level, lots, mk) => { let w = 0; for (let g = 0; g < 300; g++) { const S = watchBot(pack, level, lots, [false, true], 64000 + g, mk(), () => {}); const sb = Engine.scoreboard(S); w += sb.rows[0].pts > sb.rows[1].pts; } return 100 * w / 300; };
+  for (const id of ['countries', 'capitals']) {
+    assert.ok(Number.isInteger(packs[id].bot.creeperGuard.window), id + ' sets creeperGuard.window');
+    const once = rate(packs[id], 'medium', 30, passOnce), pure = rate(packs[id], 'medium', 30, () => POL.creeper);
+    assert.ok(once <= 22, `${id} Medium 30 lots: the pass-once creeper wins ${once}% (it was 37% in Countries and 17% in Capitals before the window; the pure creeper wins ${pure}%)`);
+  }
+  assert.ok(Engine.validatePack(Object.assign({}, packs.countries, { bot: Object.assign({}, packs.countries.bot, { creeperGuard: { raises: 3, window: 0 } }) })).some(e => /creeperGuard/.test(e)), 'a window of 0 is refused');
 });

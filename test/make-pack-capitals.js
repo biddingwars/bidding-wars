@@ -16,18 +16,24 @@ const CAL = {
   budgets: { beginner: { 5: 25, 10: 50, 15: 75, 20: 100, 30: 150 }, medium: { 5: 50, 10: 100, 15: 150, 20: 200, 30: 300 }, expert: { 5: 50, 10: 100, 15: 150, 20: 200, 30: 300 } },
   mediumMin: 2, // Medium: capitals over 2 million (70 of 195)
   bot: {
-    limitMul: { beginner: { 5: 1.211, 10: 1.083, 15: 1.019, 20: 0.981, 30: 0.837 }, medium: { 5: 0.777, 10: 0.976, 15: 0.972, 20: 0.912, 30: 0.922 }, expert: { 5: 1.55, 10: 1.419, 15: 1.261, 20: 1.405, 30: 1.782 }},
+    limitMul: { beginner: { 5: 1.211, 10: 1.083, 15: 1.019, 20: 0.9, 30: 0.78 }, medium: { 5: 0.777, 10: 1.122, 15: 1.118, 20: 1.049, 30: 1.06 }, expert: { 5: 1.55, 10: 1.419, 15: 1.261, 20: 1.616, 30: 1.782 }},
     premium: { top: 5, pct: { beginner: 0.5, medium: 0.15, expert: 0.15 } },
     pacing: { gamma: 0.5, lo: 0.7, hi: 1.5 },
     knockout: { kappa: { beginner: 0.92, medium: 0.379, expert: 0.64 } },
     mood: { k: 0.25, up: 0.2, down: 0.15 },
     wallet: { lo: 0.7 },
-    noise: { beginner: 0.392, medium: 0.278, expert: 0.471 },
+    /* v60, Beginner 20 and 30 lots: a player who bid up to about 1.1 x the fair price on everything won 61% / 71% of those rounds. The bot's limit swung too much from lot to lot
+       (SD 0.57 of the fair price), so the fixed-cap player took the lots of its low draws cheaply and made it pay the cap on the rest. Same cure as US States: a narrow roll (rollSpan 0.3),
+       little jitter (noise 0.1) and a weaker efficiency factor; then the limit has a flat valley (20 lots: 0.8-1.0, 30 lots: 0.75-0.8) instead of none at all. At 30 lots
+       a roll of 0.45 rather than 0.3 keeps the +1 creeper near 13% (with 0.3 and a limit of 0.7 the best cap fell to 50% but the creeper won 25%).
+       A value per lot count uses the nearest listed count at or below the round length. */
+    noise: { beginner: { 5: 0.392, 20: 0.1, 30: 0.1 }, medium: { 5: 0.278, 10: 0.07 }, expert: { 5: 0.471, 20: 0.118 } },   // Medium from 10 lots and Expert from 20: the same cure (a 0.7-0.75 x cap won 60-61% at Medium, a 1.5 x cap 60-64% at Expert)
+    rollSpan: { beginner: { 5: 1, 20: 0.3, 30: 0.45 }, medium: { 5: 1, 10: 0.3 }, expert: { 5: 1, 20: 0.3 } },
     crowd: { beginner: -0.15, medium: 0.15, expert: 0.2 },                // v50: the walk-away changes by this share per extra seat at a table of 3-4 (never in a duel); found with a fair-value human against 2-3 bots
 
-    efficiency: { gamma: { beginner: 0.65, medium: 0.989, expert: 0.598 }, lo: { beginner: 0.4, medium: 0.29, expert: 0.27 }, hi: { beginner: 3.281, medium: 3.28, expert: 2.522 }, pick: { beginner: 1.916, medium: 1.85, expert: 1.903 } },
+    efficiency: { gamma: { beginner: { 5: 0.65, 20: 0.3, 30: 0.15 }, medium: 0.989, expert: 0.598 }, lo: { beginner: 0.4, medium: 0.29, expert: 0.27 }, hi: { beginner: 3.281, medium: 3.28, expert: 2.522 }, pick: { beginner: 1.916, medium: 1.85, expert: 1.903 } },
     decisive: { share: { beginner: 0.233, medium: 0.31, expert: 0.209 }, minPrice: { beginner: 0.8, medium: 1.2, expert: 1.2 } },   // all-in only for a lot whose fair price is at least this share of the bot's current purse (1.2 = one it cannot really afford: Delhi yes; Seoul and Washington no)
-    creeperGuard: { raises: 3 },
+    creeperGuard: { raises: 3, window: 10 },   // v60: the guard comes back after 10 lots in a row without a voluntary pass (8 cost the bot 5-9 points against honest capped bidders at Medium, 30 lots)
     temperaments: { weights: [25, 50, 25], bigRank: 10, spread: { 5: 0.06, 10: 0.06, 15: 0.05, 20: 0.04, 30: 0.04 }, conservative: { step: 0.75, big: 0.95 }, aggressive: { step: 1.25, big: 1.05, reserveCap: 3 } }
   }
 };

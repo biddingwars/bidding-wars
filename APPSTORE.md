@@ -50,11 +50,11 @@ run on a real iPhone or iPad, and there is no native project in this repository 
 6. **Service worker:** not registered inside the native app (`Native.is`), which is right; the files are already local.
 7. **Test on device:** airplane mode from a fresh install, a phone call during a lot, lock and unlock mid-auction, rotate, Split View on iPad, VoiceOver through one whole game, Dynamic Type at its largest, and "Delete all data" followed by a restart.
 
-## 4. Known game-balance issues that ship (none is a crash)
+## 4. Game balance at release (none of this is a crash)
 
-These are measured and documented in `CLAUDE.md`; three tests fail on them and failed before v59 too.
+Measured with `node test/exploit.js <pack> all 500 4000` at v60: in every pack, level and round length the best strategy of the search family wins at most 59.8% (the project's own
+limit is 60%, 65% at 5 lots). Details and costs are in `CLAUDE.md`, "Exploit retune (v60)".
 
-- Capitals, Beginner, 30 lots: a player who bids up to about 1.1× the fair price on everything wins about 70% of rounds (the limit the project set itself is 60%).
-- Countries knockout test (b) and the Countries repeat test (SD 14.3% against 15%) fail narrowly.
-- US States at 20 lots: a fixed cap of about 0.7× the fair price wins about 57–64%.
-- The creeper guard can be switched off by passing once on purpose; a "+1" player who does that wins more often than one who does not (Countries Medium 20 lots: about 29% instead of 5%), still far below half.
+- A "+1" creeper that passes on purpose now and then still does better than one that never passes (about 25-32% instead of 5% in Countries Medium long rounds). It loses most games.
+- Two tests still fail, as they did before v59, on cells that were not touched: Countries knockout test (b) and the Countries repeat test (SD 14.3% against 15%).
+- Long Medium rounds of Capitals are hard for a player who pays up to 1.25x the fair price for everything (about 20-29% wins at 20-30 lots); a tighter cap wins 42-50%.
