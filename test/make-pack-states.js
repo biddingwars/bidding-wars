@@ -10,9 +10,11 @@ const C = JSON.parse(fs.readFileSync(path.join(__dirname, 'states-content.json')
 const CAL = Object.assign({
   priceScale: 1,                                        // v43: an average lot is $10 (about $1.5 per million people at the fair price); it was 3 (an average lot $30)
   budgets: { 5: 20, 10: 35, 15: 50, 20: 70 },          // the clean table (owner): about $3.4 per lot, $170 for all 50 states = one dollar per million people for the two players together
-  limitMul: { 5: 0.8, 10: 0.55, 15: 0.55, 20: 0.55 },
+  limitMul: { 5: 0.8, 10: 0.55, 15: 0.55, 20: 0.565 },
   spread: { 5: 0.06, 10: 0.06, 15: 0.05, 20: 0.04 },
-  rollSpan: 0.4, noise: 0.15
+  /* v60: at 20 lots the roll narrows to 0.1 and the jitter to 0.05. With 0.4 / 0.15 the best fixed cap (0.70-0.75 x the fair price) won 57%; now it wins 52% for every limit
+     from 0.55 to 0.58 (3,000 games each): a flat floor instead of a point. A value per lot count uses the nearest listed count at or below the round length. */
+  rollSpan: { 5: 0.4, 20: 0.1 }, noise: { 5: 0.15, 20: 0.05 }
 }, JSON.parse(process.env.STATES_CAL || '{}'));
 const LANGS = ['de', 'it', 'es', 'fr'];
 const items = census.states.map(s => {
@@ -59,9 +61,9 @@ const pack = `/* ===============================================================
        calibration tables by lot count (test/economy.js re-measures them on the real engine). */
     bot: {
       limitMul: ${JSON.stringify(CAL.limitMul)},   // 15+ lots are tuned together with rollSpan (below): a player who never pays more than ~0.8x the fair price beat the old limits 76-100% of long rounds (see CLAUDE.md)
-      rollSpan: ${CAL.rollSpan},                                   // the walk-away roll uses the first 40% of [ideal, max]: less lot-to-lot swing in the bot's limit, so no fixed-limit player out-earns it
+      rollSpan: ${JSON.stringify(CAL.rollSpan)},                                   // the walk-away roll uses the first 40% of [ideal, max]: less lot-to-lot swing in the bot's limit, so no fixed-limit player out-earns it
       crowd: 0.1,                                      // v50: at a table of 3-4 the walk-away grows by this share per extra seat (never in a duel); found with a fair-value human against 2-3 bots
-      noise: ${CAL.noise},                                     // a little per-lot jitter on top, so the narrower roll does not make the drop-out point easy to read (0.15 keeps the exploit search under its limit; 0.25+ does not)
+      noise: ${JSON.stringify(CAL.noise)},                                     // a little per-lot jitter on top, so the narrower roll does not make the drop-out point easy to read (0.15 keeps the exploit search under its limit; 0.25+ does not)
       premium: { top: 4, pct: 0.15 },
       pacing: { gamma: 0.5, lo: 0.7, hi: 1.5 },
       knockout: { kappa: 1.5 },

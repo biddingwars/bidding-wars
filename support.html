@@ -8,13 +8,12 @@
 <link rel="icon" href="icon-180.png?v=51">
 <meta name="color-scheme" content="dark">
 <style>
-  :root{color-scheme:dark;--bg1:#0A0A18;--bg2:#15133A;--ink:#F5F6FF;--ink2:#C9CCE8;--glass:rgba(255,255,255,.085);--stroke:rgba(255,255,255,.16);--gold1:#EDC66F;--gold2:#C99A3F;--goldink:#F6D993;--on-gold:#261A04}
+  :root{color-scheme:dark;--bg:#0E0D0B;--card:#1C1B17;--ink:#F6F2E9;--ink2:#B5AFA1;--stroke:rgba(255,246,228,.10);--gold1:#EDC66F;--gold2:#C99A3F;--goldink:#EBC577;--on-gold:#261A04}
   *{box-sizing:border-box}
-  body{margin:0;min-height:100vh;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,"Segoe UI",Roboto,sans-serif;line-height:1.55;background:linear-gradient(180deg,var(--bg1),var(--bg2)) fixed var(--bg1)}
-  .wrap{max-width:640px;margin:0 auto;padding:calc(28px + env(safe-area-inset-top)) 18px calc(60px + env(safe-area-inset-bottom))}
-  .card{background:var(--glass);border:1px solid var(--stroke);border-radius:26px;box-shadow:0 18px 50px rgba(0,0,0,.25);padding:24px 22px;margin-bottom:18px;-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,"Segoe UI",Roboto,sans-serif;line-height:1.55;background:var(--bg);-webkit-text-size-adjust:100%}
+  .wrap{max-width:680px;margin:0 auto;padding:calc(28px + env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) calc(60px + env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left))}
+  .card{background:var(--card);border:1px solid var(--stroke);border-radius:26px;box-shadow:0 18px 50px rgba(0,0,0,.25);padding:24px 22px;margin-bottom:18px}
   h1{font-size:30px;margin:0 0 6px;letter-spacing:-.035em;line-height:1.1}
-  .updated{font-size:13px;color:var(--ink2);margin:0 0 22px}
   h2{font-size:17px;margin:22px 0 8px}
   p{margin:0 0 12px}
   p,li{color:var(--ink2)} strong,h1,h2{color:var(--ink)}
@@ -27,16 +26,19 @@
 <div class="wrap">
   <div class="card">
     <h1>Support</h1>
-    <p>Bidding Wars is a country-auction game: random countries come up as lots, you bid against a rival, and population decides the score once every lot is revealed.</p>
+    <p>Bidding Wars is an auction game: countries, US states or capital cities come up as lots, you bid against bots or friends on the same device, and population decides the score once every lot is revealed.</p>
 
     <h2>Report a bug or ask a question</h2>
-    <p>The fastest way to reach us is to open an issue on GitHub — we read every one.</p>
+    <p>Open an issue on GitHub and we will answer there. Please say which device you use and the version number shown at the bottom of the game’s menu.</p>
     <a class="btn" href="https://github.com/biddingwars/bidding-wars/issues" target="_blank" rel="noopener">Open an issue on GitHub</a>
 
     <h2>Common questions</h2>
-    <p><strong>Does the game need an internet connection?</strong><br>No — everything runs offline, including the bot, the map borders and the globe.</p>
-    <p><strong>Do you collect any of my data?</strong><br>No accounts, no analytics, no tracking. See the <a href="privacy.html">privacy policy</a> for details.</p>
-    <p><strong>How do I reset my stats?</strong><br>Open the menu in-game and use the privacy screen's "Delete all data" option.</p>
+    <p><strong>Does the game need an internet connection?</strong><br>No. Everything runs offline, including the bots, the maps and the globe.</p>
+    <p><strong>Do you collect any of my data?</strong><br>No. There are no accounts, no analytics, no ads and no tracking. See the <a href="privacy.html">privacy policy</a>.</p>
+    <p><strong>How do I reset my record or delete my data?</strong><br>On the menu, tap the lock button to open the privacy screen and choose “Delete all data”. To reset only your record against the bot, tap the record on the menu and choose “Reset record”.</p>
+    <p><strong>Why did a game not count for my record?</strong><br>Only solo games with the default bot style count. If you changed the bot style or switched on “Show the fair price” in Settings, the game is a practice game.</p>
+    <p><strong>There is no sound.</strong><br>Check the sound button at the top of the screen, your device’s volume and its silent switch.</p>
+    <p><strong>Is the money real?</strong><br>No. The budget is play money that exists only inside a round. Nothing can be bought, won or cashed out.</p>
   </div>
   <a class="back" href="index.html">&larr; Back to Bidding Wars</a>
 </div>

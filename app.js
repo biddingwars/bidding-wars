@@ -201,7 +201,7 @@ const LANGS=[
 
 const STR={
 en:{
- credits:'Credits & licences', creditsIntro:'Everything in this game is bundled on your device. Thank you to:', creditsPop:'<b>US population</b> — U.S. Census Bureau, Vintage 2025 estimates (NST-EST2025-POP). Public domain.', creditsCap:'<b>Capital-city population</b> — United Nations, DESA Population Division, World Urbanization Prospects: The 2018 Revision, File 13 (urban agglomeration, 2018). CC BY 3.0 IGO. Data unchanged; this is not an endorsement by the United Nations.', creditsMap:'<b>US state outlines</b> — U.S. Census Bureau cartographic boundary files, packaged by us-atlas. Public domain data.', creditsImg:'<b>US map imagery</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (July). NASA imagery is free to use with credit; this is not an endorsement by NASA.', creditsWorld:'<b>World borders</b> — Natural Earth. Public domain.', creditsGlobe:'<b>Globe texture</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (July). Free to use with credit; not an endorsement by NASA.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. MIT licence.', creditsSound:'<b>Sound</b> — every sound is synthesised on your device; there are no recordings. The eagle-style win cry is synthesised too. In films that cry is really a red-tailed hawk, because a bald eagle’s own voice is a thin chirp.', creditsFacts:'<b>US States fun facts</b> — written for this game. They have not been independently verified yet.',
+ credits:'Credits & licences', creditsIntro:'Everything in this game is bundled on your device. Thank you to:', creditsPop:'<b>US population</b> — U.S. Census Bureau, Vintage 2025 estimates (NST-EST2025-POP). Public domain.', creditsCap:'<b>Capital-city population</b> — United Nations, DESA Population Division, World Urbanization Prospects: The 2018 Revision, File 13 (urban agglomeration, 2018). CC BY 3.0 IGO. Data unchanged; this is not an endorsement by the United Nations.', creditsMap:'<b>US state outlines</b> — U.S. Census Bureau cartographic boundary files, packaged by us-atlas. Public domain data.', creditsImg:'<b>US map imagery</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (July). NASA imagery is free to use with credit; this is not an endorsement by NASA.', creditsWorld:'<b>World borders</b> — Natural Earth. Public domain.', creditsGlobe:'<b>Globe texture</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (July). Free to use with credit; not an endorsement by NASA.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. MIT licence.', creditsSound:'<b>Sound</b> — every sound is synthesised on your device; there are no recordings. The eagle-style win cry is synthesised too. In films that cry is really a red-tailed hawk, because a bald eagle’s own voice is a thin chirp.', creditsFacts:'<b>US States fun facts</b> — written for this game and checked against public sources (national parks, state agencies, the Census Bureau, USGS, NASA and similar).',
  lotsAll:'All {n}', funFacts:'Fun facts', factsIntro:'Every state in this round.',
  tagline:'Use your knowledge to beat your rivals',
  solo:'Solo', soloDesc:'One rival, the bot. It has a price in mind for every country and walks away the moment you beat it. Works offline.',
@@ -301,7 +301,7 @@ en:{
  smartestU:'<b>{name}</b> shopped smartest at {v} {unit}.'
 },
 de:{
- credits:'Quellen & Lizenzen', creditsIntro:'Alles in diesem Spiel liegt auf deinem Gerät. Danke an:', creditsPop:'<b>US-Einwohnerzahlen</b> — U.S. Census Bureau, Schätzung Vintage 2025 (NST-EST2025-POP). Gemeinfrei.', creditsCap:'<b>Einwohnerzahlen der Hauptstädte</b> — Vereinte Nationen, DESA, Abteilung Bevölkerung, World Urbanization Prospects: The 2018 Revision, Datei 13 (städtische Agglomeration, 2018). CC BY 3.0 IGO. Daten unverändert; keine Billigung durch die Vereinten Nationen.', creditsMap:'<b>Umrisse der US-Bundesstaaten</b> — Kartografische Grenzdateien des U.S. Census Bureau, aufbereitet von us-atlas. Gemeinfreie Daten.', creditsImg:'<b>Bilder der US-Karte</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (Juli). NASA-Bilder dürfen mit Quellenangabe frei verwendet werden; keine Billigung durch die NASA.', creditsWorld:'<b>Weltgrenzen</b> — Natural Earth. Gemeinfrei.', creditsGlobe:'<b>Globus-Textur</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (Juli). Mit Quellenangabe frei verwendbar; keine Billigung durch die NASA.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. MIT-Lizenz.', creditsSound:'<b>Klang</b> — alle Töne werden auf deinem Gerät erzeugt, es gibt keine Aufnahmen. Auch der adlerartige Siegesruf ist erzeugt. In Filmen ist dieser Ruf in Wirklichkeit ein Rotschwanzbussard, denn die Stimme eines Weißkopfseeadlers ist ein dünnes Zwitschern.', creditsFacts:'<b>Wissenswertes zu den US-Staaten</b> — für dieses Spiel geschrieben und noch nicht unabhängig überprüft.',
+ credits:'Quellen & Lizenzen', creditsIntro:'Alles in diesem Spiel liegt auf deinem Gerät. Danke an:', creditsPop:'<b>US-Einwohnerzahlen</b> — U.S. Census Bureau, Schätzung Vintage 2025 (NST-EST2025-POP). Gemeinfrei.', creditsCap:'<b>Einwohnerzahlen der Hauptstädte</b> — Vereinte Nationen, DESA, Abteilung Bevölkerung, World Urbanization Prospects: The 2018 Revision, Datei 13 (städtische Agglomeration, 2018). CC BY 3.0 IGO. Daten unverändert; keine Billigung durch die Vereinten Nationen.', creditsMap:'<b>Umrisse der US-Bundesstaaten</b> — Kartografische Grenzdateien des U.S. Census Bureau, aufbereitet von us-atlas. Gemeinfreie Daten.', creditsImg:'<b>Bilder der US-Karte</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (Juli). NASA-Bilder dürfen mit Quellenangabe frei verwendet werden; keine Billigung durch die NASA.', creditsWorld:'<b>Weltgrenzen</b> — Natural Earth. Gemeinfrei.', creditsGlobe:'<b>Globus-Textur</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (Juli). Mit Quellenangabe frei verwendbar; keine Billigung durch die NASA.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. MIT-Lizenz.', creditsSound:'<b>Klang</b> — alle Töne werden auf deinem Gerät erzeugt, es gibt keine Aufnahmen. Auch der adlerartige Siegesruf ist erzeugt. In Filmen ist dieser Ruf in Wirklichkeit ein Rotschwanzbussard, denn die Stimme eines Weißkopfseeadlers ist ein dünnes Zwitschern.', creditsFacts:'<b>Wissenswertes zu den US-Staaten</b> — für dieses Spiel geschrieben und mit öffentlichen Quellen abgeglichen (Nationalparks, Behörden der Bundesstaaten, Census Bureau, USGS, NASA und ähnliche).',
  lotsAll:'Alle {n}', funFacts:'Wissenswertes', factsIntro:'Alle Bundesstaaten dieser Runde.',
  tagline:'Nutze dein Wissen und schlag deine Rivalen',
  solo:'Solo', soloDesc:'Ein Gegner, der Bot. Er hat für jedes Land einen Preis im Kopf und steigt aus, sobald du ihn überbietest. Läuft offline.',
@@ -401,7 +401,7 @@ de:{
  smartestU:'<b>{name}</b> hat am klügsten eingekauft: {v} {unit}.'
 },
 it:{
- credits:'Crediti e licenze', creditsIntro:'Tutto in questo gioco è sul tuo dispositivo. Grazie a:', creditsPop:'<b>Popolazione USA</b> — U.S. Census Bureau, stime Vintage 2025 (NST-EST2025-POP). Pubblico dominio.', creditsCap:'<b>Popolazione delle capitali</b> — Nazioni Unite, DESA, Divisione Popolazione, World Urbanization Prospects: The 2018 Revision, File 13 (agglomerato urbano, 2018). CC BY 3.0 IGO. Dati non modificati; nessun avallo da parte delle Nazioni Unite.', creditsMap:'<b>Contorni degli stati USA</b> — file cartografici di confine del U.S. Census Bureau, a cura di us-atlas. Dati di pubblico dominio.', creditsImg:'<b>Immagini della mappa USA</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (luglio). Le immagini NASA si possono usare liberamente citando la fonte; nessun avallo da parte della NASA.', creditsWorld:'<b>Confini del mondo</b> — Natural Earth. Pubblico dominio.', creditsGlobe:'<b>Texture del globo</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (luglio). Libera con citazione della fonte; nessun avallo da parte della NASA.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. Licenza MIT.', creditsSound:'<b>Suono</b> — ogni suono è sintetizzato sul tuo dispositivo, senza registrazioni. Anche il grido di vittoria da aquila è sintetizzato. Nei film quel grido è in realtà di una poiana codarossa, perché la voce dell’aquila di mare testabianca è un sottile cinguettio.', creditsFacts:'<b>Curiosità sugli stati USA</b> — scritte per questo gioco e non ancora verificate in modo indipendente.',
+ credits:'Crediti e licenze', creditsIntro:'Tutto in questo gioco è sul tuo dispositivo. Grazie a:', creditsPop:'<b>Popolazione USA</b> — U.S. Census Bureau, stime Vintage 2025 (NST-EST2025-POP). Pubblico dominio.', creditsCap:'<b>Popolazione delle capitali</b> — Nazioni Unite, DESA, Divisione Popolazione, World Urbanization Prospects: The 2018 Revision, File 13 (agglomerato urbano, 2018). CC BY 3.0 IGO. Dati non modificati; nessun avallo da parte delle Nazioni Unite.', creditsMap:'<b>Contorni degli stati USA</b> — file cartografici di confine del U.S. Census Bureau, a cura di us-atlas. Dati di pubblico dominio.', creditsImg:'<b>Immagini della mappa USA</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (luglio). Le immagini NASA si possono usare liberamente citando la fonte; nessun avallo da parte della NASA.', creditsWorld:'<b>Confini del mondo</b> — Natural Earth. Pubblico dominio.', creditsGlobe:'<b>Texture del globo</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (luglio). Libera con citazione della fonte; nessun avallo da parte della NASA.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. Licenza MIT.', creditsSound:'<b>Suono</b> — ogni suono è sintetizzato sul tuo dispositivo, senza registrazioni. Anche il grido di vittoria da aquila è sintetizzato. Nei film quel grido è in realtà di una poiana codarossa, perché la voce dell’aquila di mare testabianca è un sottile cinguettio.', creditsFacts:'<b>Curiosità sugli stati USA</b> — scritte per questo gioco e verificate su fonti pubbliche (parchi nazionali, enti statali, Census Bureau, USGS, NASA e simili).',
  lotsAll:'Tutti {n}', funFacts:'Curiosità', factsIntro:'Tutti gli stati di questa partita.',
  tagline:'Usa le tue conoscenze per battere i rivali',
  solo:'Solo', soloDesc:'Un rivale, il bot. Ha un prezzo in mente per ogni paese e si ritira appena lo superi. Funziona offline.',
@@ -501,7 +501,7 @@ it:{
  smartestU:'<b>{name}</b> ha comprato nel modo più furbo: {v} {unit}.'
 },
 es:{
- credits:'Créditos y licencias', creditsIntro:'Todo en este juego está en tu dispositivo. Gracias a:', creditsPop:'<b>Población de EE. UU.</b> — U.S. Census Bureau, estimaciones Vintage 2025 (NST-EST2025-POP). Dominio público.', creditsCap:'<b>Población de las capitales</b> — Naciones Unidas, DAES, División de Población, World Urbanization Prospects: The 2018 Revision, archivo 13 (aglomeración urbana, 2018). CC BY 3.0 IGO. Datos sin modificar; no implica respaldo de las Naciones Unidas.', creditsMap:'<b>Contornos de los estados</b> — archivos cartográficos de límites del U.S. Census Bureau, empaquetados por us-atlas. Datos de dominio público.', creditsImg:'<b>Imágenes del mapa de EE. UU.</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (julio). Las imágenes de la NASA se pueden usar libremente citando la fuente; no implica respaldo de la NASA.', creditsWorld:'<b>Fronteras del mundo</b> — Natural Earth. Dominio público.', creditsGlobe:'<b>Textura del globo</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (julio). Libre con mención de la fuente; no implica respaldo de la NASA.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. Licencia MIT.', creditsSound:'<b>Sonido</b> — todos los sonidos se sintetizan en tu dispositivo; no hay grabaciones. El grito de victoria de águila también es sintético. En las películas ese grito es en realidad de un ratonero de cola roja, porque la voz del águila calva es un trino fino.', creditsFacts:'<b>Curiosidades de los estados</b> — escritas para este juego y aún sin verificar de forma independiente.',
+ credits:'Créditos y licencias', creditsIntro:'Todo en este juego está en tu dispositivo. Gracias a:', creditsPop:'<b>Población de EE. UU.</b> — U.S. Census Bureau, estimaciones Vintage 2025 (NST-EST2025-POP). Dominio público.', creditsCap:'<b>Población de las capitales</b> — Naciones Unidas, DAES, División de Población, World Urbanization Prospects: The 2018 Revision, archivo 13 (aglomeración urbana, 2018). CC BY 3.0 IGO. Datos sin modificar; no implica respaldo de las Naciones Unidas.', creditsMap:'<b>Contornos de los estados</b> — archivos cartográficos de límites del U.S. Census Bureau, empaquetados por us-atlas. Datos de dominio público.', creditsImg:'<b>Imágenes del mapa de EE. UU.</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (julio). Las imágenes de la NASA se pueden usar libremente citando la fuente; no implica respaldo de la NASA.', creditsWorld:'<b>Fronteras del mundo</b> — Natural Earth. Dominio público.', creditsGlobe:'<b>Textura del globo</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (julio). Libre con mención de la fuente; no implica respaldo de la NASA.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. Licencia MIT.', creditsSound:'<b>Sonido</b> — todos los sonidos se sintetizan en tu dispositivo; no hay grabaciones. El grito de victoria de águila también es sintético. En las películas ese grito es en realidad de un ratonero de cola roja, porque la voz del águila calva es un trino fino.', creditsFacts:'<b>Curiosidades de los estados</b> — escritas para este juego y contrastadas con fuentes públicas (parques nacionales, organismos estatales, Census Bureau, USGS, NASA y similares).',
  lotsAll:'Todos {n}', funFacts:'Curiosidades', factsIntro:'Todos los estados de esta partida.',
  tagline:'Usa tus conocimientos para vencer a tus rivales',
  solo:'Solo', soloDesc:'Un rival, el bot. Tiene un precio en mente para cada país y se retira en cuanto lo superas. Funciona sin conexión.',
@@ -601,7 +601,7 @@ es:{
  smartestU:'<b>{name}</b> compró de la forma más lista: {v} {unit}.'
 },
 fr:{
- credits:'Crédits et licences', creditsIntro:'Tout dans ce jeu est sur ton appareil. Merci à :', creditsPop:'<b>Population des États-Unis</b> — U.S. Census Bureau, estimations Vintage 2025 (NST-EST2025-POP). Domaine public.', creditsCap:'<b>Population des capitales</b> — Nations unies, DAES, Division de la population, World Urbanization Prospects: The 2018 Revision, fichier 13 (agglomération urbaine, 2018). CC BY 3.0 IGO. Données non modifiées ; aucune approbation des Nations unies.', creditsMap:'<b>Contours des États</b> — fichiers cartographiques de limites du U.S. Census Bureau, mis en forme par us-atlas. Données du domaine public.', creditsImg:'<b>Images de la carte des États-Unis</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (juillet). Les images de la NASA sont libres d’usage avec mention de la source ; aucune approbation de la NASA.', creditsWorld:'<b>Frontières du monde</b> — Natural Earth. Domaine public.', creditsGlobe:'<b>Texture du globe</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (juillet). Libre avec mention de la source ; aucune approbation de la NASA.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. Licence MIT.', creditsSound:'<b>Son</b> — tous les sons sont synthétisés sur ton appareil, sans enregistrement. Le cri de victoire d’aigle est lui aussi synthétisé. Au cinéma ce cri est en réalité celui d’une buse à queue rousse, car la voix du pygargue à tête blanche est un mince pépiement.', creditsFacts:'<b>Le saviez-vous sur les États</b> — écrits pour ce jeu et pas encore vérifiés de façon indépendante.',
+ credits:'Crédits et licences', creditsIntro:'Tout dans ce jeu est sur ton appareil. Merci à :', creditsPop:'<b>Population des États-Unis</b> — U.S. Census Bureau, estimations Vintage 2025 (NST-EST2025-POP). Domaine public.', creditsCap:'<b>Population des capitales</b> — Nations unies, DAES, Division de la population, World Urbanization Prospects: The 2018 Revision, fichier 13 (agglomération urbaine, 2018). CC BY 3.0 IGO. Données non modifiées ; aucune approbation des Nations unies.', creditsMap:'<b>Contours des États</b> — fichiers cartographiques de limites du U.S. Census Bureau, mis en forme par us-atlas. Données du domaine public.', creditsImg:'<b>Images de la carte des États-Unis</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (juillet). Les images de la NASA sont libres d’usage avec mention de la source ; aucune approbation de la NASA.', creditsWorld:'<b>Frontières du monde</b> — Natural Earth. Domaine public.', creditsGlobe:'<b>Texture du globe</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (juillet). Libre avec mention de la source ; aucune approbation de la NASA.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. Licence MIT.', creditsSound:'<b>Son</b> — tous les sons sont synthétisés sur ton appareil, sans enregistrement. Le cri de victoire d’aigle est lui aussi synthétisé. Au cinéma ce cri est en réalité celui d’une buse à queue rousse, car la voix du pygargue à tête blanche est un mince pépiement.', creditsFacts:'<b>Le saviez-vous sur les États</b> — écrits pour ce jeu et vérifiés auprès de sources publiques (parcs nationaux, agences des États, Census Bureau, USGS, NASA et autres).',
  lotsAll:'Tous {n}', funFacts:'Le saviez-vous ?', factsIntro:'Tous les États de cette partie.',
  tagline:'Utilise tes connaissances pour battre tes rivaux',
  solo:'Solo', soloDesc:'Un rival, le bot. Il a un prix en tête pour chaque pays et se retire dès que tu le dépasses. Fonctionne hors ligne.',
@@ -707,6 +707,8 @@ fr:{
 /* ---- Settings page, practice helpers and the practice-game note (all five languages; merged into STR) ---- */
 const STR_SET = {
  "en": {
+  "privPolicy": "Privacy policy",
+  "supportLink": "Help & contact",
   "settings": "Settings",
   "setAppear": "Appearance",
   "themeDarkL": "Dark",
@@ -770,6 +772,8 @@ const STR_SET = {
   "botsHint": "Each bot plays its own style, and you never see which."
  },
  "de": {
+  "privPolicy": "Datenschutzerklärung",
+  "supportLink": "Hilfe & Kontakt",
   "settings": "Einstellungen",
   "setAppear": "Darstellung",
   "themeDarkL": "Dunkel",
@@ -833,6 +837,8 @@ const STR_SET = {
   "botsHint": "Jeder Bot spielt seinen eigenen Stil, und du siehst nie, welchen."
  },
  "it": {
+  "privPolicy": "Informativa sulla privacy",
+  "supportLink": "Aiuto e contatti",
   "settings": "Impostazioni",
   "setAppear": "Aspetto",
   "themeDarkL": "Scuro",
@@ -896,6 +902,8 @@ const STR_SET = {
   "botsHint": "Ogni bot ha un suo stile di gioco, e non vedi mai quale."
  },
  "es": {
+  "privPolicy": "Política de privacidad",
+  "supportLink": "Ayuda y contacto",
   "settings": "Ajustes",
   "setAppear": "Apariencia",
   "themeDarkL": "Oscuro",
@@ -959,6 +967,8 @@ const STR_SET = {
   "botsHint": "Cada bot juega a su manera y nunca ves cuál es su estilo."
  },
  "fr": {
+  "privPolicy": "Politique de confidentialité",
+  "supportLink": "Aide et contact",
   "settings": "Réglages",
   "setAppear": "Apparence",
   "themeDarkL": "Sombre",
@@ -1235,12 +1245,12 @@ function home() {
       <div class="m-r">
         <div class="packs" role="list">
           ${[['countries', 'packCountries'], ['states', 'packStates'], ['capitals', 'packCapitals']].map(([id, k]) => { const pm = Packs.meta(id), sel = id === SELPACK; return `<button class="pack ${sel ? 'on glass2' : 'off'}" data-pack="${id}" role="listitem" ${sel ? 'aria-current="true"' : ''}><b>${esc(t(k))}</b><span class="s">${pm.count} · ${esc(t('popLabel'))}</span></button>`; }).join('')}
-          ${['packWorld'].map(k => `<button class="pack off" data-soon="1" role="listitem" aria-disabled="true"><i>${esc(t('soon'))}</i><b>${esc(t(k))}</b><span class="s">${esc(t('popLabel'))}</span></button>`).join('')}
+          ${(CONFIG.teasers ? ['packWorld'] : []).map(k => `<button class="pack off" data-soon="1" role="listitem" aria-disabled="true"><i>${esc(t('soon'))}</i><b>${esc(t(k))}</b><span class="s">${esc(t('popLabel'))}</span></button>`).join('')}
         </div>
         <div class="modes">
           <button class="glass mode" id="m1"><span class="ic">${IC('person')}</span><span class="t"><b>${esc(t('solo'))}</b><span class="d">${esc(t('soloShort'))}</span></span><span class="go">${IC('chev', 'sm')}</span></button>
           <button class="glass mode" id="m2"><span class="ic b">${IC('people')}</span><span class="t"><b>${esc(t('multi'))}</b><span class="d">${esc(t('multiShort'))}</span></span><span class="go">${IC('chev', 'sm')}</span></button>
-          <button class="glass mode dim" id="m3" ${Net.available ? '' : 'aria-disabled="true"'}><span class="ic c">${IC('globe')}</span><span class="t"><b>${esc(t('online'))}<span class="soon">${Net.available ? 'Beta' : esc(t('soon'))}</span></b><span class="d">${esc(!Net.available ? t('onlineShort') : net ? t('onlineDesc') : t('onlineOff'))}</span></span></button>
+          ${Net.available || CONFIG.teasers ? `<button class="glass mode dim" id="m3" ${Net.available ? '' : 'aria-disabled="true"'}><span class="ic c">${IC('globe')}</span><span class="t"><b>${esc(t('online'))}<span class="soon">${Net.available ? 'Beta' : esc(t('soon'))}</span></b><span class="d">${esc(!Net.available ? t('onlineShort') : net ? t('onlineDesc') : t('onlineOff'))}</span></span></button>` : ''}
         </div>
         <div class="dockbar">
           <button class="glass chipbtn" id="mr">${IC('book', 'sm')}${esc(t('how'))}</button>
@@ -1312,11 +1322,11 @@ function settingsSheet() {
     b.setAttribute('aria-checked', String(on)); Snd.ui(); Haptics.light(); saveSettings();
   });
   on('logx', () => { Snd.ui(); logSheet(); });
-  on('logc', () => { Snd.ui(); ask(t('logClearTitle'), t('logClearBody'), t('logClear'), async () => { await Store.remove(Engine.LOG_KEY); settingsSheet(); }, null, t('cancel')); });
+  on('logc', () => { Snd.ui(); ask(t('logClearTitle'), t('logClearBody'), t('logClear'), async () => { await Store.remove(Engine.LOG_KEY); settingsSheet(); }, () => settingsSheet(), t('cancel')); });
   $('#aggr', box).oninput = e => { SET.aggr = +e.target.value; saveSettings(); paint(); Snd.ui(); };
   on('slang', () => { Snd.ui(); langSheet(); });
   on('sdone', () => { Snd.ui(); h.close(); home(); });
-  on('sreset', () => { Snd.ui(); ask(t('resetSetTitle'), t('resetSetBody'), t('resetSettings'), async () => { SET = Engine.parseSettings(null); await saveSettings(); settingsSheet(); }, null, t('cancel')); });
+  on('sreset', () => { Snd.ui(); ask(t('resetSetTitle'), t('resetSetBody'), t('resetSettings'), async () => { SET = Engine.parseSettings(null); await saveSettings(); settingsSheet(); }, () => settingsSheet(), t('cancel')); });
   h.onDismiss = () => home();
   /* the sheet repaints the menu behind it (currency and language show there) when it closes */
   return h;
@@ -1362,12 +1372,14 @@ async function recordScreen() {
 
 function privacy() {
   const h = sheet({ title: t('privacy'), foot: `<button class="btn ghost" id="wipe">${esc(t('wipe'))}</button><button class="btn gold" id="pd">${esc(t('done'))}</button>`,
-    body: `<p>${esc(t('privP1'))}</p><p>${esc(t('privP2'))}</p><p>${esc(t('privP3'))}</p><p class="sm">${esc(t('privP4'))}</p><button class="btn glassb wide" id="cr">${esc(t('credits'))}</button>` });
+    body: `<p>${esc(t('privP1'))}</p><p>${esc(t('privP2'))}</p><p>${esc(t('privP3'))}</p><p class="sm">${esc(t('privP4'))}</p><a class="btn glassb wide" id="ppol" href="privacy.html">${esc(t('privPolicy'))}</a><a class="btn glassb wide" id="psup" href="support.html">${esc(t('supportLink'))}</a><button class="btn glassb wide" id="cr">${esc(t('credits'))}</button>` });
   on('pd', () => { Snd.ui(); h.close(); });
   on('cr', () => { Snd.ui(); credits(); });
   on('wipe', () => { Snd.ui(); ask(t('wipeTitle'), t('wipeBody'), t('wipe'), async () => {
-    await clearRec(); await Store.remove('lang:v1'); await Store.remove('name:v1'); await Store.remove('theme:v1'); await Store.remove(Engine.SETTINGS_KEY); await Store.remove(Engine.LOG_KEY);
-    THEME = 'dark'; applyTheme(); SET = Engine.parseSettings(null); applySettings(); toast(t('wiped')); home();
+    /* every stored value is REMOVED (the record used to be written back as a blank record, which left a value behind), and what is held in memory goes with it */
+    await Store.remove(Engine.REC_KEY); await Store.remove('lang:v1'); await Store.remove('name:v1'); await Store.remove('theme:v1'); await Store.remove(Engine.SETTINGS_KEY); await Store.remove(Engine.LOG_KEY);
+    RECS = Engine.parseRecords(null, Packs.ids()); SELPACK = DEFAULT_PACK; LASTCFG = null;
+    THEME = 'dark'; applyTheme(); SET = Engine.parseSettings(null); applySettings(); await loadLang(); toast(t('wiped')); home();
   }, null, t('cancel')); });
 }
 
@@ -1894,7 +1906,7 @@ function lobby(code) {
     if (room.phase !== 'lobby') { stopPoll(); return onlineLot(code); }
     const host = room.host === RID;
     go(`${navBack()}
-      <div class="glass panel"><span class="label">${esc(t('roomCode'))}</span><div class="code">${code}</div><p style="text-align:center">${esc(t('shareCode'))}</p></div>
+      <div class="glass panel"><span class="label">${esc(t('roomCode'))}</span><div class="code">${esc(code)}</div><p style="text-align:center">${esc(t('shareCode'))}</p></div>
       <div class="glass panel">
         <span class="label">${esc(t('inRoom'))} (${room.players.length})</span>
         ${room.players.map(p => `<div class="line"><b>${esc(p.name)}${p.id === RID ? ' · ' + esc(t('youTag')) : ''}</b><span>${p.id === room.host ? esc(t('hostTag')) : ''}</span></div>`).join('')}
@@ -1945,7 +1957,7 @@ function onlineLot(code) {
     speak(spoken(c, PACK && PACK.id));
     go(`${navBack()}
       <div class="glass panel" style="align-items:center;text-align:center"><div class="orb" style="--orb:64px" aria-hidden="true">${icon(c)}</div><h2>${esc(cname(c))}</h2>
-        <span class="label">${esc(t('lot'))} ${room.round + 1} ${esc(t('of'))} ${room.items.length} · ${code}</span></div>
+        <span class="label">${esc(t('lot'))} ${room.round + 1} ${esc(t('of'))} ${room.items.length} · ${esc(code)}</span></div>
       <div class="glass panel"><span class="label">${esc(t('sealedBid', { n: me.budget }))}</span>
         <input class="field" id="bid" type="number" min="0" max="${me.budget}" value="1" inputmode="numeric" aria-label="${esc(t('sealedBid', { n: me.budget }))}">
         <button class="btn gold" id="ok">${esc(t('submit'))}</button></div>

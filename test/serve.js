@@ -1,5 +1,5 @@
 /* Tiny static server for the browser tests: serves the repo root under /bidding-wars/
-   (index.html has <base href="/bidding-wars/">). No dependencies. */
+   (the path GitHub Pages serves it under; every path in the game is relative). No dependencies. */
 const http = require('http'), fs = require('fs'), path = require('path');
 const ROOT = path.resolve(process.env.BW_ROOT || path.join(__dirname, '..'));
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.woff2': 'font/woff2', '.webmanifest': 'application/manifest+json' };

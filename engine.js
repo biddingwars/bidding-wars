@@ -207,7 +207,7 @@
         const flat = v => typeof v === 'number' ? [v] : (isObj(v) ? Object.values(v).flatMap(flat) : [NaN]), numOk = (v, f) => v !== undefined && flat(v).length > 0 && flat(v).every(f);   // a number, or per level / per lots numbers
         if (b.wallet !== undefined && !(b.wallet.lo > 0 && b.wallet.lo <= 1)) e('bot.wallet needs { lo: 0 < share <= 1 }');
         if (b.efficiency !== undefined && !(isObj(b.efficiency) && numOk(b.efficiency.gamma, v => v >= 0) && numOk(b.efficiency.lo, v => v > 0) && numOk(b.efficiency.hi, v => v > 0) && (b.efficiency.pick === undefined || numOk(b.efficiency.pick, v => v > 0)))) e('bot.efficiency needs { gamma >= 0, lo > 0, hi > 0, pick > 0 } (numbers, or per level)');
-        if (b.creeperGuard !== undefined && !(b.creeperGuard.raises >= 1)) e('bot.creeperGuard needs { raises >= 1 }');
+        if (b.creeperGuard !== undefined && !(b.creeperGuard.raises >= 1 && (b.creeperGuard.window === undefined || isPosInt(b.creeperGuard.window)))) e('bot.creeperGuard needs { raises >= 1, window: positive whole number of lots (optional) }');
         if (b.decisive !== undefined && !(isObj(b.decisive) && numOk(b.decisive.share, v => v > 0 && v <= 1))) e('bot.decisive needs { share: 0 < share <= 1 } (a number, or per level)');
         if (b.decisive && b.decisive.minPrice !== undefined && !numOk(b.decisive.minPrice, v => v > 0 && v <= 2)) e('bot.decisive.minPrice must be 0 < x <= 2 (a share of the current budget of the bot, a number or per level)');
         if (b.jumpFrom !== undefined && !numOk(b.jumpFrom, v => v >= 0 && v <= 1)) e('bot.jumpFrom must be 0..1 (the share of the rival\'s purse the price must have reached before the bot jumps to it; a number, or per level)');
@@ -382,7 +382,7 @@
       players: opts.players.map(p => ({ name: p.name, budget, bought: [], ai: !!p.ai })),
       L: null, _ceil: null, _ceilLot: -1
     };
-    if (pack.bot && pack.bot.creeperGuard) S.watch = { raises: 0, vol: 0 };   // what the human has done so far: raises, and passes made while it could still afford the next euro
+    if (pack.bot && pack.bot.creeperGuard) S.watch = { raises: 0, vol: 0, last: -1, since: 0 };   // what the human has done so far: raises, and passes made while it could still afford the next euro
     if (pack.economy) S.unsold = [];                              // lots nobody could pay for (house-price endgame)
     if (pack.bot) {                                               // the bot rolls its temperament once, from the injected rng; never shown
       /* "the biggest items" (premium, bigRank) are the biggest of THIS level's pool, so Beginner's giants are Europe's, not the world's */
@@ -460,7 +460,7 @@
     const L = S.L, actor = S.players[L.turn];
     if (!Number.isInteger(amount) || !(amount > L.price)) return { error: 'mustBeat' };
     if (amount > actor.budget) return { error: 'tooMuch' };
-    if (S.watch && !actor.ai) S.watch.raises++;
+    if (S.watch && !actor.ai) { S.watch.raises++; S.watch.since++; }
     if (S.trace && S._tl) S._tl.bids.push([L.turn, 'r', amount]);
     L.price = amount; L.holder = L.turn; L.turn = nextAfter(S, L.holder);
     return { ok: true, next: L.turn === null ? 'award' : 'turn' };
@@ -469,7 +469,7 @@
   function pass(S) {
     if (closed(S)) return { error: 'closed' };
     const L = S.L;
-    if (S.watch && !S.players[L.turn].ai && S.players[L.turn].budget >= L.price + 1) S.watch.vol++;
+    if (S.watch && !S.players[L.turn].ai && S.players[L.turn].budget >= L.price + 1) { S.watch.vol++; S.watch.last = S.i; S.watch.since = 0; }   // last / since: the lot of the latest voluntary pass and the raises made after it
     if (S.trace && S._tl) S._tl.bids.push([L.turn, 'p', L.price]);
     L.active = L.active.filter(i => i !== L.turn);
     if (L.active.length <= 1) return { ok: true, next: 'award' };
@@ -565,7 +565,12 @@
       for (const r of rest) { if (used + r.id > money) { eStar = r.e; break; } used += r.id; }
       /* a rival who has raised again and again and never once walked away while it could still pay (the "+1 until broke" creeper) is best made to pay
          full price on every lot, so the efficiency factor may only raise the walk-away for it, never lower it */
-      const creeper = !!(B.creeperGuard && S.watch && S.watch.raises >= B.creeperGuard.raises && S.watch.vol === 0);
+      /* v60: one pass on purpose used to switch this guard off for the rest of the game (vol was never 0 again). With creeperGuard.window = W the guard comes back once the
+         rival has gone W lots in a row without a voluntary pass (and raised `raises` times since the last one). W must be LONG: an honest player who bids up to a fixed cap also wins
+         a few lots in a row, and against such a player the guard makes the bot overpay for junk (with W = 1-3 a 0.8 x fair-price player went from 56% to 87-93% in Capitals Medium,
+         20 lots). Absent: the old rule (never passed at all). */
+      const G = B.creeperGuard, Wt = S.watch;
+      const creeper = !!(G && Wt && Wt.raises >= G.raises && (Wt.vol === 0 || (G.window != null && S.i - Wt.last >= G.window && Wt.since >= G.raises)));
       if (eStar > 0) w *= clamp(Math.pow(item.value / (eStar * E.pick) / priceOf(S.pack, item).ideal, E.gamma), creeper ? 1 : E.lo, E.hi);   // pick > 1: pickier than the fair-price plan, because real prices run above fair when the rival pushes
     }
     if (B.pacing) w *= clamp(Math.pow(me.budget / Math.max(1, sumFrom(S, idx, i => priceOf(S.pack, i).ideal)) / S.bot.paceTarget, B.pacing.gamma), B.pacing.lo, B.pacing.hi);
@@ -636,6 +641,13 @@
       if (target != null && target > L.price && !heavy(target, K)) { jump = target; lim = Math.max(lim, target); }
     }
     if (decisiveLot) lim = Math.max(lim, me.budget);     // and no random ceiling either: against a rival who goes all-in on the lot that decides the game, a bot that stops at a random 70-100% of its purse simply loses it
+    /* The last lot (v59): money is worth nothing once the round is over. When this lot decides whether the bot wins (without it the bot does not win, with it the bot does),
+       its limit is its whole purse, in every pack. Countries already behaved like this (its last lot is always "decisive"); US States and Capitals could walk away from the
+       deciding lot with money in hand. */
+    if (lotsAfter === 0) {
+      const mine = ptsOf(me), holderPts = L.holder === L.turn ? -Infinity : ptsOf(S.players[L.holder]) + item.value;
+      if (mine <= Math.max(ptsOf(leader), holderPts) && mine + item.value > ptsOf(leader)) lim = Math.max(lim, me.budget);
+    }
     const hardCap = Math.min(me.budget - reserve, lim);
     if (L.price < hardCap && me.budget > L.price) {
       const rivals = L.active.filter(i => i !== L.turn);
@@ -648,6 +660,9 @@
          A random +2 now and then breaks that, so even and odd drop-out prices stay equally likely. */
       if (contested && step === 1 && L.price >= 3 && L.price < 12 && B.parity !== false && rng(100) < 40) step = 2;
       let amount = Math.min(me.budget, hardCap, L.price + step);
+      /* never past what the richest rival still in the lot could top (v59): a bid equal to that purse already cannot be beaten, every euro above it is thrown away.
+         (Purses are on screen, so this gives nothing away. A random step used to carry the bot a few euros past a nearly broke rival about once every other game.) */
+      if (contested) { const top = Math.max(...rivals.map(i => S.players[i].budget)); if (amount > top) amount = Math.max(L.price + 1, top); }
       if (jump != null && jump <= hardCap && jump > L.price) amount = jump;
       if (amount > L.price) return { type: 'raise', amount };
     }
@@ -778,7 +793,7 @@
     let v = null;
     try { v = raw ? JSON.parse(raw) : null; } catch (e) { v = null; }
     const out = { v: 2, packs: {}, last: null };
-    if (isObj(v) && isObj(v.packs)) Object.keys(v.packs).forEach(id => { out.packs[id] = v.packs[id]; });
+    if (isObj(v) && isObj(v.packs)) Object.keys(v.packs).forEach(id => { if (/^[a-z][a-z0-9-]*$/.test(id)) out.packs[id] = v.packs[id]; });   // only pack-id shaped keys (a stored "__proto__" must never be assigned)
     else if (isObj(v) && 'played' in v) out.packs.countries = v;           // v1 → v2
     (ids || []).forEach(id => { if (!(id in out.packs)) out.packs[id] = null; });
     if (isObj(v) && typeof v.last === 'string' && (ids || []).includes(v.last)) out.last = v.last;   // the pack picked last, so the menu reopens on it
@@ -798,8 +813,9 @@
     rec.best = Math.max(rec.best, rec.streak);
     rec.pts += you.pts; rec.botPts += bot.pts; rec.spent += you.spent;
     let record = false;
-    if (!rec.bestGame || you.pts > rec.bestGame.pts) {
-      rec.bestGame = { pts: Math.round(you.pts * 10) / 10, level, lots: you.p.bought.length };
+    const shown = Math.round(you.pts * 10) / 10;        // the best game is stored and shown to one decimal: compare what is shown, or an equal score counts as a new best
+    if (!rec.bestGame || shown > rec.bestGame.pts) {
+      rec.bestGame = { pts: shown, level, lots: you.p.bought.length };
       record = rec.played > 1;
     }
     return { win, draw, record };

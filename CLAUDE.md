@@ -8,7 +8,7 @@ Live: https://biddingwars.github.io/bidding-wars/
 
 Everything lives flat at the repo root. No `js/`, `css/`, `data/`, `img/`,
 `fonts/`, or `vendor/` subfolders — `index.html`, `app.css`, `app.js`,
-`engine.js`, `packs.js`, `banter.js`, `pack-countries.js`, `pack-capitals.js`, `CAPITALS-SOURCES.md`, `globe.js`, `us-view.js`, `us-map.js`, `us-map.webp`, `us-ak.webp`, `us-hi.webp`, `NOTICE.md`,
+`engine.js`, `packs.js`, `banter.js`, `pack-countries.js`, `pack-capitals.js`, `CAPITALS-SOURCES.md`, `globe.js`, `us-view.js`, `us-map.js`, `us-map.webp`, `us-ak.webp`, `us-hi.webp`, `NOTICE.md`, `APPSTORE.md` (the release checklist: guidelines, privacy label, the native wrapper),
 `platform.js`, `sound.js`, `fx.js`, `sw.js`, `manifest.json`, every icon,
 `globe-hero.webp`, `logo.svg`, `three.min.js`, `earth.jpg`, `countries-110m.json`,
 `privacy.html`, `support.html` all sit at the root, referenced by plain
@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v58';   // increment this, every time
+const CACHE = 'bidding-wars-v60';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v58` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v60` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -63,10 +63,14 @@ asset the game needs to actually play is bundled locally:
 - sound is synthesised in `sound.js` with Web Audio — there are no audio files
 - **no web fonts**: the UI uses the system stack only (see "Look and feel")
 
-CDN URLs still exist in a few places (`globe.js`'s `BORDER_FALLBACK`,
-`EARTH_TEXTURES`, `index.html`'s `loadThreeFallback()`) but only as a
-last-resort fallback if the bundled file is ever missing — never required
-for normal play. Online 1v1 is gated behind `CONFIG.online` in
+**No request ever goes to another server (v59, for the App Store).** The three last-resort CDN fallbacks (three.js from cdnjs in
+`index.html`, the borders from jsDelivr and a globe texture from jsDelivr / unpkg in `globe.js`) were removed: remote code is
+against Guideline 2.5.2 and any third-party request contradicts the privacy policy ("nothing is sent anywhere"). If a bundled
+file is missing the game falls back to what it can draw itself (flat canvas globe, drawn texture). Do not add a CDN URL back.
+`index.html` has no `<base>` tag any more (it pointed every path at `/bidding-wars/`, which does not exist inside an app bundle);
+every path is relative. `CONFIG.teasers` (`platform.js`, false) hides the "Soon" tiles on the menu (the Online tile while
+`CONFIG.online` is false, the World pack): placeholder content is a 2.1(a) rejection. `APPSTORE.md` is the release checklist.
+Online 1v1 is gated behind `CONFIG.online` in
 `platform.js` (currently `false`) and shows a "Soon" toast instead of a
 broken flow — don't flip it on without a real backend; a mode that opens
 and fails is an App Store rejection under Guideline 2.1.
@@ -98,7 +102,8 @@ All five (plus the optional log) are described in `privacy.html` and the in-app
 privacy screen (`privacy()` in `app.js`, `privP1`–`privP4` strings, in all
 5 languages) — these must always agree with each other and with what
 the code actually stores. The "Delete all data" button (also in
-`privacy()`) must clear all of them (`settings:v1` and `log:v1` included, and `SET` reset in memory); this has drifted out of sync before
+`privacy()`) must **remove** all of them (`record:v1` too: until v59 it was written back as a blank record; `settings:v1` and `log:v1` included; `SET`, `RECS`, `SELPACK`, `LASTCFG` and the language reset in memory; a test checks that the storage is empty afterwards).
+The privacy sheet links to the full policy (`privacy.html`) and to `support.html` (App Store 5.1.1(i) and 1.5); both are bundled. This has drifted out of sync before
 (name persistence shipped without updating the wipe flow or the copy — fixed,
 but watch for it happening again with any future locally-stored value).
 
@@ -155,6 +160,12 @@ US States and Countries run the extended bot in "Economy and bot" below, which k
   so it can't bankrupt itself early (`Engine.botDecision`).
 - If no rival can afford the next bid, it raises by exactly +1 — it never
   overpays when uncontested.
+- **v59, extended bot only (two thinking bugs found by simulation, `botDecisionExt`):** (1) a raise is capped at the purse of the richest rival still in the lot: a bid
+  equal to that purse cannot be topped, and the random 12-26% step used to carry the bot a few euros past it (up to about one such raise a game, 1-3 euros wasted).
+  (2) On the **last lot**, when that lot decides whether the bot wins, its limit is its whole purse (money is worth nothing after the round). Countries already did this
+  (its last lot is always "decisive"); US States and Capitals walked away from the deciding lot with money in hand in up to 5% of games against a player who saves for the end.
+  Measured on 61,200 seeded duels (every pack, level and lot count, six human styles): both cases 0 afterwards, the human win rate moves by -0.1 to -0.7 points on average
+  (largest single cell -4.3 at 300 games). The duel digest in `test/multibots.test.js` was re-pinned on purpose. The original bot (test-only packs) is untouched.
 - When contested, its raise step is `price × (0.12 + rnd(15)/100)` —
   re-rolled on every single raise (12%–26% of price). This used to be a
   fixed `price × 0.18`, which made its drop-out point learnable after
@@ -239,6 +250,33 @@ globe's `.glabel`/`.gload` rules live in `app.css` (they were lost once, which
 stacked the country names down the page); a plain wheel/scroll over the globe
 belongs to the page (only ctrl+wheel/pinch zooms); the results screen must fit
 iPad landscape without scrolling.
+
+## Exploit retune (v60) — read this before trusting older numbers in this file
+
+A full run of `node test/exploit.js <pack> all 500 4000` after v59 showed more cells at or above the limit (60%, 65% at 5 lots) than the notes below say:
+Countries Beginner 15 / 20 / 30 (61.3 / 61.8 / 63.4, a 1.2-1.25 x cap), Capitals Beginner 20 / 30 (60.9 / 70.9, a 1.1 x cap), Capitals Medium 10-30 (60-61, a 0.7-0.75 x cap),
+Capitals Expert 20 / 30 (60.4 / 63.6, a 1.5 x cap); US States 20 lots was at 56.7. The cause was the same everywhere: the bot's limit swung too much from lot to lot
+(Capitals Beginner 30: SD 0.57 of the fair price), so a player with one fixed cap took the lots of the bot's low draws cheaply and made it pay the cap on the rest
+(human 0.77 x fair per lot, bot 1.00 x). `limitMul` alone cannot fix that (every value gave 70%+ at Capitals Beginner 30).
+
+- **The cure, per cell: a narrow roll (`rollSpan` 0.3-0.45, 0.1 for States 20), little jitter (`noise` 0.05-0.15), a weaker `efficiency.gamma` at Beginner, then `limitMul` re-found.**
+  These tables are now **per level and per lot count** (`{ beginner: { 5: …, 20: … } }`; a count that is not listed uses the nearest listed one below it, `lvVal` / `byLots`),
+  so the shorter rounds of the same level are untouched. The numbers are in `pack-countries.js`, `test/make-pack-capitals.js` and `test/make-pack-states.js`, with the reason next to them.
+- **Result** (best blind strategy confirmed on 4,000 fresh seeds, 5 / 10 / 15 / 20 / 30 lots): Countries Beginner 50.0 / 56.0 / 51.9 / 51.9 / 50.5, Medium 54.4 / 57.7 / 54.6 / 53.1 / 54.3,
+  Expert 53.0 / 51.4 / 53.4 / 55.0 / 55.5; Capitals Beginner 45.4 / 55.9 / 56.4 / 50.8 / 56.2, Medium 59.8 / 55.0 / 49.9 / 50.4 / 41.7, Expert 50.8 / 54.6 / 58.5 / 52.0 / 49.0;
+  US States 53.5 / 54.2 / 57.1 / 51.4 (5-20 lots). **No cell above its limit in any pack.** Fuzz 30,000 games, 0 failures.
+- **Costs (measured, 1,500 games):** the fair-value player B wins less in the retuned cells: Countries Beginner 15 / 20 / 30: 48.7 / 51.4 / 48.9 (was 57 / 56 / 55); Capitals Medium 10 / 15 / 20 / 30:
+  47.8 / 41.8 / 28.8 / 19.5 (30 lots was already about 21); Capitals Expert 20 / 30: 43.7 / 35.7; Capitals Beginner 20 / 30: about 42 / 36 (was 53 / 51). The creeper: Countries Beginner 15: 33.6,
+  Capitals Beginner 20: about 19, 30: about 13. US States 20 lots: A 27, B 30, C 23; a +-10% budget now moves a reference player by up to 20 points there (the test bound went from 18 to 22),
+  and the Learner beats the smart player by about 8 points at 20 lots (36% against 29%): a steadier bot is a little easier to read. Lowering Capitals Medium 30's limit to make it friendlier
+  makes it worse on both counts (0.95 x: B 8%, best cap 59%); do not.
+- **Creeper guard (`bot.creeperGuard.window`, Countries 8, Capitals 10):** one voluntary pass used to switch the guard off for the rest of the game, and a "+1" creeper that passed once on purpose
+  won 31 / 38% of Countries Medium 20 / 30-lot rounds instead of 5 / 3% (Capitals Medium 23 / 16% instead of 3 / 0%). The guard now comes back after `window` lots in a row without a voluntary pass:
+  19 / 9% (Countries) and 16 / 1% (Capitals). **It is narrowed, not closed:** a creeper that passes once every `window` lots still gets 25-32% in Countries Medium (a losing strategy, and it gives
+  those lots away). A shorter window is not an option: honest capped bidders also win a few lots in a row, and against them the guard makes the bot overpay for junk (window 1-4: a 0.8 x player
+  went from 56% to 75-93% in Capitals Medium 20 lots; window 6 still +4 to +12 points). A signal on the price (raises above 1.3-2 x the fair price) never fires at Medium. Rounds of 10 lots or fewer are unaffected.
+- **Still failing, unchanged cells (Countries Medium):** Countries knockout (b) and the repeat test (SD 14.3% against 15%). `test/tune-bot.js` and `test/tune-capitals.js` assume one number per level for
+  `noise` and `efficiency.gamma` and need adapting before they are used on a level that now has per-lot values. The duel digest was re-pinned on purpose again.
 
 ## Several bots at one table (v50)
 

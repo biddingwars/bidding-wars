@@ -17,7 +17,7 @@ asset, add it here and in `credits()` in `app.js` (five languages).
 | three.js | `three.min.js` | three.js authors | MIT — © 2010–2021 three.js authors (text below) |
 | Sound | `sound.js` | Synthesised with Web Audio on the device — no recordings | Ours |
 | Eagle-style win cry (US States) | `Snd.eagle()` in `sound.js` | Synthesised, not a recording | Ours. In films the "eagle" cry is really a **red-tailed hawk**; a bald eagle's own voice is a thin chirp |
-| US States fun facts | `pack-states.js` `facts` | Written for this game | **Unverified** — see `FACTS-SOURCES.md` |
+| US States fun facts | `pack-states.js` `facts` | Written for this game | Ours. All 50 were checked against public sources in October 2026 — see `FACTS-SOURCES.md` |
 
 ## Regenerating the US map imagery
 

@@ -252,6 +252,11 @@ test('the (switched-off) online screens still render and fail gracefully without
 
 test('Online 1 vs 1 shows "Soon" and opens nothing while CONFIG.online is false', { skip: SKIP }, async () => {
   const { page, ctx } = await open();
+  /* v59: for the App Store no "Soon" tile is on the menu at all (Guideline 2.1(a): no placeholder content); CONFIG.teasers brings them back */
+  assert.equal(await page.$('#m3'), null, 'no Online tile while it is not available');
+  assert.equal(await page.$('[data-soon]'), null, 'no coming-soon pack tile');
+  assert.ok(!/Soon/.test(await page.textContent('#app')), 'the menu does not say Soon');
+  await page.evaluate(() => { CONFIG.teasers = true; home(); });
   await page.click('#m3', { force: true });
   await page.waitForSelector('.toast');
   assert.equal(await page.$('#new'), null);
@@ -268,7 +273,9 @@ test('Delete all data wipes the record, the name, the language, the appearance a
   assert.equal(s.name, null); assert.equal(s.lang, null); assert.equal(s.theme, null); assert.equal(s.attr, 'dark', 'back to the dark default');
   assert.equal(await page.evaluate(() => localStorage.getItem('settings:v1')), null, 'the settings are wiped too');
   assert.deepEqual(await page.evaluate(() => ({ cur: SET.cur, aggr: SET.aggr })), { cur: null, aggr: 2 }, 'and reset in memory');
-  assert.equal(JSON.parse(s.rec).packs.countries.played, 0);
+  assert.equal(s.rec, null, 'the record is removed, not written back as a blank one');
+  assert.deepEqual(await page.evaluate(() => Object.keys(localStorage)), [], 'nothing at all is left on the device');
+  assert.equal(await page.evaluate(() => RECS.packs.countries.played), 0, 'and it is blank in memory');
   await ctx.close();
 });
 
