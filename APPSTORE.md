@@ -37,18 +37,22 @@ run on a real iPhone or iPad, and there is no native project in this repository 
 - **Content rights:** "contains third-party content, and I have the rights" (NASA, UN, Census, Natural Earth, three.js; all credited in the app).
 - **Category:** Games (Trivia or Strategy); secondary Education is defensible.
 
-## 3. The native wrapper (not in this repository)
+## 3. The native wrapper (`native/`, added in v61)
 
-`platform.js` already speaks to Capacitor when it is present (`Preferences`, `Haptics`, `Keyboard`,
-`StatusBar`, `SplashScreen`). What the wrapper has to get right:
+A Capacitor 8 project: `native/ios/App/App.xcodeproj` (Swift Package Manager), the game packaged from the files named in `sw.js`'s `SHELL`. How to build it is in `native/README.md`.
+It was generated on Linux and **has never been opened in Xcode, run in the simulator or put on a device**. Done in it:
 
-1. **Bundle the files.** Copy the repository root (without `test/`, `.github/`, the `*.md` files and `sw.js`) into the web directory. Never set `server.url` to the website: the app must start in airplane mode on first launch. v59 removed `<base href="/bidding-wars/">` from `index.html`; with it, every relative path would have pointed at a folder that does not exist inside an app bundle.
-2. **Privacy manifest (`PrivacyInfo.xcprivacy`).** Required since May 2024. `NSPrivacyTracking` false, no tracking domains, no collected data types. The Preferences plugin stores values in `UserDefaults`, which is a required-reason API: declare `NSPrivacyAccessedAPICategoryUserDefaults` with reason `CA92.1`. Check the manifest Xcode generates for each plugin you add.
-3. **No usage-description strings** are needed: the game asks for no permission. Do not add plugins that pull one in.
-4. **iPad:** the game supports every orientation; enable all four and supply a launch screen, or opt out of multitasking.
-5. **Sound and the silent switch:** `sound.js` asks for the `ambient` audio session where the web view offers it (iOS 16.4 and later). Check on the oldest iOS you support that the game stays quiet when the switch is on.
-6. **Service worker:** not registered inside the native app (`Native.is`), which is right; the files are already local.
-7. **Test on device:** airplane mode from a fresh install, a phone call during a lot, lock and unlock mid-auction, rotate, Split View on iPad, VoiceOver through one whole game, Dynamic Type at its largest, and "Delete all data" followed by a restart.
+1. **Files bundled, no `server.url`**: the app starts from its own files in airplane mode. `native/build-www.js` refuses a bundle that names another web address. (`test/native.test.js` runs the bundle with a stand-in Capacitor.)
+2. **Privacy manifest** `PrivacyInfo.xcprivacy` is in the app target: no tracking, no collected data, `UserDefaults` with reason `CA92.1`. Check the manifests Xcode reports for each plugin if you add one.
+3. **No usage-description strings** and no permission prompts: only Preferences, Haptics, Keyboard, StatusBar and SplashScreen are installed.
+4. `ITSAppUsesNonExemptEncryption` = false; the stale `armv7` device capability is now `arm64`.
+5. **iPad:** all four orientations are enabled; the launch screen is the game's own (dark, the menu's planet); the icon is `icon-1024.png` (no alpha).
+6. **Status bar** follows the game's own theme (v61), not the phone's.
+7. **Sound and the silent switch:** the game asks for an `ambient` audio session, which web views support from iOS 16.4. The project targets iOS 15, where the sounds ignore the silent switch. Raise the deployment target to 16.4 if that matters.
+
+**You still have to:** open it on a Mac, set your team and **your own bundle identifier** (`io.github.biddingwars.app` is a guess based on the GitHub organisation), register that identifier in App Store Connect, build, fix whatever the first build shows, and test on a real iPhone and iPad:
+airplane mode from a fresh install, a phone call during a lot, lock and unlock mid-auction, rotate, Split View on iPad, VoiceOver through one whole game, Dynamic Type at its largest, "Delete all data" then a restart, and the privacy / support links
+(they open inside the app; the "Back to Bidding Wars" link returns to the game, and the GitHub link opens in Safari).
 
 ## 4. Game balance at release (none of this is a crash)
 

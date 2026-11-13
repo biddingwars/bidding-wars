@@ -33,3 +33,14 @@ test('the privacy sheet links to the full policy and to support, both bundled fo
   assert.match(read('platform.js'), /teasers:\s*false/, 'CONFIG.teasers must be false for a store release (Guideline 2.1(a))');
   ['en', 'de', 'it', 'es', 'fr'].forEach(l => assert.match(app, new RegExp('"' + l + '": \\{\\n  "privPolicy": "[^"]+",\\n  "supportLink": "[^"]+"'), l + ' has the two link labels'));
 });
+
+/* v61: the native shell. The wrapper (native/) packages the files named in sw.js's SHELL; the status bar follows the game's own theme. */
+test('native wrapper: the privacy manifest declares no tracking and no collected data, the web bundle list comes from sw.js, and the status bar follows the theme', () => {
+  const root = path.join(__dirname, '..'), man = fs.readFileSync(path.join(root, 'native/ios/App/App/PrivacyInfo.xcprivacy'), 'utf8');
+  assert.match(man, /<key>NSPrivacyTracking<\/key>\s*<false\/>/); assert.match(man, /<key>NSPrivacyCollectedDataTypes<\/key>\s*<array\/>/); assert.match(man, /<key>NSPrivacyTrackingDomains<\/key>\s*<array\/>/);
+  assert.match(fs.readFileSync(path.join(root, 'native/ios/App/App.xcodeproj/project.pbxproj'), 'utf8'), /PrivacyInfo\.xcprivacy in Resources/, 'the manifest is part of the app target');
+  assert.match(fs.readFileSync(path.join(root, 'native/build-www.js'), 'utf8'), /const SHELL = /);
+  assert.match(read('platform.js'), /style: theme === 'light' \? 'LIGHT' : 'DARK'/); assert.match(read('app.js'), /Shell\.statusBar\(THEME\)/);
+  const cfg = JSON.parse(fs.readFileSync(path.join(root, 'native/capacitor.config.json'), 'utf8'));
+  assert.equal(cfg.webDir, 'www'); assert.ok(!cfg.server, 'no server.url: the app must start offline from its own files');
+});

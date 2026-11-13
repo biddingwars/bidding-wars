@@ -21,9 +21,13 @@ breaking caching/icons because the files were never actually there.
 If you add a new asset or reference a path anywhere, keep it flat and
 double-check it against the real file list at the repo root.
 
-The one exception is `test/` — dev-only (unit tests, the fixture pack, a tiny
-static server, the contrast and UI-simulation scripts). The game never
-references it and `sw.js` never caches it.
+The exceptions are `test/` — dev-only (unit tests, the fixture pack, a tiny
+static server, the contrast and UI-simulation scripts) — and `native/` (v61): the
+Capacitor iOS wrapper (`native/README.md`: `npm run sync` copies the files named in
+`sw.js`'s `SHELL` into `native/www`, a generated, git-ignored folder). The game never
+references either and `sw.js` never caches them. **After any change to a game file run
+`npm run sync` in `native/` before building the app: `www/` is a copy.** If you add a file
+to `SHELL`, the app picks it up by itself (the list is read from `sw.js`).
 
 ## `sw.js` — bump `CACHE` on every deploy that touches a cached file
 
@@ -34,7 +38,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v60';   // increment this, every time
+const CACHE = 'bidding-wars-v61';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +46,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v60` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v61` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 

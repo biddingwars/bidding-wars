@@ -5,8 +5,8 @@
 
 const CONFIG = {
   /* The release number shown on the menu so anyone can check they have the latest build.
-     MUST equal the number in sw.js's CACHE ('bidding-wars-v60' -> 60); test/version.test.js enforces it. */
-  version: 60,
+     MUST equal the number in sw.js's CACHE ('bidding-wars-v61' -> 61); test/version.test.js enforces it. */
+  version: 61,
 
   /* Online 1 vs 1 needs a real backend (Firebase, Supabase, PartyKit, …).
      Leave this false until one is wired up in Net.* below — shipping a mode
@@ -115,6 +115,13 @@ const Haptics = (() => {
    iOS housekeeping
    ------------------------------------------------------------------------- */
 const Shell = {
+  /* Capacitor's names are about the BACKGROUND: DARK = light clock and icons for a dark page, LIGHT = dark ones for a light page. No-op in a browser. */
+  async statusBar(theme) {
+    try {
+      const sb = Native.plugin('StatusBar');
+      if (sb) await sb.setStyle({ style: theme === 'light' ? 'LIGHT' : 'DARK' });
+    } catch (e) {}
+  },
   async ready() {
     /* keyboard must not resize the layout mid-auction */
     try {
@@ -122,11 +129,8 @@ const Shell = {
       if (kb && kb.setResizeMode) await kb.setResizeMode({ mode: 'none' });
     } catch (e) {}
 
-    /* the status bar follows the phone's light or dark appearance, as the page itself does */
-    try {
-      const sb = Native.plugin('StatusBar');
-      if (sb) await sb.setStyle({ style: 'DEFAULT' });
-    } catch (e) {}
+    /* the status bar follows the game's own appearance (dark unless Daylight was chosen), never the phone's: a dark page under dark clock text is unreadable */
+    await Shell.statusBar(document.documentElement.getAttribute('data-theme'));
 
     /* hand-off from the launch screen only once the UI has painted */
     requestAnimationFrame(() => setTimeout(async () => {

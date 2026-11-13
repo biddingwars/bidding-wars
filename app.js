@@ -72,6 +72,7 @@ const THEME_COLOR = { dark: '#0E0D0B', light: '#EEF0FF' };
 function applyTheme() {
   document.documentElement.setAttribute('data-theme', THEME);
   $$('meta[name=theme-color]').forEach(m => m.setAttribute('content', THEME_COLOR[THEME]));
+  Shell.statusBar(THEME);                            // the native status bar follows the game's appearance, not the phone's
 }
 async function loadTheme() { const v = await Store.get('theme:v1'); THEME = v === 'light' ? 'light' : 'dark'; applyTheme(); }
 async function setTheme(v) {
