@@ -5,8 +5,8 @@
 
 const CONFIG = {
   /* The release number shown on the menu so anyone can check they have the latest build.
-     MUST equal the number in sw.js's CACHE ('bidding-wars-v58' -> 58); test/version.test.js enforces it. */
-  version: 58,
+     MUST equal the number in sw.js's CACHE ('bidding-wars-v59' -> 59); test/version.test.js enforces it. */
+  version: 59,
 
   /* Online 1 vs 1 needs a real backend (Firebase, Supabase, PartyKit, …).
      Leave this false until one is wired up in Net.* below — shipping a mode
@@ -18,7 +18,12 @@ const CONFIG = {
   privacyUrl: 'https://biddingwars.github.io/bidding-wars/privacy.html',
   supportUrl: 'https://biddingwars.github.io/bidding-wars/support.html',
 
-  /* No ad SDK is bundled. See docs/APPSTORE.md before adding one — an ad SDK
+  /* "Soon" tiles on the menu (the Online 1 vs 1 mode while `online` is false, the World pack).
+     Off for release: App Review rejects placeholder / coming-soon content under Guideline 2.1(a).
+     The Online tile comes back by itself the day `online` is true. */
+  teasers: false,
+
+  /* No ad SDK is bundled. See APPSTORE.md before adding one — an ad SDK
      changes the privacy label, the age rating and the COPPA obligations. */
   ads: false
 };

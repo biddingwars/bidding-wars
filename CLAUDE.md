@@ -8,7 +8,7 @@ Live: https://biddingwars.github.io/bidding-wars/
 
 Everything lives flat at the repo root. No `js/`, `css/`, `data/`, `img/`,
 `fonts/`, or `vendor/` subfolders — `index.html`, `app.css`, `app.js`,
-`engine.js`, `packs.js`, `banter.js`, `pack-countries.js`, `pack-capitals.js`, `CAPITALS-SOURCES.md`, `globe.js`, `us-view.js`, `us-map.js`, `us-map.webp`, `us-ak.webp`, `us-hi.webp`, `NOTICE.md`,
+`engine.js`, `packs.js`, `banter.js`, `pack-countries.js`, `pack-capitals.js`, `CAPITALS-SOURCES.md`, `globe.js`, `us-view.js`, `us-map.js`, `us-map.webp`, `us-ak.webp`, `us-hi.webp`, `NOTICE.md`, `APPSTORE.md` (the release checklist: guidelines, privacy label, the native wrapper),
 `platform.js`, `sound.js`, `fx.js`, `sw.js`, `manifest.json`, every icon,
 `globe-hero.webp`, `logo.svg`, `three.min.js`, `earth.jpg`, `countries-110m.json`,
 `privacy.html`, `support.html` all sit at the root, referenced by plain
@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v58';   // increment this, every time
+const CACHE = 'bidding-wars-v59';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v58` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v59` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -63,10 +63,14 @@ asset the game needs to actually play is bundled locally:
 - sound is synthesised in `sound.js` with Web Audio — there are no audio files
 - **no web fonts**: the UI uses the system stack only (see "Look and feel")
 
-CDN URLs still exist in a few places (`globe.js`'s `BORDER_FALLBACK`,
-`EARTH_TEXTURES`, `index.html`'s `loadThreeFallback()`) but only as a
-last-resort fallback if the bundled file is ever missing — never required
-for normal play. Online 1v1 is gated behind `CONFIG.online` in
+**No request ever goes to another server (v59, for the App Store).** The three last-resort CDN fallbacks (three.js from cdnjs in
+`index.html`, the borders from jsDelivr and a globe texture from jsDelivr / unpkg in `globe.js`) were removed: remote code is
+against Guideline 2.5.2 and any third-party request contradicts the privacy policy ("nothing is sent anywhere"). If a bundled
+file is missing the game falls back to what it can draw itself (flat canvas globe, drawn texture). Do not add a CDN URL back.
+`index.html` has no `<base>` tag any more (it pointed every path at `/bidding-wars/`, which does not exist inside an app bundle);
+every path is relative. `CONFIG.teasers` (`platform.js`, false) hides the "Soon" tiles on the menu (the Online tile while
+`CONFIG.online` is false, the World pack): placeholder content is a 2.1(a) rejection. `APPSTORE.md` is the release checklist.
+Online 1v1 is gated behind `CONFIG.online` in
 `platform.js` (currently `false`) and shows a "Soon" toast instead of a
 broken flow — don't flip it on without a real backend; a mode that opens
 and fails is an App Store rejection under Guideline 2.1.
@@ -98,7 +102,8 @@ All five (plus the optional log) are described in `privacy.html` and the in-app
 privacy screen (`privacy()` in `app.js`, `privP1`–`privP4` strings, in all
 5 languages) — these must always agree with each other and with what
 the code actually stores. The "Delete all data" button (also in
-`privacy()`) must clear all of them (`settings:v1` and `log:v1` included, and `SET` reset in memory); this has drifted out of sync before
+`privacy()`) must **remove** all of them (`record:v1` too: until v59 it was written back as a blank record; `settings:v1` and `log:v1` included; `SET`, `RECS`, `SELPACK`, `LASTCFG` and the language reset in memory; a test checks that the storage is empty afterwards).
+The privacy sheet links to the full policy (`privacy.html`) and to `support.html` (App Store 5.1.1(i) and 1.5); both are bundled. This has drifted out of sync before
 (name persistence shipped without updating the wipe flow or the copy — fixed,
 but watch for it happening again with any future locally-stored value).
 
@@ -155,6 +160,12 @@ US States and Countries run the extended bot in "Economy and bot" below, which k
   so it can't bankrupt itself early (`Engine.botDecision`).
 - If no rival can afford the next bid, it raises by exactly +1 — it never
   overpays when uncontested.
+- **v59, extended bot only (two thinking bugs found by simulation, `botDecisionExt`):** (1) a raise is capped at the purse of the richest rival still in the lot: a bid
+  equal to that purse cannot be topped, and the random 12-26% step used to carry the bot a few euros past it (up to about one such raise a game, 1-3 euros wasted).
+  (2) On the **last lot**, when that lot decides whether the bot wins, its limit is its whole purse (money is worth nothing after the round). Countries already did this
+  (its last lot is always "decisive"); US States and Capitals walked away from the deciding lot with money in hand in up to 5% of games against a player who saves for the end.
+  Measured on 61,200 seeded duels (every pack, level and lot count, six human styles): both cases 0 afterwards, the human win rate moves by -0.1 to -0.7 points on average
+  (largest single cell -4.3 at 300 games). The duel digest in `test/multibots.test.js` was re-pinned on purpose. The original bot (test-only packs) is untouched.
 - When contested, its raise step is `price × (0.12 + rnd(15)/100)` —
   re-rolled on every single raise (12%–26% of price). This used to be a
   fixed `price × 0.18`, which made its drop-out point learnable after

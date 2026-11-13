@@ -636,6 +636,13 @@
       if (target != null && target > L.price && !heavy(target, K)) { jump = target; lim = Math.max(lim, target); }
     }
     if (decisiveLot) lim = Math.max(lim, me.budget);     // and no random ceiling either: against a rival who goes all-in on the lot that decides the game, a bot that stops at a random 70-100% of its purse simply loses it
+    /* The last lot (v59): money is worth nothing once the round is over. When this lot decides whether the bot wins (without it the bot does not win, with it the bot does),
+       its limit is its whole purse, in every pack. Countries already behaved like this (its last lot is always "decisive"); US States and Capitals could walk away from the
+       deciding lot with money in hand. */
+    if (lotsAfter === 0) {
+      const mine = ptsOf(me), holderPts = L.holder === L.turn ? -Infinity : ptsOf(S.players[L.holder]) + item.value;
+      if (mine <= Math.max(ptsOf(leader), holderPts) && mine + item.value > ptsOf(leader)) lim = Math.max(lim, me.budget);
+    }
     const hardCap = Math.min(me.budget - reserve, lim);
     if (L.price < hardCap && me.budget > L.price) {
       const rivals = L.active.filter(i => i !== L.turn);
@@ -648,6 +655,9 @@
          A random +2 now and then breaks that, so even and odd drop-out prices stay equally likely. */
       if (contested && step === 1 && L.price >= 3 && L.price < 12 && B.parity !== false && rng(100) < 40) step = 2;
       let amount = Math.min(me.budget, hardCap, L.price + step);
+      /* never past what the richest rival still in the lot could top (v59): a bid equal to that purse already cannot be beaten, every euro above it is thrown away.
+         (Purses are on screen, so this gives nothing away. A random step used to carry the bot a few euros past a nearly broke rival about once every other game.) */
+      if (contested) { const top = Math.max(...rivals.map(i => S.players[i].budget)); if (amount > top) amount = Math.max(L.price + 1, top); }
       if (jump != null && jump <= hardCap && jump > L.price) amount = jump;
       if (amount > L.price) return { type: 'raise', amount };
     }
@@ -778,7 +788,7 @@
     let v = null;
     try { v = raw ? JSON.parse(raw) : null; } catch (e) { v = null; }
     const out = { v: 2, packs: {}, last: null };
-    if (isObj(v) && isObj(v.packs)) Object.keys(v.packs).forEach(id => { out.packs[id] = v.packs[id]; });
+    if (isObj(v) && isObj(v.packs)) Object.keys(v.packs).forEach(id => { if (/^[a-z][a-z0-9-]*$/.test(id)) out.packs[id] = v.packs[id]; });   // only pack-id shaped keys (a stored "__proto__" must never be assigned)
     else if (isObj(v) && 'played' in v) out.packs.countries = v;           // v1 → v2
     (ids || []).forEach(id => { if (!(id in out.packs)) out.packs[id] = null; });
     if (isObj(v) && typeof v.last === 'string' && (ids || []).includes(v.last)) out.last = v.last;   // the pack picked last, so the menu reopens on it
@@ -798,8 +808,9 @@
     rec.best = Math.max(rec.best, rec.streak);
     rec.pts += you.pts; rec.botPts += bot.pts; rec.spent += you.spent;
     let record = false;
-    if (!rec.bestGame || you.pts > rec.bestGame.pts) {
-      rec.bestGame = { pts: Math.round(you.pts * 10) / 10, level, lots: you.p.bought.length };
+    const shown = Math.round(you.pts * 10) / 10;        // the best game is stored and shown to one decimal: compare what is shown, or an equal score counts as a new best
+    if (!rec.bestGame || shown > rec.bestGame.pts) {
+      rec.bestGame = { pts: shown, level, lots: you.p.bought.length };
       record = rec.played > 1;
     }
     return { win, draw, record };

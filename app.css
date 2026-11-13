@@ -98,6 +98,7 @@ input,textarea{-webkit-user-select:text;user-select:text}
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;letter-spacing:inherit}
 button:disabled{cursor:default}
 a{color:var(--goldink)}
+a.btn{text-decoration:none}
 .num{font-variant-numeric:tabular-nums}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 :focus-visible{outline:3px solid var(--gold1);outline-offset:2px}

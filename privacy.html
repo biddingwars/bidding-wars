@@ -2,24 +2,31 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Privacy Policy — Bidding Wars</title>
-<meta name="description" content="Bidding Wars privacy policy: no accounts, no analytics, no tracking.">
+<meta name="description" content="Bidding Wars privacy policy: no accounts, no data collection, no tracking, no ads. Everything stays on your device.">
 <link rel="icon" href="icon-180.png?v=51">
 <meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0E0D0B">
 <style>
-  :root{color-scheme:dark;--bg1:#0A0A18;--bg2:#15133A;--ink:#F5F6FF;--ink2:#C9CCE8;--glass:rgba(255,255,255,.085);--stroke:rgba(255,255,255,.16);--gold1:#EDC66F;--gold2:#C99A3F;--goldink:#F6D993;--on-gold:#261A04}
+  :root{color-scheme:dark;--bg:#0E0D0B;--card:#1C1B17;--ink:#F6F2E9;--ink2:#B5AFA1;--stroke:rgba(255,246,228,.10);--gold1:#EDC66F;--gold2:#C99A3F;--goldink:#EBC577;--on-gold:#261A04}
   *{box-sizing:border-box}
-  body{margin:0;min-height:100vh;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,"Segoe UI",Roboto,sans-serif;line-height:1.55;background:linear-gradient(180deg,var(--bg1),var(--bg2)) fixed var(--bg1)}
-  .wrap{max-width:640px;margin:0 auto;padding:calc(28px + env(safe-area-inset-top)) 18px calc(60px + env(safe-area-inset-bottom))}
-  .card{background:var(--glass);border:1px solid var(--stroke);border-radius:26px;box-shadow:0 18px 50px rgba(0,0,0,.25);padding:24px 22px;margin-bottom:18px;-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)}
+  body{margin:0;min-height:100vh;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,"Segoe UI",Roboto,sans-serif;line-height:1.55;background:var(--bg);-webkit-text-size-adjust:100%}
+  .wrap{max-width:680px;margin:0 auto;padding:calc(28px + env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) calc(60px + env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left))}
+  .card{background:var(--card);border:1px solid var(--stroke);border-radius:26px;box-shadow:0 18px 50px rgba(0,0,0,.25);padding:24px 22px;margin-bottom:18px}
   h1{font-size:30px;margin:0 0 6px;letter-spacing:-.035em;line-height:1.1}
-  .updated{font-size:13px;color:var(--ink2);margin:0 0 22px}
-  h2{font-size:17px;margin:22px 0 8px}
+  .updated{font-size:13px;color:var(--ink2);margin:0 0 18px}
+  h2{font-size:17px;margin:26px 0 8px}
   p{margin:0 0 12px}
-  p,li{color:var(--ink2)} strong,h1,h2{color:var(--ink)}
+  ul{margin:0 0 12px;padding-left:20px}
+  li{margin:0 0 6px}
+  p,li,td{color:var(--ink2)} strong,h1,h2,th{color:var(--ink)}
   a{color:var(--goldink)}
-  a.btn{display:inline-block;background:linear-gradient(180deg,var(--gold1),var(--gold2));color:var(--on-gold);text-decoration:none;font-weight:700;padding:12px 20px;border-radius:24px;margin-top:4px}
+  .short{border:1px solid var(--stroke);border-radius:18px;padding:14px 16px;margin:0 0 6px}
+  .short p:last-child{margin:0}
+  table{width:100%;border-collapse:collapse;margin:0 0 12px;font-size:15px}
+  th,td{text-align:left;vertical-align:top;padding:8px 10px 8px 0;border-bottom:1px solid var(--stroke)}
+  th{font-weight:600}
   .back{display:inline-block;margin-top:6px;font-weight:600;color:var(--goldink)}
 </style>
 </head>
@@ -27,30 +34,75 @@
 <div class="wrap">
   <div class="card">
     <h1>Privacy Policy</h1>
-    <p class="updated">Last updated: 29 October 2026</p>
+    <p class="updated">Effective 13 November 2026 · applies to the Bidding Wars app (iPhone, iPad) and to the web version at biddingwars.github.io/bidding-wars</p>
 
-    <p>Bidding Wars is a country-auction game. This policy covers the app and this website in full — there is nothing else to disclose.</p>
+    <div class="short">
+      <p><strong>The short version.</strong> Bidding Wars does not collect, transmit, sell or share any personal data. It has no accounts, no sign-in, no analytics, no advertising and no tracking. The game runs entirely on your device, works with no internet connection, and a handful of preferences are saved on your device only. You can delete them at any time.</p>
+    </div>
 
-    <h2>What we collect</h2>
-    <p>Nothing. Bidding Wars has no accounts, no sign-in, and no analytics or tracking software of any kind. Nothing you do in the app is sent anywhere, to us or to anyone else.</p>
+    <h2>1. Who we are</h2>
+    <p>Bidding Wars is an auction game published by its developer (“we”, “us”). You can reach us through the contact details on the <a href="support.html">support page</a>.</p>
 
-    <h2>What's stored on your device</h2>
-    <p>Five things, saved locally on your device only: the language you picked, the appearance you chose (dark by default, or light), your record against the bot (with the game you last picked), the name you last entered, and your settings (currency, bot style, accessibility and practice choices). None of it ever leaves your device. Deleting the app deletes all five. If you switch on “Record my games” in Settings (off by default), a sixth value, a log of your finished games (bids, prices, the bot’s limits; no names), is also kept on your device. It is never sent anywhere, and “Delete all data” removes it. You can also clear them at any time from the in-app privacy screen's "Delete all data" option.</p>
+    <h2>2. Data we collect</h2>
+    <p><strong>None.</strong> We do not collect any information about you or about how you use the game, and the game does not send anything to us or to anyone else. Specifically:</p>
+    <ul>
+      <li>no accounts, registration or sign-in;</li>
+      <li>no analytics, crash-reporting or measurement software;</li>
+      <li>no advertising and no advertising identifiers;</li>
+      <li>no tracking across apps or websites, so no tracking permission is ever requested;</li>
+      <li>no third-party software development kits;</li>
+      <li>no purchases inside the game;</li>
+      <li>no access to your location, contacts, photos, camera, microphone, calendar, health data or notifications. The game asks for no device permissions.</li>
+    </ul>
+    <p>While you play, the game does not contact any server. Everything it needs (the game data, the maps, the globe, the sound) is part of the app.</p>
 
-    <h2>Nicknames</h2>
-    <p>Player nicknames are optional and are only used to label players on screen during a round. The one you enter for yourself is remembered locally as a convenience for next time, per the storage note above; it is never transmitted anywhere.</p>
+    <h2>3. What is saved on your device</h2>
+    <p>To remember your preferences between sessions, the game saves the following on your device, and nowhere else. We cannot see or retrieve any of it.</p>
+    <table>
+      <tr><th>What</th><th>Why</th></tr>
+      <tr><td>Language</td><td>So the game opens in the language you picked.</td></tr>
+      <tr><td>Appearance</td><td>Only if you switched from dark to light.</td></tr>
+      <tr><td>Your record against the bot</td><td>Wins, losses, draws, points and streaks per game pack, and which pack you picked last, so the menu reopens on it.</td></tr>
+      <tr><td>The last nickname you typed</td><td>So you do not have to type it again. A nickname is optional and is only shown on screen during a round. Nicknames of other players at the table are never saved.</td></tr>
+      <tr><td>Settings</td><td>Only the choices you changed: currency symbol, bot style, text size, reduced motion, seat shapes and the practice helpers.</td></tr>
+      <tr><td>Game log (optional, off by default)</td><td>Only if you switch on “Record my games” in Settings: a log of up to your last 100 finished games (the pack, difficulty and round length, the date and time, each bid and price, the bot’s hidden limits, the final scores). It contains no names. It exists so you can look at it or copy it yourself from Settings; it is never sent anywhere.</td></tr>
+    </table>
+    <p>The lot names are read aloud by your device’s built-in voice. This happens on your device.</p>
 
-    <h2>Advertising and third parties</h2>
-    <p>No advertising, no tracking, and no third-party software development kits are bundled with this app.</p>
+    <h2>4. How to delete it</h2>
+    <ul>
+      <li><strong>In the game:</strong> open the privacy screen (the lock button on the menu) and choose “Delete all data”. This removes every value listed above, including the game log.</li>
+      <li><strong>Game log only:</strong> Settings → “Clear log”. <strong>Record only:</strong> the record screen → “Reset record”.</li>
+      <li><strong>App:</strong> deleting the app from your device deletes everything it saved.</li>
+      <li><strong>Web version:</strong> clearing the website data for this site in your browser deletes everything it saved.</li>
+    </ul>
+    <p>Because nothing is ever stored on our side, there is nothing for us to delete, export or correct, and no retention period applies to us.</p>
 
-    <h2>Children</h2>
-    <p>Because Bidding Wars collects no personal data from anyone, of any age, there is nothing to collect from children either.</p>
+    <h2>5. Sharing with third parties</h2>
+    <p>We share nothing with anyone, because we have nothing to share. No data is sold, rented or used for advertising.</p>
 
-    <h2>Changes to this policy</h2>
-    <p>If this policy ever changes, the updated version will be posted at this same address with a new "last updated" date.</p>
+    <h2>6. The App Store and the website host</h2>
+    <p>Two companies are involved in getting the game to you. Each handles data under its own privacy policy, and neither receives anything from inside the game:</p>
+    <ul>
+      <li><strong>Apple.</strong> If you install the app from the App Store, Apple processes the download as described in Apple’s privacy policy. If you have chosen in your device settings to share analytics with app developers, Apple may show us aggregated, anonymous statistics such as the number of installs or crashes. These cannot be linked to you.</li>
+      <li><strong>GitHub Pages.</strong> The web version and this page are hosted by GitHub. As with any website, GitHub’s servers receive technical information such as your IP address and browser type when the pages are loaded, as described in the <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub Privacy Statement</a>. We do not have access to those logs. After the first visit the web version keeps a copy of its own files on your device so it can run offline.</li>
+    </ul>
+    <p>The support page links to GitHub. If you choose to contact us there, GitHub’s terms and privacy statement apply to what you post.</p>
 
-    <h2>Contact</h2>
-    <p>Questions about this policy can be sent via the contact details on the <a href="support.html">support page</a>.</p>
+    <h2>7. Children</h2>
+    <p>The game is suitable for all ages and collects no personal information from anyone, including children. It contains no advertising, no purchases, no chat and no way to share information with other people.</p>
+
+    <h2>8. Your rights</h2>
+    <p>Privacy laws such as the EU and UK General Data Protection Regulation and the California Consumer Privacy Act give you rights over personal data that a company holds about you, including access, correction, deletion and objection. We hold no personal data about you, so the practical way to exercise full control is the one in section 4: everything is on your device and you can delete it yourself at any time. If you have any question, contact us through the <a href="support.html">support page</a>. You also have the right to complain to your local data protection authority.</p>
+
+    <h2>9. Security</h2>
+    <p>Your preferences never leave your device, so they are protected by your device’s own security (its passcode and encryption).</p>
+
+    <h2>10. Changes to this policy</h2>
+    <p>If the game ever changes in a way that affects your privacy, this policy will be updated before the change is released, at this same address and with a new effective date. The privacy screen inside the game always matches the version you have installed.</p>
+
+    <h2>11. Contact</h2>
+    <p>Questions about this policy or about your privacy: see the contact details on the <a href="support.html">support page</a>.</p>
   </div>
   <a class="back" href="index.html">&larr; Back to Bidding Wars</a>
 </div>

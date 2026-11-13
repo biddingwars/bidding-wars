@@ -126,7 +126,6 @@ function globe2d(host, owned, pack){
 /* Borders are a bundled asset. Nothing here touches the network — an app that
    needs a server to draw its own map fails review the moment it is tested offline. */
 const BORDER_FILE='countries-110m.json';
-const BORDER_FALLBACK='https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 let BORDER_CACHE=null;
 
 /* minimal TopoJSON reader — saves pulling in topojson-client */
@@ -159,7 +158,7 @@ async function loadBorders(){
   if(BORDER_CACHE!==null) return BORDER_CACHE;
   const notes=[];
   const tag=u=>u.indexOf('//')<0 ? 'local' : 'cdn';
-  for(const url of [BORDER_FILE, BORDER_FALLBACK]){
+  for(const url of [BORDER_FILE]){                 // the bundled file only: the game never asks another server for anything
     try{
       const r=await fetch(url);
       if(!r.ok){ notes.push(tag(url)+' HTTP'+r.status); continue; }
@@ -177,13 +176,9 @@ async function loadBorders(){
   BORDER_CACHE=false; return false;
 }
 
-/* NASA Blue Marble (July) satellite imagery, see NOTICE.md. Tried in order: a copy bundled with the app,
-   then two public CDNs. Falls back to the drawn texture if all three fail. */
-const EARTH_TEXTURES=[
-  'earth.jpg',
-  'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/textures/planets/earth_atmos_2048.jpg',
-  'https://unpkg.com/three@0.128.0/examples/textures/planets/earth_atmos_2048.jpg'
-];
+/* NASA Blue Marble (July) satellite imagery, see NOTICE.md: the copy bundled with the app, nothing else.
+   Falls back to the drawn texture if it is missing. */
+const EARTH_TEXTURES=['earth.jpg'];
 
 function loadEarthTexture(done){
   if(!window.THREE || !THREE.TextureLoader){ done(null); return; }

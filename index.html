@@ -2,7 +2,6 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
-<base href="/bidding-wars/">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#0E0D0B">
@@ -43,15 +42,8 @@
 </div>
 <div id="layer"></div>
 
-<script>
-  function loadThreeFallback(){
-    var s=document.createElement('script');
-    s.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-    s.onerror=function(){ window.__noThree=1; };
-    document.head.appendChild(s);
-  }
-</script>
-<script src="three.min.js" onerror="loadThreeFallback()"></script>
+<!-- three.js is bundled. If it is ever missing the results screen draws the flat canvas globe instead: nothing is fetched from another server (no remote code, no third-party request). -->
+<script src="three.min.js" onerror="window.__noThree=1"></script>
 
 <script src="platform.js"></script>
 <script src="sound.js"></script>

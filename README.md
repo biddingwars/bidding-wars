@@ -17,7 +17,7 @@ debugging time before.
 
 | File | What it is |
 |---|---|
-| `index.html` | Shell (`<base href="/bidding-wars/">` for GitHub Pages). |
+| `index.html` | Shell. All paths are relative, so the same files run on GitHub Pages and inside a native wrapper. |
 | `app.js` | The view: all screens and sheets, i18n. Calls the engine; contains no game rules. |
 | `fx.js` | Motion: springs, rolling numbers, the gavel moment, confetti. |
 | `sound.js` | The soundscape, synthesised with Web Audio (no audio files). |
@@ -40,7 +40,7 @@ debugging time before.
 bumped:
 
 ```js
-const CACHE = 'bidding-wars-v23';   // increment this on every deploy
+const CACHE = 'bidding-wars-v59';   // increment this on every deploy, together with CONFIG.version in platform.js
 ```
 
 After bumping, the user must close *all* tabs and reopen — a reload isn't
@@ -54,9 +54,14 @@ commit again.
 
 - **No network at runtime** for anything essential. three.js, borders, the
   globe texture — all must work bundled, since Apple tests in airplane mode.
-- **No accounts, no analytics, no tracking.** Only four things are stored on
-  device: chosen language, appearance (if forced), record vs the bot, and the
-  last name entered.
+- **No accounts, no analytics, no tracking.** Only five things are stored on
+  device: chosen language, appearance (if light), record vs the bot, the last
+  name entered and the settings — plus the optional game log if the player
+  switched it on. `privacy.html` and the in-app privacy screen describe them.
+- **No requests to any other server**, not even as a fallback: no CDN, no
+  remote code (App Store Guideline 2.5.2).
+- `APPSTORE.md` is the release checklist (guidelines, privacy label, what to
+  enter in App Store Connect).
 - **No ad SDK.**
 - Five languages: en, de, it, es, fr. Every user-facing string goes through
   `t('key')`; country names go through `cname(c)`.

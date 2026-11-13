@@ -23,7 +23,7 @@ test('a duel against one bot is exactly what it was before several bots existed 
   for (const [name, pack] of Object.entries(packs)) for (const level of pack.levels.map(l => l.id)) for (const lots of [5, pack.lots.options[1]]) for (let g = 0; g < 6; g++) for (const pol of ['creeper', 'fair']) {
     const { S, log } = play(pack, level, lots, [false, true], 4000 + g, pol); h.update(name + level + lots + g + pol + log + '|' + S.players.map(p => p.budget).join('/'));
   }
-  assert.equal(h.digest('hex'), 'a8c88a38ba64994dd4196e1037dd1b6484e7a4fa0125b2e57ca23e7b971015b0', 'the duel changed (digest = the engine of v57: blind to the lots to come, tuned, no instant all-in; re-pinned on purpose in v57, it was the v47 engine before)');
+  assert.equal(h.digest('hex'), 'd0951f9855c3a35169449a75c272d1366387603bc6d4a5bf1f4774e7dce9c458', 'the duel changed (digest = the engine of v59: v57 plus two fixes to the bot, it never bids past what the richest rival can top and it does not walk away from the last lot when that lot decides the game; re-pinned on purpose in v59, it was the v57 engine before, and the v47 engine before)');
 });
 
 test('several bots: every bot has a style of its own (all different for 2 and 3 bots), never drawn twice, a forced style applies to all', () => {
@@ -84,4 +84,46 @@ test('validatePack accepts the crowd parameter and refuses nonsense', () => {
   for (const pack of Object.values(packs)) assert.deepEqual(Engine.validatePack(pack), []);
   const bad = c => Engine.validatePack(Object.assign({}, packs.states, { bot: Object.assign({}, packs.states.bot, { crowd: c }) }));
   assert.ok(bad('x').some(m => /crowd/.test(m))); assert.ok(bad(5).some(m => /crowd/.test(m))); assert.deepEqual(bad(0.2), []);
+});
+
+/* ---- v59: two thinking bugs of the extended bot, found by simulation ---- */
+function watchBot(pack, level, lots, seats, seed, human, onBot) {
+  const S = Engine.newAuction({ pack, kind: seats.length === 2 ? 'solo' : 'multi', level, lots, players: seats.map((ai, i) => ai ? { name: 'Bot' + i, ai: true } : { name: 'P' + i }), rng: Engine.seededRng(seed) });
+  let r = Engine.startLot(S);
+  while (r.state === 'lot') {
+    let ended = S.L.turn === null;
+    while (!ended) {
+      const me = S.players[S.L.turn], a = me.ai ? Engine.botDecision(S) : human(S, me);
+      if (me.ai) onBot(S, me, a);
+      let res = a.type === 'raise' ? Engine.raise(S, a.amount) : Engine.pass(S);
+      if (res.error) res = Engine.pass(S);
+      ended = res.next === 'award';
+    }
+    Engine.award(S); r = Engine.advance(S);
+  }
+  return S;
+}
+test('the bot never bids past what the richest rival still in the lot could top (a bid equal to that purse already cannot be beaten)', () => {
+  let raises = 0;
+  for (const id of Object.keys(packs)) for (const lv of packs[id].levels.map(l => l.id)) for (const seats of [[false, true], [false, true, true], [false, true, true, true]]) for (let g = 0; g < 25; g++) {
+    watchBot(packs[id], lv, 20, seats, 31000 + g, g % 2 ? POL.creeper : POL.fair, (S, me, a) => {
+      if (a.type !== 'raise') return; raises++;
+      const top = Math.max(...S.L.active.filter(i => i !== S.L.turn).map(i => S.players[i].budget));
+      assert.ok(a.amount <= Math.max(top, S.L.price + 1), `${id} ${lv} seed ${31000 + g}: bid ${a.amount} at price ${S.L.price} although no rival has more than ${top}`);
+    });
+  }
+  assert.ok(raises > 5000, 'the bots did bid: ' + raises);
+});
+test('the last lot: the bot does not walk away with money in hand when that lot decides whether it wins', () => {
+  const sniper = (S, me) => { const cap = S.items.length - S.i - 1 <= 1 ? 1e9 : Math.floor(0.5 * ideal(S)); return go(S, me, cap); };   // saves its money for the end
+  let lastLots = 0;
+  for (const id of Object.keys(packs)) for (const lv of packs[id].levels.map(l => l.id)) for (let g = 0; g < 150; g++) {
+    watchBot(packs[id], lv, 10, [false, true], 52000 + g, g % 2 ? sniper : POL.fair, (S, me, a) => {
+      if (S.i !== S.items.length - 1) return; lastLots++;
+      if (a.type !== 'pass' || me.budget < S.L.price + 1) return;
+      const pts = p => p.bought.reduce((x, b) => x + b.value, 0), v = S.items[S.i].value, you = S.players[0];
+      assert.ok(!(pts(me) <= pts(you) + v && pts(me) + v > pts(you)), `${id} ${lv} seed ${52000 + g}: passed at ${S.L.price} with ${me.budget} left on the lot that decided the game`);
+    });
+  }
+  assert.ok(lastLots > 500, 'last lots were played: ' + lastLots);
 });
