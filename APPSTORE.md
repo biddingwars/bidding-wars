@@ -49,6 +49,9 @@ run on a real iPhone or iPad, and there is no native project in this repository 
 5. **Sound and the silent switch:** `sound.js` asks for the `ambient` audio session where the web view offers it (iOS 16.4 and later). Check on the oldest iOS you support that the game stays quiet when the switch is on.
 6. **Service worker:** not registered inside the native app (`Native.is`), which is right; the files are already local.
 7. **Test on device:** airplane mode from a fresh install, a phone call during a lot, lock and unlock mid-auction, rotate, Split View on iPad, VoiceOver through one whole game, Dynamic Type at its largest, and "Delete all data" followed by a restart.
+8. **The top buttons clear the status bar (iPad and iPhone, both orientations).** On the auction screen the Menu, pause and sound buttons must be fully visible, not dimmed or cut by the status bar.
+   As a home-screen web app on iPadOS the status bar's dark band reached lower than the reported safe area and cut the top half of the buttons; v62 fixed that with extra room, but only under `@media (display-mode: standalone)` in `app.css`, which does **not** match inside the native app.
+   The app relies on `env(safe-area-inset-top)` (`--top` in `app.css`). If the buttons are clipped there too, apply the same rule when `Native.is` (for example a class on `<html>` set in `platform.js`).
 
 ## 4. Game balance at release (none of this is a crash)
 
