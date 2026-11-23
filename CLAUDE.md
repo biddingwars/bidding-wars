@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v62';   // increment this, every time
+const CACHE = 'bidding-wars-v63';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,9 +42,11 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v62` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v63` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
+
+**How an update reaches a device (v63)**: `sw.js` installs with `cache: 'reload'` (GitHub Pages lets the HTTP cache keep files 10 minutes; without it v62 was saved with v61's files on an iPad). `index.html` checks for a new version at launch and whenever the app returns to the front (`reg.update()` on `visibilitychange`), and when a new worker takes over it reloads on the menu (`onMenuIdle` / `maybeUpdate` in `app.js`), never mid-game.
 
 Also: GitHub Pages deploys one run at a time, and a new commit cancels an
 in-flight deploy. Commit once, wait for the green check, then commit again.

@@ -66,7 +66,17 @@
       Packs.load('countries').catch(function () {});
     });
     if ('serviceWorker' in navigator && !Native.is && location.protocol !== 'file:') {
-      navigator.serviceWorker.register('sw.js').catch(function(){});
+      /* updates: look for a new version at launch and whenever the app comes back to the front (a home-screen app is
+         often only resumed, never relaunched). When a new version takes over, reload on the menu; mid-game it waits for the menu. */
+      var hadSW = !!navigator.serviceWorker.controller;
+      navigator.serviceWorker.register('sw.js').then(function (reg) {
+        document.addEventListener('visibilitychange', function () { if (!document.hidden) reg.update().catch(function(){}); });
+      }).catch(function(){});
+      navigator.serviceWorker.addEventListener('controllerchange', function () {
+        if (!hadSW || window.pendingReload) return;
+        window.pendingReload = function () { window.pendingReload = function(){}; location.reload(); };
+        if (window.onMenuIdle && onMenuIdle()) window.pendingReload();
+      });
     }
   });
 </script>

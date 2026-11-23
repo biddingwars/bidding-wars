@@ -149,7 +149,7 @@ function sheet(o) {
     set(body, foot) { $('.sbc', wrap).innerHTML = body; $('.sheetfoot', wrap).innerHTML = foot || ''; },
     close(now) {
       if (!h.alive) return; h.alive = false; holdClock--;
-      if (sheetH === h) { sheetH = null; if ('inert' in app) app.inert = false; }
+      if (sheetH === h) { sheetH = null; if ('inert' in app) app.inert = false; if (!now) setTimeout(() => window.maybeUpdate && maybeUpdate(), 300); }
       wrap.style.pointerEvents = 'none';
       if (opener && opener.focus && document.contains(opener)) { try { opener.focus({ preventScroll: true }); } catch (e) {} }
       if (now || FX.reduced) { wrap.remove(); return; }
@@ -1297,7 +1297,12 @@ function home() {
     Snd.ui(); Haptics.light(); SELPACK = b.dataset.pack; RECS.last = SELPACK; saveRec(); home();
     (window.requestIdleCallback || (f => setTimeout(f, 200)))(() => Packs.load(SELPACK).catch(() => {}));   // warm it up so Setup opens instantly
   });
+  setTimeout(window.maybeUpdate, 0);
 }
+
+/* a new version took over (index.html): reload only on the menu with nothing open, never in the middle of a game */
+window.onMenuIdle = () => !!$('.screen[data-screen=menu]') && !sheetH;
+window.maybeUpdate = () => { if (window.pendingReload && window.onMenuIdle()) window.pendingReload(); };
 
 /* ============ SETTINGS — one sheet: currency, bot style, accessibility, practice helpers (stored in settings:v1) ============ */
 const AGGR_KEYS = ['aggr0', 'aggr1', 'aggr2', 'aggr3', 'aggr4'];
