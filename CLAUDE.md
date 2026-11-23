@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v60';   // increment this, every time
+const CACHE = 'bidding-wars-v61';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v60` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v61` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -235,6 +235,8 @@ fails on clipping, NaN, silence or a loudness spread over 40x. Audio starts on t
 first touch and resumes after an iOS interruption; mute (`Snd.setMuted`) also
 gates haptics. iPhone Safari has no web haptics API — `Haptics` fires only on
 Android web or a native shell.
+
+**Pause (v61)**: the auction nav has a pause button (`#pause`, `pauseGame()` in `app.js`): a sheet with Resume and Leave the game. Like every sheet it holds the clock (`holdClock`); the bot's `think()` also counts only while `holdClock` is 0 and the page is visible, so the bot never moves under a sheet or in the background.
 
 The decision clock (`startClock`) is a smooth ring that waits while a sheet is
 open and ignores a frame gap over 250 ms (a locked phone) so a background never

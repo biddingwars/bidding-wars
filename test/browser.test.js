@@ -376,6 +376,31 @@ test('the decision clock waits while a sheet is open and ignores a stalled page'
   await ctx.close();
 });
 
+test('PAUSE: the pause button stops the clock and the bot until Resume, and can leave the game', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open();
+  await startSolo(page, 5, 30);
+  await page.waitForSelector('#pass:not(:disabled)');
+  const left = () => page.evaluate(() => +document.getElementById('timer').style.getPropertyValue('--p'));
+  const p0 = await left();
+  await page.click('#pause'); await page.waitForSelector('#resume');
+  await page.waitForTimeout(1200);
+  await page.click('#resume'); await page.waitForTimeout(100);
+  assert.ok(p0 - await left() < 0.02, 'the clock waited while paused');
+  /* the bot's own thinking waits too: hand it the turn, pause, and nothing may happen */
+  const before = await page.evaluate(() => { stopClock(); S.L.turn = 1; aiTurn(); pauseGame(); return JSON.stringify([S.L.price, S.L.turn, S.L.active]); });
+  await page.waitForTimeout(3600);                        // longer than the bot's longest think (3 s)
+  assert.equal(await page.evaluate(() => JSON.stringify([S.L.price, S.L.turn, S.L.active])), before, 'the bot did not move while paused');
+  await page.keyboard.press('Escape');                    // Escape resumes as well
+  await page.waitForFunction(b => JSON.stringify([S.L.price, S.L.turn, S.L.active]) !== b, before, { timeout: 5000 });
+  /* Leave the game -> the leave question; "Stay here" goes back to the pause sheet, Leave goes home */
+  await page.evaluate(() => { window.think = () => new Promise(() => {}); });
+  await page.evaluate(() => pauseGame()); await page.waitForSelector('#pquit');
+  await page.click('#pquit'); await page.waitForSelector('#dn'); await page.click('#dn'); await page.waitForSelector('#resume');
+  await page.click('#pquit'); await page.waitForSelector('#dy'); await page.click('#dy'); await page.waitForSelector('#m1');
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
 test('timeout is an automatic drop out; double-tapping Drop out sells the lot once', { skip: SKIP }, async () => {
   const { page, errors, ctx } = await open();
   await startSolo(page, 5, 10);
