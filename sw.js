@@ -1,7 +1,7 @@
 /* Service worker — the whole game is cached on first visit, then served from
    cache. After that it runs with no connection at all, which is the point. */
 
-const CACHE = 'bidding-wars-v62';
+const CACHE = 'bidding-wars-v63';
 
 const SHELL = [
   './',
@@ -41,7 +41,9 @@ const SHELL = [
 self.addEventListener('install', e => {
   e.waitUntil((async () => {
     const c = await caches.open(CACHE);
-    await Promise.all(SHELL.map(u => c.add(u).catch(() => null)));
+    /* cache: 'reload' skips the browser's HTTP cache (GitHub Pages lets it keep files 10 minutes): without it a new version
+       deployed soon after the last one was saved with the OLD files and the menu still showed the old number (v62 on an iPad). */
+    await Promise.all(SHELL.map(u => c.add(new Request(u, { cache: 'reload' })).catch(() => null)));
     self.skipWaiting();
   })());
 });
