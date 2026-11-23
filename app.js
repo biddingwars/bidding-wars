@@ -765,6 +765,11 @@ const STR_SET = {
   "practiceTitle": "Practice game",
   "practiceNote": "Your record was not changed.",
   "fairHint": "Fair price about {p}",
+  "pauseBtn": "Pause",
+  "pausedTitle": "Paused",
+  "pausedBody": "The clock and the bot are waiting. Nothing moves until you resume.",
+  "resume": "Resume",
+  "leaveGame": "Leave the game",
   "dropAskTitle": "Drop out?",
   "dropAskBody": "You keep your money, and whoever holds the top bid buys this lot.",
   "peopleN": "People",
@@ -830,6 +835,11 @@ const STR_SET = {
   "practiceTitle": "Übungsspiel",
   "practiceNote": "Deine Bilanz wurde nicht geändert.",
   "fairHint": "Fairer Preis etwa {p}",
+  "pauseBtn": "Pause",
+  "pausedTitle": "Pausiert",
+  "pausedBody": "Uhr und Bot warten. Nichts geht weiter, bis du fortsetzt.",
+  "resume": "Weiter",
+  "leaveGame": "Spiel verlassen",
   "dropAskTitle": "Aussteigen?",
   "dropAskBody": "Du behältst dein Geld, und wer das höchste Gebot hält, kauft dieses Los.",
   "peopleN": "Menschen",
@@ -895,6 +905,11 @@ const STR_SET = {
   "practiceTitle": "Partita di prova",
   "practiceNote": "Il tuo bilancio non è cambiato.",
   "fairHint": "Prezzo equo circa {p}",
+  "pauseBtn": "Pausa",
+  "pausedTitle": "In pausa",
+  "pausedBody": "Il tempo e il bot aspettano. Nulla si muove finché non riprendi.",
+  "resume": "Riprendi",
+  "leaveGame": "Esci dalla partita",
   "dropAskTitle": "Ritirarti?",
   "dropAskBody": "Tieni i tuoi soldi e chi ha l’offerta più alta compra questo lotto.",
   "peopleN": "Persone",
@@ -960,6 +975,11 @@ const STR_SET = {
   "practiceTitle": "Partida de práctica",
   "practiceNote": "Tu balance no ha cambiado.",
   "fairHint": "Precio justo: unos {p}",
+  "pauseBtn": "Pausa",
+  "pausedTitle": "En pausa",
+  "pausedBody": "El reloj y el bot esperan. Nada se mueve hasta que reanudes.",
+  "resume": "Reanudar",
+  "leaveGame": "Salir de la partida",
   "dropAskTitle": "¿Retirarte?",
   "dropAskBody": "Conservas tu dinero y quien tenga la puja más alta compra este lote.",
   "peopleN": "Personas",
@@ -1025,6 +1045,11 @@ const STR_SET = {
   "practiceTitle": "Partie d’entraînement",
   "practiceNote": "Ton bilan n’a pas changé.",
   "fairHint": "Prix juste : environ {p}",
+  "pauseBtn": "Pause",
+  "pausedTitle": "En pause",
+  "pausedBody": "Le chrono et le bot attendent. Rien ne bouge tant que tu ne reprends pas.",
+  "resume": "Reprendre",
+  "leaveGame": "Quitter la partie",
   "dropAskTitle": "Abandonner ?",
   "dropAskBody": "Tu gardes ton argent, et celui qui détient la meilleure enchère remporte ce lot.",
   "peopleN": "Personnes",
@@ -1491,7 +1516,7 @@ function paintLot() {
   const c = S.items[S.i], L = S.L;
   const sec = go(`
     <p class="sr" id="live" role="status" aria-live="polite"></p>
-    <div class="nav"><button class="ibtn pill" id="nb">${IC('menu')}${esc(t('menu'))}</button><span class="lotpill num">${esc(t('lot'))} ${S.i + 1} ${esc(t('of'))} ${S.items.length}</span>${navBtns(false)}</div>
+    <div class="nav"><button class="ibtn pill" id="nb">${IC('menu')}${esc(t('menu'))}</button><span class="lotpill num">${esc(t('lot'))} ${S.i + 1} ${esc(t('of'))} ${S.items.length}</span><span class="navr"><button class="ibtn" id="pause" aria-label="${esc(t('pauseBtn'))}">${IC('pause')}</button>${navBtns(false)}</span></div>
     <div class="aud">
       <div class="aud-l"><div class="stage" id="stage">
         <div class="head"><div class="orb" aria-hidden="true">${icon(c)}</div><h2 class="cname ${cname(c).length <= 13 ? 'n1' : cname(c).length <= 20 ? 'n2' : 'n3'}" id="lotName">${esc(cname(c))}</h2></div>
@@ -1523,6 +1548,7 @@ function paintLot() {
     Snd.ui(); Haptics.light();
     ask(t('leaveTitle'), t('leaveBody'), t('leave'), () => home(), null);
   });
+  on('pause', () => { Snd.ui(); Haptics.light(); pauseGame(); });
   const stage = $('#stage', sec);
   if (stage && !FX.reduced) FX.spring(stage, 0, 1, v => ({ opacity: Math.min(1, v * 1.5), transform: `translateY(${(1 - v) * -26}px) scale(${1.05 - .05 * v})` }), { k: 200, c: 15 });
   setRing(1, S.clock, false);
@@ -1663,7 +1689,30 @@ function pass(timedOut) {
 }
 
 /* ============ THE BOT'S TURN — all local, no network, no cost ============ */
-function think(ms) { return new Promise(r => setTimeout(r, ms)); }
+/* the bot's thinking time only runs while nothing is on top of the auction (pause, any sheet) and the page is visible */
+function think(ms) {
+  return new Promise(r => {
+    let last = performance.now(), left = ms;
+    const step = () => {
+      const now = performance.now(), dt = now - last; last = now;
+      if (holdClock <= 0 && !document.hidden) left -= dt;
+      if (left <= 0) r(); else setTimeout(step, Math.min(left, 100));
+    };
+    setTimeout(step, Math.min(left, 100));
+  });
+}
+
+/* pause: a sheet over the auction. While it is open the decision clock and the bot wait (holdClock); closing it resumes. */
+function pauseGame() {
+  if (!S || !S.L || sheetH) return;
+  const h = sheet({
+    title: t('pausedTitle'), body: `<p>${esc(t('pausedBody'))}</p>`,
+    foot: `<button class="btn gold" id="resume">${esc(t('resume'))}</button><button class="btn ghost" id="pquit">${esc(t('leaveGame'))}</button>`
+  });
+  $('#resume', h.wrap).onclick = () => { Snd.ui(); h.close(); };
+  $('#pquit', h.wrap).onclick = () => { Snd.ui(); ask(t('leaveTitle'), t('leaveBody'), t('leave'), () => home(), () => pauseGame()); };
+  return h;
+}
 
 async function aiTurn() {
   const S0 = S, L = S.L, c = S.items[S.i], me = S.players[L.turn];
