@@ -178,15 +178,20 @@ body.pk-states::after{width:calc(var(--fw) * .4);height:calc(var(--fw) * .2834);
 .hero img.globe{--hp:48px;box-sizing:content-box;padding:var(--hp);background:radial-gradient(closest-side,var(--halo1) 58%,var(--halo2) 80%,var(--halo0) 100%);   /* the glow is the box's own background: it ends at 0 before the edge, so there is no seam to see */
   position:absolute;right:calc(-120px - var(--hp));top:calc(-52px - var(--hp));width:280px;height:280px;opacity:.92;z-index:0;pointer-events:none}
 h1.title{font:800 42px/.98 var(--round);letter-spacing:-.045em;position:relative}
+/* right to left (Arabic): the hero keeps its drawn layout (the planet on the right, the Latin brand name on the left); its tagline
+   still reads right to left. Letter spacing would pull Arabic's joined letters apart, so it is off for Arabic everywhere. */
+[dir=rtl] .hero{direction:ltr}
+[dir=rtl] .hero .tag{direction:rtl;text-align:left}
+html[lang=ar] *{letter-spacing:normal!important}
 h1.title span{display:block}
 .tag{margin-top:10px;font-size:15px;color:var(--ink2);max-width:210px;line-height:1.35;position:relative}
 .packs{display:flex;gap:10px;flex:none;margin:0 calc(-1 * var(--padx));padding:2px var(--padx) 4px;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x proximity}
 .packs::-webkit-scrollbar{display:none}
-.pack{flex:none;width:136px;min-height:84px;border-radius:22px;padding:12px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;text-align:left;scroll-snap-align:start}
+.pack{flex:none;width:136px;min-height:84px;border-radius:22px;padding:32px 12px 12px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;text-align:start;scroll-snap-align:start}   /* the top padding keeps a two-line name (Arabic, German) clear of the flags */
 .pack b{font-size:16px;font-weight:700;letter-spacing:-.02em;line-height:1.15}
 .pack span.s{font-size:12px;color:var(--ink2)}
 .pack.on{background:linear-gradient(150deg,var(--goldtint),var(--glass));border:1.5px solid var(--gold1);box-shadow:0 10px 30px var(--goldglow),inset 0 1px 0 var(--hi)}
-.pack[data-pack]::before{position:absolute;left:10px;top:8px;font-size:17px;letter-spacing:2px}   /* a pack's flags show whether or not it is the selected one */
+.pack[data-pack]::before{position:absolute;inset-inline-start:10px;top:8px;font-size:17px;letter-spacing:2px}   /* a pack's flags show whether or not it is the selected one */
 .pack[data-pack=countries]::before{content:"🇯🇵🇧🇷🇰🇪🇲🇽"}
 .pack[data-pack=states]::before{content:"🇺🇸";letter-spacing:0}
 .pack[data-pack=capitals]::before{content:"🏛️";letter-spacing:0}
@@ -204,7 +209,7 @@ h1.title span{display:block}
 .mode .go{width:34px;height:34px;border-radius:50%;background:var(--glass2);display:grid;place-items:center;color:var(--ink);flex:none}
 .mode.dim{opacity:.78}
 .dockbar{display:flex;gap:10px;align-items:center;flex:none;margin-top:auto;padding-bottom:6px}
-.chipbtn{flex:1;min-height:46px;border-radius:23px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:600;color:var(--ink);min-width:0;padding:0 10px}
+.chipbtn{flex:1;min-height:46px;border-radius:23px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:600;color:var(--ink);min-width:0;padding:0 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}   /* "How to play" wrapped onto two lines at 390 px */
 .chipbtn:active{transform:scale(.985)}
 .chipbtn.sq{flex:none;width:46px;padding:0}
 .recpill{display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:22px;flex:none;text-align:left;width:100%}
@@ -399,7 +404,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 @media (max-height:700px){
   h1.title{font-size:36px}
   .tag{margin-top:6px;font-size:14px}
-  .pack{min-height:70px;padding:10px}
+  .pack{min-height:70px;padding:28px 10px 10px}
   .mode{min-height:56px;padding:8px 14px}
   .recpill{padding:6px 14px}
   .hero img.globe{width:240px;height:240px;top:calc(-44px - var(--hp))}
@@ -469,6 +474,13 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 .f1 s{text-decoration:none;color:var(--ink2);font-weight:500}
 .redact{display:inline-block;height:11px;width:40px;border-radius:6px;background:repeating-linear-gradient(135deg,var(--ink2) 0 3px,transparent 3px 6px);vertical-align:-1px;cursor:pointer;box-sizing:content-box;padding:10px 4px;margin:-10px -4px;background-clip:content-box;font:inherit;color:inherit}
 .redact.open{background:none;width:auto;height:auto;color:inherit;font-weight:700;padding:0;margin:0;vertical-align:baseline;cursor:default}
+/* long rounds (more than 10 lots): compact chips, four to a row (three on a narrow phone). The redact width rule needs :not(.open),
+   or it outranks .redact.open and every lifted value (the totals too) stays 24 px wide and is cut off. */
+.lb.many .fl{gap:4px}
+.lb.many .f1{flex:0 0 auto;min-width:calc(25% - 3px);font-size:11px;padding:2px 5px 2px 2px;gap:3px;border-radius:12px}   /* at least a quarter, wider when a price and value need it (never "€2…") */
+.lb.many .f1 em{width:17px;height:17px;font-size:11px}
+@media (max-width:420px){ .lb.many .f1{min-width:calc(33.3% - 3px)} }
+.lb.many .redact:not(.open){width:24px}
 .gl{flex:1 1 0;min-height:110px;position:relative;overflow:hidden;border-radius:26px;display:flex;flex-direction:column;justify-content:flex-end;padding:0}
 .gl .globe{position:relative;width:calc(100% - 40px);margin:0 auto;min-height:120px;background:transparent}
 .gl .globe canvas{display:block;width:100%;height:auto;touch-action:none;overscroll-behavior:contain;cursor:grab}
@@ -524,8 +536,15 @@ html[data-motion=reduce] .rays,html[data-motion=reduce] .confetti{display:none}
   .ringwrap{--ring:clamp(170px,calc(100dvh - 420px),280px)}
   .gvwrap{max-height:340px}
   .gv{width:min(430px,calc(100cqh * 1.405))}
-  .res2{display:grid;grid-template-columns:1fr 1fr;gap:18px;flex:1;min-height:0;align-items:center}
+  .res2{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:minmax(0,1fr);gap:18px;flex:1;min-height:0;align-items:center}
   .r-l,.r-r{display:flex;flex-direction:column;gap:12px;min-height:0}
+  /* a long game's scoreboard is taller than the screen: each column scrolls inside the page instead of spilling up under Menu */
+  .r-l,.r-r{max-height:100%;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding-bottom:6px}
+  .r-l::-webkit-scrollbar,.r-r::-webkit-scrollbar{display:none}
+  .r-l>#acts{position:sticky;bottom:0;z-index:2}
+  /* while the scores are sealed the board sits alone, centred */
+  .res2:has(#extra[hidden]){grid-template-columns:minmax(0,520px);justify-content:center}
+  .res2:has(#extra[hidden]) .r-r{display:none}
   .gl{min-height:0}
   .gl .globe{flex:none;width:min(100%,calc(100dvh - 500px));min-width:220px;margin:0 auto}
   .sheetbox{border-radius:30px;margin-bottom:5vh;border-bottom:1px solid var(--stroke)}
