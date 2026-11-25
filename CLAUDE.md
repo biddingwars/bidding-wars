@@ -8,7 +8,7 @@ Live: https://biddingwars.github.io/bidding-wars/
 
 Everything lives flat at the repo root. No `js/`, `css/`, `data/`, `img/`,
 `fonts/`, or `vendor/` subfolders — `index.html`, `app.css`, `app.js`,
-`engine.js`, `packs.js`, `banter.js`, `pack-countries.js`, `pack-capitals.js`, `CAPITALS-SOURCES.md`, `globe.js`, `us-view.js`, `us-map.js`, `us-map.webp`, `us-ak.webp`, `us-hi.webp`, `NOTICE.md`, `APPSTORE.md` (the release checklist: guidelines, privacy label, the native wrapper),
+`engine.js`, `packs.js`, `banter.js`, `i18n-<lang>.js` (the eight added languages), `pack-countries.js`, `pack-capitals.js`, `CAPITALS-SOURCES.md`, `globe.js`, `us-view.js`, `us-map.js`, `us-map.webp`, `us-ak.webp`, `us-hi.webp`, `NOTICE.md`, `APPSTORE.md` (the release checklist: guidelines, privacy label, the native wrapper),
 `platform.js`, `sound.js`, `fx.js`, `sw.js`, `manifest.json`, every icon,
 `globe-hero.webp`, `logo.svg`, `three.min.js`, `earth.jpg`, `countries-110m.json`,
 `privacy.html`, `support.html` all sit at the root, referenced by plain
@@ -29,12 +29,12 @@ references it and `sw.js` never caches it.
 
 `sw.js` serves cache-first. Any change to `app.css`, `app.js`, `index.html`,
 `globe.js`, `us-view.js`, `us-map.js`, `us-*.webp`, `platform.js`, `sound.js`, `fx.js`, `engine.js`, `packs.js`,
-`banter.js`, any `pack-*.js`, `globe-hero.webp`, `three.min.js`, `earth.jpg`, or
+`banter.js`, any `pack-*.js`, any `i18n-*.js`, `globe-hero.webp`, `three.min.js`, `earth.jpg`, or
 `manifest.json` is **invisible** to anyone with the site already loaded
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v63';   // increment this, every time
+const CACHE = 'bidding-wars-v64';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v63` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v64` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still four keys).
 
@@ -109,11 +109,33 @@ The privacy sheet links to the full policy (`privacy.html`) and to `support.html
 (name persistence shipped without updating the wipe flow or the copy — fixed,
 but watch for it happening again with any future locally-stored value).
 
-## Five languages
+## Thirteen languages (v64)
 
-`en`, `de`, `it`, `es`, `fr`. Every user-facing string goes through
-`t('key')` against the per-language objects in `app.js` (search `en:{`,
-`de:{`, etc.) — never hardcode UI text. Country names go through `cname(c)`,
+`en`, `de`, `it`, `es`, `fr` built into `app.js`, plus `pt` (Brazil), `id`, `zh` (Simplified), `hi`, `ja`, `ko`, `ar` (right to left) and `th`
+(added in v64, owner: "add these languages", the list of the sister game Outlines). Every user-facing string goes through
+`t('key')` — never hardcode UI text. The first five live in the per-language objects in `app.js` (search `en:{`,
+`de:{`, etc.); each added language lives in its own flat file **`i18n-<id>.js`** (`str` = the same keys as `STR.en`, `strp` = the
+per-pack lines of `STRP`), loaded by `loadLangFile()` the first time that language is needed (stored choice or the phone's language)
+and registered with `addLang()`; all eight are in `sw.js`'s `SHELL`. **A new UI string needs all thirteen**: `test/languages.test.js`
+fails on a missing key, a different `{placeholder}` set or different `<b>` markup than English, a missing `STRP` line, a pack title /
+noun / level / metric label, a non-Latin item name, a taunt tier or a banter list.
+
+- **Where the added-language content came from:** 104 of the 254 UI strings were taken unchanged from Outlines' `strings.js` (same English
+  there, so the same meaning); the other 150 and every `STRP` line, the taunts (`pack-countries.js`, `test/capitals-content.json`) and
+  `banter.js` were translated for this game. Country and US state names are Outlines' (Unicode CLDR through `Intl.DisplayNames`, a few
+  long forms adjusted); capital names are from Outlines' tables plus ten added by hand (see `NOTICE.md`). **None of it has been read by a
+  native speaker yet.** States' taunts are not translated (States shows fun facts instead) and the 50 US fun facts stay English in every
+  language but English, as they already did in de/it/es/fr (they are source-checked; see `FACTS-SOURCES.md`).
+- **Money is a symbol, never a word** in the added languages ("€50", "€ por milhão", "$ لكل مليون"), so Settings → Currency can rewrite it:
+  `writeIn()` turns a lone `€`/`$` into the chosen symbol (no lookbehind regex: older iOS Safari cannot parse one). `CURWORDS` only knows
+  the first five languages' currency words, and the test fails if an added language spells one out.
+- **Arabic is right to left**: `LANGS` marks it `rtl`, `applyLang()` sets `<html dir="rtl">`. The layout mirrors by itself (flex, grid,
+  `inset-inline-start`, `text-align:start`); the menu hero keeps its drawn layout (`[dir=rtl] .hero{direction:ltr}`), and
+  `html[lang=ar] *{letter-spacing:normal}` because letter spacing pulls Arabic's joined letters apart. Amounts in Arabic text carry a
+  left-to-right mark (U+200E) before `€` so "€50" does not flip. Pack tiles have top padding so a two-line name clears the flags.
+- `privacy.html` and `support.html` are English only (bundled web pages, linked from the privacy sheet). Speech uses a voice for every
+  language where the phone has one (`speak()`).
+- Seat initials are the first letter of the name (`ini()`), so the bot is "B" in English and "ب"/"ボ"… in other scripts. Country names go through `cname(c)`,
 not the raw English name, since each pack item carries a localised `name`
 object (`Engine.itemName`).
 
@@ -245,6 +267,19 @@ open and ignores a frame gap over 250 ms (a locked phone) so a background never
 costs a lot. Hot-seat games ignore taps for 260 ms after a turn passes so a
 double tap can't land on the next player.
 
+**Results screen, ported from Outlines (v64, its beta found these in the shared shell):** the photo and borders of the results globe are
+fetched and decoded when the last lot is sold (`preloadGlobe()` in `globe.js`, called at the top of `finish()`), and the world card
+with its WebGL globe is built hidden while the bars are lifted (`buildWorld()`, about 450 ms into `finish()`), so the globe is there
+the moment the winner is shown (it used to take about 4 s: `reveal()` waited 2.4 s, then painted a 2048-pixel drawn texture first).
+`reveal()` only shows `#extra` (380 ms) and appends the record pill. On iPad/desktop the two result columns scroll inside the page
+(`.res2{grid-template-rows:minmax(0,1fr)}`; a 30-lot, 4-seat scoreboard used to spill up under Menu), `#acts` (Lift every bar, then
+Play again / Menu) sits under the scoreboard in `.r-l` (sticky on iPad; on a phone straight after the board), and while the scores are
+sealed the board sits alone, centred. More than 10 lots → compact chips (`.lb.many`, at least a quarter of the row, wider when a price
+needs it — Outlines' ellipsis cut "€262" to "€2…"; the redact width rule needs `:not(.open)`). "Lift every bar" takes at most about
+1.5 s (70 ms a bar, less for long games) with at most one click/haptic every 60 ms. Globe labels are clamped inside the card and one
+that would overlap a label nearer the viewer is hidden. `.chipbtn` does not wrap ("How to play" broke onto two lines at 390 px).
+Outlines' sixth fix (skip "Script error." in the error log) does not apply: Bidding Wars has no window error listener.
+
 Lessons from the first iPad test (keep them): the document is locked
 (`html,body{position:fixed}`; iOS Safari ignores `overflow:hidden` on body);
 the sold overlay has no full-screen blur (it stalled iPad GPUs) and **Next lot
@@ -342,7 +377,7 @@ Census-boundary centroids, taunts, fun facts).
   `max` = ideal × a multiplier that eases from about 2.0 (smallest) to 1.35 (largest). Both
   are non-decreasing in population. `test/golden-states.json` pins all 50;
   `test/states.test.js` checks the targets (×3 of CA 45–60, TX 35–48, FL 26–35, NY 22–30).
-- **Currency.** USD in every language (see "Five languages").
+- **Currency.** USD in every language (see "Thirteen languages").
 - **Economy.** See the next section.
 - **Fun facts.** `pack.facts[id] = { en }`, one per state, shown on the SOLD screen,
   in the results "Fun facts" sheet and (since v43, `pack.captionFacts`, owner: "put the fun facts there instead") as the caption under the lot while it is on the block — in US States the rival's taunts and its drop-out / win one-liners are not shown at all (`showTaunt` returns early; the caption wraps to at most three lines, `.taunt.fact`; Countries and Capitals keep their taunts); must not hint at population or rank;
@@ -521,7 +556,7 @@ bands also had hard edges (185 pairs where a bigger country was cheaper; Vietnam
 ### Capital Cities pack (`pack-capitals.js`, v40; bot all-in rule v44)
 
 `pack-capitals.js` is **generated** by `test/make-pack-capitals.js` from two committed inputs — edit those, never the pack: `test/wup2018-f13-capitals.json` (the UN numbers, copied
-unchanged, with licence and the SHA-256 of the downloaded xls) and `test/capitals-content.json` (names in five languages, the Europe list, taunts, level labels). The calibration
+unchanged, with licence and the SHA-256 of the downloaded xls) and `test/capitals-content.json` (names in thirteen languages, the Europe list, taunts, level labels). The calibration
 (`CAL`: price anchors, ratio, budgets, the whole `bot` block) lives in the generator. `CAPITALS-SOURCES.md` has the source, every choice and every caveat, plus all 195 rows.
 
 - **Score (decided with the owner).** The population of the capital's *urban agglomeration*, in millions, from ONE UN source and vintage: *World Urbanization Prospects: The 2018 Revision*, File 13,
@@ -551,7 +586,7 @@ unchanged, with licence and the SHA-256 of the downloaded xls) and `test/capital
   Medium 52.0 / 57.6 / 50.0 / 55.3 / 57.9, Expert 39.2 / 42.0 / 43.8 / 46.4 / 52.8 (v47) — **no cell above the limit** (the oracle, which sees the lots to come, reaches 52%). Expert 5 lots is the hardest on fair players (32%, Countries 40%): one big city decides a 5-lot round. The Learner (memorises the bot's drop-outs per capital) loses to the fair player by 15-52 points (measured before v44).
   Fuzz: 200,000 hostile games, 0 failures (before v44; 30,000 again after). `node test/ui-sim.js`: 0 failures.
 - **Accepted / known**: short rounds are luck-heavy (5 lots: one big city decides); Medium 30 lots is the tightest cell (best blind 57.6%); the fair-value player wins only 34-38% of Medium 30-lot rounds (Countries: 29%, so it is not harder); capitals under 0.1 million are worth almost nothing
-  (Vatican City 0.0008 points, the metric prints "801"); there are no per-capital fun facts (taunts are generic, by size tier, in all five languages); names and wording in German, Italian, Spanish and French have not been read by a native speaker.
+  (Vatican City 0.0008 points, the metric prints "801"); there are no per-capital fun facts (taunts are generic, by size tier, in all thirteen languages); names and wording in the twelve languages other than English have not been read by a native speaker.
 - **Look**: the existing globe with a pin per capital (`globe: { borders: true, claimBorders: false }`), the normal brass-gold theme, tile icon 🏛️ (`.pack[data-pack=capitals]::before`). Euros, no new theme, nothing new stored (still four keys).
 - **Wording**: `STRP.capitals` in `app.js` (all 5 languages) + `creditsCap` (UN, CC BY 3.0 IGO, "not an endorsement"). `test/browser.test.js` fails if the menu, setup, auction or results of Capitals say "country" in any language.
 
@@ -648,7 +683,9 @@ counters inside the single `record:v1` value.
   temperament, the frozen baseline, the unpredictability tests (repeat test, parity, wallet-bound giants, the Learner), the rules text in five languages.
 - `node --test test/capitals.test.js` — the Capitals pack: UN data as committed (195 lots, values = thousands / 1000, no Palestine), the generator writes exactly the committed pack, the documented seat-of-government choices, pools (46 / 70 / 195), monotone golden prices, budgets and the top-5 cap, random draw (chi-square) per level, the $1 walkover, loose calibration bands per level, a small exploit scan. `node test/economy.js capitals`, `node test/exploit.js capitals`, `node test/tune-capitals.js` are the long ones.
 - `node --test test/fuzz.test.js` — a 600-game slice of `node test/fuzz.js` (hostile and random humans against both bots; invariants after every move). `node test/exploit.js [pack] [level|all]` is the strategy search (dev-only, minutes).
+- `node --test test/languages.test.js` — the thirteen languages: every UI key, placeholder and `<b>` in every added language, every `STRP` line, pack titles / levels / labels, item names in the non-Latin scripts, taunts and banter, no spelled-out currency, every `i18n-*.js` in the offline cache. The `LANGUAGES:` tests in `test/browser.test.js` cover lazy loading, the stored and the phone's language, Arabic right to left, the one-screen auction in Arabic / Hindi / Thai / Japanese, currency rewriting and a whole game per added language.
 - `node test/make-translation-review.js` — writes `TRANSLATIONS-REVIEW.md`, the pack wording (Countries, US States, Capitals incl. all 195 capital names, the taunts and the UN credits line) and the 5-lot hint side by side in five languages for a native speaker (dev-only; the strings stay in `app.js`).
+- `node test/make-translation-review-added.js` — writes `TRANSLATIONS-REVIEW-ADDED.md`: every UI string, pack line, title, level, taunt, one-liner and capital name of the eight added languages next to the English, for a native speaker (dev-only). Re-run it after changing an `i18n-*.js` file.
 - `node --test test/usmap.test.js` — the generated US map data (48 + AK + HI), the files being in
   the offline cache, and the label layout (no overlaps, callouts inside the map).
 - `node --test test/contrast.test.js` — WCAG contrast of the real design tokens

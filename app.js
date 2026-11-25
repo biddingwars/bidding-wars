@@ -44,7 +44,7 @@ function speak(text) {
   try {
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    const tag = { en: 'en-US', de: 'de-DE', it: 'it-IT', es: 'es-ES', fr: 'fr-FR' }[LANG] || 'en-US';
+    const tag = { en: 'en-US', de: 'de-DE', it: 'it-IT', es: 'es-ES', fr: 'fr-FR', pt: 'pt-BR', id: 'id-ID', zh: 'zh-CN', hi: 'hi-IN', ja: 'ja-JP', ko: 'ko-KR', ar: 'ar-SA', th: 'th-TH' }[LANG] || 'en-US';
     u.lang = tag; u.rate = .92; u.pitch = 1.05; u.volume = 1;
     const want = tag.slice(0, 2);
     const v = speechSynthesis.getVoices().find(x => x.lang && x.lang.toLowerCase().startsWith(want));
@@ -196,12 +196,21 @@ const LANGS=[
   {id:'de', flag:'DE', label:'Deutsch'},
   {id:'it', flag:'IT', label:'Italiano'},
   {id:'es', flag:'ES', label:'Español'},
-  {id:'fr', flag:'FR', label:'Français'}
+  {id:'fr', flag:'FR', label:'Français'},
+  /* added languages: their words live in i18n-<id>.js, loaded when picked (addLang below) */
+  {id:'pt', flag:'BR', label:'Português'},
+  {id:'id', flag:'ID', label:'Bahasa Indonesia'},
+  {id:'zh', flag:'CN', label:'中文'},
+  {id:'hi', flag:'IN', label:'हिन्दी'},
+  {id:'ja', flag:'JP', label:'日本語'},
+  {id:'ko', flag:'KR', label:'한국어'},
+  {id:'ar', flag:'SA', label:'العربية', rtl:true},
+  {id:'th', flag:'TH', label:'ไทย'}
 ];
 
 const STR={
 en:{
- credits:'Credits & licences', creditsIntro:'Everything in this game is bundled on your device. Thank you to:', creditsPop:'<b>US population</b> — U.S. Census Bureau, Vintage 2025 estimates (NST-EST2025-POP). Public domain.', creditsCap:'<b>Capital-city population</b> — United Nations, DESA Population Division, World Urbanization Prospects: The 2018 Revision, File 13 (urban agglomeration, 2018). CC BY 3.0 IGO. Data unchanged; this is not an endorsement by the United Nations.', creditsMap:'<b>US state outlines</b> — U.S. Census Bureau cartographic boundary files, packaged by us-atlas. Public domain data.', creditsImg:'<b>US map imagery</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (July). NASA imagery is free to use with credit; this is not an endorsement by NASA.', creditsWorld:'<b>World borders</b> — Natural Earth. Public domain.', creditsGlobe:'<b>Globe texture</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (July). Free to use with credit; not an endorsement by NASA.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. MIT licence.', creditsSound:'<b>Sound</b> — every sound is synthesised on your device; there are no recordings. The eagle-style win cry is synthesised too. In films that cry is really a red-tailed hawk, because a bald eagle’s own voice is a thin chirp.', creditsFacts:'<b>US States fun facts</b> — written for this game and checked against public sources (national parks, state agencies, the Census Bureau, USGS, NASA and similar).',
+ credits:'Credits & licences', creditsIntro:'Everything in this game is bundled on your device. Thank you to:', creditsPop:'<b>US population</b> — U.S. Census Bureau, Vintage 2025 estimates (NST-EST2025-POP). Public domain.', creditsCap:'<b>Capital-city population</b> — United Nations, DESA Population Division, World Urbanization Prospects: The 2018 Revision, File 13 (urban agglomeration, 2018). CC BY 3.0 IGO. Data unchanged; this is not an endorsement by the United Nations.', creditsMap:'<b>US state outlines</b> — U.S. Census Bureau cartographic boundary files, packaged by us-atlas. Public domain data.', creditsImg:'<b>US map imagery</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (July). NASA imagery is free to use with credit; this is not an endorsement by NASA.', creditsWorld:'<b>World borders</b> — Natural Earth. Public domain.', creditsGlobe:'<b>Globe texture</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (July). Free to use with credit; not an endorsement by NASA.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. MIT licence.', creditsSound:'<b>Sound</b> — every sound is synthesised on your device; there are no recordings. The eagle-style win cry is synthesised too. In films that cry is really a red-tailed hawk, because a bald eagle’s own voice is a thin chirp.', creditsFacts:'<b>US States fun facts</b> — written for this game and checked against public sources (national parks, state agencies, the Census Bureau, USGS, NASA and similar).', creditsNames:"<b>Names in Portuguese, Indonesian, Chinese, Hindi, Japanese, Korean, Arabic and Thai</b> — country and US state names from the Unicode CLDR (Unicode License v3); capital-city names translated for this game.",
  lotsAll:'All {n}', funFacts:'Fun facts', factsIntro:'Every state in this round.',
  tagline:'Use your knowledge to beat your rivals',
  solo:'Solo', soloDesc:'One rival, the bot. It has a price in mind for every country and walks away the moment you beat it. Works offline.',
@@ -301,7 +310,7 @@ en:{
  smartestU:'<b>{name}</b> shopped smartest at {v} {unit}.'
 },
 de:{
- credits:'Quellen & Lizenzen', creditsIntro:'Alles in diesem Spiel liegt auf deinem Gerät. Danke an:', creditsPop:'<b>US-Einwohnerzahlen</b> — U.S. Census Bureau, Schätzung Vintage 2025 (NST-EST2025-POP). Gemeinfrei.', creditsCap:'<b>Einwohnerzahlen der Hauptstädte</b> — Vereinte Nationen, DESA, Abteilung Bevölkerung, World Urbanization Prospects: The 2018 Revision, Datei 13 (städtische Agglomeration, 2018). CC BY 3.0 IGO. Daten unverändert; keine Billigung durch die Vereinten Nationen.', creditsMap:'<b>Umrisse der US-Bundesstaaten</b> — Kartografische Grenzdateien des U.S. Census Bureau, aufbereitet von us-atlas. Gemeinfreie Daten.', creditsImg:'<b>Bilder der US-Karte</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (Juli). NASA-Bilder dürfen mit Quellenangabe frei verwendet werden; keine Billigung durch die NASA.', creditsWorld:'<b>Weltgrenzen</b> — Natural Earth. Gemeinfrei.', creditsGlobe:'<b>Globus-Textur</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (Juli). Mit Quellenangabe frei verwendbar; keine Billigung durch die NASA.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. MIT-Lizenz.', creditsSound:'<b>Klang</b> — alle Töne werden auf deinem Gerät erzeugt, es gibt keine Aufnahmen. Auch der adlerartige Siegesruf ist erzeugt. In Filmen ist dieser Ruf in Wirklichkeit ein Rotschwanzbussard, denn die Stimme eines Weißkopfseeadlers ist ein dünnes Zwitschern.', creditsFacts:'<b>Wissenswertes zu den US-Staaten</b> — für dieses Spiel geschrieben und mit öffentlichen Quellen abgeglichen (Nationalparks, Behörden der Bundesstaaten, Census Bureau, USGS, NASA und ähnliche).',
+ credits:'Quellen & Lizenzen', creditsIntro:'Alles in diesem Spiel liegt auf deinem Gerät. Danke an:', creditsPop:'<b>US-Einwohnerzahlen</b> — U.S. Census Bureau, Schätzung Vintage 2025 (NST-EST2025-POP). Gemeinfrei.', creditsCap:'<b>Einwohnerzahlen der Hauptstädte</b> — Vereinte Nationen, DESA, Abteilung Bevölkerung, World Urbanization Prospects: The 2018 Revision, Datei 13 (städtische Agglomeration, 2018). CC BY 3.0 IGO. Daten unverändert; keine Billigung durch die Vereinten Nationen.', creditsMap:'<b>Umrisse der US-Bundesstaaten</b> — Kartografische Grenzdateien des U.S. Census Bureau, aufbereitet von us-atlas. Gemeinfreie Daten.', creditsImg:'<b>Bilder der US-Karte</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (Juli). NASA-Bilder dürfen mit Quellenangabe frei verwendet werden; keine Billigung durch die NASA.', creditsWorld:'<b>Weltgrenzen</b> — Natural Earth. Gemeinfrei.', creditsGlobe:'<b>Globus-Textur</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (Juli). Mit Quellenangabe frei verwendbar; keine Billigung durch die NASA.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. MIT-Lizenz.', creditsSound:'<b>Klang</b> — alle Töne werden auf deinem Gerät erzeugt, es gibt keine Aufnahmen. Auch der adlerartige Siegesruf ist erzeugt. In Filmen ist dieser Ruf in Wirklichkeit ein Rotschwanzbussard, denn die Stimme eines Weißkopfseeadlers ist ein dünnes Zwitschern.', creditsFacts:'<b>Wissenswertes zu den US-Staaten</b> — für dieses Spiel geschrieben und mit öffentlichen Quellen abgeglichen (Nationalparks, Behörden der Bundesstaaten, Census Bureau, USGS, NASA und ähnliche).', creditsNames:"<b>Namen auf Portugiesisch, Indonesisch, Chinesisch, Hindi, Japanisch, Koreanisch, Arabisch und Thai</b> — Länder- und US-Staatennamen aus dem Unicode CLDR (Unicode License v3); Hauptstadtnamen für dieses Spiel übersetzt.",
  lotsAll:'Alle {n}', funFacts:'Wissenswertes', factsIntro:'Alle Bundesstaaten dieser Runde.',
  tagline:'Nutze dein Wissen und schlag deine Rivalen',
  solo:'Solo', soloDesc:'Ein Gegner, der Bot. Er hat für jedes Land einen Preis im Kopf und steigt aus, sobald du ihn überbietest. Läuft offline.',
@@ -401,7 +410,7 @@ de:{
  smartestU:'<b>{name}</b> hat am klügsten eingekauft: {v} {unit}.'
 },
 it:{
- credits:'Crediti e licenze', creditsIntro:'Tutto in questo gioco è sul tuo dispositivo. Grazie a:', creditsPop:'<b>Popolazione USA</b> — U.S. Census Bureau, stime Vintage 2025 (NST-EST2025-POP). Pubblico dominio.', creditsCap:'<b>Popolazione delle capitali</b> — Nazioni Unite, DESA, Divisione Popolazione, World Urbanization Prospects: The 2018 Revision, File 13 (agglomerato urbano, 2018). CC BY 3.0 IGO. Dati non modificati; nessun avallo da parte delle Nazioni Unite.', creditsMap:'<b>Contorni degli stati USA</b> — file cartografici di confine del U.S. Census Bureau, a cura di us-atlas. Dati di pubblico dominio.', creditsImg:'<b>Immagini della mappa USA</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (luglio). Le immagini NASA si possono usare liberamente citando la fonte; nessun avallo da parte della NASA.', creditsWorld:'<b>Confini del mondo</b> — Natural Earth. Pubblico dominio.', creditsGlobe:'<b>Texture del globo</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (luglio). Libera con citazione della fonte; nessun avallo da parte della NASA.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. Licenza MIT.', creditsSound:'<b>Suono</b> — ogni suono è sintetizzato sul tuo dispositivo, senza registrazioni. Anche il grido di vittoria da aquila è sintetizzato. Nei film quel grido è in realtà di una poiana codarossa, perché la voce dell’aquila di mare testabianca è un sottile cinguettio.', creditsFacts:'<b>Curiosità sugli stati USA</b> — scritte per questo gioco e verificate su fonti pubbliche (parchi nazionali, enti statali, Census Bureau, USGS, NASA e simili).',
+ credits:'Crediti e licenze', creditsIntro:'Tutto in questo gioco è sul tuo dispositivo. Grazie a:', creditsPop:'<b>Popolazione USA</b> — U.S. Census Bureau, stime Vintage 2025 (NST-EST2025-POP). Pubblico dominio.', creditsCap:'<b>Popolazione delle capitali</b> — Nazioni Unite, DESA, Divisione Popolazione, World Urbanization Prospects: The 2018 Revision, File 13 (agglomerato urbano, 2018). CC BY 3.0 IGO. Dati non modificati; nessun avallo da parte delle Nazioni Unite.', creditsMap:'<b>Contorni degli stati USA</b> — file cartografici di confine del U.S. Census Bureau, a cura di us-atlas. Dati di pubblico dominio.', creditsImg:'<b>Immagini della mappa USA</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (luglio). Le immagini NASA si possono usare liberamente citando la fonte; nessun avallo da parte della NASA.', creditsWorld:'<b>Confini del mondo</b> — Natural Earth. Pubblico dominio.', creditsGlobe:'<b>Texture del globo</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (luglio). Libera con citazione della fonte; nessun avallo da parte della NASA.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. Licenza MIT.', creditsSound:'<b>Suono</b> — ogni suono è sintetizzato sul tuo dispositivo, senza registrazioni. Anche il grido di vittoria da aquila è sintetizzato. Nei film quel grido è in realtà di una poiana codarossa, perché la voce dell’aquila di mare testabianca è un sottile cinguettio.', creditsFacts:'<b>Curiosità sugli stati USA</b> — scritte per questo gioco e verificate su fonti pubbliche (parchi nazionali, enti statali, Census Bureau, USGS, NASA e simili).', creditsNames:"<b>Nomi in portoghese, indonesiano, cinese, hindi, giapponese, coreano, arabo e thailandese</b> — nomi di paesi e stati USA dal Unicode CLDR (Unicode License v3); nomi delle capitali tradotti per questo gioco.",
  lotsAll:'Tutti {n}', funFacts:'Curiosità', factsIntro:'Tutti gli stati di questa partita.',
  tagline:'Usa le tue conoscenze per battere i rivali',
  solo:'Solo', soloDesc:'Un rivale, il bot. Ha un prezzo in mente per ogni paese e si ritira appena lo superi. Funziona offline.',
@@ -501,7 +510,7 @@ it:{
  smartestU:'<b>{name}</b> ha comprato nel modo più furbo: {v} {unit}.'
 },
 es:{
- credits:'Créditos y licencias', creditsIntro:'Todo en este juego está en tu dispositivo. Gracias a:', creditsPop:'<b>Población de EE. UU.</b> — U.S. Census Bureau, estimaciones Vintage 2025 (NST-EST2025-POP). Dominio público.', creditsCap:'<b>Población de las capitales</b> — Naciones Unidas, DAES, División de Población, World Urbanization Prospects: The 2018 Revision, archivo 13 (aglomeración urbana, 2018). CC BY 3.0 IGO. Datos sin modificar; no implica respaldo de las Naciones Unidas.', creditsMap:'<b>Contornos de los estados</b> — archivos cartográficos de límites del U.S. Census Bureau, empaquetados por us-atlas. Datos de dominio público.', creditsImg:'<b>Imágenes del mapa de EE. UU.</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (julio). Las imágenes de la NASA se pueden usar libremente citando la fuente; no implica respaldo de la NASA.', creditsWorld:'<b>Fronteras del mundo</b> — Natural Earth. Dominio público.', creditsGlobe:'<b>Textura del globo</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (julio). Libre con mención de la fuente; no implica respaldo de la NASA.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. Licencia MIT.', creditsSound:'<b>Sonido</b> — todos los sonidos se sintetizan en tu dispositivo; no hay grabaciones. El grito de victoria de águila también es sintético. En las películas ese grito es en realidad de un ratonero de cola roja, porque la voz del águila calva es un trino fino.', creditsFacts:'<b>Curiosidades de los estados</b> — escritas para este juego y contrastadas con fuentes públicas (parques nacionales, organismos estatales, Census Bureau, USGS, NASA y similares).',
+ credits:'Créditos y licencias', creditsIntro:'Todo en este juego está en tu dispositivo. Gracias a:', creditsPop:'<b>Población de EE. UU.</b> — U.S. Census Bureau, estimaciones Vintage 2025 (NST-EST2025-POP). Dominio público.', creditsCap:'<b>Población de las capitales</b> — Naciones Unidas, DAES, División de Población, World Urbanization Prospects: The 2018 Revision, archivo 13 (aglomeración urbana, 2018). CC BY 3.0 IGO. Datos sin modificar; no implica respaldo de las Naciones Unidas.', creditsMap:'<b>Contornos de los estados</b> — archivos cartográficos de límites del U.S. Census Bureau, empaquetados por us-atlas. Datos de dominio público.', creditsImg:'<b>Imágenes del mapa de EE. UU.</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (julio). Las imágenes de la NASA se pueden usar libremente citando la fuente; no implica respaldo de la NASA.', creditsWorld:'<b>Fronteras del mundo</b> — Natural Earth. Dominio público.', creditsGlobe:'<b>Textura del globo</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (julio). Libre con mención de la fuente; no implica respaldo de la NASA.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. Licencia MIT.', creditsSound:'<b>Sonido</b> — todos los sonidos se sintetizan en tu dispositivo; no hay grabaciones. El grito de victoria de águila también es sintético. En las películas ese grito es en realidad de un ratonero de cola roja, porque la voz del águila calva es un trino fino.', creditsFacts:'<b>Curiosidades de los estados</b> — escritas para este juego y contrastadas con fuentes públicas (parques nacionales, organismos estatales, Census Bureau, USGS, NASA y similares).', creditsNames:"<b>Nombres en portugués, indonesio, chino, hindi, japonés, coreano, árabe y tailandés</b> — nombres de países y estados de EE. UU. del Unicode CLDR (Unicode License v3); nombres de capitales traducidos para este juego.",
  lotsAll:'Todos {n}', funFacts:'Curiosidades', factsIntro:'Todos los estados de esta partida.',
  tagline:'Usa tus conocimientos para vencer a tus rivales',
  solo:'Solo', soloDesc:'Un rival, el bot. Tiene un precio en mente para cada país y se retira en cuanto lo superas. Funciona sin conexión.',
@@ -601,7 +610,7 @@ es:{
  smartestU:'<b>{name}</b> compró de la forma más lista: {v} {unit}.'
 },
 fr:{
- credits:'Crédits et licences', creditsIntro:'Tout dans ce jeu est sur ton appareil. Merci à :', creditsPop:'<b>Population des États-Unis</b> — U.S. Census Bureau, estimations Vintage 2025 (NST-EST2025-POP). Domaine public.', creditsCap:'<b>Population des capitales</b> — Nations unies, DAES, Division de la population, World Urbanization Prospects: The 2018 Revision, fichier 13 (agglomération urbaine, 2018). CC BY 3.0 IGO. Données non modifiées ; aucune approbation des Nations unies.', creditsMap:'<b>Contours des États</b> — fichiers cartographiques de limites du U.S. Census Bureau, mis en forme par us-atlas. Données du domaine public.', creditsImg:'<b>Images de la carte des États-Unis</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (juillet). Les images de la NASA sont libres d’usage avec mention de la source ; aucune approbation de la NASA.', creditsWorld:'<b>Frontières du monde</b> — Natural Earth. Domaine public.', creditsGlobe:'<b>Texture du globe</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (juillet). Libre avec mention de la source ; aucune approbation de la NASA.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. Licence MIT.', creditsSound:'<b>Son</b> — tous les sons sont synthétisés sur ton appareil, sans enregistrement. Le cri de victoire d’aigle est lui aussi synthétisé. Au cinéma ce cri est en réalité celui d’une buse à queue rousse, car la voix du pygargue à tête blanche est un mince pépiement.', creditsFacts:'<b>Le saviez-vous sur les États</b> — écrits pour ce jeu et vérifiés auprès de sources publiques (parcs nationaux, agences des États, Census Bureau, USGS, NASA et autres).',
+ credits:'Crédits et licences', creditsIntro:'Tout dans ce jeu est sur ton appareil. Merci à :', creditsPop:'<b>Population des États-Unis</b> — U.S. Census Bureau, estimations Vintage 2025 (NST-EST2025-POP). Domaine public.', creditsCap:'<b>Population des capitales</b> — Nations unies, DAES, Division de la population, World Urbanization Prospects: The 2018 Revision, fichier 13 (agglomération urbaine, 2018). CC BY 3.0 IGO. Données non modifiées ; aucune approbation des Nations unies.', creditsMap:'<b>Contours des États</b> — fichiers cartographiques de limites du U.S. Census Bureau, mis en forme par us-atlas. Données du domaine public.', creditsImg:'<b>Images de la carte des États-Unis</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (juillet). Les images de la NASA sont libres d’usage avec mention de la source ; aucune approbation de la NASA.', creditsWorld:'<b>Frontières du monde</b> — Natural Earth. Domaine public.', creditsGlobe:'<b>Texture du globe</b> — NASA Earth Observatory, Blue Marble: Next Generation with Topography and Bathymetry (juillet). Libre avec mention de la source ; aucune approbation de la NASA.', creditsThree:'<b>three.js</b> — © 2010–2021 three.js authors. Licence MIT.', creditsSound:'<b>Son</b> — tous les sons sont synthétisés sur ton appareil, sans enregistrement. Le cri de victoire d’aigle est lui aussi synthétisé. Au cinéma ce cri est en réalité celui d’une buse à queue rousse, car la voix du pygargue à tête blanche est un mince pépiement.', creditsFacts:'<b>Le saviez-vous sur les États</b> — écrits pour ce jeu et vérifiés auprès de sources publiques (parcs nationaux, agences des États, Census Bureau, USGS, NASA et autres).', creditsNames:"<b>Noms en portugais, indonésien, chinois, hindi, japonais, coréen, arabe et thaï</b> — noms des pays et des États américains issus du Unicode CLDR (Unicode License v3) ; noms des capitales traduits pour ce jeu.",
  lotsAll:'Tous {n}', funFacts:'Le saviez-vous ?', factsIntro:'Tous les États de cette partie.',
  tagline:'Utilise tes connaissances pour battre tes rivaux',
  solo:'Solo', soloDesc:'Un rival, le bot. Il a un prix en tête pour chaque pays et se retire dès que tu le dépasses. Fonctionne hors ligne.',
@@ -1201,6 +1210,7 @@ const CURWORDS={
   many:{ en:/\b(?:euros|dollars)\b/gi, de:/\b(?:Euro|Dollar)\b/g, it:/\b(?:euro|dollari)\b/g, es:/\b(?:euros|dólares)\b/g, fr:/\b(?:euros|dollars)\b/g }
 };
 function writeIn(c, v){
+  v=v.replace(/(\d\s?)?[€$](?!\s?\d)/g,(m,d)=>d?m:c.sym);        // a lone symbol ("€ por milhão", "每百万人 $"); amounts are done below
   v=v.replace(CURWORDS.one[LANG]||CURWORDS.one.en,(m,d)=>(typeof d==='string'&&d?'de ':'')+Engine.currencyText(c,'1'));
   v=v.replace(CURWORDS.many[LANG]||CURWORDS.many.en,()=>c.sym);
   return v.replace(/[€$]\s?(\d[\d.,]*)|(\d[\d.,]*)\s?[€$]/g,(m,a,b)=>Engine.currencyText(c,a||b));
@@ -1216,15 +1226,39 @@ function t(key, vars){
   else if(cur()!=='€') v=v.replace(/€\s?(\d[\d.,]*)/g,(m,n)=>cur()+n).replace(/(\d[\d.,]*)\s?€/g,(m,n)=>cur()+n);
   return v;
 }
+/* An added language registers itself from i18n-<id>.js: its UI words become STR[id], its per-pack lines join STRP. */
+function addLang(id, L){
+  STR[id]=Object.assign({}, L.str);
+  Object.keys(L.strp||{}).forEach(p=>{ if(STRP[p]) STRP[p][id]=L.strp[p]; });
+}
+window.addLang=addLang;
+const knownLang = id => LANGS.some(l => l.id === id);
+/* the first five are built in; the others are fetched once (from the offline cache) the first time they are needed */
+function loadLangFile(id){
+  if(STR[id] || !knownLang(id)) return Promise.resolve(!!STR[id]);
+  return new Promise(res=>{
+    const sc=document.createElement('script');
+    sc.src='i18n-'+id+'.js'; sc.async=true;
+    sc.onload=()=>res(!!STR[id]); sc.onerror=()=>{ sc.remove(); res(false); };
+    document.head.appendChild(sc);
+  });
+}
+function applyLang(){
+  const d=document.documentElement;
+  d.lang=LANG;
+  d.dir=(LANGS.find(l=>l.id===LANG)||{}).rtl ? 'rtl' : 'ltr';      // Arabic reads right to left
+}
 async function loadLang(){
-  const v=await Store.get('lang:v1'); if(v&&STR[v]){ LANG=v; document.documentElement.lang=LANG; return; }
-  const n=(navigator.language||'en').slice(0,2);
-  if(STR[n]) LANG=n;
-  document.documentElement.lang=LANG;
+  const v=await Store.get('lang:v1');
+  if(v&&knownLang(v)&&await loadLangFile(v)){ LANG=v; applyLang(); return; }
+  const n=(navigator.language||'en').slice(0,2).toLowerCase();
+  LANG='en';
+  if(knownLang(n)&&await loadLangFile(n)) LANG=n;
+  applyLang();
 }
 async function setLang(id){
-  if(!STR[id]) return;
-  LANG=id; document.documentElement.lang=LANG;
+  if(!knownLang(id) || !(await loadLangFile(id))) return;
+  LANG=id; applyLang();
   await Store.set('lang:v1', id);
   home();
 }
@@ -1416,7 +1450,7 @@ function privacy() {
 /* sources and licences for everything bundled (the full text lives in NOTICE.md) */
 function credits() {
   const h = sheet({ title: t('credits'), foot: `<button class="btn gold" id="cd">${esc(t('done'))}</button>`,
-    body: `<p>${esc(t('creditsIntro'))}</p>` + ['creditsPop', 'creditsCap', 'creditsMap', 'creditsImg', 'creditsWorld', 'creditsGlobe', 'creditsThree', 'creditsSound', 'creditsFacts'].map(k => `<p class="sm">${t(k)}</p>`).join('') });
+    body: `<p>${esc(t('creditsIntro'))}</p>` + ['creditsPop', 'creditsCap', 'creditsMap', 'creditsImg', 'creditsWorld', 'creditsGlobe', 'creditsThree', 'creditsSound', 'creditsFacts', 'creditsNames'].map(k => `<p class="sm">${t(k)}</p>`).join('') });
   on('cd', () => { Snd.ui(); h.close(); });
 }
 
@@ -1777,6 +1811,7 @@ async function saveGameLog() {
 }
 function finish() {
   stopClock(); S._taunt = '';
+  if (S.pack && S.pack.map !== 'us' && typeof preloadGlobe === 'function') try { preloadGlobe(); } catch (e) {}   // decode the photo and borders while the bars are lifted
   if (S.trace && !S._logged) { S._logged = true; saveGameLog(); }
   try { speechSynthesis.cancel(); } catch (e) {}
   PACK = S.pack;
@@ -1789,37 +1824,64 @@ function finish() {
     <div class="res2">
       <div class="r-l">
         <div class="glass win" id="verdict"><div class="crown" aria-hidden="true">🔒</div><h2>${esc(t('sealed'))}</h2><p>${esc(t('revealShort'))}</p></div>
-        <div class="glass lb" id="lb">${rows.map(r => `
+        <div class="glass lb${S.items.length > 10 ? ' many' : ''}" id="lb">${rows.map(r => `
           <div class="lbr"><div class="o s${seatOf(r.p)}" aria-hidden="true">${esc(ini(r.p.name))}</div><div class="n">${esc(r.p.name)}</div><div class="p">${red(r.pts.toFixed(1), t('points') + ' · ' + r.p.name)}</div></div>
           <div class="fl">${r.p.bought.length ? r.p.bought.map(b => `<span class="f1"><em aria-hidden="true">${icon(b)}</em><span class="sr">${esc(cname(b))}</span><span>${b.free ? esc(t('freeLot')) : money(b.price)}</span><s>${red(fmtVal(b.value), cname(b))}</s></span>`).join('') : `<span class="sm">${esc(t('nothing'))}</span>`}</div>`).join('')}
           ${S.unsold && S.unsold.length ? `<p class="sm unsold">${esc(t('unsoldNote', { n: S.unsold.length }))}</p>` : ''}
         </div>
+        <div class="acts" id="acts"><button class="btn gold wide" id="rev">${esc(t('liftAll'))}</button></div>
       </div>
-      <div class="r-r"><div id="extra" hidden></div>
-        <div class="acts" id="acts"><button class="btn gold wide" id="rev">${esc(t('liftAll'))}</button></div></div>
+      <div class="r-r"><div id="extra" hidden></div></div>
     </div>`, 'results');
   on('nb', () => { Snd.ui(); home(); });
 
   const bars = $$('.redact', sec);
-  let opened = 0, revealed = false;
+  let opened = 0, revealed = false, lastTick = 0;
   const lift = b => {
     if (b.classList.contains('open')) return;
     b.classList.add('open'); b.textContent = b.dataset.v; b.removeAttribute('aria-label'); b.tabIndex = -1;
-    Snd.ui(); Haptics.light();
+    const now = performance.now(); if (now - lastTick > 60) { lastTick = now; Snd.ui(); Haptics.light(); }   // a long game lifts 100+ bars: at most one click every 60 ms
     if (!FX.reduced) b.animate([{ transform: 'scale(.85)', opacity: .3 }, { transform: 'scale(1.08)', opacity: 1, offset: .6 }, { transform: 'scale(1)', opacity: 1 }], { duration: 300, easing: 'ease-out' });
     opened++;
     if (opened === bars.length && !revealed) { revealed = true; setTimeout(() => reveal(sec, rows, best, bestEff, REC), 420); }
   };
   bars.forEach(b => b.onclick = () => lift(b));
-  on('rev', () => { let d = 0; bars.forEach(b => { if (!b.classList.contains('open')) setTimeout(() => lift(b), d += 70); }); $('#rev').disabled = true; });
+  on('rev', () => {                                  // 70 ms a bar, but the whole lift never takes more than about 1.5 s (120 bars took 8.4 s)
+    const shut = bars.filter(b => !b.classList.contains('open')), stepMs = Math.min(70, 1500 / Math.max(1, shut.length));
+    let d = 0; shut.forEach(b => setTimeout(() => lift(b), d += stepMs)); $('#rev').disabled = true;
+  });
   if (!bars.length) { revealed = true; setTimeout(() => reveal(sec, rows, best, bestEff, REC), 200); }
+  /* the world card (and its WebGL globe) is built now, hidden, while the bars are lifted, so it is ready the moment the winner is shown */
+  const tokW = navTok;
+  setTimeout(() => (window.requestIdleCallback || (f => f()))(() => { if (tokW === navTok) buildWorld(sec, best); }, { timeout: 400 }), 450);
+}
+
+/* the winner's world: the globe (or the US map) with their lots, built once, hidden until reveal() shows #extra */
+function buildWorld(sec, best) {
+  if (sec._world || !sec.isConnected) return;
+  sec._world = true;
+  const lots = best.p.bought.filter(Engine.hasCoords);
+  if (!lots.length) return;
+  const usMode = S.pack.map === 'us' && window.USView;                  // States: the map of the US instead of the globe
+  $('#extra', sec).insertAdjacentHTML('afterbegin', `<div class="glass gl${usMode ? ' gl-us' : ''}">${usMode ? `<div class="usm" id="gl"><img class="gph" src="us-map.webp" alt="" decoding="async"></div>` : `<div class="globe" id="gl"></div>`}
+      <div class="cap"><b>${esc(t('worldTitle'))}</b>${t('world', { name: esc(best.p.name) })}</div>
+      <div class="chips">${lots.map(b => `<span class="chip"><span aria-hidden="true">${icon(b)}</span> ${esc(cname(b))}</span>`).join('')}</div></div>`);
+  const host = $('#gl', sec);
+  if (usMode) {
+    USView.render(host, lots, { reduced: FX.reduced, label: b => b.abbr || b.id, value: b => fmtVal(b.value), aria: t('worldTitle') + ': ' + lots.map(cname).join(', ') })
+      .catch(() => {});                                                  // the placeholder map stays if the outlines are missing
+    return;
+  }
+  if (stopGlobe) stopGlobe();
+  stopGlobe = globe(host, lots, S.pack);
 }
 
 /* The reveal is staged on purpose. Doing the confetti, the count-up, the card spring and the globe in
    the same frames made the old end screen stutter on a phone, so each gets its own beat:
-   0 ms verdict springs in · 120 ms points count up · 260 ms sound + confetti · 520 ms globe card
-   fades in · 2.4 s the live globe is built (its WebGL set-up is the one heavy job, so it waits until
-   the celebration has finished). Blur on the glass panels is dropped while the confetti falls. */
+   0 ms verdict springs in · 120 ms points count up · 260 ms sound + confetti · 380 ms the globe card
+   slides in. The live globe itself (the one heavy WebGL job) was already built, hidden, while the bars
+   were being lifted (buildWorld from finish(); the photo is decoded even earlier, preloadGlobe), so
+   nothing heavy runs during the celebration. Blur on the glass panels is dropped while the confetti falls. */
 async function reveal(sec, rows, best, bestEff, REC) {
   if (!sec.isConnected) return;
   const tok = navTok, win = !best.p.ai;
@@ -1830,7 +1892,6 @@ async function reveal(sec, rows, best, bestEff, REC) {
     if (tok !== navTok) return;
   }
   rootEl.classList.add('celebrating');
-  const lots = best.p.bought.filter(Engine.hasCoords);
   const single = S.players.filter(p => !p.ai).length === 1;
   const v = $('#verdict', sec);
   v.classList.add('final');
@@ -1854,35 +1915,17 @@ async function reveal(sec, rows, best, bestEff, REC) {
   step(260, () => {
     if (win) { S.pack.map === 'us' ? Snd.eagle() : Snd.fanfare(); Haptics.success(); if (single || !best.p.ai) FX.confetti(sec, 22); } else { Snd.sting(); Haptics.warning(); }
   });
-  /* the card with the world and the record */
+  /* the card with the world (built while the bars were lifted) and the record */
   const ex = $('#extra', sec);
+  buildWorld(sec, best);                                                 // nothing to do if it is already there
   const recHtml = outcome ? `<div class="glass recpill" style="padding:8px 14px;order:0"><div class="big num" style="font-size:24px">${REC.won}<i>–</i>${REC.lost}${REC.drawn ? `<i>–</i>${REC.drawn}` : ''}</div><div class="m"><b>${esc(outcome.record ? t('newRecord') : t('record'))}</b><br>${REC.played} ${esc(t('games'))}${REC.streak ? ` · ${esc(t('streak'))} ${REC.streak > 0 ? '+' : ''}${REC.streak}` : ''}</div></div>` : S.practice ? `<div class="glass recpill" style="padding:8px 14px;order:0"><div class="m"><b>${esc(t('practiceTitle'))}</b><br>${esc(t('practiceNote'))}</div></div>` : '';
-  const usMode = S.pack.map === 'us' && window.USView;                  // States: the map of the US instead of the globe
-  ex.innerHTML = `${lots.length ? `<div class="glass gl${usMode ? ' gl-us' : ''}">${usMode ? `<div class="usm" id="gl"><img class="gph" src="us-map.webp" alt="" decoding="async"></div>` : `<div class="globe" id="gl"><img class="gph" src="globe-hero.webp" alt="" decoding="async"></div>`}
-      <div class="cap"><b>${esc(t('worldTitle'))}</b>${t('world', { name: esc(best.p.name) })}</div>
-      <div class="chips">${lots.map(b => `<span class="chip"><span aria-hidden="true">${icon(b)}</span> ${esc(cname(b))}</span>`).join('')}</div></div>` : ''}${recHtml}`;
-  step(520, () => {
+  if (recHtml) ex.insertAdjacentHTML('beforeend', recHtml);
+  step(380, () => {
+    if (!ex.children.length) return;
     ex.hidden = false;
     if (!FX.reduced) FX.spring(ex, 0, 1, x => ({ transform: `translateY(${(1 - x) * 18}px)`, opacity: Math.min(1, x * 1.6) }), { k: 200, c: 18 });
   });
-  step(2400, () => {
-    rootEl.classList.remove('celebrating');
-    const host = $('#gl', sec); if (!host) return;
-    if (usMode) {
-      USView.render(host, lots, { reduced: FX.reduced, label: b => b.abbr || b.id, value: b => fmtVal(b.value), aria: t('worldTitle') + ': ' + lots.map(cname).join(', ') })
-        .then(() => { if (tok !== navTok) return; if (!FX.reduced) host.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 400, easing: 'ease-out' }); })
-        .catch(() => {});                                                // the placeholder map stays if the outlines are missing
-      return;
-    }
-    const mount = () => {
-      if (tok !== navTok) return;
-      const ph = $('.gph', host); if (ph) ph.remove();
-      if (stopGlobe) stopGlobe();
-      stopGlobe = globe(host, lots, S.pack);
-      const cv = $('canvas', host); if (cv && !FX.reduced) cv.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 400, easing: 'ease-out' });
-    };
-    (window.requestIdleCallback || (f => setTimeout(f, 60)))(mount, { timeout: 700 });
-  });
+  step(2000, () => rootEl.classList.remove('celebrating'));
   if (FX.reduced) rootEl.classList.remove('celebrating');
 }
 

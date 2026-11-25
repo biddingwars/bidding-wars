@@ -1,7 +1,7 @@
 /* Service worker — the whole game is cached on first visit, then served from
    cache. After that it runs with no connection at all, which is the point. */
 
-const CACHE = 'bidding-wars-v63';
+const CACHE = 'bidding-wars-v64';
 
 const SHELL = [
   './',
@@ -14,6 +14,14 @@ const SHELL = [
   './engine.js',
   './packs.js',
   './banter.js',
+  './i18n-pt.js',
+  './i18n-id.js',
+  './i18n-zh.js',
+  './i18n-hi.js',
+  './i18n-ja.js',
+  './i18n-ko.js',
+  './i18n-ar.js',
+  './i18n-th.js',
   './pack-countries.js',
   './pack-states.js',
   './pack-capitals.js',

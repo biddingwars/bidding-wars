@@ -50,805 +50,2104 @@
  "names": {
   "AF": {
    "en": "Kabul",
-   "fr": "Kaboul"
+   "fr": "Kaboul",
+   "pt": "Cabul",
+   "zh": "喀布尔",
+   "hi": "काबुल",
+   "ja": "カブール",
+   "ko": "카불",
+   "ar": "كابل",
+   "th": "คาบูล"
   },
   "AL": {
-   "en": "Tirana"
+   "en": "Tirana",
+   "zh": "地拉那",
+   "hi": "तिराना",
+   "ja": "ティラナ",
+   "ko": "티라나",
+   "ar": "تيرانا",
+   "th": "ติรานา"
   },
   "DZ": {
    "en": "Algiers",
    "de": "Algier",
    "it": "Algeri",
    "es": "Argel",
-   "fr": "Alger"
+   "fr": "Alger",
+   "pt": "Argel",
+   "id": "Aljir",
+   "zh": "阿尔及尔",
+   "hi": "अल्जीयर्स",
+   "ja": "アルジェ",
+   "ko": "알제",
+   "ar": "الجزائر العاصمة",
+   "th": "แอลเจียร์"
   },
   "AD": {
-   "en": "Andorra la Vella"
+   "en": "Andorra la Vella",
+   "pt": "Andorra-a-Velha",
+   "zh": "安道尔城",
+   "hi": "अंडोरा ला वेया",
+   "ja": "アンドラ・ラ・ベリャ",
+   "ko": "안도라라베야",
+   "ar": "أندورا لا فيلا",
+   "th": "อันดอร์ราลาเวลลา"
   },
   "AO": {
-   "en": "Luanda"
+   "en": "Luanda",
+   "zh": "罗安达",
+   "hi": "लुआंडा",
+   "ja": "ルアンダ",
+   "ko": "루안다",
+   "ar": "لواندا",
+   "th": "ลูอันดา"
   },
   "AG": {
-   "en": "Saint John's"
+   "en": "Saint John's",
+   "pt": "Saint John’s",
+   "id": "Saint John’s",
+   "zh": "圣约翰",
+   "hi": "सेंट जॉन्स",
+   "ja": "セントジョンズ",
+   "ko": "세인트존스",
+   "ar": "سانت جونز",
+   "th": "เซนต์จอห์นส์"
   },
   "AR": {
-   "en": "Buenos Aires"
+   "en": "Buenos Aires",
+   "zh": "布宜诺斯艾利斯",
+   "hi": "ब्यूनस आयर्स",
+   "ja": "ブエノスアイレス",
+   "ko": "부에노스아이레스",
+   "ar": "بوينس آيرس",
+   "th": "บัวโนสไอเรส"
   },
   "AM": {
    "en": "Yerevan",
    "de": "Jerewan",
    "it": "Erevan",
    "es": "Ereván",
-   "fr": "Erevan"
+   "fr": "Erevan",
+   "pt": "Ierevan",
+   "zh": "埃里温",
+   "hi": "येरेवान",
+   "ja": "エレバン",
+   "ko": "예레반",
+   "ar": "يريفان",
+   "th": "เยเรวาน"
   },
   "AU": {
-   "en": "Canberra"
+   "en": "Canberra",
+   "pt": "Camberra",
+   "zh": "堪培拉",
+   "hi": "कैनबरा",
+   "ja": "キャンベラ",
+   "ko": "캔버라",
+   "ar": "كانبرا",
+   "th": "แคนเบอร์รา"
   },
   "AT": {
    "en": "Vienna",
    "de": "Wien",
    "es": "Viena",
-   "fr": "Vienne"
+   "fr": "Vienne",
+   "pt": "Viena",
+   "id": "Wina",
+   "zh": "维也纳",
+   "hi": "वियना",
+   "ja": "ウィーン",
+   "ko": "빈",
+   "ar": "فيينا",
+   "th": "เวียนนา"
   },
   "AZ": {
    "en": "Baku",
    "es": "Bakú",
-   "fr": "Bakou"
+   "fr": "Bakou",
+   "zh": "巴库",
+   "hi": "बाकू",
+   "ja": "バクー",
+   "ko": "바쿠",
+   "ar": "باكو",
+   "th": "บากู"
   },
   "BS": {
-   "en": "Nassau"
+   "en": "Nassau",
+   "zh": "拿骚",
+   "hi": "नासाउ",
+   "ja": "ナッソー",
+   "ko": "나소",
+   "ar": "ناساو",
+   "th": "แนสซอ"
   },
   "BH": {
-   "en": "Manama"
+   "en": "Manama",
+   "zh": "麦纳麦",
+   "hi": "मनामा",
+   "ja": "マナーマ",
+   "ko": "마나마",
+   "ar": "المنامة",
+   "th": "มานามา"
   },
   "BD": {
    "en": "Dhaka",
    "it": "Dacca",
    "es": "Daca",
-   "fr": "Dacca"
+   "fr": "Dacca",
+   "pt": "Daca",
+   "zh": "达卡",
+   "hi": "ढाका",
+   "ja": "ダッカ",
+   "ko": "다카",
+   "ar": "دكا",
+   "th": "ธากา"
   },
   "BB": {
-   "en": "Bridgetown"
+   "en": "Bridgetown",
+   "zh": "布里奇敦",
+   "hi": "ब्रिजटाउन",
+   "ja": "ブリッジタウン",
+   "ko": "브리지타운",
+   "ar": "بريدجتاون",
+   "th": "บริดจ์ทาวน์"
   },
   "BY": {
-   "en": "Minsk"
+   "en": "Minsk",
+   "zh": "明斯克",
+   "hi": "मिन्स्क",
+   "ja": "ミンスク",
+   "ko": "민스크",
+   "ar": "مينسك",
+   "th": "มินสก์"
   },
   "BE": {
    "en": "Brussels",
    "de": "Brüssel",
    "it": "Bruxelles",
    "es": "Bruselas",
-   "fr": "Bruxelles"
+   "fr": "Bruxelles",
+   "pt": "Bruxelas",
+   "id": "Brussel",
+   "zh": "布鲁塞尔",
+   "hi": "ब्रसेल्स",
+   "ja": "ブリュッセル",
+   "ko": "브뤼셀",
+   "ar": "بروكسل",
+   "th": "บรัสเซลส์"
   },
   "BZ": {
-   "en": "Belmopan"
+   "en": "Belmopan",
+   "pt": "Belmopã",
+   "zh": "贝尔莫潘",
+   "hi": "बेलमोपान",
+   "ja": "ベルモパン",
+   "ko": "벨모판",
+   "ar": "بلموبان",
+   "th": "เบลโมแพน"
   },
   "BJ": {
-   "en": "Cotonou"
+   "en": "Cotonou",
+   "zh": "科托努",
+   "hi": "कोटोनू",
+   "ja": "コトヌー",
+   "ko": "코토누",
+   "ar": "كوتونو",
+   "th": "โกโตนู"
   },
   "BT": {
    "en": "Thimphu",
-   "fr": "Thimphou"
+   "fr": "Thimphou",
+   "pt": "Timbu",
+   "zh": "廷布",
+   "hi": "थिम्पू",
+   "ja": "ティンプー",
+   "ko": "팀부",
+   "ar": "تيمفو",
+   "th": "ทิมพู"
   },
   "BO": {
-   "en": "La Paz"
+   "en": "La Paz",
+   "zh": "拉巴斯",
+   "hi": "ला पाज़",
+   "ja": "ラパス",
+   "ko": "라파스",
+   "ar": "لاباز",
+   "th": "ลาปาซ"
   },
   "BA": {
-   "en": "Sarajevo"
+   "en": "Sarajevo",
+   "zh": "萨拉热窝",
+   "hi": "साराजेवो",
+   "ja": "サラエボ",
+   "ko": "사라예보",
+   "ar": "سراييفو",
+   "th": "ซาราเยโว"
   },
   "BW": {
-   "en": "Gaborone"
+   "en": "Gaborone",
+   "zh": "哈博罗内",
+   "hi": "गैबोरोन",
+   "ja": "ハボローネ",
+   "ko": "하보로네",
+   "ar": "غابورون",
+   "th": "กาโบโรเน"
   },
   "BR": {
    "en": "Brasília",
    "it": "Brasilia",
    "es": "Brasilia",
-   "fr": "Brasilia"
+   "fr": "Brasilia",
+   "zh": "巴西利亚",
+   "hi": "ब्रासीलिया",
+   "ja": "ブラジリア",
+   "ko": "브라질리아",
+   "ar": "برازيليا",
+   "th": "บราซิเลีย"
   },
   "BN": {
-   "en": "Bandar Seri Begawan"
+   "en": "Bandar Seri Begawan",
+   "zh": "斯里巴加湾市",
+   "hi": "बंदर सेरी बेगावान",
+   "ja": "バンダルスリブガワン",
+   "ko": "반다르스리브가완",
+   "ar": "بندر سري بكاوان",
+   "th": "บันดาร์เสรีเบกาวัน"
   },
   "BG": {
    "en": "Sofia",
-   "es": "Sofía"
+   "es": "Sofía",
+   "pt": "Sófia",
+   "zh": "索非亚",
+   "hi": "सोफ़िया",
+   "ja": "ソフィア",
+   "ko": "소피아",
+   "ar": "صوفيا",
+   "th": "โซเฟีย"
   },
   "BF": {
    "en": "Ouagadougou",
-   "es": "Uagadugú"
+   "es": "Uagadugú",
+   "pt": "Uagadugu",
+   "zh": "瓦加杜古",
+   "hi": "वागाडुगू",
+   "ja": "ワガドゥグー",
+   "ko": "와가두구",
+   "ar": "واغادوغو",
+   "th": "วากาดูกู"
   },
   "BI": {
-   "en": "Bujumbura"
+   "en": "Bujumbura",
+   "zh": "布琼布拉",
+   "hi": "बुजुम्बुरा",
+   "ja": "ブジュンブラ",
+   "ko": "부줌부라",
+   "ar": "بوجمبورا",
+   "th": "บูจุมบูรา"
   },
   "CV": {
-   "en": "Praia"
+   "en": "Praia",
+   "zh": "普拉亚",
+   "hi": "प्राइया",
+   "ja": "プライア",
+   "ko": "프라이아",
+   "ar": "برايا",
+   "th": "ไปรอา"
   },
   "KH": {
    "en": "Phnom Penh",
-   "es": "Nom Pen"
+   "es": "Nom Pen",
+   "zh": "金边",
+   "hi": "नॉम पेन्ह",
+   "ja": "プノンペン",
+   "ko": "프놈펜",
+   "ar": "بنوم بنه",
+   "th": "พนมเปญ"
   },
   "CM": {
    "en": "Yaoundé",
    "de": "Jaunde",
-   "es": "Yaundé"
+   "es": "Yaundé",
+   "pt": "Iaundé",
+   "zh": "雅温得",
+   "hi": "याउंडे",
+   "ja": "ヤウンデ",
+   "ko": "야운데",
+   "ar": "ياوندي",
+   "th": "ยาอุนเด"
   },
   "CA": {
-   "en": "Ottawa"
+   "en": "Ottawa",
+   "zh": "渥太华",
+   "hi": "ओटावा",
+   "ja": "オタワ",
+   "ko": "오타와",
+   "ar": "أوتاوا",
+   "th": "ออตตาวา"
   },
   "CF": {
-   "en": "Bangui"
+   "en": "Bangui",
+   "zh": "班吉",
+   "hi": "बांगुई",
+   "ja": "バンギ",
+   "ko": "방기",
+   "ar": "بانغي",
+   "th": "บังกี"
   },
   "TD": {
    "en": "N'Djamena",
    "es": "Yamena",
-   "fr": "N'Djaména"
+   "fr": "N'Djaména",
+   "pt": "N’Djamena",
+   "id": "N’Djamena",
+   "zh": "恩贾梅纳",
+   "hi": "एनजामेना",
+   "ja": "ンジャメナ",
+   "ko": "은자메나",
+   "ar": "نجامينا",
+   "th": "อึนจาเมนา"
   },
   "CL": {
-   "en": "Santiago"
+   "en": "Santiago",
+   "zh": "圣地亚哥",
+   "hi": "सैंटियागो",
+   "ja": "サンティアゴ",
+   "ko": "산티아고",
+   "ar": "سانتياغو",
+   "th": "ซานติอาโก"
   },
   "CN": {
    "en": "Beijing",
    "de": "Peking",
    "it": "Pechino",
    "es": "Pekín",
-   "fr": "Pékin"
+   "fr": "Pékin",
+   "pt": "Pequim",
+   "zh": "北京",
+   "hi": "बीजिंग",
+   "ja": "北京",
+   "ko": "베이징",
+   "ar": "بكين",
+   "th": "ปักกิ่ง"
   },
   "CO": {
    "en": "Bogotá",
-   "fr": "Bogota"
+   "fr": "Bogota",
+   "zh": "波哥大",
+   "hi": "बोगोटा",
+   "ja": "ボゴタ",
+   "ko": "보고타",
+   "ar": "بوغوتا",
+   "th": "โบโกตา"
   },
   "KM": {
-   "en": "Moroni"
+   "en": "Moroni",
+   "zh": "莫罗尼",
+   "hi": "मोरोनी",
+   "ja": "モロニ",
+   "ko": "모로니",
+   "ar": "موروني",
+   "th": "โมโรนี"
   },
   "CG": {
-   "en": "Brazzaville"
+   "en": "Brazzaville",
+   "zh": "布拉柴维尔",
+   "hi": "ब्राज़ाविल",
+   "ja": "ブラザビル",
+   "ko": "브라자빌",
+   "ar": "برازافيل",
+   "th": "บราซาวิล"
   },
   "CD": {
-   "en": "Kinshasa"
+   "en": "Kinshasa",
+   "zh": "金沙萨",
+   "hi": "किंशासा",
+   "ja": "キンシャサ",
+   "ko": "킨샤사",
+   "ar": "كينشاسا",
+   "th": "กินชาซา"
   },
   "CR": {
-   "en": "San José"
+   "en": "San José",
+   "zh": "圣何塞",
+   "hi": "सान होसे",
+   "ja": "サンホセ",
+   "ko": "산호세",
+   "ar": "سان خوسيه",
+   "th": "ซานโฮเซ"
   },
   "CI": {
-   "en": "Abidjan"
+   "en": "Abidjan",
+   "zh": "阿比让",
+   "hi": "आबिदजान",
+   "ja": "アビジャン",
+   "ko": "아비장",
+   "ar": "أبيدجان",
+   "th": "อาบีจาน"
   },
   "HR": {
-   "en": "Zagreb"
+   "en": "Zagreb",
+   "zh": "萨格勒布",
+   "hi": "ज़ाग्रेब",
+   "ja": "ザグレブ",
+   "ko": "자그레브",
+   "ar": "زغرب",
+   "th": "ซาเกร็บ"
   },
   "CU": {
    "en": "Havana",
    "de": "Havanna",
    "it": "L'Avana",
    "es": "La Habana",
-   "fr": "La Havane"
+   "fr": "La Havane",
+   "zh": "哈瓦那",
+   "hi": "हवाना",
+   "ja": "ハバナ",
+   "ko": "아바나",
+   "ar": "هافانا",
+   "th": "ฮาวานา"
   },
   "CY": {
    "en": "Nicosia",
    "de": "Nikosia",
-   "fr": "Nicosie"
+   "fr": "Nicosie",
+   "pt": "Nicósia",
+   "id": "Nikosia",
+   "zh": "尼科西亚",
+   "hi": "निकोसिया",
+   "ja": "ニコシア",
+   "ko": "니코시아",
+   "ar": "نيقوسيا",
+   "th": "นิโคเซีย"
   },
   "CZ": {
    "en": "Prague",
    "de": "Prag",
    "it": "Praga",
-   "es": "Praga"
+   "es": "Praga",
+   "pt": "Praga",
+   "id": "Praha",
+   "zh": "布拉格",
+   "hi": "प्राग",
+   "ja": "プラハ",
+   "ko": "프라하",
+   "ar": "براغ",
+   "th": "ปราก"
   },
   "KP": {
    "en": "Pyongyang",
    "de": "Pjöngjang",
-   "es": "Pionyang"
+   "es": "Pionyang",
+   "zh": "平壤",
+   "hi": "प्योंगयांग",
+   "ja": "平壌",
+   "ko": "평양",
+   "ar": "بيونغ يانغ",
+   "th": "เปียงยาง"
   },
   "DK": {
    "en": "Copenhagen",
    "de": "Kopenhagen",
    "it": "Copenaghen",
    "es": "Copenhague",
-   "fr": "Copenhague"
+   "fr": "Copenhague",
+   "pt": "Copenhague",
+   "id": "Kopenhagen",
+   "zh": "哥本哈根",
+   "hi": "कोपेनहेगन",
+   "ja": "コペンハーゲン",
+   "ko": "코펜하겐",
+   "ar": "كوبنهاغن",
+   "th": "โคเปนเฮเกน"
   },
   "DJ": {
    "en": "Djibouti",
    "de": "Dschibuti",
    "it": "Gibuti",
-   "es": "Yibuti"
+   "es": "Yibuti",
+   "pt": "Djibuti",
+   "zh": "吉布提市",
+   "hi": "जिबूती",
+   "ja": "ジブチ市",
+   "ko": "지부티시",
+   "ar": "جيبوتي العاصمة",
+   "th": "จิบูตี"
   },
   "DM": {
-   "en": "Roseau"
+   "en": "Roseau",
+   "zh": "罗索",
+   "hi": "रोज़ो",
+   "ja": "ロゾー",
+   "ko": "로조",
+   "ar": "روزو",
+   "th": "โรโซ"
   },
   "DO": {
-   "en": "Santo Domingo"
+   "en": "Santo Domingo",
+   "zh": "圣多明各",
+   "hi": "सैंटो डोमिंगो",
+   "ja": "サントドミンゴ",
+   "ko": "산토도밍고",
+   "ar": "سانتو دومينغو",
+   "th": "ซานโตโดมิงโก"
   },
   "EC": {
-   "en": "Quito"
+   "en": "Quito",
+   "zh": "基多",
+   "hi": "कीटो",
+   "ja": "キト",
+   "ko": "키토",
+   "ar": "كيتو",
+   "th": "กีโต"
   },
   "EG": {
    "en": "Cairo",
    "de": "Kairo",
    "it": "Il Cairo",
    "es": "El Cairo",
-   "fr": "Le Caire"
+   "fr": "Le Caire",
+   "id": "Kairo",
+   "zh": "开罗",
+   "hi": "काहिरा",
+   "ja": "カイロ",
+   "ko": "카이로",
+   "ar": "القاهرة",
+   "th": "ไคโร"
   },
   "SV": {
-   "en": "San Salvador"
+   "en": "San Salvador",
+   "zh": "圣萨尔瓦多",
+   "hi": "सान साल्वाडोर",
+   "ja": "サンサルバドル",
+   "ko": "산살바도르",
+   "ar": "سان سلفادور",
+   "th": "ซานซัลวาดอร์"
   },
   "GQ": {
-   "en": "Malabo"
+   "en": "Malabo",
+   "zh": "马拉博",
+   "hi": "मालाबो",
+   "ja": "マラボ",
+   "ko": "말라보",
+   "ar": "مالابو",
+   "th": "มาลาโบ"
   },
   "ER": {
-   "en": "Asmara"
+   "en": "Asmara",
+   "zh": "阿斯马拉",
+   "hi": "अस्मारा",
+   "ja": "アスマラ",
+   "ko": "아스마라",
+   "ar": "أسمرة",
+   "th": "แอสมารา"
   },
   "EE": {
-   "en": "Tallinn"
+   "en": "Tallinn",
+   "zh": "塔林",
+   "hi": "तालिन",
+   "ja": "タリン",
+   "ko": "탈린",
+   "ar": "تالين",
+   "th": "ทาลลินน์"
   },
   "SZ": {
-   "en": "Mbabane"
+   "en": "Mbabane",
+   "zh": "姆巴巴内",
+   "hi": "म्बाबाने",
+   "ja": "ムババーネ",
+   "ko": "음바바네",
+   "ar": "مبابان",
+   "th": "อึมบาบาเน"
   },
   "ET": {
    "en": "Addis Ababa",
    "de": "Addis Abeba",
    "it": "Addis Abeba",
    "es": "Adís Abeba",
-   "fr": "Addis-Abeba"
+   "fr": "Addis-Abeba",
+   "pt": "Adis Abeba",
+   "zh": "亚的斯亚贝巴",
+   "hi": "अदीस अबाबा",
+   "ja": "アディスアベバ",
+   "ko": "아디스아바바",
+   "ar": "أديس أبابا",
+   "th": "แอดดิสอาบาบา"
   },
   "FJ": {
-   "en": "Suva"
+   "en": "Suva",
+   "zh": "苏瓦",
+   "hi": "सूवा",
+   "ja": "スバ",
+   "ko": "수바",
+   "ar": "سوفا",
+   "th": "ซูวา"
   },
   "FI": {
-   "en": "Helsinki"
+   "en": "Helsinki",
+   "pt": "Helsinque",
+   "zh": "赫尔辛基",
+   "hi": "हेलसिंकी",
+   "ja": "ヘルシンキ",
+   "ko": "헬싱키",
+   "ar": "هلسنكي",
+   "th": "เฮลซิงกิ"
   },
   "FR": {
-   "en": "Paris"
+   "en": "Paris",
+   "zh": "巴黎",
+   "hi": "पेरिस",
+   "ja": "パリ",
+   "ko": "파리",
+   "ar": "باريس",
+   "th": "ปารีส"
   },
   "GA": {
-   "en": "Libreville"
+   "en": "Libreville",
+   "zh": "利伯维尔",
+   "hi": "लिब्रविल",
+   "ja": "リーブルビル",
+   "ko": "리브르빌",
+   "ar": "ليبرفيل",
+   "th": "ลีเบรอวิล"
   },
   "GM": {
-   "en": "Banjul"
+   "en": "Banjul",
+   "zh": "班珠尔",
+   "hi": "बंजुल",
+   "ja": "バンジュール",
+   "ko": "반줄",
+   "ar": "بانجول",
+   "th": "บันจูล"
   },
   "GE": {
    "en": "Tbilisi",
-   "fr": "Tbilissi"
+   "fr": "Tbilissi",
+   "zh": "第比利斯",
+   "hi": "त्बिलिसी",
+   "ja": "トビリシ",
+   "ko": "트빌리시",
+   "ar": "تبليسي",
+   "th": "ทบิลิซี"
   },
   "DE": {
-   "en": "Berlin"
+   "en": "Berlin",
+   "pt": "Berlim",
+   "zh": "柏林",
+   "hi": "बर्लिन",
+   "ja": "ベルリン",
+   "ko": "베를린",
+   "ar": "برلين",
+   "th": "เบอร์ลิน"
   },
   "GH": {
    "en": "Accra",
-   "es": "Acra"
+   "es": "Acra",
+   "pt": "Acra",
+   "zh": "阿克拉",
+   "hi": "अक्रा",
+   "ja": "アクラ",
+   "ko": "아크라",
+   "ar": "أكرا",
+   "th": "อักกรา"
   },
   "GR": {
    "en": "Athens",
    "de": "Athen",
    "it": "Atene",
    "es": "Atenas",
-   "fr": "Athènes"
+   "fr": "Athènes",
+   "pt": "Atenas",
+   "id": "Athena",
+   "zh": "雅典",
+   "hi": "एथेंस",
+   "ja": "アテネ",
+   "ko": "아테네",
+   "ar": "أثينا",
+   "th": "เอเธนส์"
   },
   "GD": {
-   "en": "Saint George's"
+   "en": "Saint George's",
+   "pt": "Saint George’s",
+   "id": "Saint George’s",
+   "zh": "圣乔治",
+   "hi": "सेंट जॉर्जेस",
+   "ja": "セントジョージズ",
+   "ko": "세인트조지스",
+   "ar": "سانت جورجز",
+   "th": "เซนต์จอร์เจส"
   },
   "GT": {
    "en": "Guatemala City",
    "de": "Guatemala-Stadt",
    "it": "Città del Guatemala",
    "es": "Ciudad de Guatemala",
-   "fr": "Guatemala"
+   "fr": "Guatemala",
+   "pt": "Cidade da Guatemala",
+   "id": "Kota Guatemala",
+   "zh": "危地马拉城",
+   "hi": "ग्वाटेमाला सिटी",
+   "ja": "グアテマラシティ",
+   "ko": "과테말라시티",
+   "ar": "غواتيمالا سيتي",
+   "th": "กัวเตมาลาซิตี"
   },
   "GN": {
    "en": "Conakry",
-   "es": "Conakri"
+   "es": "Conakri",
+   "pt": "Conacri",
+   "zh": "科纳克里",
+   "hi": "कोनाक्री",
+   "ja": "コナクリ",
+   "ko": "코나크리",
+   "ar": "كوناكري",
+   "th": "โกนากรี"
   },
   "GW": {
-   "en": "Bissau"
+   "en": "Bissau",
+   "zh": "比绍",
+   "hi": "बिसाउ",
+   "ja": "ビサウ",
+   "ko": "비사우",
+   "ar": "بيساو",
+   "th": "บิสเซา"
   },
   "GY": {
-   "en": "Georgetown"
+   "en": "Georgetown",
+   "zh": "乔治敦",
+   "hi": "जॉर्जटाउन",
+   "ja": "ジョージタウン",
+   "ko": "조지타운",
+   "ar": "جورج تاون",
+   "th": "จอร์จทาวน์"
   },
   "HT": {
    "en": "Port-au-Prince",
-   "es": "Puerto Príncipe"
+   "es": "Puerto Príncipe",
+   "pt": "Porto Príncipe",
+   "zh": "太子港",
+   "hi": "पोर्ट-ओ-प्रिंस",
+   "ja": "ポルトープランス",
+   "ko": "포르토프랭스",
+   "ar": "بورت أو برنس",
+   "th": "ปอร์โตแปรงส์"
   },
   "VA": {
    "en": "Vatican City",
    "de": "Vatikanstadt",
    "it": "Città del Vaticano",
    "es": "Ciudad del Vaticano",
-   "fr": "Cité du Vatican"
+   "fr": "Cité du Vatican",
+   "pt": "Cidade do Vaticano",
+   "id": "Kota Vatikan",
+   "zh": "梵蒂冈城",
+   "hi": "वेटिकन सिटी",
+   "ja": "バチカン",
+   "ko": "바티칸시티",
+   "ar": "مدينة الفاتيكان",
+   "th": "นครวาติกัน"
   },
   "HN": {
-   "en": "Tegucigalpa"
+   "en": "Tegucigalpa",
+   "zh": "特古西加尔巴",
+   "hi": "तेगुसिगाल्पा",
+   "ja": "テグシガルパ",
+   "ko": "테구시갈파",
+   "ar": "تيغوسيغالبا",
+   "th": "เตกูซิกัลปา"
   },
   "HU": {
-   "en": "Budapest"
+   "en": "Budapest",
+   "pt": "Budapeste",
+   "zh": "布达佩斯",
+   "hi": "बुडापेस्ट",
+   "ja": "ブダペスト",
+   "ko": "부다페스트",
+   "ar": "بودابست",
+   "th": "บูดาเปสต์"
   },
   "IS": {
    "en": "Reykjavik",
-   "es": "Reikiavik"
+   "es": "Reikiavik",
+   "pt": "Reykjavík",
+   "id": "Reykjavík",
+   "zh": "雷克雅未克",
+   "hi": "रेक्याविक",
+   "ja": "レイキャビク",
+   "ko": "레이캬비크",
+   "ar": "ريكيافيك",
+   "th": "เรคยาวิก"
   },
   "IN": {
-   "en": "Delhi"
+   "en": "Delhi",
+   "pt": "Délhi",
+   "zh": "德里",
+   "hi": "दिल्ली",
+   "ja": "デリー",
+   "ko": "델리",
+   "ar": "دلهي",
+   "th": "เดลี"
   },
   "ID": {
    "en": "Jakarta",
-   "es": "Yakarta"
+   "es": "Yakarta",
+   "pt": "Jacarta",
+   "zh": "雅加达",
+   "hi": "जकार्ता",
+   "ja": "ジャカルタ",
+   "ko": "자카르타",
+   "ar": "جاكرتا",
+   "th": "จาการ์ตา"
   },
   "IR": {
    "en": "Tehran",
    "de": "Teheran",
    "it": "Teheran",
    "es": "Teherán",
-   "fr": "Téhéran"
+   "fr": "Téhéran",
+   "pt": "Teerã",
+   "id": "Teheran",
+   "zh": "德黑兰",
+   "hi": "तेहरान",
+   "ja": "テヘラン",
+   "ko": "테헤란",
+   "ar": "طهران",
+   "th": "เตหะราน"
   },
   "IQ": {
    "en": "Baghdad",
    "de": "Bagdad",
    "es": "Bagdad",
-   "fr": "Bagdad"
+   "fr": "Bagdad",
+   "pt": "Bagdá",
+   "id": "Bagdad",
+   "zh": "巴格达",
+   "hi": "बग़दाद",
+   "ja": "バグダッド",
+   "ko": "바그다드",
+   "ar": "بغداد",
+   "th": "แบกแดด"
   },
   "IE": {
    "en": "Dublin",
    "it": "Dublino",
-   "es": "Dublín"
+   "es": "Dublín",
+   "zh": "都柏林",
+   "hi": "डबलिन",
+   "ja": "ダブリン",
+   "ko": "더블린",
+   "ar": "دبلن",
+   "th": "ดับลิน"
   },
   "IL": {
    "en": "Jerusalem",
    "it": "Gerusalemme",
    "es": "Jerusalén",
-   "fr": "Jérusalem"
+   "fr": "Jérusalem",
+   "pt": "Jerusalém",
+   "id": "Yerusalem",
+   "zh": "耶路撒冷",
+   "hi": "यरूशलम",
+   "ja": "エルサレム",
+   "ko": "예루살렘",
+   "ar": "القدس",
+   "th": "เยรูซาเลม"
   },
   "IT": {
    "en": "Rome",
    "de": "Rom",
    "it": "Roma",
-   "es": "Roma"
+   "es": "Roma",
+   "pt": "Roma",
+   "id": "Roma",
+   "zh": "罗马",
+   "hi": "रोम",
+   "ja": "ローマ",
+   "ko": "로마",
+   "ar": "روما",
+   "th": "โรม"
   },
   "JM": {
-   "en": "Kingston"
+   "en": "Kingston",
+   "zh": "金斯敦",
+   "hi": "किंग्सटन",
+   "ja": "キングストン",
+   "ko": "킹스턴",
+   "ar": "كينغستون",
+   "th": "คิงส์ตัน"
   },
   "JP": {
    "en": "Tokyo",
-   "es": "Tokio"
+   "es": "Tokio",
+   "pt": "Tóquio",
+   "zh": "东京",
+   "hi": "टोक्यो",
+   "ja": "東京",
+   "ko": "도쿄",
+   "ar": "طوكيو",
+   "th": "โตเกียว"
   },
   "JO": {
    "en": "Amman",
-   "es": "Amán"
+   "es": "Amán",
+   "pt": "Amã",
+   "zh": "安曼",
+   "hi": "अम्मान",
+   "ja": "アンマン",
+   "ko": "암만",
+   "ar": "عمّان",
+   "th": "อัมมาน"
   },
   "KZ": {
-   "en": "Astana"
+   "en": "Astana",
+   "zh": "阿斯塔纳",
+   "hi": "अस्ताना",
+   "ja": "アスタナ",
+   "ko": "아스타나",
+   "ar": "أستانا",
+   "th": "อัสตานา"
   },
   "KE": {
-   "en": "Nairobi"
+   "en": "Nairobi",
+   "pt": "Nairóbi",
+   "zh": "内罗毕",
+   "hi": "नैरोबी",
+   "ja": "ナイロビ",
+   "ko": "나이로비",
+   "ar": "نيروبي",
+   "th": "ไนโรบี"
   },
   "KI": {
-   "en": "Tarawa"
+   "en": "Tarawa",
+   "pt": "Taraua",
+   "zh": "塔拉瓦",
+   "hi": "तरावा",
+   "ja": "タラワ",
+   "ko": "타라와",
+   "ar": "تاراوا",
+   "th": "ตาระวา"
   },
   "KW": {
    "en": "Kuwait City",
    "de": "Kuwait-Stadt",
-   "fr": "Koweït"
+   "fr": "Koweït",
+   "pt": "Cidade do Kuwait",
+   "id": "Kota Kuwait",
+   "zh": "科威特城",
+   "hi": "कुवैत सिटी",
+   "ja": "クウェート市",
+   "ko": "쿠웨이트시티",
+   "ar": "مدينة الكويت",
+   "th": "คูเวตซิตี"
   },
   "KG": {
    "en": "Bishkek",
    "it": "Biškek",
    "es": "Biskek",
-   "fr": "Bichkek"
+   "fr": "Bichkek",
+   "pt": "Bisqueque",
+   "zh": "比什凯克",
+   "hi": "बिश्केक",
+   "ja": "ビシュケク",
+   "ko": "비슈케크",
+   "ar": "بشكيك",
+   "th": "บิชเคก"
   },
   "LA": {
    "en": "Vientiane",
-   "es": "Vientián"
+   "es": "Vientián",
+   "zh": "万象",
+   "hi": "वियनतियान",
+   "ja": "ビエンチャン",
+   "ko": "비엔티안",
+   "ar": "فيينتيان",
+   "th": "เวียงจันทน์"
   },
   "LV": {
-   "en": "Riga"
+   "en": "Riga",
+   "zh": "里加",
+   "hi": "रीगा",
+   "ja": "リガ",
+   "ko": "리가",
+   "ar": "ريغا",
+   "th": "ริกา"
   },
   "LB": {
    "en": "Beirut",
-   "fr": "Beyrouth"
+   "fr": "Beyrouth",
+   "pt": "Beirute",
+   "zh": "贝鲁特",
+   "hi": "बेरूत",
+   "ja": "ベイルート",
+   "ko": "베이루트",
+   "ar": "بيروت",
+   "th": "เบรุต"
   },
   "LS": {
-   "en": "Maseru"
+   "en": "Maseru",
+   "zh": "马塞卢",
+   "hi": "मासेरू",
+   "ja": "マセル",
+   "ko": "마세루",
+   "ar": "ماسيرو",
+   "th": "มาเซรู"
   },
   "LR": {
-   "en": "Monrovia"
+   "en": "Monrovia",
+   "pt": "Monróvia",
+   "zh": "蒙罗维亚",
+   "hi": "मोनरोविया",
+   "ja": "モンロビア",
+   "ko": "몬로비아",
+   "ar": "مونروفيا",
+   "th": "มันโรเวีย"
   },
   "LY": {
    "en": "Tripoli",
-   "de": "Tripolis"
+   "de": "Tripolis",
+   "pt": "Trípoli",
+   "zh": "的黎波里",
+   "hi": "त्रिपोली",
+   "ja": "トリポリ",
+   "ko": "트리폴리",
+   "ar": "طرابلس",
+   "th": "ตริโปลี"
   },
   "LI": {
-   "en": "Vaduz"
+   "en": "Vaduz",
+   "zh": "瓦杜兹",
+   "hi": "वादुज़",
+   "ja": "ファドゥーツ",
+   "ko": "파두츠",
+   "ar": "فادوز",
+   "th": "ฟาดุซ"
   },
   "LT": {
    "en": "Vilnius",
-   "es": "Vilna"
+   "es": "Vilna",
+   "zh": "维尔纽斯",
+   "hi": "विल्नियस",
+   "ja": "ビリニュス",
+   "ko": "빌뉴스",
+   "ar": "فيلنيوس",
+   "th": "วิลนีอุส"
   },
   "LU": {
    "en": "Luxembourg",
    "de": "Luxemburg",
    "it": "Lussemburgo",
-   "es": "Luxemburgo"
+   "es": "Luxemburgo",
+   "pt": "Luxemburgo",
+   "id": "Luksemburg",
+   "zh": "卢森堡市",
+   "hi": "लक्ज़मबर्ग",
+   "ja": "ルクセンブルク市",
+   "ko": "룩셈부르크시",
+   "ar": "مدينة لوكسمبورغ",
+   "th": "ลักเซมเบิร์ก"
   },
   "MG": {
-   "en": "Antananarivo"
+   "en": "Antananarivo",
+   "zh": "塔那那利佛",
+   "hi": "अंतानानारिवो",
+   "ja": "アンタナナリボ",
+   "ko": "안타나나리보",
+   "ar": "أنتاناناريفو",
+   "th": "อันตานานาริโว"
   },
   "MW": {
-   "en": "Lilongwe"
+   "en": "Lilongwe",
+   "zh": "利隆圭",
+   "hi": "लिलोंग्वे",
+   "ja": "リロングウェ",
+   "ko": "릴롱궤",
+   "ar": "ليلونغوي",
+   "th": "ลิลองเว"
   },
   "MY": {
-   "en": "Kuala Lumpur"
+   "en": "Kuala Lumpur",
+   "zh": "吉隆坡",
+   "hi": "कुआलालंपुर",
+   "ja": "クアラルンプール",
+   "ko": "쿠알라룸푸르",
+   "ar": "كوالالمبور",
+   "th": "กัวลาลัมเปอร์"
   },
   "MV": {
-   "en": "Malé"
+   "en": "Malé",
+   "zh": "马累",
+   "hi": "माले",
+   "ja": "マレ",
+   "ko": "말레",
+   "ar": "ماليه",
+   "th": "มาเล"
   },
   "ML": {
-   "en": "Bamako"
+   "en": "Bamako",
+   "pt": "Bamaco",
+   "zh": "巴马科",
+   "hi": "बामाको",
+   "ja": "バマコ",
+   "ko": "바마코",
+   "ar": "باماكو",
+   "th": "บามาโก"
   },
   "MT": {
    "en": "Valletta",
    "it": "La Valletta",
    "es": "La Valeta",
-   "fr": "La Valette"
+   "fr": "La Valette",
+   "pt": "Valeta",
+   "zh": "瓦莱塔",
+   "hi": "वैलेटा",
+   "ja": "バレッタ",
+   "ko": "발레타",
+   "ar": "فاليتا",
+   "th": "วัลเลตตา"
   },
   "MH": {
-   "en": "Majuro"
+   "en": "Majuro",
+   "zh": "马朱罗",
+   "hi": "माजुरो",
+   "ja": "マジュロ",
+   "ko": "마주로",
+   "ar": "ماجورو",
+   "th": "มาจูโร"
   },
   "MR": {
-   "en": "Nouakchott"
+   "en": "Nouakchott",
+   "zh": "努瓦克肖特",
+   "hi": "नुआकशॉट",
+   "ja": "ヌアクショット",
+   "ko": "누악쇼트",
+   "ar": "نواكشوط",
+   "th": "นูแอกชอต"
   },
   "MU": {
-   "en": "Port Louis"
+   "en": "Port Louis",
+   "zh": "路易港",
+   "hi": "पोर्ट लुई",
+   "ja": "ポートルイス",
+   "ko": "포트루이스",
+   "ar": "بورت لويس",
+   "th": "พอร์ตหลุยส์"
   },
   "MX": {
    "en": "Mexico City",
    "de": "Mexiko-Stadt",
    "it": "Città del Messico",
    "es": "Ciudad de México",
-   "fr": "Mexico"
+   "fr": "Mexico",
+   "pt": "Cidade do México",
+   "id": "Kota Meksiko",
+   "zh": "墨西哥城",
+   "hi": "मेक्सिको सिटी",
+   "ja": "メキシコシティ",
+   "ko": "멕시코시티",
+   "ar": "مكسيكو سيتي",
+   "th": "เม็กซิโกซิตี"
   },
   "FM": {
-   "en": "Palikir"
+   "en": "Palikir",
+   "zh": "帕利基尔",
+   "hi": "पालिकिर",
+   "ja": "パリキール",
+   "ko": "팔리키르",
+   "ar": "باليكير",
+   "th": "ปาลีกีร์"
   },
   "MC": {
    "en": "Monaco",
-   "es": "Mónaco"
+   "es": "Mónaco",
+   "pt": "Mônaco",
+   "id": "Monako",
+   "zh": "摩纳哥",
+   "hi": "मोनाको",
+   "ja": "モナコ",
+   "ko": "모나코",
+   "ar": "موناكو",
+   "th": "โมนาโก"
   },
   "MN": {
    "en": "Ulaanbaatar",
    "de": "Ulan Bator",
    "it": "Ulan Bator",
    "es": "Ulán Bator",
-   "fr": "Oulan-Bator"
+   "fr": "Oulan-Bator",
+   "pt": "Ulan Bator",
+   "id": "Ulan Bator",
+   "zh": "乌兰巴托",
+   "hi": "उलानबातर",
+   "ja": "ウランバートル",
+   "ko": "울란바토르",
+   "ar": "أولان باتور",
+   "th": "อูลานบาตอร์"
   },
   "ME": {
-   "en": "Podgorica"
+   "en": "Podgorica",
+   "zh": "波德戈里察",
+   "hi": "पॉडगोरिका",
+   "ja": "ポドゴリツァ",
+   "ko": "포드고리차",
+   "ar": "بودغوريتسا",
+   "th": "พอดกอรีตซา"
   },
   "MA": {
-   "en": "Rabat"
+   "en": "Rabat",
+   "zh": "拉巴特",
+   "hi": "रबात",
+   "ja": "ラバト",
+   "ko": "라바트",
+   "ar": "الرباط",
+   "th": "ราบัต"
   },
   "MZ": {
-   "en": "Maputo"
+   "en": "Maputo",
+   "zh": "马普托",
+   "hi": "मापुतो",
+   "ja": "マプト",
+   "ko": "마푸투",
+   "ar": "مابوتو",
+   "th": "มาปูโต"
   },
   "MM": {
-   "en": "Nay Pyi Taw"
+   "en": "Nay Pyi Taw",
+   "pt": "Naypyidaw",
+   "id": "Naypyidaw",
+   "zh": "内比都",
+   "hi": "नेपिडॉ",
+   "ja": "ネピドー",
+   "ko": "네피도",
+   "ar": "نايبيداو",
+   "th": "เนปีดอ"
   },
   "NA": {
-   "en": "Windhoek"
+   "en": "Windhoek",
+   "zh": "温得和克",
+   "hi": "विंडहोक",
+   "ja": "ウィントフック",
+   "ko": "빈트후크",
+   "ar": "ويندهوك",
+   "th": "วินด์ฮุก"
   },
   "NR": {
-   "en": "Yaren"
+   "en": "Yaren",
+   "zh": "亚伦",
+   "hi": "यारेन",
+   "ja": "ヤレン",
+   "ko": "야렌",
+   "ar": "يارين",
+   "th": "ยาเรน"
   },
   "NP": {
    "en": "Kathmandu",
    "es": "Katmandú",
-   "fr": "Katmandou"
+   "fr": "Katmandou",
+   "pt": "Katmandu",
+   "zh": "加德满都",
+   "hi": "काठमांडू",
+   "ja": "カトマンズ",
+   "ko": "카트만두",
+   "ar": "كاتماندو",
+   "th": "กาฐมาณฑุ"
   },
   "NL": {
    "en": "The Hague",
    "de": "Den Haag",
    "it": "L'Aia",
    "es": "La Haya",
-   "fr": "La Haye"
+   "fr": "La Haye",
+   "pt": "Haia",
+   "id": "Den Haag",
+   "zh": "海牙",
+   "hi": "हेग",
+   "ja": "ハーグ",
+   "ko": "헤이그",
+   "ar": "لاهاي",
+   "th": "เดอะเฮก"
   },
   "NZ": {
-   "en": "Wellington"
+   "en": "Wellington",
+   "zh": "惠灵顿",
+   "hi": "वेलिंग्टन",
+   "ja": "ウェリントン",
+   "ko": "웰링턴",
+   "ar": "ويلينغتون",
+   "th": "เวลลิงตัน"
   },
   "NI": {
-   "en": "Managua"
+   "en": "Managua",
+   "pt": "Manágua",
+   "zh": "马那瓜",
+   "hi": "मानागुआ",
+   "ja": "マナグア",
+   "ko": "마나과",
+   "ar": "ماناغوا",
+   "th": "มานากัว"
   },
   "NE": {
-   "en": "Niamey"
+   "en": "Niamey",
+   "zh": "尼亚美",
+   "hi": "नियामे",
+   "ja": "ニアメ",
+   "ko": "니아메",
+   "ar": "نيامي",
+   "th": "นีอาเมย์"
   },
   "NG": {
-   "en": "Abuja"
+   "en": "Abuja",
+   "zh": "阿布贾",
+   "hi": "अबुजा",
+   "ja": "アブジャ",
+   "ko": "아부자",
+   "ar": "أبوجا",
+   "th": "อาบูจา"
   },
   "MK": {
    "en": "Skopje",
-   "es": "Skopie"
+   "es": "Skopie",
+   "pt": "Escópia",
+   "zh": "斯科普里",
+   "hi": "स्कोप्ये",
+   "ja": "スコピエ",
+   "ko": "스코페",
+   "ar": "سكوبيه",
+   "th": "สโกเปีย"
   },
   "NO": {
-   "en": "Oslo"
+   "en": "Oslo",
+   "zh": "奥斯陆",
+   "hi": "ओस्लो",
+   "ja": "オスロ",
+   "ko": "오슬로",
+   "ar": "أوسلو",
+   "th": "ออสโล"
   },
   "OM": {
    "en": "Muscat",
    "de": "Maskat",
    "it": "Mascate",
    "es": "Mascate",
-   "fr": "Mascate"
+   "fr": "Mascate",
+   "pt": "Mascate",
+   "id": "Muskat",
+   "zh": "马斯喀特",
+   "hi": "मस्कट",
+   "ja": "マスカット",
+   "ko": "무스카트",
+   "ar": "مسقط",
+   "th": "มัสกัต"
   },
   "PK": {
-   "en": "Islamabad"
+   "en": "Islamabad",
+   "zh": "伊斯兰堡",
+   "hi": "इस्लामाबाद",
+   "ja": "イスラマバード",
+   "ko": "이슬라마바드",
+   "ar": "إسلام آباد",
+   "th": "อิสลามาบัด"
   },
   "PW": {
-   "en": "Koror"
+   "en": "Koror",
+   "zh": "科罗尔",
+   "hi": "कोरोर",
+   "ja": "コロール",
+   "ko": "코로르",
+   "ar": "كورور",
+   "th": "โครอร์"
   },
   "PA": {
    "en": "Panama City",
    "de": "Panama-Stadt",
    "it": "Città di Panama",
    "es": "Ciudad de Panamá",
-   "fr": "Panama"
+   "fr": "Panama",
+   "pt": "Cidade do Panamá",
+   "id": "Kota Panama",
+   "zh": "巴拿马城",
+   "hi": "पनामा सिटी",
+   "ja": "パナマシティ",
+   "ko": "파나마시티",
+   "ar": "مدينة بنما",
+   "th": "ปานามาซิตี"
   },
   "PG": {
-   "en": "Port Moresby"
+   "en": "Port Moresby",
+   "zh": "莫尔兹比港",
+   "hi": "पोर्ट मोरेस्बी",
+   "ja": "ポートモレスビー",
+   "ko": "포트모르즈비",
+   "ar": "بورت مورسبي",
+   "th": "พอร์ตมอร์สบี"
   },
   "PY": {
-   "en": "Asunción"
+   "en": "Asunción",
+   "pt": "Assunção",
+   "zh": "亚松森",
+   "hi": "असुन्सियोन",
+   "ja": "アスンシオン",
+   "ko": "아순시온",
+   "ar": "أسونسيون",
+   "th": "อาซุนซิออน"
   },
   "PE": {
-   "en": "Lima"
+   "en": "Lima",
+   "zh": "利马",
+   "hi": "लीमा",
+   "ja": "リマ",
+   "ko": "리마",
+   "ar": "ليما",
+   "th": "ลิมา"
   },
   "PH": {
    "en": "Manila",
-   "fr": "Manille"
+   "fr": "Manille",
+   "zh": "马尼拉",
+   "hi": "मनीला",
+   "ja": "マニラ",
+   "ko": "마닐라",
+   "ar": "مانيلا",
+   "th": "มะนิลา"
   },
   "PL": {
    "en": "Warsaw",
    "de": "Warschau",
    "it": "Varsavia",
    "es": "Varsovia",
-   "fr": "Varsovie"
+   "fr": "Varsovie",
+   "pt": "Varsóvia",
+   "id": "Warsawa",
+   "zh": "华沙",
+   "hi": "वारसॉ",
+   "ja": "ワルシャワ",
+   "ko": "바르샤바",
+   "ar": "وارسو",
+   "th": "วอร์ซอ"
   },
   "PT": {
    "en": "Lisbon",
    "de": "Lissabon",
    "it": "Lisbona",
    "es": "Lisboa",
-   "fr": "Lisbonne"
+   "fr": "Lisbonne",
+   "pt": "Lisboa",
+   "id": "Lisboa",
+   "zh": "里斯本",
+   "hi": "लिस्बन",
+   "ja": "リスボン",
+   "ko": "리스본",
+   "ar": "لشبونة",
+   "th": "ลิสบอน"
   },
   "QA": {
-   "en": "Doha"
+   "en": "Doha",
+   "zh": "多哈",
+   "hi": "दोहा",
+   "ja": "ドーハ",
+   "ko": "도하",
+   "ar": "الدوحة",
+   "th": "โดฮา"
   },
   "KR": {
    "en": "Seoul",
    "it": "Seul",
    "es": "Seúl",
-   "fr": "Séoul"
+   "fr": "Séoul",
+   "pt": "Seul",
+   "zh": "首尔",
+   "hi": "सियोल",
+   "ja": "ソウル",
+   "ko": "서울",
+   "ar": "سول",
+   "th": "โซล"
   },
   "MD": {
    "en": "Chișinău",
-   "es": "Chisináu"
+   "es": "Chisináu",
+   "zh": "基希讷乌",
+   "hi": "किशिनाउ",
+   "ja": "キシナウ",
+   "ko": "키시너우",
+   "ar": "كيشيناو",
+   "th": "คีชีเนา"
   },
   "RO": {
    "en": "Bucharest",
    "de": "Bukarest",
    "it": "Bucarest",
    "es": "Bucarest",
-   "fr": "Bucarest"
+   "fr": "Bucarest",
+   "pt": "Bucareste",
+   "id": "Bukares",
+   "zh": "布加勒斯特",
+   "hi": "बुख़ारेस्ट",
+   "ja": "ブカレスト",
+   "ko": "부쿠레슈티",
+   "ar": "بوخارست",
+   "th": "บูคาเรสต์"
   },
   "RU": {
    "en": "Moscow",
    "de": "Moskau",
    "it": "Mosca",
    "es": "Moscú",
-   "fr": "Moscou"
+   "fr": "Moscou",
+   "pt": "Moscou",
+   "id": "Moskwa",
+   "zh": "莫斯科",
+   "hi": "मॉस्को",
+   "ja": "モスクワ",
+   "ko": "모스크바",
+   "ar": "موسكو",
+   "th": "มอสโก"
   },
   "RW": {
-   "en": "Kigali"
+   "en": "Kigali",
+   "zh": "基加利",
+   "hi": "किगाली",
+   "ja": "キガリ",
+   "ko": "키갈리",
+   "ar": "كيغالي",
+   "th": "คิกาลี"
   },
   "KN": {
-   "en": "Basseterre"
+   "en": "Basseterre",
+   "zh": "巴斯特尔",
+   "hi": "बासेतेर",
+   "ja": "バセテール",
+   "ko": "바스테르",
+   "ar": "باستير",
+   "th": "บาสแตร์"
   },
   "LC": {
-   "en": "Castries"
+   "en": "Castries",
+   "zh": "卡斯特里",
+   "hi": "कैस्ट्रीज़",
+   "ja": "カストリーズ",
+   "ko": "캐스트리스",
+   "ar": "كاستريس",
+   "th": "แคสตรีส์"
   },
   "VC": {
-   "en": "Kingstown"
+   "en": "Kingstown",
+   "zh": "金斯敦（圣文森特）",
+   "hi": "किंग्सटाउन",
+   "ja": "キングスタウン",
+   "ko": "킹스타운",
+   "ar": "كينغستاون",
+   "th": "คิงส์ทาวน์"
   },
   "WS": {
-   "en": "Apia"
+   "en": "Apia",
+   "pt": "Ápia",
+   "zh": "阿皮亚",
+   "hi": "आपिया",
+   "ja": "アピア",
+   "ko": "아피아",
+   "ar": "آبيا",
+   "th": "อาปีอา"
   },
   "SM": {
-   "en": "San Marino"
+   "en": "San Marino",
+   "zh": "圣马力诺市",
+   "hi": "सैन मरीनो",
+   "ja": "サンマリノ市",
+   "ko": "산마리노시",
+   "ar": "مدينة سان مارينو",
+   "th": "ซานมารีโน"
   },
   "ST": {
    "en": "São Tomé",
-   "es": "Santo Tomé"
+   "es": "Santo Tomé",
+   "zh": "圣多美",
+   "hi": "साओ टोमे",
+   "ja": "サントメ",
+   "ko": "상투메",
+   "ar": "ساو تومي",
+   "th": "เซาตูเม"
   },
   "SA": {
    "en": "Riyadh",
    "de": "Riad",
    "it": "Riyad",
-   "es": "Riad"
+   "es": "Riad",
+   "pt": "Riad",
+   "zh": "利雅得",
+   "hi": "रियाद",
+   "ja": "リヤド",
+   "ko": "리야드",
+   "ar": "الرياض",
+   "th": "ริยาด"
   },
   "SN": {
-   "en": "Dakar"
+   "en": "Dakar",
+   "pt": "Dacar",
+   "zh": "达喀尔",
+   "hi": "डकार",
+   "ja": "ダカール",
+   "ko": "다카르",
+   "ar": "داكار",
+   "th": "ดาการ์"
   },
   "RS": {
    "en": "Belgrade",
    "de": "Belgrad",
    "it": "Belgrado",
-   "es": "Belgrado"
+   "es": "Belgrado",
+   "pt": "Belgrado",
+   "id": "Beograd",
+   "zh": "贝尔格莱德",
+   "hi": "बेलग्रेड",
+   "ja": "ベオグラード",
+   "ko": "베오그라드",
+   "ar": "بلغراد",
+   "th": "เบลเกรด"
   },
   "SC": {
-   "en": "Victoria"
+   "en": "Victoria",
+   "pt": "Vitória",
+   "zh": "维多利亚",
+   "hi": "विक्टोरिया",
+   "ja": "ビクトリア",
+   "ko": "빅토리아",
+   "ar": "فيكتوريا",
+   "th": "วิกตอเรีย"
   },
   "SL": {
-   "en": "Freetown"
+   "en": "Freetown",
+   "zh": "弗里敦",
+   "hi": "फ़्रीटाउन",
+   "ja": "フリータウン",
+   "ko": "프리타운",
+   "ar": "فريتاون",
+   "th": "ฟรีทาวน์"
   },
   "SG": {
    "en": "Singapore",
    "de": "Singapur",
    "es": "Singapur",
-   "fr": "Singapour"
+   "fr": "Singapour",
+   "pt": "Singapura",
+   "id": "Singapura",
+   "zh": "新加坡",
+   "hi": "सिंगापुर",
+   "ja": "シンガポール",
+   "ko": "싱가포르",
+   "ar": "سنغافورة",
+   "th": "สิงคโปร์"
   },
   "SK": {
-   "en": "Bratislava"
+   "en": "Bratislava",
+   "zh": "布拉迪斯拉发",
+   "hi": "ब्रातिस्लावा",
+   "ja": "ブラチスラバ",
+   "ko": "브라티슬라바",
+   "ar": "براتيسلافا",
+   "th": "บราติสลาวา"
   },
   "SI": {
    "en": "Ljubljana",
    "it": "Lubiana",
-   "es": "Liubliana"
+   "es": "Liubliana",
+   "pt": "Liubliana",
+   "zh": "卢布尔雅那",
+   "hi": "ल्यूब्लियाना",
+   "ja": "リュブリャナ",
+   "ko": "류블랴나",
+   "ar": "ليوبليانا",
+   "th": "ลูบลิยานา"
   },
   "SB": {
-   "en": "Honiara"
+   "en": "Honiara",
+   "zh": "霍尼亚拉",
+   "hi": "होनियारा",
+   "ja": "ホニアラ",
+   "ko": "호니아라",
+   "ar": "هونيارا",
+   "th": "โฮนีอารา"
   },
   "SO": {
    "en": "Mogadishu",
    "de": "Mogadischu",
    "it": "Mogadiscio",
    "es": "Mogadiscio",
-   "fr": "Mogadiscio"
+   "fr": "Mogadiscio",
+   "pt": "Mogadíscio",
+   "zh": "摩加迪沙",
+   "hi": "मोगादिशु",
+   "ja": "モガディシュ",
+   "ko": "모가디슈",
+   "ar": "مقديشو",
+   "th": "โมกาดิชู"
   },
   "ZA": {
-   "en": "Pretoria"
+   "en": "Pretoria",
+   "pt": "Pretória",
+   "zh": "比勒陀利亚",
+   "hi": "प्रिटोरिया",
+   "ja": "プレトリア",
+   "ko": "프리토리아",
+   "ar": "بريتوريا",
+   "th": "พริทอเรีย"
   },
   "SS": {
-   "en": "Juba"
+   "en": "Juba",
+   "zh": "朱巴",
+   "hi": "जूबा",
+   "ja": "ジュバ",
+   "ko": "주바",
+   "ar": "جوبا",
+   "th": "จูบา"
   },
   "ES": {
-   "en": "Madrid"
+   "en": "Madrid",
+   "pt": "Madri",
+   "zh": "马德里",
+   "hi": "मैड्रिड",
+   "ja": "マドリード",
+   "ko": "마드리드",
+   "ar": "مدريد",
+   "th": "มาดริด"
   },
   "LK": {
-   "en": "Colombo"
+   "en": "Colombo",
+   "id": "Kolombo",
+   "zh": "科伦坡",
+   "hi": "कोलंबो",
+   "ja": "コロンボ",
+   "ko": "콜롬보",
+   "ar": "كولومبو",
+   "th": "โคลัมโบ"
   },
   "SD": {
    "en": "Khartoum",
    "de": "Khartum",
    "it": "Khartum",
-   "es": "Jartum"
+   "es": "Jartum",
+   "pt": "Cartum",
+   "zh": "喀土穆",
+   "hi": "ख़ार्तूम",
+   "ja": "ハルツーム",
+   "ko": "하르툼",
+   "ar": "الخرطوم",
+   "th": "คาร์ทูม"
   },
   "SR": {
-   "en": "Paramaribo"
+   "en": "Paramaribo",
+   "zh": "帕拉马里博",
+   "hi": "पारामारिबो",
+   "ja": "パラマリボ",
+   "ko": "파라마리보",
+   "ar": "باراماريبو",
+   "th": "ปารามาริโบ"
   },
   "SE": {
    "en": "Stockholm",
    "it": "Stoccolma",
-   "es": "Estocolmo"
+   "es": "Estocolmo",
+   "pt": "Estocolmo",
+   "zh": "斯德哥尔摩",
+   "hi": "स्टॉकहोम",
+   "ja": "ストックホルム",
+   "ko": "스톡홀름",
+   "ar": "ستوكهولم",
+   "th": "สตอกโฮล์ม"
   },
   "CH": {
    "en": "Bern",
    "it": "Berna",
    "es": "Berna",
-   "fr": "Berne"
+   "fr": "Berne",
+   "pt": "Berna",
+   "zh": "伯尔尼",
+   "hi": "बर्न",
+   "ja": "ベルン",
+   "ko": "베른",
+   "ar": "برن",
+   "th": "เบิร์น"
   },
   "SY": {
    "en": "Damascus",
    "de": "Damaskus",
    "it": "Damasco",
    "es": "Damasco",
-   "fr": "Damas"
+   "fr": "Damas",
+   "pt": "Damasco",
+   "id": "Damaskus",
+   "zh": "大马士革",
+   "hi": "दमिश्क़",
+   "ja": "ダマスカス",
+   "ko": "다마스쿠스",
+   "ar": "دمشق",
+   "th": "ดามัสกัส"
   },
   "TJ": {
    "en": "Dushanbe",
    "de": "Duschanbe",
    "es": "Dusambé",
-   "fr": "Douchanbé"
+   "fr": "Douchanbé",
+   "pt": "Duchambé",
+   "zh": "杜尚别",
+   "hi": "दुशांबे",
+   "ja": "ドゥシャンベ",
+   "ko": "두샨베",
+   "ar": "دوشنبه",
+   "th": "ดูชานเบ"
   },
   "TH": {
-   "en": "Bangkok"
+   "en": "Bangkok",
+   "zh": "曼谷",
+   "hi": "बैंकॉक",
+   "ja": "バンコク",
+   "ko": "방콕",
+   "ar": "بانكوك",
+   "th": "กรุงเทพมหานคร"
   },
   "TL": {
-   "en": "Dili"
+   "en": "Dili",
+   "pt": "Díli",
+   "zh": "帝力",
+   "hi": "दिली",
+   "ja": "ディリ",
+   "ko": "딜리",
+   "ar": "ديلي",
+   "th": "ดิลี"
   },
   "TG": {
-   "en": "Lomé"
+   "en": "Lomé",
+   "zh": "洛美",
+   "hi": "लोमे",
+   "ja": "ロメ",
+   "ko": "로메",
+   "ar": "لومي",
+   "th": "โลเม"
   },
   "TO": {
-   "en": "Nuku'alofa"
+   "en": "Nuku'alofa",
+   "pt": "Nucualofa",
+   "id": "Nuku’alofa",
+   "zh": "努库阿洛法",
+   "hi": "नुकुआलोफ़ा",
+   "ja": "ヌクアロファ",
+   "ko": "누쿠알로파",
+   "ar": "نوكوالوفا",
+   "th": "นูกูอาโลฟา"
   },
   "TT": {
    "en": "Port of Spain",
    "es": "Puerto España",
-   "fr": "Port-d'Espagne"
+   "fr": "Port-d'Espagne",
+   "zh": "西班牙港",
+   "hi": "पोर्ट ऑफ़ स्पेन",
+   "ja": "ポートオブスペイン",
+   "ko": "포트오브스페인",
+   "ar": "بورت أوف سبين",
+   "th": "พอร์ตออฟสเปน"
   },
   "TN": {
    "en": "Tunis",
-   "es": "Túnez"
+   "es": "Túnez",
+   "pt": "Túnis",
+   "zh": "突尼斯市",
+   "hi": "ट्यूनिस",
+   "ja": "チュニス",
+   "ko": "튀니스",
+   "ar": "تونس العاصمة",
+   "th": "ตูนิส"
   },
   "TR": {
-   "en": "Ankara"
+   "en": "Ankara",
+   "pt": "Ancara",
+   "zh": "安卡拉",
+   "hi": "अंकारा",
+   "ja": "アンカラ",
+   "ko": "앙카라",
+   "ar": "أنقرة",
+   "th": "อังการา"
   },
   "TM": {
    "en": "Ashgabat",
    "de": "Aschgabat",
    "es": "Asjabad",
-   "fr": "Achgabat"
+   "fr": "Achgabat",
+   "pt": "Asgabate",
+   "zh": "阿什哈巴德",
+   "hi": "अश्गाबात",
+   "ja": "アシガバート",
+   "ko": "아시가바트",
+   "ar": "عشق آباد",
+   "th": "อาชกาบัต"
   },
   "TV": {
-   "en": "Funafuti"
+   "en": "Funafuti",
+   "zh": "富纳富提",
+   "hi": "फ़ुनाफ़ुटी",
+   "ja": "フナフティ",
+   "ko": "푸나푸티",
+   "ar": "فونافوتي",
+   "th": "ฟูนะฟูตี"
   },
   "UG": {
-   "en": "Kampala"
+   "en": "Kampala",
+   "zh": "坎帕拉",
+   "hi": "कंपाला",
+   "ja": "カンパラ",
+   "ko": "캄팔라",
+   "ar": "كمبالا",
+   "th": "กัมปาลา"
   },
   "UA": {
    "en": "Kyiv",
    "de": "Kiew",
    "it": "Kiev",
    "es": "Kiev",
-   "fr": "Kiev"
+   "fr": "Kiev",
+   "pt": "Kiev",
+   "zh": "基辅",
+   "hi": "कीव",
+   "ja": "キーウ",
+   "ko": "키이우",
+   "ar": "كييف",
+   "th": "เคียฟ"
   },
   "AE": {
    "en": "Abu Dhabi",
    "es": "Abu Dabi",
-   "fr": "Abou Dabi"
+   "fr": "Abou Dabi",
+   "zh": "阿布扎比",
+   "hi": "अबू धाबी",
+   "ja": "アブダビ",
+   "ko": "아부다비",
+   "ar": "أبوظبي",
+   "th": "อาบูดาบี"
   },
   "GB": {
    "en": "London",
    "it": "Londra",
    "es": "Londres",
-   "fr": "Londres"
+   "fr": "Londres",
+   "pt": "Londres",
+   "zh": "伦敦",
+   "hi": "लंदन",
+   "ja": "ロンドン",
+   "ko": "런던",
+   "ar": "لندن",
+   "th": "ลอนดอน"
   },
   "TZ": {
-   "en": "Dodoma"
+   "en": "Dodoma",
+   "zh": "多多马",
+   "hi": "डोडोमा",
+   "ja": "ドドマ",
+   "ko": "도도마",
+   "ar": "دودوما",
+   "th": "โดโดมา"
   },
   "US": {
    "en": "Washington, D.C.",
    "it": "Washington",
    "es": "Washington D. C.",
-   "fr": "Washington"
+   "fr": "Washington",
+   "zh": "华盛顿哥伦比亚特区",
+   "hi": "वॉशिंगटन, डी.सी.",
+   "ja": "ワシントンD.C.",
+   "ko": "워싱턴 D.C.",
+   "ar": "واشنطن العاصمة",
+   "th": "วอชิงตัน ดี.ซี."
   },
   "UY": {
-   "en": "Montevideo"
+   "en": "Montevideo",
+   "pt": "Montevidéu",
+   "zh": "蒙得维的亚",
+   "hi": "मोंटेवीडियो",
+   "ja": "モンテビデオ",
+   "ko": "몬테비데오",
+   "ar": "مونتيفيديو",
+   "th": "มอนเตวิเดโอ"
   },
   "UZ": {
    "en": "Tashkent",
    "de": "Taschkent",
    "es": "Taskent",
-   "fr": "Tachkent"
+   "fr": "Tachkent",
+   "zh": "塔什干",
+   "hi": "ताशकंद",
+   "ja": "タシケント",
+   "ko": "타슈켄트",
+   "ar": "طشقند",
+   "th": "ทาชเคนต์"
   },
   "VU": {
-   "en": "Port Vila"
+   "en": "Port Vila",
+   "zh": "维拉港",
+   "hi": "पोर्ट विला",
+   "ja": "ポートビラ",
+   "ko": "포트빌라",
+   "ar": "بورت فيلا",
+   "th": "พอร์ตวิลา"
   },
   "VE": {
-   "en": "Caracas"
+   "en": "Caracas",
+   "zh": "加拉加斯",
+   "hi": "काराकास",
+   "ja": "カラカス",
+   "ko": "카라카스",
+   "ar": "كاراكاس",
+   "th": "การากัส"
   },
   "VN": {
    "en": "Hanoi",
    "es": "Hanói",
-   "fr": "Hanoï"
+   "fr": "Hanoï",
+   "pt": "Hanói",
+   "zh": "河内",
+   "hi": "हनोई",
+   "ja": "ハノイ",
+   "ko": "하노이",
+   "ar": "هانوي",
+   "th": "ฮานอย"
   },
   "YE": {
    "en": "Sana'a",
    "de": "Sanaa",
    "es": "Saná",
-   "fr": "Sanaa"
+   "fr": "Sanaa",
+   "pt": "Sana",
+   "id": "Sana’a",
+   "zh": "萨那",
+   "hi": "सना",
+   "ja": "サヌア",
+   "ko": "사나",
+   "ar": "صنعاء",
+   "th": "ซานา"
   },
   "ZM": {
-   "en": "Lusaka"
+   "en": "Lusaka",
+   "zh": "卢萨卡",
+   "hi": "लुसाका",
+   "ja": "ルサカ",
+   "ko": "루사카",
+   "ar": "لوساكا",
+   "th": "ลูซากา"
   },
   "ZW": {
-   "en": "Harare"
+   "en": "Harare",
+   "zh": "哈拉雷",
+   "hi": "हरारे",
+   "ja": "ハラレ",
+   "ko": "하라레",
+   "ar": "هراري",
+   "th": "ฮาราเร"
   },
   "TW": {
    "en": "Taipei",
    "es": "Taipéi",
-   "de": "Taipeh"
+   "de": "Taipeh",
+   "pt": "Taipé",
+   "zh": "台北",
+   "hi": "ताइपे",
+   "ja": "台北",
+   "ko": "타이베이",
+   "ar": "تايبيه",
+   "th": "ไทเป"
   }
  },
  "taunts": {
@@ -1036,6 +2335,262 @@
     "Ma liste courte pourrait contenir {n} en entier.",
     "{n} s'arrondit à zéro, et je te surenchérirai quand même."
    ]
+  },
+  "pt": {
+   "mega": [
+    "{n} é o lote que todos lembram. Lembre dele como meu.",
+    "Um horizonte como o de {n} não sai barato. Eu também não.",
+    "Dê lance em {n} se você gosta de lições caras.",
+    "Milhões vivem em {n}. Você está prestes a pagar a conta."
+   ],
+   "large": [
+    "{n} tem peso de verdade. Minha carteira também.",
+    "Uma cidade séria, {n}. Exige um lance sério.",
+    "{n} vale mais do que seu instinto sugere.",
+    "Cuidado com {n}: ela morde de volta."
+   ],
+   "mid": [
+    "{n} é razoável. E o razoável eu tiro de gente como você.",
+    "Modesta, útil, minha. Essa é {n}.",
+    "Você continua dando lances. Eu continuo contando. {n} é minha.",
+    "{n} não vai ganhar a noite para você, mas pode perdê-la."
+   ],
+   "small": [
+    "{n} é pequena, barata e ainda acima do seu juízo.",
+    "Já tive estacionamentos maiores que {n}.",
+    "{n}? Que gracinha. Vou levar só por birra.",
+    "Não pague caro por {n}. Pague. Por favor."
+   ],
+   "micro": [
+    "Em algum lugar de {n}, três pessoas estão assistindo. Olá.",
+    "{n} cabe num elevador. Sua pontuação também.",
+    "Eu compraria {n} com os trocados do meu casaco.",
+    "{n} arredonda para nada, e mesmo assim eu cubro seu lance."
+   ]
+  },
+  "id": {
+   "mega": [
+    "{n} adalah lot yang diingat orang. Ingatlah sebagai milikku.",
+    "Cakrawala seperti {n} tidak murah. Aku juga tidak.",
+    "Tawar {n} kalau kamu suka pelajaran mahal.",
+    "Jutaan orang tinggal di {n}. Kamu akan segera bertemu tagihannya."
+   ],
+   "large": [
+    "{n} punya bobot sungguhan. Dompetku juga.",
+    "Kota yang serius, {n}. Butuh tawaran yang serius.",
+    "{n} lebih berharga dari dugaanmu.",
+    "Hati-hati dengan {n}: kota itu bisa balas menggigit."
+   ],
+   "mid": [
+    "{n} lumayan. Dan yang lumayan kuambil dari orang sepertimu.",
+    "Sederhana, berguna, milikku. Itulah {n}.",
+    "Kamu terus menawar. Aku terus menghitung. {n} milikku.",
+    "{n} tak akan memenangkan malam ini untukmu, tapi bisa membuatmu kalah."
+   ],
+   "small": [
+    "{n} kecil, murah, dan tetap di luar jangkauan penilaianmu.",
+    "Aku pernah punya lahan parkir yang lebih besar dari {n}.",
+    "{n}? Manis. Kuambil hanya karena iseng.",
+    "Jangan bayar kemahalan untuk {n}. Bayarlah. Silakan."
+   ],
+   "micro": [
+    "Di suatu tempat di {n}, tiga orang sedang menonton. Halo.",
+    "{n} muat di dalam lift. Skormu juga.",
+    "Aku bisa membeli {n} dengan uang receh di saku mantelku.",
+    "{n} dibulatkan jadi nol, dan aku tetap menawar lebih tinggi."
+   ]
+  },
+  "zh": {
+   "mega": [
+    "{n}是大家都会记住的拍品。记住它是我的。",
+    "像{n}这样的天际线可不便宜。我也一样。",
+    "如果你喜欢昂贵的教训，就去竞拍{n}吧。",
+    "{n}住着几百万人。账单马上就到你手里了。"
+   ],
+   "large": [
+    "{n}很有分量。我的钱包也是。",
+    "{n}是座正经城市。得出个正经价。",
+    "{n}比你的直觉认为的更值钱。",
+    "小心{n}：它会反咬一口。"
+   ],
+   "mid": [
+    "{n}还不错。不错的东西，我专门从你这种人手里拿走。",
+    "朴素、实用、归我。这就是{n}。",
+    "你继续出价，我继续数钱。{n}是我的。",
+    "{n}帮不了你赢下今晚，但能让你输掉。"
+   ],
+   "small": [
+    "{n}又小又便宜，却仍然超出你的判断力。",
+    "我拥有过比{n}还大的停车场。",
+    "{n}？真可爱。我拿下它纯属跟你过不去。",
+    "别为{n}多付钱。付吧。请便。"
+   ],
+   "micro": [
+    "{n}的某个角落，有三个人在看。你们好。",
+    "{n}装得进一部电梯。你的分数也是。",
+    "我用大衣口袋里的零钱就能买下{n}。",
+    "{n}四舍五入就是零，我照样压你一头。"
+   ]
+  },
+  "hi": {
+   "mega": [
+    "{n} वह लॉट है जो सबको याद रहता है। उसे मेरे नाम से याद रखिए।",
+    "{n} जैसा क्षितिज सस्ता नहीं आता। मैं भी नहीं।",
+    "अगर महँगे सबक पसंद हैं तो {n} पर बोली लगाइए।",
+    "{n} में लाखों लोग रहते हैं। बिल अब आपके पास आने वाला है।"
+   ],
+   "large": [
+    "{n} में असली वज़न है। मेरे बटुए में भी।",
+    "{n} एक गंभीर शहर है। गंभीर बोली चाहिए।",
+    "{n} आपके अंदाज़े से ज़्यादा क़ीमती है।",
+    "{n} से सावधान: यह पलटकर काटता है।"
+   ],
+   "mid": [
+    "{n} ठीक-ठाक है। और ठीक-ठाक चीज़ें मैं आप जैसों से छीन लेता हूँ।",
+    "सादा, काम का, मेरा। यही है {n}।",
+    "आप बोली लगाते रहिए। मैं गिनता रहूँगा। {n} मेरा है।",
+    "{n} आपको शाम नहीं जिताएगा, पर हरा ज़रूर सकता है।"
+   ],
+   "small": [
+    "{n} छोटा है, सस्ता है, फिर भी आपकी समझ से परे है।",
+    "मेरे पास {n} से बड़े पार्किंग रह चुके हैं।",
+    "{n}? प्यारा है। मैं इसे बस आपको चिढ़ाने के लिए लूँगा।",
+    "{n} के लिए ज़्यादा मत दीजिए। दीजिए। ज़रूर दीजिए।"
+   ],
+   "micro": [
+    "{n} में कहीं तीन लोग यह देख रहे हैं। नमस्ते।",
+    "{n} एक लिफ़्ट में समा जाए। आपका स्कोर भी।",
+    "मैं {n} को अपने कोट की रेज़गारी से ख़रीद लूँ।",
+    "{n} गोल करके शून्य है, फिर भी मैं आपसे ऊँची बोली लगाऊँगा।"
+   ]
+  },
+  "ja": {
+   "mega": [
+    "{n}はみんなが覚えているロットだ。私のものとして覚えておきなさい。",
+    "{n}のようなスカイラインは安くない。私もね。",
+    "高い授業料が好きなら{n}に入札するといい。",
+    "{n}には何百万人も住んでいる。請求書はもうすぐ君の手元だ。"
+   ],
+   "large": [
+    "{n}には本物の重みがある。私の財布にもね。",
+    "{n}は本格的な都市だ。本格的な入札が要る。",
+    "{n}は君の勘より価値がある。",
+    "{n}には気をつけたまえ。噛みついてくるぞ。"
+   ],
+   "mid": [
+    "{n}はまあまあだ。まあまあの物は、君のような人から頂く。",
+    "地味で、役に立って、私のもの。それが{n}。",
+    "君は入札を続ける。私は数え続ける。{n}は私のものだ。",
+    "{n}で今夜は勝てないが、負けることはある。"
+   ],
+   "small": [
+    "{n}は小さくて安いのに、それでも君の判断を超えている。",
+    "{n}より大きな駐車場を持っていたことがある。",
+    "{n}？ かわいいね。ただの意地悪で頂くよ。",
+    "{n}に払いすぎないように。いや、どうぞ払って。"
+   ],
+   "micro": [
+    "{n}のどこかで3人が見ている。こんにちは。",
+    "{n}はエレベーターに収まる。君のスコアもね。",
+    "コートのポケットの小銭で{n}が買える。",
+    "{n}は四捨五入すればゼロだが、それでも君より高く入れる。"
+   ]
+  },
+  "ko": {
+   "mega": [
+    "{n}은(는) 모두가 기억하는 로트야. 내 것으로 기억해.",
+    "{n} 같은 스카이라인은 싸지 않아. 나도 마찬가지고.",
+    "비싼 수업료가 좋다면 {n}에 입찰해 봐.",
+    "{n}에는 수백만 명이 살아. 이제 청구서를 받을 차례야."
+   ],
+   "large": [
+    "{n}은(는) 진짜 무게가 있어. 내 지갑도 그렇고.",
+    "{n}은(는) 진지한 도시야. 진지한 입찰이 필요해.",
+    "{n}은(는) 네 직감보다 값져.",
+    "{n} 조심해. 되물 수도 있어."
+   ],
+   "mid": [
+    "{n}? 괜찮지. 괜찮은 건 너 같은 사람한테서 가져가.",
+    "소박하고, 쓸모 있고, 내 거야. 그게 {n}이야.",
+    "넌 계속 입찰해. 난 계속 세지. {n}은(는) 내 거야.",
+    "{n}으로 오늘 밤을 이길 순 없지만 질 수는 있어."
+   ],
+   "small": [
+    "{n}은(는) 작고 싸지만 여전히 네 판단력 밖이야.",
+    "{n}보다 큰 주차장도 가져 봤어.",
+    "{n}? 귀엽네. 그냥 심술로 가져갈게.",
+    "{n}에 너무 많이 내지 마. 아니, 내. 제발."
+   ],
+   "micro": [
+    "{n} 어딘가에서 세 사람이 보고 있어. 안녕.",
+    "{n}은(는) 엘리베이터에 들어가. 네 점수도.",
+    "외투 주머니 잔돈으로 {n}을(를) 살 수 있어.",
+    "{n}은(는) 반올림하면 0인데도 난 너보다 높게 부를 거야."
+   ]
+  },
+  "ar": {
+   "mega": [
+    "{n} هي القطعة التي يتذكرها الناس. تذكّرها على أنها لي.",
+    "أفق مثل أفق {n} لا يأتي رخيصًا. وأنا كذلك.",
+    "زايد على {n} إن كنت تحب الدروس الباهظة.",
+    "يعيش الملايين في {n}. الفاتورة في طريقها إليك."
+   ],
+   "large": [
+    "لـ{n} وزن حقيقي. ولمحفظتي أيضًا.",
+    "{n} مدينة جادة. تحتاج إلى مزايدة جادة.",
+    "{n} تساوي أكثر مما يوحي به حدسك.",
+    "احذر {n}: إنها تعضّ."
+   ],
+   "mid": [
+    "{n} مقبولة. والمقبول آخذه من أمثالك.",
+    "متواضعة، مفيدة، ولي. هذه هي {n}.",
+    "تواصل المزايدة. وأواصل العدّ. {n} لي.",
+    "{n} لن تربحك المساء، لكنها قد تخسرك إياه."
+   ],
+   "small": [
+    "{n} صغيرة ورخيصة، ومع ذلك أبعد من حسن تقديرك.",
+    "امتلكت مواقف سيارات أكبر من {n}.",
+    "{n}؟ لطيفة. سآخذها نكاية بك فقط.",
+    "لا تدفع كثيرًا في {n}. بل ادفع. تفضّل."
+   ],
+   "micro": [
+    "في مكان ما من {n} يشاهدنا ثلاثة أشخاص. مرحبًا.",
+    "{n} تتسع لها مصعد. ونتيجتك أيضًا.",
+    "أستطيع شراء {n} بالفكة التي في جيب معطفي.",
+    "{n} تُقرَّب إلى لا شيء، ومع ذلك سأزايد عليك."
+   ]
+  },
+  "th": {
+   "mega": [
+    "{n} คือล็อตที่ทุกคนจำได้ จำไว้ว่าเป็นของฉัน",
+    "เส้นขอบฟ้าอย่าง{n}ไม่ได้มาถูก ๆ ฉันก็เหมือนกัน",
+    "ประมูล{n}สิ ถ้าชอบบทเรียนราคาแพง",
+    "{n} มีคนอยู่เป็นล้าน ใบเรียกเก็บเงินกำลังมาหาคุณ"
+   ],
+   "large": [
+    "{n} มีน้ำหนักจริง กระเป๋าเงินฉันก็เช่นกัน",
+    "{n} เป็นเมืองจริงจัง ต้องประมูลอย่างจริงจัง",
+    "{n} มีค่ากว่าที่สัญชาตญาณคุณบอก",
+    "ระวัง{n}ไว้ มันกัดกลับได้"
+   ],
+   "mid": [
+    "{n} ก็พอใช้ได้ และของพอใช้ได้ ฉันชอบแย่งจากคนอย่างคุณ",
+    "เรียบง่าย มีประโยชน์ เป็นของฉัน นั่นแหละ{n}",
+    "คุณประมูลต่อไป ฉันนับต่อไป {n} เป็นของฉัน",
+    "{n} ไม่ช่วยให้คุณชนะคืนนี้ แต่ทำให้แพ้ได้"
+   ],
+   "small": [
+    "{n} เล็ก ถูก แต่ก็ยังเกินวิจารณญาณของคุณ",
+    "ฉันเคยมีลานจอดรถที่ใหญ่กว่า{n}",
+    "{n} เหรอ น่ารักดี ฉันจะเอาไปแค่เพราะอยากกวน",
+    "อย่าจ่ายแพงสำหรับ{n} จ่ายเถอะ เชิญเลย"
+   ],
+   "micro": [
+    "ที่ไหนสักแห่งใน{n} มีสามคนกำลังดูอยู่ สวัสดี",
+    "{n} จุลงลิฟต์ได้ คะแนนคุณก็ด้วย",
+    "ฉันซื้อ{n}ได้ด้วยเศษเหรียญในกระเป๋าเสื้อโค้ต",
+    "{n} ปัดเศษแล้วเหลือศูนย์ แต่ฉันก็ยังสู้ราคาคุณ"
+   ]
   }
  },
  "title": {
@@ -1043,21 +2598,45 @@
   "de": "Hauptstädte",
   "it": "Capitali",
   "es": "Capitales",
-  "fr": "Capitales"
+  "fr": "Capitales",
+  "pt": "Capitais",
+  "id": "Ibu kota",
+  "zh": "首都",
+  "hi": "राजधानियाँ",
+  "ja": "首都",
+  "ko": "수도",
+  "ar": "العواصم",
+  "th": "เมืองหลวง"
  },
  "noun": {
   "en": "capital",
   "de": "Hauptstadt",
   "it": "capitale",
   "es": "capital",
-  "fr": "capitale"
+  "fr": "capitale",
+  "pt": "capital",
+  "id": "ibu kota",
+  "zh": "首都",
+  "hi": "राजधानी",
+  "ja": "首都",
+  "ko": "수도",
+  "ar": "عاصمة",
+  "th": "เมืองหลวง"
  },
  "metricLabel": {
   "en": "Population",
   "de": "Einwohner",
   "it": "Popolazione",
   "es": "Población",
-  "fr": "Population"
+  "fr": "Population",
+  "pt": "População",
+  "id": "Populasi",
+  "zh": "人口",
+  "hi": "आबादी",
+  "ja": "人口",
+  "ko": "인구",
+  "ar": "السكان",
+  "th": "ประชากร"
  },
  "levels": {
   "beginner": {
@@ -1065,21 +2644,45 @@
    "de": "Anfänger — nur Europa",
    "it": "Principiante — solo Europa",
    "es": "Principiante — solo Europa",
-   "fr": "Débutant — Europe seulement"
+   "fr": "Débutant — Europe seulement",
+   "pt": "Iniciante — só a Europa",
+   "id": "Pemula — hanya Eropa",
+   "zh": "入门——仅欧洲",
+   "hi": "शुरुआती — सिर्फ़ यूरोप",
+   "ja": "初級 — ヨーロッパのみ",
+   "ko": "초급 — 유럽만",
+   "ar": "مبتدئ — أوروبا فقط",
+   "th": "มือใหม่ — เฉพาะยุโรป"
   },
   "medium": {
    "en": "Medium — over 2 million",
    "de": "Mittel — über 2 Millionen",
    "it": "Medio — oltre 2 milioni",
    "es": "Medio — más de 2 millones",
-   "fr": "Moyen — plus de 2 millions"
+   "fr": "Moyen — plus de 2 millions",
+   "pt": "Médio — mais de 2 milhões",
+   "id": "Menengah — di atas 2 juta",
+   "zh": "中级——人口超过 200 万",
+   "hi": "मध्यम — 20 लाख से ज़्यादा",
+   "ja": "中級 — 人口200万人以上",
+   "ko": "중급 — 인구 200만 명 이상",
+   "ar": "متوسط — أكثر من مليونين",
+   "th": "ปานกลาง — มากกว่า 2 ล้านคน"
   },
   "expert": {
    "en": "Expert — all 195 capitals",
    "de": "Experte — alle 195 Hauptstädte",
    "it": "Esperto — tutte le 195 capitali",
    "es": "Experto — las 195 capitales",
-   "fr": "Expert — les 195 capitales"
+   "fr": "Expert — les 195 capitales",
+   "pt": "Especialista — todas as 195 capitais",
+   "id": "Ahli — semua 195 ibu kota",
+   "zh": "专家——全部 195 个首都",
+   "hi": "विशेषज्ञ — सभी 195 राजधानियाँ",
+   "ja": "上級 — 全195の首都",
+   "ko": "고급 — 195개 수도 전체",
+   "ar": "خبير — كل العواصم الـ195",
+   "th": "ผู้เชี่ยวชาญ — ครบทั้ง 195 เมือง"
   }
  }
 }

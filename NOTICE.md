@@ -2,7 +2,7 @@
 
 The game bundles everything it needs (no network at runtime). This file is the
 long form of the in-app **Privacy → Credits & licences** sheet. If you add an
-asset, add it here and in `credits()` in `app.js` (five languages).
+asset, add it here and in `credits()` in `app.js` (all thirteen languages: the first five in `app.js`, the others in `i18n-<id>.js`).
 
 | What | Where it is used | Source | Licence / status |
 |---|---|---|---|
@@ -17,6 +17,7 @@ asset, add it here and in `credits()` in `app.js` (five languages).
 | three.js | `three.min.js` | three.js authors | MIT — © 2010–2021 three.js authors (text below) |
 | Sound | `sound.js` | Synthesised with Web Audio on the device — no recordings | Ours |
 | Eagle-style win cry (US States) | `Snd.eagle()` in `sound.js` | Synthesised, not a recording | Ours. In films the "eagle" cry is really a **red-tailed hawk**; a bald eagle's own voice is a thin chirp |
+| Names in the added languages (pt, id, zh, hi, ja, ko, ar, th) | `pack-countries.js`, `pack-states.js` (via `test/states-content.json`), `pack-capitals.js` (via `test/capitals-content.json`) | Country and US state names: **Unicode CLDR**, <https://cldr.unicode.org/>, read through `Intl.DisplayNames` in the sister project Outlines (a few long forms adjusted there). Capital-city names: Outlines' translation tables, ten added for this game (Cotonou, La Paz, Bujumbura, Abidjan, Mbabane, Jerusalem, Yaren, The Hague, Koror, Colombo) | CLDR: **Unicode License v3** (permissive; © 1991-2025 Unicode, Inc.). The rest: ours |
 | US States fun facts | `pack-states.js` `facts` | Written for this game | Ours. All 50 were checked against public sources in October 2026 — see `FACTS-SOURCES.md` |
 
 ## Regenerating the US map imagery

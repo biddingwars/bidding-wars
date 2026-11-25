@@ -1447,3 +1447,98 @@ test('BOTS: the privacy copy and the wipe are unchanged (still five stored value
   assert.deepEqual(errors, []);
   await ctx.close();
 });
+
+/* ---------------------------------------------------------------- LANGUAGES: the eight added languages (i18n-<id>.js, loaded when picked) */
+const ADDED_LANGS = ['pt', 'id', 'zh', 'hi', 'ja', 'ko', 'ar', 'th'];
+
+test('LANGUAGES: the sheet lists all thirteen; picking one loads its file, translates the menu and is remembered; Arabic reads right to left', { skip: SKIP }, async () => {
+  const { page, errors, requests, ctx } = await open();
+  assert.ok(!requests.some(r => /i18n-/.test(r)), 'no language file at boot in English');
+  await page.click('#ml'); await page.waitForSelector('[data-l]');
+  assert.deepEqual(await page.$$eval('[data-l]', e => e.map(x => x.dataset.l)), ['en', 'de', 'it', 'es', 'fr'].concat(ADDED_LANGS));
+  await page.click('[data-l="zh"]'); await page.waitForFunction(() => LANG === 'zh');
+  assert.ok(requests.includes('i18n-zh.js'), 'the Chinese file was fetched on demand');
+  assert.match(await page.textContent('#m1'), /单人|Solo|独自/);
+  assert.equal(await page.getAttribute('html', 'lang'), 'zh');
+  assert.equal(await page.evaluate(() => localStorage.getItem('lang:v1')), 'zh');
+  await page.reload(); await page.waitForFunction(() => document.body.classList.contains('booted'));
+  assert.equal(await page.evaluate(() => LANG), 'zh', 'remembered after a reload');
+  await page.click('#ml'); await page.click('[data-l="ar"]'); await page.waitForFunction(() => LANG === 'ar');
+  assert.equal(await page.getAttribute('html', 'dir'), 'rtl');
+  assert.equal(await page.textContent('.foot').then(t => /دولة/.test(t)), true, 'Arabic footer');
+  await page.click('#ml'); await page.click('[data-l="en"]'); await page.waitForFunction(() => LANG === 'en');
+  assert.equal(await page.getAttribute('html', 'dir'), 'ltr', 'back to left to right');
+  assert.deepEqual(errors, []);
+  await ctx.close();
+  /* a phone set to Japanese opens in Japanese the first time */
+  const c = await open({ init: () => Object.defineProperty(navigator, 'language', { get: () => 'ja-JP' }) });
+  assert.equal(await c.page.evaluate(() => LANG), 'ja');
+  assert.equal(await c.page.evaluate(() => localStorage.getItem('lang:v1')), null, 'nothing is stored until the player picks');
+  await c.ctx.close();
+});
+
+test('LANGUAGES: the auction never scrolls in the new scripts (worst case, 2 and 4 seats)', { skip: SKIP }, async () => {
+  const sizes = [[375, 560], [375, 667], [834, 1194], [844, 390]];
+  for (const [w, h] of sizes) for (const lang of ['ar', 'hi', 'th', 'ja']) for (const np of [2, 4]) {
+    const { page, errors, ctx } = await open({ viewport: { width: w, height: h }, init: l => localStorage.setItem('lang:v1', l), initArg: lang });
+    await page.evaluate(() => { window.think = () => new Promise(() => {}); });
+    await page.evaluate(async np => {
+      const pack = await Packs.load('countries'); PACK = pack;
+      const names = ['Maximiliane-Sophie', 'Bartholomäus-Jan', 'Wolfeschlegelstein', 'Ägidius-Konstantin'];
+      S = Engine.newAuction({ pack, kind: np === 2 ? 'solo' : 'multi', level: 'expert', lots: 30, clock: 30, players: np === 2 ? [{ name: names[0] }, { name: 'Bot', ai: true }] : names.map(n => ({ name: n })), rng: rnd });
+      Engine.startLot(S);
+      S.items[S.i] = pack.items.find(i => i.id === 'CF');                        // the longest names in most scripts
+      S.players.forEach((p, i) => { p.budget = 300 - i; p.bought = new Array(12).fill({}); });
+      S.L.price = 289; S.L.holder = np - 1; S.L.turn = 0;
+      S._taunt = Banter[LANG].pass[0] + ' ' + Banter[LANG].win[0];
+      paintLot(); showTaunt(S._taunt); controls();
+    }, np);
+    const r = await page.evaluate(() => { const sc = document.querySelector('.screen'); return { y: sc.scrollHeight - sc.clientHeight, x: sc.scrollWidth - sc.clientWidth, page: document.documentElement.scrollHeight - innerHeight }; });
+    assert.ok(r.y <= 1 && r.x <= 1 && r.page <= 1, `${w}x${h} ${lang} ${np}p scrolls: ${JSON.stringify(r)}`);
+    assert.ok(await page.$eval('#ctrl', e => e.getBoundingClientRect().bottom) <= h + 0.5, `${w}x${h} ${lang} dock fits`);
+    assert.deepEqual(errors, [], `${w}x${h} ${lang}`);
+    await ctx.close();
+  }
+});
+
+test('LANGUAGES: money stays a symbol in every new language: rules in euros and dollars, and a chosen currency rewrites them all', { skip: SKIP }, async () => {
+  for (const lang of ADDED_LANGS) {
+    const { page, errors, ctx } = await open({ init: l => localStorage.setItem('lang:v1', l), initArg: lang });
+    await page.click('#mr'); await page.waitForSelector('.sheetbox');
+    assert.match(await page.textContent('.sheetbox'), /€\s?300/, lang + ' Countries rules list the budgets in euros');
+    await page.keyboard.press('Escape');
+    await pickPack(page, 'states'); await page.click('#mr'); await page.waitForSelector('.sheetbox');
+    const st = await page.textContent('.sheetbox');
+    assert.match(st, /\$20[^$]+\$35[^$]+\$50[^$]+\$70/, lang + ' States rules list the dollar budgets');
+    assert.ok(!/€/.test(st), lang + ' States rules say no euro');
+    await page.keyboard.press('Escape');
+    await openSettings(page); await page.click('[data-g="cur"] [data-v="SEK"]'); await page.click('#sdone'); await page.waitForSelector('#m1');
+    await page.evaluate(() => { SELPACK = 'countries'; home(); });
+    await page.click('#mr'); await page.waitForSelector('.sheetbox');
+    const kr = await page.textContent('.sheetbox');
+    assert.ok(!/€/.test(kr) && /\d+ kr/.test(kr), lang + ' rules in kr: ' + (kr.match(/.{15}€.{5}/) || [''])[0]);
+    assert.deepEqual(errors, [], lang);
+    await ctx.close();
+  }
+});
+
+test('LANGUAGES: a whole game in each new language, every pack, with no English left on the auction and results screens', { skip: SKIP }, async () => {
+  const packs = ['countries', 'states', 'capitals'];
+  for (const [i, lang] of ADDED_LANGS.entries()) {
+    const { page, errors, ctx } = await open({ init: l => localStorage.setItem('lang:v1', l), initArg: lang });
+    const pk = packs[i % 3];
+    if (pk !== 'countries') await pickPack(page, pk);
+    await startSolo(page, 5, 0);
+    const auction = await page.textContent('.screen');
+    await autoplay(page); await reveal(page);
+    const results = await page.textContent('.screen');
+    for (const [where, txt] of [['auction', auction], ['results', results]]) {
+      const en = txt.match(/\b(of|Standing bid|Drop out|Bid|Points|Play again|Top bid|Your collection|Sold)\b/);   // "Menu" and "Lot" are Portuguese and Indonesian words too
+      assert.ok(!en, `${lang} ${pk} ${where}: English "${en && en[0]}"`);
+    }
+    assert.ok(!/NaN|undefined/.test(results), lang + ' results');
+    assert.equal(await page.getAttribute('html', 'dir'), lang === 'ar' ? 'rtl' : 'ltr');
+    assert.deepEqual(errors, [], lang);
+    await ctx.close();
+  }
+});

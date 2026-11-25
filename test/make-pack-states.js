@@ -38,8 +38,8 @@ const pack = `/* ===============================================================
 (function (root) {
   const pack = {
     id: 'states',
-    title: ${JSON.stringify({ en: 'US States', de: 'US-Bundesstaaten', it: 'Stati USA', es: 'Estados de EE. UU.', fr: 'États américains' })},
-    noun:  ${JSON.stringify({ en: 'state', de: 'Bundesstaat', it: 'stato', es: 'estado', fr: 'État' })},
+    title: ${JSON.stringify({"en":"US States","de":"US-Bundesstaaten","it":"Stati USA","es":"Estados de EE. UU.","fr":"États américains","pt":"Estados dos EUA","id":"Negara bagian AS","zh":"美国各州","hi":"अमेरिकी राज्य","ja":"アメリカの州","ko":"미국 주","ar":"الولايات الأمريكية","th":"รัฐในสหรัฐฯ"})},
+    noun:  ${JSON.stringify({"en":"state","de":"Bundesstaat","it":"stato","es":"estado","fr":"État","pt":"estado","id":"negara bagian","zh":"州","hi":"राज्य","ja":"州","ko":"주","ar":"ولاية","th":"รัฐ"})},
     currency: { symbol: '$', code: 'USD', locale: 'en-US' },    // USD in every language
     budgetPerLot: 10,                       // nominal only: the real budgets are the table in economy.budgets
     lots: { options: [5, 10, 15, 20], default: 10 },    // capped at 20 on purpose (v40): a fixed-cap player beats the bot in 30-50-lot rounds (CLAUDE.md, "The stingy-player exploit"); the engine still draws any count
@@ -77,13 +77,13 @@ const pack = `/* ===============================================================
       }
     },
     metric: {
-      label: ${JSON.stringify({ en: 'Population', de: 'Einwohner', it: 'Popolazione', es: 'Población', fr: 'Population' })},
+      label: ${JSON.stringify({"en":"Population","de":"Einwohner","it":"Popolazione","es":"Población","fr":"Population","pt":"População","id":"Populasi","zh":"人口","hi":"आबादी","ja":"人口","ko":"인구","ar":"السكان","th":"ประชากร"})},
       effUnit: '$/M',                       // dollars per million people
-      effLabel: ${JSON.stringify({ en: '$ per million', de: '$ pro Million', it: '$ per milione', es: '$ por millón', fr: '$ par million' })},
+      effLabel: ${JSON.stringify({"en":"$ per million","de":"$ pro Million","it":"$ per milione","es":"$ por millón","fr":"$ par million","pt":"$ por milhão","id":"$ per juta","zh":"每百万人 $","hi":"$ प्रति दस लाख","ja":"100万人あたりの $","ko":"100만 명당 $","ar":"$ لكل مليون","th":"$ ต่อล้านคน"})},
       format: v => v >= 10 ? v.toFixed(1) + 'M' : v.toFixed(2) + 'M'
     },
     /* No difficulty filters: every state is eligible, and a round draws without replacement. */
-    levels: [{ id: 'all', label: ${JSON.stringify({ en: 'All 50 states', de: 'Alle 50 Bundesstaaten', it: 'Tutti i 50 stati', es: 'Los 50 estados', fr: 'Les 50 États' })} }],
+    levels: [{ id: 'all', label: ${JSON.stringify({"en":"All 50 states","de":"Alle 50 Bundesstaaten","it":"Tutti i 50 stati","es":"Los 50 estados","fr":"Les 50 États","pt":"Todos os 50 estados","id":"Semua 50 negara bagian","zh":"全部 50 个州","hi":"सभी 50 राज्य","ja":"全50州","ko":"50개 주 전체","ar":"كل الولايات الخمسين","th":"ครบทั้ง 50 รัฐ"})} }],
     defaultLevel: 'all',
     globe: { borders: false, claimBorders: false },
     map: 'us',                              // results show the US map (us-view.js) instead of the globe
