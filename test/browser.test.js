@@ -1546,9 +1546,11 @@ test('LANGUAGES: a whole game in each new language, every pack, with no English 
     const pk = packs[i % 3];
     if (pk !== 'countries') await pickPack(page, pk);
     await startSolo(page, 5, 0);
-    const auction = await page.textContent('.screen');
+    /* the US States caption is the state's fun fact, which stays English in every language but English by design (source-checked, see FACTS-SOURCES.md): not counted */
+    const text = () => page.evaluate(() => { const c = document.querySelector('.screen').cloneNode(true); c.querySelectorAll('.fact').forEach(e => e.remove()); return c.textContent; });
+    const auction = await text();
     await autoplay(page); await reveal(page);
-    const results = await page.textContent('.screen');
+    const results = await text();
     for (const [where, txt] of [['auction', auction], ['results', results]]) {
       const en = txt.match(/\b(of|Standing bid|Drop out|Bid|Points|Play again|Top bid|Your collection|Sold)\b/);   // "Menu" and "Lot" are Portuguese and Indonesian words too
       assert.ok(!en, `${lang} ${pk} ${where}: English "${en && en[0]}"`);
