@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v65';   // increment this, every time
+const CACHE = 'bidding-wars-v66';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v65` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v66` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still five keys).
 
@@ -289,6 +289,28 @@ globe's `.glabel`/`.gload` rules live in `app.css` (they were lost once, which
 stacked the country names down the page); a plain wheel/scroll over the globe
 belongs to the page (only ctrl+wheel/pinch zooms); the results screen must fit
 iPad landscape without scrolling.
+
+## Playtest round (v66) — owner: "actually play rounds and check if everything works" (Xcode step 28 Nov 2026)
+
+Rounds were played through the real UI in Chromium with animations on and touch taps, as a human would (raise in small steps up to about 0.9 x the
+fair price, then drop out): Countries / US States / Capitals, every level, solo against 1-3 bots and pass-and-play with three named people, iPhone 15,
+15 Pro Max, 14, SE (3rd gen), iPhone sideways, iPad Pro 11 (both orientations), iPad mini, dark and Daylight, Reduce Motion, the practice helpers,
+pause, Play again, fun facts, record, in English, German, Arabic and Japanese. Every screenshot was looked at. Found and fixed:
+
+- **"You takes it"**: the headline was `takesIt` with the default name ("Du gewinnt", "فاز أنت"). A solo win under the default name now uses `youWin`
+  ("You win!", "Du gewinnst!", "لقد فزت!"…, 13 languages); every other winner gets `takesIt` = "{name} wins!" (owner: "it would also say: Leo wins!"),
+  "Bot wins!", "Leo gewinnt!", "¡Leo gana!".
+- **"1 Games" / "1 Spiele"**: counts use `gamesOne` / `gamesN` picked by `Intl.PluralRules` (`gamesN()` in `app.js`); Arabic says "عدد الألعاب: n", right for every n.
+- **"Best streak +0"** now "0" (`signed()`).
+- **Two seats with the same initial** (Ben and Bot, both "B") get two letters ("Be", "Bo"): `seatIni()`.
+- **Arabic**: "+1" rendered "1+" and "€8" rendered "8€" inside Arabic text. `ltr()` puts a left-to-right mark on each side of every amount (`money()`),
+  signed number and percentage, and `t()` does the same for amounts inside Arabic sentences. English fun facts inside Arabic screens get `dir="auto"`
+  (their full stop had jumped to the front).
+- **Decimals** follow the language (`fx1()`, `locDec()`, `fmtVal()`, the globe labels): "311,9 Punkte", "0,26 € pro Million", "18,4M" in German, Portuguese,
+  Spanish, French, Italian, Indonesian; a point elsewhere. Digits stay Latin in Arabic (`-u-nu-latn`).
+- Checked and fine: the gavel moment (Next after about 1.1-1.2 s, first tap always works, also with Reduce Motion), pause, the confirm sheet, the fair
+  price line, the US results map in Daylight and Arabic, the sideways phone, iPad portrait, 3 bots on an iPhone SE, the record sheet. Tests: `PLAYTEST:`
+  in `test/browser.test.js`. Not a bug: the playtest script's own taps missed buttons below a sheet's fold until it scrolled them into view first.
 
 ## Bug-fix round (v65) — owner: "fix all the remaining issues, very thorough"
 

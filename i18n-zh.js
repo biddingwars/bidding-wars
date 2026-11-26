@@ -29,7 +29,7 @@
   "sold": "成交",
   "liftAll": "揭开所有横条",
   "final": "最终",
-  "takesIt": "{name} 获胜",
+  "takesIt": "{name} 获胜！",
   "points": "分数",
   "playAgain": "再玩一次",
   "menu": "菜单",
@@ -261,6 +261,9 @@
   "fairShowD": "在每件拍品上拍时显示它值多少。练习局不会改变你的战绩。",
   "resetSetBody": "货币、机器人风格和其他选项都会恢复默认。",
   "fairHint": "公道价约 {p}",
+  "gamesOne": "{n} 局",
+  "gamesN": "{n} 局",
+  "youWin": "你赢了！",
   "dropAskTitle": "退出？",
   "dropAskBody": "你的钱保留，最高出价者买下这件拍品。"
  },

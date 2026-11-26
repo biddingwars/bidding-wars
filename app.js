@@ -26,17 +26,38 @@ function icon(it) {
   const ic = Engine.itemIcon(PACK, it);
   return ic.flag ? flag(ic.flag) : ic.emoji ? esc(ic.emoji) : `<span class="ibadge">${esc(ic.badge)}</span>`;
 }
-const fmtVal = v => PACK.metric.format(v);
+/* numbers on screen in the player's language (v66, playtest): "311,9" in German, Portuguese, French…; and in Arabic an amount or a signed number stays in one piece
+   ("€8" did not flip to "8€", "+1" not to "1+") thanks to a left-to-right mark on each side (supported everywhere, unlike some isolate characters) */
+const isRtl = () => !!(LANGS.find(l => l.id === LANG) || {}).rtl;
+const ltr = s => isRtl() ? '\u200E' + s + '\u200E' : String(s);
+let DEC = { lang: null, sep: '.' };
+const decSep = () => {
+  if (DEC.lang !== LANG) { let sep = '.'; try { const d = new Intl.NumberFormat(LANG + '-u-nu-latn').formatToParts(1.5).find(x => x.type === 'decimal'); if (d) sep = d.value; } catch (e) {} DEC = { lang: LANG, sep }; }
+  return DEC.sep;
+};
+const locDec = s => { const sep = decSep(); return sep === '.' ? String(s) : String(s).replace(/(\d)\.(\d)/g, '$1' + sep + '$2'); };
+const fx1 = (n, d = 1) => locDec(Number(n).toFixed(d));
+const signed = n => ltr(n > 0 ? '+' + n : String(n));
+/* "1 game" / "3 games": the plural form of the player's language (Arabic says "number of games: n", right for every n) */
+const gamesN = n => { let one = n === 1; try { one = new Intl.PluralRules(LANG).select(n) === 'one'; } catch (e) {} return t(one ? 'gamesOne' : 'gamesN', { n }); };
+const fmtVal = v => locDec(PACK.metric.format(v));
 let SELPACK = DEFAULT_PACK;                         // the pack picked on the menu (memory only; nothing about it is stored)
 /* The money is written in the currency the player picked in Settings (SET.cur), else in the pack's own ("$" for US States, "€" for the rest). Only the writing changes, never the numbers. */
 let SET = Engine.parseSettings(null);
 const nativeSym = () => (PACK ? PACK.currency.symbol : ((Packs.meta(SELPACK) || {}).sym || '€'));
 const chosenCur = () => { const c = Engine.currencyById(SET.cur); return c && c.sym !== nativeSym() ? c : null; };   // null = write it the pack's own way
 const cur = () => { const c = chosenCur(); return c ? c.sym : nativeSym(); };
-const money = n => { const c = chosenCur(); return c ? Engine.formatMoney(PACK, n, c.id) : (PACK ? Engine.formatMoney(PACK, n) : nativeSym() + n); };   // "$1,234" for US States, "€12" for Countries, "70 kr" when kr is picked
+const money = n => { const c = chosenCur(); return ltr(c ? Engine.formatMoney(PACK, n, c.id) : (PACK ? Engine.formatMoney(PACK, n) : nativeSym() + n)); };   // "$1,234" for US States, "€12" for Countries, "70 kr" when kr is picked
 /* the first whole character a reader sees: a Hindi conjunct ("क्षे"), an emoji flag or a letter with its accent, not half of one (Intl.Segmenter where the browser has it) */
 const firstChar = s => { try { if (Intl.Segmenter) { const g = new Intl.Segmenter().segment(s)[Symbol.iterator]().next().value; if (g) return g.segment; } } catch (e) {} return Array.from(s)[0]; };
-const ini = n => { const t = String(n || '?').trim(), m = t.match(/^(.*\S)\s+(\d)$/); return ((firstChar(m ? m[1] : t) || '?') + (m ? m[2] : '')).toUpperCase(); };   // "Bot 2" -> B2, so seats with the same first letter can be told apart
+const ini = n => { const t = String(n || '?').trim(), m = t.match(/^(.*\S)\s+(\d)$/); return ((firstChar(m ? m[1] : t) || '?') + (m ? m[2] : '')).toUpperCase(); };
+/* the initial on a seat's orb; when two seats would share one ("Ben" and "Bot"), those two get their first two characters ("Be", "Bo") (v66, playtest) */
+const graphemes = s => { try { if (Intl.Segmenter) return [...new Intl.Segmenter().segment(s)].map(x => x.segment); } catch (e) {} return Array.from(s); };
+const seatIni = (p, players) => {
+  const mine = ini(p.name), list = players || (S && S.players) || [p];
+  if (list.filter(q => ini(q.name) === mine).length < 2) return mine;
+  const g = graphemes(String(p.name).trim()); return g.length > 1 ? g[0].toUpperCase() + g[1].toLowerCase() : mine;
+};   // "Bot 2" -> B2, so seats with the same first letter can be told apart
 const IC = (id, cls) => `<svg class="i ${cls || ''}" aria-hidden="true" focusable="false"><use href="#i-${id}"/></svg>`;
 const isOnline = () => navigator.onLine !== false;
 
@@ -234,7 +255,7 @@ en:{
  nextLot:'Next lot', sold:'Sold', result:'Result',
  sealed:'The books are sealed', nobody:'Nobody knows yet',
  revealHint:'Every population is still blacked out. Tap a bar to lift it, or lift them all at once. The result stands once the last bar is gone.',
- liftAll:'Lift every bar', final:'Final', takesIt:'{name} takes it',
+ liftAll:'Lift every bar', final:'Final', takesIt:'{name} wins!',
  pointsAgainst:'{a} points against {b}.', smartest:'<b>{name}</b> shopped smartest at €{v} per million.',
  nothing:'Walked away with nothing.', points:'Points', spentEff:'{cur}{n} spent · efficiency',
  playAgain:'Play again', menu:'Menu', world:"{name}'s world · drag to spin and tilt · pinch to zoom",
@@ -334,7 +355,7 @@ de:{
  nextLot:'Nächstes Los', sold:'Verkauft', result:'Ergebnis',
  sealed:'Die Bücher sind versiegelt', nobody:'Noch weiß es niemand',
  revealHint:'Alle Einwohnerzahlen sind noch geschwärzt. Tippe einen Balken an oder deck alle auf einmal auf. Das Ergebnis steht erst, wenn der letzte Balken weg ist.',
- liftAll:'Alles aufdecken', final:'Endstand', takesIt:'{name} gewinnt',
+ liftAll:'Alles aufdecken', final:'Endstand', takesIt:'{name} gewinnt!',
  pointsAgainst:'{a} Punkte gegen {b}.', smartest:'<b>{name}</b> hat am klügsten eingekauft: {v} € pro Million.',
  nothing:'Ging leer aus.', points:'Punkte', spentEff:'{n} {cur} ausgegeben · Effizienz',
  playAgain:'Nochmal', menu:'Menü', world:'{name}s Welt · ziehen zum Drehen und Kippen · zwei Finger zum Zoomen',
@@ -434,7 +455,7 @@ it:{
  nextLot:'Prossimo lotto', sold:'Venduto', result:'Risultato',
  sealed:'I libri sono sigillati', nobody:'Ancora nessuno lo sa',
  revealHint:'Tutte le popolazioni sono ancora oscurate. Tocca una barra per scoprirla, o scoprile tutte insieme. Il risultato vale quando sparisce l’ultima barra.',
- liftAll:'Scopri tutto', final:'Finale', takesIt:'{name} vince',
+ liftAll:'Scopri tutto', final:'Finale', takesIt:'{name} vince!',
  pointsAgainst:'{a} punti contro {b}.', smartest:'<b>{name}</b> ha comprato meglio: {v} € per milione.',
  nothing:'Se n’è andato a mani vuote.', points:'Punti', spentEff:'{n} {cur} spesi · efficienza',
  playAgain:'Rigioca', menu:'Menu', world:'Il mondo di {name} · trascina per ruotare · pizzica per lo zoom',
@@ -534,7 +555,7 @@ es:{
  nextLot:'Siguiente lote', sold:'Vendido', result:'Resultado',
  sealed:'Los libros están sellados', nobody:'Todavía nadie lo sabe',
  revealHint:'Todas las poblaciones siguen tapadas. Toca una barra para levantarla, o levántalas todas. El resultado vale cuando desaparezca la última.',
- liftAll:'Levantar todo', final:'Final', takesIt:'{name} gana',
+ liftAll:'Levantar todo', final:'Final', takesIt:'¡{name} gana!',
  pointsAgainst:'{a} puntos contra {b}.', smartest:'<b>{name}</b> compró mejor: {v} € por millón.',
  nothing:'Se fue con las manos vacías.', points:'Puntos', spentEff:'{n} {cur} gastados · eficiencia',
  playAgain:'Otra vez', menu:'Menú', world:'El mundo de {name} · arrastra para girar · pellizca para acercar',
@@ -634,7 +655,7 @@ fr:{
  nextLot:'Lot suivant', sold:'Adjugé', result:'Résultat',
  sealed:'Les registres sont scellés', nobody:'Personne ne sait encore',
  revealHint:'Toutes les populations sont encore masquées. Touche une barre pour la lever, ou lève-les toutes. Le résultat compte une fois la dernière barre partie.',
- liftAll:'Tout dévoiler', final:'Final', takesIt:'{name} l’emporte',
+ liftAll:'Tout dévoiler', final:'Final', takesIt:'{name} l’emporte !',
  pointsAgainst:'{a} points contre {b}.', smartest:'<b>{name}</b> a le mieux acheté : {v} € par million.',
  nothing:'Reparti les mains vides.', points:'Points', spentEff:'{n} {cur} dépensés · efficacité',
  playAgain:'Rejouer', menu:'Menu', world:'Le monde de {name} · fais glisser pour tourner · pince pour zoomer',
@@ -782,6 +803,9 @@ const STR_SET = {
   "resume": "Resume",
   "leaveGame": "Leave the game",
   "dropAskTitle": "Drop out?",
+  "gamesOne": "{n} game",
+  "gamesN": "{n} games",
+  "youWin": "You win!",
   "dropAskBody": "You keep your money, and whoever holds the top bid buys this lot.",
   "peopleN": "People",
   "botsN": "Bots",
@@ -852,6 +876,9 @@ const STR_SET = {
   "resume": "Weiter",
   "leaveGame": "Spiel verlassen",
   "dropAskTitle": "Aussteigen?",
+  "gamesOne": "{n} Spiel",
+  "gamesN": "{n} Spiele",
+  "youWin": "Du gewinnst!",
   "dropAskBody": "Du behältst dein Geld, und wer das höchste Gebot hält, kauft dieses Los.",
   "peopleN": "Menschen",
   "botsN": "Bots",
@@ -922,6 +949,9 @@ const STR_SET = {
   "resume": "Riprendi",
   "leaveGame": "Esci dalla partita",
   "dropAskTitle": "Ritirarti?",
+  "gamesOne": "{n} partita",
+  "gamesN": "{n} partite",
+  "youWin": "Hai vinto!",
   "dropAskBody": "Tieni i tuoi soldi e chi ha l’offerta più alta compra questo lotto.",
   "peopleN": "Persone",
   "botsN": "Bot",
@@ -992,6 +1022,9 @@ const STR_SET = {
   "resume": "Reanudar",
   "leaveGame": "Salir de la partida",
   "dropAskTitle": "¿Retirarte?",
+  "gamesOne": "{n} partida",
+  "gamesN": "{n} partidas",
+  "youWin": "¡Has ganado!",
   "dropAskBody": "Conservas tu dinero y quien tenga la puja más alta compra este lote.",
   "peopleN": "Personas",
   "botsN": "Bots",
@@ -1062,6 +1095,9 @@ const STR_SET = {
   "resume": "Reprendre",
   "leaveGame": "Quitter la partie",
   "dropAskTitle": "Abandonner ?",
+  "gamesOne": "{n} partie",
+  "gamesN": "{n} parties",
+  "youWin": "Tu l’emportes !",
   "dropAskBody": "Tu gardes ton argent, et celui qui détient la meilleure enchère remporte ce lot.",
   "peopleN": "Personnes",
   "botsN": "Bots",
@@ -1226,6 +1262,10 @@ function t(key, vars){
   const cc=chosenCur();
   if(cc) v=writeIn(cc,v);
   else if(cur()!=='€') v=v.replace(/€\s?(\d[\d.,]*)/g,(m,n)=>cur()+n).replace(/(\d[\d.,]*)\s?€/g,(m,n)=>cur()+n);
+  if(isRtl()){   // Arabic: every amount ("€8", "$20", "70 kr") stays in one left-to-right piece
+    const sy=['€','$'].concat(cc?[cc.sym.trim()]:[]).map(x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|');
+    v=v.replace(new RegExp('\\u200E?((?:'+sy+')\\s?\\d[\\d.,]*|\\d[\\d.,]*\\s?(?:'+sy+'))\\u200E?','g'),'\u200E$1\u200E');
+  }
   return v;
 }
 /* An added language registers itself from i18n-<id>.js: its UI words become STR[id], its per-pack lines join STRP. */
@@ -1300,7 +1340,7 @@ function home() {
           <p class="tag">${esc(t('tagline'))}</p></div>
         <button class="glass recpill" id="mrec" aria-label="${esc(t('aRecord'))}">
           <span class="big num">${REC.won}<i>–</i>${REC.lost}${REC.drawn ? `<i>–</i>${REC.drawn}` : ''}</span>
-          <span class="m"><b>${esc(t('record'))}</b><br>${has ? `${REC.played} ${esc(t('games'))} · ${Math.round(REC.won / REC.played * 100)}% ${esc(t('winRate'))}` : esc(t('noGames'))}</span>
+          <span class="m"><b>${esc(t('record'))}</b><br>${has ? `${esc(gamesN(REC.played))} · ${ltr(Math.round(REC.won / REC.played * 100) + '%')} ${esc(t('winRate'))}` : esc(t('noGames'))}</span>
           ${has && REC.streak > 1 ? `<span class="streak">+${REC.streak}</span>` : ''}
         </button>
       </div>
@@ -1430,7 +1470,7 @@ async function recordScreen() {
   const h = sheet({ title: t('record'), foot: `${REC.played ? `<button class="btn ghost" id="rs">${esc(t('reset'))}</button>` : ''}<button class="btn gold" id="rd">${esc(t('done'))}</button>`,
     body: `<p class="label">${esc(pack ? (pack.title[LANG] || pack.title.en) : '')}</p>` + (REC.played ? `
       <div class="rec3"><div class="w"><div class="rn num">${REC.won}</div><div class="rl">${esc(t('wins'))}</div></div><div><div class="rn num">${REC.lost}</div><div class="rl">${esc(t('losses'))}</div></div><div><div class="rn num">${REC.drawn}</div><div class="rl">${esc(t('draws'))}</div></div></div>
-      <div class="group">${row(t('games'), REC.played)}${row(t('winRate'), pct + '%')}${row(t('streak'), REC.streak > 0 ? '+' + REC.streak : REC.streak)}${row(t('bestStreak'), '+' + REC.best)}${row(t('avgPts'), avg.toFixed(1) + ' — ' + avgBot.toFixed(1))}${REC.bestGame ? row(t('bestGame'), REC.bestGame.pts) : ''}</div>
+      <div class="group">${row(t('games'), REC.played)}${row(t('winRate'), ltr(pct + '%'))}${row(t('streak'), signed(REC.streak))}${row(t('bestStreak'), signed(REC.best))}${row(t('avgPts'), fx1(avg) + ' — ' + fx1(avgBot))}${REC.bestGame ? row(t('bestGame'), fx1(REC.bestGame.pts)) : ''}</div>
       ${(pack && pack.levels.length > 1) && Object.keys(REC.byLevel).filter(k => REC.byLevel[k].played).length ? `<div class="group">${Object.keys(REC.byLevel).filter(k => REC.byLevel[k].played).map(k => row(lvlName(k), REC.byLevel[k].won + '/' + REC.byLevel[k].played)).join('')}</div>` : ''}
       <p class="sm">${esc(t('recordNote'))}</p>` : `<p>${esc(t('noGames'))}</p>`) });
   on('rd', () => { Snd.ui(); h.close(); });
@@ -1550,7 +1590,7 @@ function lot() {
 }
 
 function tileHtml(p, i) {
-  return `<div class="po" data-i="${i}" role="group"><span class="now"></span><span class="crown" aria-hidden="true">👑</span><div class="o s${i % 4}" aria-hidden="true">${esc(ini(p.name))}</div><div class="nm">${esc(p.name)}</div><div class="bd num">${money(p.budget)}</div><div class="rl"></div></div>`;
+  return `<div class="po" data-i="${i}" role="group"><span class="now"></span><span class="crown" aria-hidden="true">👑</span><div class="o s${i % 4}" aria-hidden="true">${esc(seatIni(p))}</div><div class="nm">${esc(p.name)}</div><div class="bd num">${money(p.budget)}</div><div class="rl"></div></div>`;
 }
 
 function paintLot() {
@@ -1568,7 +1608,7 @@ function paintLot() {
           <div class="in" id="bump"><div class="lbl">${esc(t('standing'))}</div><div class="price"><sup>${esc(cur())}</sup><span id="price">${L.price}</span></div></div><span class="secs num" id="secs" aria-hidden="true"></span></div>
         <div class="holder"><span class="dot s${L.holder % 4}" id="hd"></span><span id="hn"></span></div>
         ${SET.fair ? `<div class="fairp" id="fairp">${esc(t('fairHint').replace('{p}', money(Math.max(1, Math.round(Engine.priceOf(S.pack, c).ideal)))))}</div>` : ''}
-        <div class="taunt${PACK.captionFacts ? ' fact' : ''}" id="taunt" aria-hidden="true">${PACK.captionFacts ? esc(Engine.factFor(S.pack, c, LANG)) : '&nbsp;'}</div>
+        <div class="taunt${PACK.captionFacts ? ' fact' : ''}" id="taunt" dir="auto" aria-hidden="true">${PACK.captionFacts ? esc(Engine.factFor(S.pack, c, LANG)) : '&nbsp;'}</div>
       </div></div>
       <div class="aud-r">
         <div class="orbs" id="players" style="--n:${S.players.length}">${S.players.map(tileHtml).join('')}</div>
@@ -1793,7 +1833,7 @@ async function award() {
     <div class="plate slab"><b>${esc(t('sold'))}</b><small>${esc(t(q === 'bargain' ? 'qBargain' : q === 'fair' ? 'qFair' : 'qOver'))}</small></div>
     <div class="gvwrap">${FX.gavelMarkup()}</div>
     <div class="soldline"><div class="who"><span class="orb" aria-hidden="true">${icon(c)}</span><span>${esc(cname(c))} · <span class="num">${money(L.price)}</span> · ${esc(mine && S.players.filter(p => !p.ai).length === 1 ? t('you') : w.name)}</span></div>
-      <div class="deal q-${q}">${esc(dealTxt)}</div>${fact ? `<p class="fact">${esc(fact)}</p>` : ''}</div>
+      <div class="deal q-${q}">${esc(dealTxt)}</div>${fact ? `<p class="fact" dir="auto">${esc(fact)}</p>` : ''}</div>
     <div class="glass tray"><span class="lbl">${esc(mine && S.players.filter(p => !p.ai).length === 1 ? t('collectionYours') : t('collectionOf', { name: w.name }))}</span>${prior.map(b => `<span class="mini" aria-hidden="true">${icon(b)}</span>`).join('')}<span class="mini new" aria-hidden="true"></span></div>
     <div class="fly" aria-hidden="true">${icon(c)}</div>
     <button class="btn gold nextbtn" id="n">${esc(last ? t('seeResult') : t('nextLot'))}</button><p class="skiphint" aria-hidden="true">${esc(t('tapSkip'))}</p>`;
@@ -1828,7 +1868,7 @@ function finish() {
       <div class="r-l">
         <div class="glass win" id="verdict"><div class="crown" aria-hidden="true">🔒</div><h2>${esc(t('sealed'))}</h2><p>${esc(t('revealShort'))}</p></div>
         <div class="glass lb${S.items.length > 10 ? ' many' : ''}" id="lb">${rows.map(r => `
-          <div class="lbr"><div class="o s${seatOf(r.p)}" aria-hidden="true">${esc(ini(r.p.name))}</div><div class="n">${esc(r.p.name)}</div><div class="p">${red(r.pts.toFixed(1), t('points') + ' · ' + r.p.name)}</div></div>
+          <div class="lbr"><div class="o s${seatOf(r.p)}" aria-hidden="true">${esc(seatIni(r.p))}</div><div class="n">${esc(r.p.name)}</div><div class="p">${red(fx1(r.pts), t('points') + ' · ' + r.p.name)}</div></div>
           <div class="fl">${r.p.bought.length ? r.p.bought.map(b => `<span class="f1"><em aria-hidden="true">${icon(b)}</em><span class="sr">${esc(cname(b))}</span><span>${b.free ? esc(t('freeLot')) : money(b.price)}</span><s>${red(fmtVal(b.value), cname(b))}</s></span>`).join('') : `<span class="sm">${esc(t('nothing'))}</span>`}</div>`).join('')}
           ${S.unsold && S.unsold.length ? `<p class="sm unsold">${esc(t('unsoldNote', { n: S.unsold.length }))}</p>` : ''}
         </div>
@@ -1876,7 +1916,7 @@ function buildWorld(sec, best) {
     return;
   }
   if (stopGlobe) stopGlobe();
-  stopGlobe = globe(host, lots, S.pack);
+  stopGlobe = globe(host, lots, Object.assign({}, S.pack, { metric: Object.assign({}, S.pack.metric, { format: fmtVal }) }));   // labels with the language's decimal separator
 }
 
 /* The reveal is staged on purpose. Doing the confetti, the count-up, the card spring and the globe in
@@ -1898,22 +1938,24 @@ async function reveal(sec, rows, best, bestEff, REC) {
   const single = S.players.filter(p => !p.ai).length === 1;
   const v = $('#verdict', sec);
   v.classList.add('final');
+  /* "You take it" needs its own sentence: "{name} takes it" with the default name gave "You takes it", "Du gewinnt", "فاز أنت" (v66, playtest). A typed nickname gets "{name} wins!" ("Leo wins!"). */
+  const headline = !best.p.ai && single && best.p.name === t('you') ? t('youWin') : t('takesIt', { name: esc(best.p.name) });
   v.innerHTML = `<div class="crown" aria-hidden="true">${best.p.ai ? '🤖' : '👑'}</div>
-    <h2>${t('takesIt', { name: esc(best.p.name) })}</h2>
-    <div class="pts goldtext num" aria-hidden="true"><span class="v" data-n="${best.pts}">${FX.reduced ? best.pts.toFixed(1) : '0.0'}</span><small>${esc(t('points'))}</small></div>
-    <p class="sr">${best.pts.toFixed(1)} ${esc(t('points'))}</p>
-    <p>${rows.filter(r => r !== best).map(r => `<b>${esc(r.p.name)}</b> ${r.pts.toFixed(1)}`).join(' · ')}</p>
-    ${bestEff.eff !== Infinity ? `<p>${PACK.metric.effUnit === nativeSym() + '/M' ? t('smartest', { name: esc(bestEff.p.name), v: bestEff.eff.toFixed(2) }) : t('smartestU', { name: esc(bestEff.p.name), v: bestEff.eff.toFixed(2), unit: esc(unitLabel()) })}</p>` : ''}`;
+    <h2>${headline}</h2>
+    <div class="pts goldtext num" aria-hidden="true"><span class="v" data-n="${best.pts}">${FX.reduced ? fx1(best.pts) : fx1(0)}</span><small>${esc(t('points'))}</small></div>
+    <p class="sr">${fx1(best.pts)} ${esc(t('points'))}</p>
+    <p>${rows.filter(r => r !== best).map(r => `<b>${esc(r.p.name)}</b> ${fx1(r.pts)}`).join(' · ')}</p>
+    ${bestEff.eff !== Infinity ? `<p>${PACK.metric.effUnit === nativeSym() + '/M' ? t('smartest', { name: esc(bestEff.p.name), v: fx1(bestEff.eff, 2) }) : t('smartestU', { name: esc(bestEff.p.name), v: fx1(bestEff.eff, 2), unit: esc(unitLabel()) })}</p>` : ''}`;
   if (!FX.reduced) FX.spring(v, 0, 1, x => ({ transform: `scale(${.96 + .04 * x})`, opacity: Math.min(1, x * 1.6) }), { k: 220, c: 14 });
   $('#acts', sec).innerHTML = `<button class="btn glassb" id="again">${esc(t('playAgain'))}</button><button class="btn gold" id="menu">${esc(t('menu'))}</button>${PACK.facts ? `<button class="btn glassb wide" id="facts">${esc(t('funFacts'))}</button>` : ''}`;
   on('again', () => { Snd.ui(); S.kind === 'net' ? online() : setup(S.kind || 'multi', S.pack.id); });
   on('facts', () => { Snd.ui(); factsSheet(); });
   on('menu', () => { Snd.ui(); home(); });
-  live(`${t('takesIt', { name: best.p.name })} — ${best.pts.toFixed(1)} ${t('points')}`);
+  live(`${headline.replace(/<[^>]+>/g, '')} — ${fx1(best.pts)} ${t('points')}`);
 
   const step = (ms, fn) => setTimeout(() => { if (tok === navTok) fn(); }, FX.reduced ? 0 : ms);
   step(120, () => {
-    const n = $('.pts .v', v); if (n) FX.roll(n, 0, +n.dataset.n, 700, x => x.toFixed(1));
+    const n = $('.pts .v', v); if (n) FX.roll(n, 0, +n.dataset.n, 700, x => fx1(x));
   });
   step(260, () => {
     if (win) { S.pack.map === 'us' ? Snd.eagle() : Snd.fanfare(); Haptics.success(); if (single || !best.p.ai) FX.confetti(sec, 22); } else { Snd.sting(); Haptics.warning(); }
@@ -1921,7 +1963,7 @@ async function reveal(sec, rows, best, bestEff, REC) {
   /* the card with the world (built while the bars were lifted) and the record */
   const ex = $('#extra', sec);
   buildWorld(sec, best);                                                 // nothing to do if it is already there
-  const recHtml = outcome ? `<div class="glass recpill" style="padding:8px 14px;order:0"><div class="big num" style="font-size:24px">${REC.won}<i>–</i>${REC.lost}${REC.drawn ? `<i>–</i>${REC.drawn}` : ''}</div><div class="m"><b>${esc(outcome.record ? t('newRecord') : t('record'))}</b><br>${REC.played} ${esc(t('games'))}${REC.streak ? ` · ${esc(t('streak'))} ${REC.streak > 0 ? '+' : ''}${REC.streak}` : ''}</div></div>` : S.practice ? `<div class="glass recpill" style="padding:8px 14px;order:0"><div class="m"><b>${esc(t('practiceTitle'))}</b><br>${esc(t('practiceNote'))}</div></div>` : '';
+  const recHtml = outcome ? `<div class="glass recpill" style="padding:8px 14px;order:0"><div class="big num" style="font-size:24px">${REC.won}<i>–</i>${REC.lost}${REC.drawn ? `<i>–</i>${REC.drawn}` : ''}</div><div class="m"><b>${esc(outcome.record ? t('newRecord') : t('record'))}</b><br>${esc(gamesN(REC.played))}${REC.streak ? ` · ${esc(t('streak'))} ${signed(REC.streak)}` : ''}</div></div>` : S.practice ? `<div class="glass recpill" style="padding:8px 14px;order:0"><div class="m"><b>${esc(t('practiceTitle'))}</b><br>${esc(t('practiceNote'))}</div></div>` : '';
   if (recHtml) ex.insertAdjacentHTML('beforeend', recHtml);
   step(380, () => {
     if (!ex.children.length) return;
@@ -1942,7 +1984,7 @@ function factsSheet() {
   const seen = new Set(), list = [];
   S.players.forEach(p => p.bought.forEach(b => { if (!seen.has(b.id)) { seen.add(b.id); list.push(b); } }));
   const h = sheet({ title: t('funFacts'), foot: `<button class="btn gold" id="fd">${esc(t('done'))}</button>`,
-    body: `<p class="sm">${esc(t('factsIntro'))}</p><div class="group">${list.map(b => `<div class="row"><span class="orb" style="--orb:34px" aria-hidden="true">${icon(b)}</span><span class="t"><b>${esc(cname(b))}</b><br><span class="sm">${esc(Engine.factFor(PACK, b, LANG))}</span></span></div>`).join('')}</div>` });
+    body: `<p class="sm">${esc(t('factsIntro'))}</p><div class="group">${list.map(b => `<div class="row"><span class="orb" style="--orb:34px" aria-hidden="true">${icon(b)}</span><span class="t"><b>${esc(cname(b))}</b><br><span class="sm" dir="auto">${esc(Engine.factFor(PACK, b, LANG))}</span></span></div>`).join('')}</div>` });
   on('fd', () => { Snd.ui(); h.close(); });
 }
 

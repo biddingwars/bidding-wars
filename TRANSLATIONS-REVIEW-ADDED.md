@@ -85,7 +85,7 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `revealHint` | Every population is still blacked out. Tap a bar to lift it, or lift them all at once. The result stands once the last bar is gone. | Todas as populações ainda estão tarjadas. Toque numa barra para levantá-la, ou levante todas de uma vez. O resultado vale quando a última barra sumir. |
 | `liftAll` | Lift every bar | Levantar todas as barras |
 | `final` | Final | Final |
-| `takesIt` | {name} takes it | {name} vence |
+| `takesIt` | {name} wins! | {name} vence! |
 | `pointsAgainst` | {a} points against {b}. | {a} pontos contra {b}. |
 | `smartest` | **{name}** shopped smartest at €{v} per million. | **{name}** comprou melhor: €{v} por milhão. |
 | `nothing` | Walked away with nothing. | Saiu sem nada. |
@@ -269,6 +269,9 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `resume` | Resume | Continuar |
 | `leaveGame` | Leave the game | Sair da partida |
 | `dropAskTitle` | Drop out? | Desistir? |
+| `gamesOne` | {n} game | {n} partida |
+| `gamesN` | {n} games | {n} partidas |
+| `youWin` | You win! | Você venceu! |
 | `dropAskBody` | You keep your money, and whoever holds the top bid buys this lot. | Você fica com seu dinheiro, e quem tem o maior lance compra este lote. |
 | `peopleN` | People | Pessoas |
 | `botsN` | Bots | Bots |
@@ -533,7 +536,7 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `revealHint` | Every population is still blacked out. Tap a bar to lift it, or lift them all at once. The result stands once the last bar is gone. | Semua populasi masih ditutup. Ketuk satu bilah untuk membukanya, atau buka semuanya sekaligus. Hasilnya berlaku setelah bilah terakhir hilang. |
 | `liftAll` | Lift every bar | Angkat semua palang |
 | `final` | Final | Final |
-| `takesIt` | {name} takes it | {name} menang |
+| `takesIt` | {name} wins! | {name} menang! |
 | `pointsAgainst` | {a} points against {b}. | {a} poin melawan {b}. |
 | `smartest` | **{name}** shopped smartest at €{v} per million. | **{name}** belanja paling cerdas: €{v} per juta. |
 | `nothing` | Walked away with nothing. | Pulang dengan tangan kosong. |
@@ -717,6 +720,9 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `resume` | Resume | Lanjutkan |
 | `leaveGame` | Leave the game | Keluar dari permainan |
 | `dropAskTitle` | Drop out? | Mundur? |
+| `gamesOne` | {n} game | {n} permainan |
+| `gamesN` | {n} games | {n} permainan |
+| `youWin` | You win! | Kamu menang! |
 | `dropAskBody` | You keep your money, and whoever holds the top bid buys this lot. | Uangmu tetap, dan pemegang tawaran tertinggi membeli lot ini. |
 | `peopleN` | People | Orang |
 | `botsN` | Bots | Bot |
@@ -926,7 +932,7 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `revealHint` | Every population is still blacked out. Tap a bar to lift it, or lift them all at once. The result stands once the last bar is gone. | 所有人口仍被涂黑。点一下黑条揭开它，或者一次全部揭开。最后一条揭开后，结果才算数。 |
 | `liftAll` | Lift every bar | 揭开所有横条 |
 | `final` | Final | 最终 |
-| `takesIt` | {name} takes it | {name} 获胜 |
+| `takesIt` | {name} wins! | {name} 获胜！ |
 | `pointsAgainst` | {a} points against {b}. | {a} 分对 {b} 分。 |
 | `smartest` | **{name}** shopped smartest at €{v} per million. | **{name}** 买得最划算：每百万人 €{v}。 |
 | `nothing` | Walked away with nothing. | 两手空空离场。 |
@@ -1110,6 +1116,9 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `resume` | Resume | 继续 |
 | `leaveGame` | Leave the game | 离开游戏 |
 | `dropAskTitle` | Drop out? | 退出？ |
+| `gamesOne` | {n} game | {n} 局 |
+| `gamesN` | {n} games | {n} 局 |
+| `youWin` | You win! | 你赢了！ |
 | `dropAskBody` | You keep your money, and whoever holds the top bid buys this lot. | 你的钱保留，最高出价者买下这件拍品。 |
 | `peopleN` | People | 人数 |
 | `botsN` | Bots | 机器人 |
@@ -1477,7 +1486,7 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `revealHint` | Every population is still blacked out. Tap a bar to lift it, or lift them all at once. The result stands once the last bar is gone. | हर आबादी अभी भी ढकी हुई है। किसी पट्टी को खोलने के लिए उस पर टैप करें, या सबको एक साथ हटाएँ। आख़िरी पट्टी हटने के बाद ही नतीजा तय होता है। |
 | `liftAll` | Lift every bar | सारी पट्टियाँ हटाएँ |
 | `final` | Final | अंतिम |
-| `takesIt` | {name} takes it | {name} जीता |
+| `takesIt` | {name} wins! | {name} की जीत! |
 | `pointsAgainst` | {a} points against {b}. | {a} अंक बनाम {b}। |
 | `smartest` | **{name}** shopped smartest at €{v} per million. | **{name}** ने सबसे समझदारी से ख़रीदा: प्रति दस लाख €{v}। |
 | `nothing` | Walked away with nothing. | ख़ाली हाथ लौटे। |
@@ -1661,6 +1670,9 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `resume` | Resume | जारी रखें |
 | `leaveGame` | Leave the game | गेम छोड़ें |
 | `dropAskTitle` | Drop out? | हट जाएँ? |
+| `gamesOne` | {n} game | {n} गेम |
+| `gamesN` | {n} games | {n} गेम |
+| `youWin` | You win! | आप जीत गए! |
 | `dropAskBody` | You keep your money, and whoever holds the top bid buys this lot. | आपके पैसे आपके पास रहते हैं, और सबसे ऊँची बोली वाला यह लॉट ख़रीद लेता है। |
 | `peopleN` | People | लोग |
 | `botsN` | Bots | बॉट |
@@ -2028,7 +2040,7 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `revealHint` | Every population is still blacked out. Tap a bar to lift it, or lift them all at once. The result stands once the last bar is gone. | 人口はすべて黒塗りのままです。バーをタップすると1本ずつ外せます。まとめて外すこともできます。最後のバーが外れたとき、結果が確定します。 |
 | `liftAll` | Lift every bar | すべてのバーを外す |
 | `final` | Final | 最終結果 |
-| `takesIt` | {name} takes it | {name}の勝ち |
+| `takesIt` | {name} wins! | {name}の勝ち！ |
 | `pointsAgainst` | {a} points against {b}. | {a}点 対 {b}点。 |
 | `smartest` | **{name}** shopped smartest at €{v} per million. | いちばん賢く買ったのは **{name}**：100万人あたり €{v}。 |
 | `nothing` | Walked away with nothing. | 何も買えずに終わりました。 |
@@ -2212,6 +2224,9 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `resume` | Resume | 再開 |
 | `leaveGame` | Leave the game | ゲームをやめる |
 | `dropAskTitle` | Drop out? | 降りますか？ |
+| `gamesOne` | {n} game | {n}ゲーム |
+| `gamesN` | {n} games | {n}ゲーム |
+| `youWin` | You win! | あなたの勝ち！ |
 | `dropAskBody` | You keep your money, and whoever holds the top bid buys this lot. | お金はそのまま残り、最高入札者がこのロットを落札します。 |
 | `peopleN` | People | 人数 |
 | `botsN` | Bots | ボット |
@@ -2579,7 +2594,7 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `revealHint` | Every population is still blacked out. Tap a bar to lift it, or lift them all at once. The result stands once the last bar is gone. | 모든 인구가 아직 가려져 있어요. 막대를 눌러 하나씩 벗기거나 한 번에 모두 벗기세요. 마지막 막대가 사라지면 결과가 확정돼요. |
 | `liftAll` | Lift every bar | 모든 막대 걷기 |
 | `final` | Final | 최종 |
-| `takesIt` | {name} takes it | {name} 승리 |
+| `takesIt` | {name} wins! | {name} 승리! |
 | `pointsAgainst` | {a} points against {b}. | {a}점 대 {b}점. |
 | `smartest` | **{name}** shopped smartest at €{v} per million. | 가장 현명하게 산 사람은 **{name}**: 100만 명당 €{v}. |
 | `nothing` | Walked away with nothing. | 아무것도 사지 못했어요. |
@@ -2763,6 +2778,9 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `resume` | Resume | 다시 시작 |
 | `leaveGame` | Leave the game | 게임 나가기 |
 | `dropAskTitle` | Drop out? | 포기할까요? |
+| `gamesOne` | {n} game | {n}게임 |
+| `gamesN` | {n} games | {n}게임 |
+| `youWin` | You win! | 승리했어요! |
 | `dropAskBody` | You keep your money, and whoever holds the top bid buys this lot. | 돈은 그대로 남고, 최고 입찰자가 이 로트를 낙찰받아요. |
 | `peopleN` | People | 인원 |
 | `botsN` | Bots | 봇 |
@@ -3130,7 +3148,7 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `revealHint` | Every population is still blacked out. Tap a bar to lift it, or lift them all at once. The result stands once the last bar is gone. | كل أعداد السكان ما زالت محجوبة. اضغط على شريط لترفعه، أو ارفعها كلها دفعة واحدة. تثبت النتيجة عند اختفاء آخر شريط. |
 | `liftAll` | Lift every bar | ارفع كل الأشرطة |
 | `final` | Final | النهائي |
-| `takesIt` | {name} takes it | فاز {name} |
+| `takesIt` | {name} wins! | فاز {name}! |
 | `pointsAgainst` | {a} points against {b}. | {a} نقطة مقابل {b}. |
 | `smartest` | **{name}** shopped smartest at €{v} per million. | **{name}** اشترى بأذكى طريقة: ‎€{v} لكل مليون. |
 | `nothing` | Walked away with nothing. | خرج خالي اليدين. |
@@ -3314,6 +3332,9 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `resume` | Resume | استئناف |
 | `leaveGame` | Leave the game | مغادرة اللعبة |
 | `dropAskTitle` | Drop out? | الانسحاب؟ |
+| `gamesOne` | {n} game | عدد الألعاب: {n} |
+| `gamesN` | {n} games | عدد الألعاب: {n} |
+| `youWin` | You win! | لقد فزت! |
 | `dropAskBody` | You keep your money, and whoever holds the top bid buys this lot. | يبقى مالك معك، ويشتري صاحب أعلى مزايدة هذه القطعة. |
 | `peopleN` | People | الأشخاص |
 | `botsN` | Bots | الروبوتات |
@@ -3681,7 +3702,7 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `revealHint` | Every population is still blacked out. Tap a bar to lift it, or lift them all at once. The result stands once the last bar is gone. | ประชากรทั้งหมดยังถูกปิดดำไว้ แตะแถบเพื่อเปิดทีละแถบ หรือเปิดทั้งหมดพร้อมกัน ผลจะเป็นที่สุดเมื่อแถบสุดท้ายหายไป |
 | `liftAll` | Lift every bar | เปิดแถบทั้งหมด |
 | `final` | Final | สรุปผล |
-| `takesIt` | {name} takes it | {name} ชนะ |
+| `takesIt` | {name} wins! | {name} ชนะ! |
 | `pointsAgainst` | {a} points against {b}. | {a} คะแนน ต่อ {b} |
 | `smartest` | **{name}** shopped smartest at €{v} per million. | **{name}** ซื้อได้คุ้มที่สุด: €{v} ต่อล้านคน |
 | `nothing` | Walked away with nothing. | กลับไปมือเปล่า |
@@ -3865,6 +3886,9 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `resume` | Resume | เล่นต่อ |
 | `leaveGame` | Leave the game | ออกจากเกม |
 | `dropAskTitle` | Drop out? | ถอนตัวไหม |
+| `gamesOne` | {n} game | {n} เกม |
+| `gamesN` | {n} games | {n} เกม |
+| `youWin` | You win! | คุณชนะ! |
 | `dropAskBody` | You keep your money, and whoever holds the top bid buys this lot. | เงินของคุณยังอยู่ และคนที่ให้ราคาสูงสุดจะได้ล็อตนี้ไป |
 | `peopleN` | People | จำนวนคน |
 | `botsN` | Bots | บอต |
