@@ -605,7 +605,17 @@
     const decisiveLot = !!B.decisive && item.value >= lvVal(B.decisive.share, S) * sumFrom(S, S.i, i => i.value)
       && (B.decisive.minPrice == null || pr.ideal >= lvVal(B.decisive.minPrice, S) * me.budget);
     if (S.trace) S._dec = decisiveLot;
-    if (decisiveLot) reserve = 0;                                                                           // no euro is kept back for it
+    /* v67 (found in the owner's game log, Capitals Expert, 30 lots, 3 bots): (1) India came up second to last, worth 28.5 of the 29 points still to come: whoever bought it
+       won the game. It was not "decisive" (its fair price, EUR 95, was not 1.2 x the bot's EUR 93), so the wallet rule stopped the bot at a random 70-100% of its purse and it walked
+       away at EUR 77 with EUR 93 in hand. A lot that SETTLES the game (with it nobody can catch the bot, without it the bot cannot win) now gets the whole purse, whatever it costs.
+       (2) On the last lot the knockout "sweep" made a bot that could no longer win pay EUR 85 for Port of Spain (fair price EUR 4): a bot that cannot win even with every lot
+       still to come makes no knockout or decisive jump on the last lot (it still bids normally). "Settles" is only judged on the closing three lots: earlier, the typical rest is too
+       rough a guess, and a 5-lot round would open with an all-in on Seoul (v47). */
+    const restPts = sumFrom(S, S.i, i => i.value) - item.value, mine = ptsOf(me);
+    const bestOther = Math.max(...others.map(i => ptsOf(S.players[i]))), buyerPts = Math.max(...pool.map(i => ptsOf(S.players[i])));
+    const settles = lotsAfter <= 2 && mine + item.value > bestOther + restPts && buyerPts + item.value > mine + restPts;
+    const hopeless = lotsAfter === 0 && mine + item.value <= bestOther;   // only on the last lot, where it is certain: before it, "what is left" is the typical rest (no peeking), and a bot that gave up on an estimate lost games it could still win
+    if (decisiveLot || settles) reserve = 0;                                                                           // no euro is kept back for it
     if (T && T.cushion && lotsAfter >= 3) reserve += Math.round(T.cushion * (me.budget + me.bought.reduce((a, b) => a + b.price, 0)));
     if (T && T.reserveCap != null) reserve = Math.min(reserve, T.reserveCap);
     let lim = S._ceil.walk, jump = null;
@@ -618,7 +628,7 @@
     const jumpFrom = B.jumpFrom == null ? 0.6 : lvVal(B.jumpFrom, S);
     /* no instant all-in (v57): only a jump that commits a big share of the bot's OWN purse is held back (a knockout of a nearly broke rival costs the bot almost nothing and stays instant) */
     const heavy = (target, K) => target > 0.35 * me.budget && L.price < jumpFrom * K;
-    if (B.knockout && rival) {
+    if (B.knockout && rival && !hopeless) {
       const K = rival.budget, afford = me.budget - reserve;
       if (K >= 1 && afford >= K) {
         const sweep = afford >= K * (lotsAfter + 1);
@@ -641,11 +651,11 @@
     }
     /* On a lot that decides the game, a bot that holds at least as much money as its rival takes it at once: raising to the rival's whole purse can
        not be topped. (Waiting only lets a rival who moves first jump to the whole purse and win every tie.) */
-    if (decisiveLot && rival && B.decisive.jump !== false && rival.budget >= 1 && me.budget >= rival.budget && L.holder !== L.turn) {
+    if (decisiveLot && !hopeless && rival && B.decisive.jump !== false && rival.budget >= 1 && me.budget >= rival.budget && L.holder !== L.turn) {
       const K = rival.budget, target = L.price < K ? K : (me.budget >= K + 1 ? K + 1 : null);
       if (target != null && target > L.price && !heavy(target, K)) { jump = target; lim = Math.max(lim, target); }
     }
-    if (decisiveLot) lim = Math.max(lim, me.budget);     // and no random ceiling either: against a rival who goes all-in on the lot that decides the game, a bot that stops at a random 70-100% of its purse simply loses it
+    if (decisiveLot || settles) lim = Math.max(lim, me.budget);     // and no random ceiling either: against a rival who goes all-in on the lot that decides the game, a bot that stops at a random 70-100% of its purse simply loses it
     /* The last lot (v59): money is worth nothing once the round is over. When this lot decides whether the bot wins (without it the bot does not win, with it the bot does),
        its limit is its whole purse, in every pack. Countries already behaved like this (its last lot is always "decisive"); US States and Capitals could walk away from the
        deciding lot with money in hand. */
