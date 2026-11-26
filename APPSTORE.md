@@ -1,9 +1,20 @@
 # App Store release checklist
 
 Checked against the App Review Guidelines as published on developer.apple.com on 13 November 2026.
-"Done" means it is true of the code in this repository at v59. "You" means something only the
+"Done" means it is true of the code in this repository (checked again at v66, 26 November 2026). "You" means something only the
 account holder can do (App Store Connect, the Xcode project, a real device). Nothing here has been
 run on a real iPhone or iPad, and there is no native project in this repository yet.
+
+## 0. Before the Xcode step (28 November 2026): what only you can do
+
+1. Add an **email address** to `support.html` (guideline 1.5; today the only contact is a GitHub issue).
+2. Decide the **storefronts** (see 5 Legal below: Taiwan and Kosovo are listed as countries).
+3. Build the wrapper as in section 3, then run the device checks in item 7 and the status-bar check in item 8.
+4. **Languages:** the game is in 13 languages (English, German, Italian, Spanish, French, Portuguese (Brazil), Indonesian, Simplified Chinese, Hindi,
+   Japanese, Korean, Arabic, Thai). In Xcode, list them as the app's localizations (`CFBundleLocalizations`, or add them in the project's Info tab)
+   so the App Store shows them; the game picks the phone's language itself. The eight added in v64 have not been read by a native speaker
+   (`TRANSLATIONS-REVIEW-ADDED.md` has every string next to the English); App Store Connect only needs a description in the languages you list there.
+5. Screenshots from the build you submit (2.3).
 
 ## 1. What the guidelines ask for, and where the game stands
 
@@ -59,5 +70,5 @@ Measured with `node test/exploit.js <pack> all 500 4000` at v60: in every pack, 
 limit is 60%, 65% at 5 lots). Details and costs are in `CLAUDE.md`, "Exploit retune (v60)".
 
 - A "+1" creeper that passes on purpose now and then still does better than one that never passes (about 25-32% instead of 5% in Countries Medium long rounds). It loses most games.
-- Two tests still fail, as they did before v59, on cells that were not touched: Countries knockout test (b) and the Countries repeat test (SD 14.3% against 15%).
+- Every test passes since v65 (the Countries knockout test (b) was a real bot bug, fixed; the repeat test measured the wrong thing, fixed). v66 played real rounds on every device size and fixed six text and layout issues (see `CLAUDE.md`, "Playtest round (v66)").
 - Long Medium rounds of Capitals are hard for a player who pays up to 1.25x the fair price for everything (about 20-29% wins at 20-30 lots); a tighter cap wins 42-50%.

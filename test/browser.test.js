@@ -1561,3 +1561,37 @@ test('LANGUAGES: a whole game in each new language, every pack, with no English 
     await ctx.close();
   }
 });
+
+/* ---------------------------------------------------------------- PLAYTEST (v66): what playing real rounds turned up */
+test('PLAYTEST: the winner headline is a sentence in every language ("You win", not "You takes it"); a nickname keeps "{name} takes it"; one game is "1 game"', { skip: SKIP }, async () => {
+  const cases = [['en', '', 'You win', /1 game\b/], ['de', '', 'Du gewinnst', /1 Spiel\b/], ['fr', '', 'Tu l’emportes', /1 partie\b/], ['ar', '', 'لقد فزت', /عدد الألعاب: 1/], ['ja', '', 'あなたの勝ち', /1ゲーム/], ['en', 'Leo', 'Leo takes it', /1 game\b/]];
+  for (const [lang, nick, head, games] of cases) {
+    const { page, errors, ctx } = await open({ init: l => localStorage.setItem('lang:v1', l), initArg: lang });
+    await page.click('#m1'); await page.waitForSelector('#start'); if (nick) await page.fill('#p1', nick); await page.click('#start'); await page.waitForSelector('#ctrl');
+    await page.evaluate(() => { window.think = () => new Promise(() => {}); const big = S.items.reduce((a, x) => x.value > a.value ? x : a); S.players[0].bought = [Object.assign({}, big, { price: 5 })]; S.players[1].bought = []; finish(); });
+    await page.click('#rev'); await page.waitForSelector('#verdict.final'); await page.waitForTimeout(500);
+    assert.equal((await page.textContent('#verdict h2')).trim(), head, lang + ' ' + (nick || 'default name'));
+    assert.match(await page.textContent('.recpill .m'), games, lang + ': the game count');
+    assert.deepEqual(errors, [], lang);
+    await ctx.close();
+  }
+});
+
+test('PLAYTEST: decimals use the language\'s separator, two seats never share an initial, Arabic keeps amounts and signs in one piece, the record shows "0" for no streak', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open({ init: () => localStorage.setItem('lang:v1', 'de') });
+  await page.click('#m2'); await page.waitForSelector('#start');
+  await pick(page, 'players', 2); await pick(page, 'bots', 1);
+  await page.fill('#p1', 'Ben'); await page.fill('#p2', 'Anna'); await page.click('#start'); await page.waitForSelector('#ctrl');
+  assert.deepEqual(await page.$$eval('.po .o', e => e.map(x => x.textContent)), ['Be', 'A', 'Bo'], 'Ben and the Bot get two letters');
+  await page.evaluate(() => { window.think = () => new Promise(() => {}); S.players[0].bought = [Object.assign({}, S.items[0], { value: 12.34, price: 5 })]; finish(); });
+  await page.click('#rev'); await page.waitForSelector('#verdict.final'); await page.waitForTimeout(900);
+  assert.match(await page.textContent('#lb'), /12,3\b/, 'German points use a comma');
+  assert.doesNotMatch(await page.textContent('#lb'), /\d\.\d/, 'no English decimal point in German');
+  await ctx.close();
+  const a = await open({ init: () => localStorage.setItem('lang:v1', 'ar') });
+  assert.equal(await a.page.evaluate(() => money(8)), '‎€8‎', 'an amount is wrapped in left-to-right marks in Arabic');
+  assert.equal(await a.page.evaluate(() => signed(-1)), '‎-1‎');
+  assert.match(await a.page.evaluate(() => t('dealFair', { n: 8 })), /‎€\s?8‎/, 'and inside an Arabic sentence too');
+  assert.equal(await a.page.evaluate(() => signed(0)), '‎0‎', 'a streak of 0 has no plus sign');
+  assert.deepEqual(errors, []); await a.ctx.close();
+});

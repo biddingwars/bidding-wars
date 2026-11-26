@@ -261,6 +261,9 @@
   "fairShowD": "Menunjukkan nilai setiap lot selama dilelang. Permainan latihan tidak mengubah rekormu.",
   "resetSetBody": "Mata uang, gaya bot, dan pilihan lain kembali ke bawaan.",
   "fairHint": "Harga wajar sekitar {p}",
+  "gamesOne": "{n} permainan",
+  "gamesN": "{n} permainan",
+  "youWin": "Kamu menang",
   "dropAskTitle": "Mundur?",
   "dropAskBody": "Uangmu tetap, dan pemegang tawaran tertinggi membeli lot ini."
  },

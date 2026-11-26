@@ -269,6 +269,9 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `resume` | Resume | Continuar |
 | `leaveGame` | Leave the game | Sair da partida |
 | `dropAskTitle` | Drop out? | Desistir? |
+| `gamesOne` | {n} game | {n} partida |
+| `gamesN` | {n} games | {n} partidas |
+| `youWin` | You win | Você venceu |
 | `dropAskBody` | You keep your money, and whoever holds the top bid buys this lot. | Você fica com seu dinheiro, e quem tem o maior lance compra este lote. |
 | `peopleN` | People | Pessoas |
 | `botsN` | Bots | Bots |
@@ -717,6 +720,9 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `resume` | Resume | Lanjutkan |
 | `leaveGame` | Leave the game | Keluar dari permainan |
 | `dropAskTitle` | Drop out? | Mundur? |
+| `gamesOne` | {n} game | {n} permainan |
+| `gamesN` | {n} games | {n} permainan |
+| `youWin` | You win | Kamu menang |
 | `dropAskBody` | You keep your money, and whoever holds the top bid buys this lot. | Uangmu tetap, dan pemegang tawaran tertinggi membeli lot ini. |
 | `peopleN` | People | Orang |
 | `botsN` | Bots | Bot |
@@ -1110,6 +1116,9 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `resume` | Resume | 继续 |
 | `leaveGame` | Leave the game | 离开游戏 |
 | `dropAskTitle` | Drop out? | 退出？ |
+| `gamesOne` | {n} game | {n} 局 |
+| `gamesN` | {n} games | {n} 局 |
+| `youWin` | You win | 你赢了 |
 | `dropAskBody` | You keep your money, and whoever holds the top bid buys this lot. | 你的钱保留，最高出价者买下这件拍品。 |
 | `peopleN` | People | 人数 |
 | `botsN` | Bots | 机器人 |
@@ -1661,6 +1670,9 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `resume` | Resume | जारी रखें |
 | `leaveGame` | Leave the game | गेम छोड़ें |
 | `dropAskTitle` | Drop out? | हट जाएँ? |
+| `gamesOne` | {n} game | {n} गेम |
+| `gamesN` | {n} games | {n} गेम |
+| `youWin` | You win | आप जीत गए |
 | `dropAskBody` | You keep your money, and whoever holds the top bid buys this lot. | आपके पैसे आपके पास रहते हैं, और सबसे ऊँची बोली वाला यह लॉट ख़रीद लेता है। |
 | `peopleN` | People | लोग |
 | `botsN` | Bots | बॉट |
@@ -2212,6 +2224,9 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `resume` | Resume | 再開 |
 | `leaveGame` | Leave the game | ゲームをやめる |
 | `dropAskTitle` | Drop out? | 降りますか？ |
+| `gamesOne` | {n} game | {n}ゲーム |
+| `gamesN` | {n} games | {n}ゲーム |
+| `youWin` | You win | あなたの勝ち |
 | `dropAskBody` | You keep your money, and whoever holds the top bid buys this lot. | お金はそのまま残り、最高入札者がこのロットを落札します。 |
 | `peopleN` | People | 人数 |
 | `botsN` | Bots | ボット |
@@ -2763,6 +2778,9 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `resume` | Resume | 다시 시작 |
 | `leaveGame` | Leave the game | 게임 나가기 |
 | `dropAskTitle` | Drop out? | 포기할까요? |
+| `gamesOne` | {n} game | {n}게임 |
+| `gamesN` | {n} games | {n}게임 |
+| `youWin` | You win | 승리했어요 |
 | `dropAskBody` | You keep your money, and whoever holds the top bid buys this lot. | 돈은 그대로 남고, 최고 입찰자가 이 로트를 낙찰받아요. |
 | `peopleN` | People | 인원 |
 | `botsN` | Bots | 봇 |
@@ -3314,6 +3332,9 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `resume` | Resume | استئناف |
 | `leaveGame` | Leave the game | مغادرة اللعبة |
 | `dropAskTitle` | Drop out? | الانسحاب؟ |
+| `gamesOne` | {n} game | عدد الألعاب: {n} |
+| `gamesN` | {n} games | عدد الألعاب: {n} |
+| `youWin` | You win | لقد فزت |
 | `dropAskBody` | You keep your money, and whoever holds the top bid buys this lot. | يبقى مالك معك، ويشتري صاحب أعلى مزايدة هذه القطعة. |
 | `peopleN` | People | الأشخاص |
 | `botsN` | Bots | الروبوتات |
@@ -3865,6 +3886,9 @@ English is the source. None of this has been read by a native speaker yet. Pleas
 | `resume` | Resume | เล่นต่อ |
 | `leaveGame` | Leave the game | ออกจากเกม |
 | `dropAskTitle` | Drop out? | ถอนตัวไหม |
+| `gamesOne` | {n} game | {n} เกม |
+| `gamesN` | {n} games | {n} เกม |
+| `youWin` | You win | คุณชนะ |
 | `dropAskBody` | You keep your money, and whoever holds the top bid buys this lot. | เงินของคุณยังอยู่ และคนที่ให้ราคาสูงสุดจะได้ล็อตนี้ไป |
 | `peopleN` | People | จำนวนคน |
 | `botsN` | Bots | บอต |

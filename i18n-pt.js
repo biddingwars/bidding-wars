@@ -261,6 +261,9 @@
   "fairShowD": "Mostra quanto vale cada lote enquanto está em leilão. Partidas de treino não mudam seu placar.",
   "resetSetBody": "Moeda, estilo do bot e as outras opções voltam ao padrão.",
   "fairHint": "Preço justo por volta de {p}",
+  "gamesOne": "{n} partida",
+  "gamesN": "{n} partidas",
+  "youWin": "Você venceu",
   "dropAskTitle": "Desistir?",
   "dropAskBody": "Você fica com seu dinheiro, e quem tem o maior lance compra este lote."
  },
