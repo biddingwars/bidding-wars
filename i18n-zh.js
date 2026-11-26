@@ -29,7 +29,7 @@
   "sold": "成交",
   "liftAll": "揭开所有横条",
   "final": "最终",
-  "takesIt": "{name} 获胜",
+  "takesIt": "{name} 获胜！",
   "points": "分数",
   "playAgain": "再玩一次",
   "menu": "菜单",
@@ -263,7 +263,7 @@
   "fairHint": "公道价约 {p}",
   "gamesOne": "{n} 局",
   "gamesN": "{n} 局",
-  "youWin": "你赢了",
+  "youWin": "你赢了！",
   "dropAskTitle": "退出？",
   "dropAskBody": "你的钱保留，最高出价者买下这件拍品。"
  },

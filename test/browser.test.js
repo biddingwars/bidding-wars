@@ -1563,8 +1563,8 @@ test('LANGUAGES: a whole game in each new language, every pack, with no English 
 });
 
 /* ---------------------------------------------------------------- PLAYTEST (v66): what playing real rounds turned up */
-test('PLAYTEST: the winner headline is a sentence in every language ("You win", not "You takes it"); a nickname keeps "{name} takes it"; one game is "1 game"', { skip: SKIP }, async () => {
-  const cases = [['en', '', 'You win', /1 game\b/], ['de', '', 'Du gewinnst', /1 Spiel\b/], ['fr', '', 'Tu l’emportes', /1 partie\b/], ['ar', '', 'لقد فزت', /عدد الألعاب: 1/], ['ja', '', 'あなたの勝ち', /1ゲーム/], ['en', 'Leo', 'Leo takes it', /1 game\b/]];
+test('PLAYTEST: the winner headline is a sentence in every language ("You win!", not "You takes it"); a nickname gets "Leo wins!"; one game is "1 game"', { skip: SKIP }, async () => {
+  const cases = [['en', '', 'You win!', /1 game\b/], ['de', '', 'Du gewinnst!', /1 Spiel\b/], ['fr', '', 'Tu l’emportes !', /1 partie\b/], ['ar', '', 'لقد فزت!', /عدد الألعاب: 1/], ['ja', '', 'あなたの勝ち！', /1ゲーム/], ['en', 'Leo', 'Leo wins!', /1 game\b/], ['de', 'Leo', 'Leo gewinnt!', /1 Spiel\b/]];
   for (const [lang, nick, head, games] of cases) {
     const { page, errors, ctx } = await open({ init: l => localStorage.setItem('lang:v1', l), initArg: lang });
     await page.click('#m1'); await page.waitForSelector('#start'); if (nick) await page.fill('#p1', nick); await page.click('#start'); await page.waitForSelector('#ctrl');

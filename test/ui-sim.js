@@ -46,7 +46,7 @@ const driver = async cfg => {
   }
   check('sealed');
   if (!$('#verdict')) return { problems: problems.concat(['no #verdict after the loop; screen=' + (document.querySelector('.screen') || {}).dataset.screen + ' steps=' + steps + ' rev=' + !!$('#rev')]), steps };
-  const sealed = $('#verdict').innerText; if (/takes it|gewinnt|vince|gana|remporte/i.test(sealed)) problems.push('winner named before the bars were lifted');
+  const sealed = $('#verdict').innerText; if (/takes it|wins!|gewinnt|vince|gana|emporte|You win|Hai vinto|ganado/i.test(sealed)) problems.push('winner named before the bars were lifted');
   $('#rev').click();
   await wait(() => $('#verdict.final'), 12000, 'reveal');
   check('results');

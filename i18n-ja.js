@@ -29,7 +29,7 @@
   "sold": "落札",
   "liftAll": "すべてのバーを外す",
   "final": "最終結果",
-  "takesIt": "{name}の勝ち",
+  "takesIt": "{name}の勝ち！",
   "points": "ポイント",
   "playAgain": "もう一度遊ぶ",
   "menu": "メニュー",
@@ -263,7 +263,7 @@
   "fairHint": "適正価格はおよそ {p}",
   "gamesOne": "{n}ゲーム",
   "gamesN": "{n}ゲーム",
-  "youWin": "あなたの勝ち",
+  "youWin": "あなたの勝ち！",
   "dropAskTitle": "降りますか？",
   "dropAskBody": "お金はそのまま残り、最高入札者がこのロットを落札します。"
  },

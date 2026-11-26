@@ -29,7 +29,7 @@
   "sold": "Terjual",
   "liftAll": "Angkat semua palang",
   "final": "Final",
-  "takesIt": "{name} menang",
+  "takesIt": "{name} menang!",
   "points": "Poin",
   "playAgain": "Main lagi",
   "menu": "Menu",
@@ -263,7 +263,7 @@
   "fairHint": "Harga wajar sekitar {p}",
   "gamesOne": "{n} permainan",
   "gamesN": "{n} permainan",
-  "youWin": "Kamu menang",
+  "youWin": "Kamu menang!",
   "dropAskTitle": "Mundur?",
   "dropAskBody": "Uangmu tetap, dan pemegang tawaran tertinggi membeli lot ini."
  },

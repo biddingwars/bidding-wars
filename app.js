@@ -255,7 +255,7 @@ en:{
  nextLot:'Next lot', sold:'Sold', result:'Result',
  sealed:'The books are sealed', nobody:'Nobody knows yet',
  revealHint:'Every population is still blacked out. Tap a bar to lift it, or lift them all at once. The result stands once the last bar is gone.',
- liftAll:'Lift every bar', final:'Final', takesIt:'{name} takes it',
+ liftAll:'Lift every bar', final:'Final', takesIt:'{name} wins!',
  pointsAgainst:'{a} points against {b}.', smartest:'<b>{name}</b> shopped smartest at €{v} per million.',
  nothing:'Walked away with nothing.', points:'Points', spentEff:'{cur}{n} spent · efficiency',
  playAgain:'Play again', menu:'Menu', world:"{name}'s world · drag to spin and tilt · pinch to zoom",
@@ -355,7 +355,7 @@ de:{
  nextLot:'Nächstes Los', sold:'Verkauft', result:'Ergebnis',
  sealed:'Die Bücher sind versiegelt', nobody:'Noch weiß es niemand',
  revealHint:'Alle Einwohnerzahlen sind noch geschwärzt. Tippe einen Balken an oder deck alle auf einmal auf. Das Ergebnis steht erst, wenn der letzte Balken weg ist.',
- liftAll:'Alles aufdecken', final:'Endstand', takesIt:'{name} gewinnt',
+ liftAll:'Alles aufdecken', final:'Endstand', takesIt:'{name} gewinnt!',
  pointsAgainst:'{a} Punkte gegen {b}.', smartest:'<b>{name}</b> hat am klügsten eingekauft: {v} € pro Million.',
  nothing:'Ging leer aus.', points:'Punkte', spentEff:'{n} {cur} ausgegeben · Effizienz',
  playAgain:'Nochmal', menu:'Menü', world:'{name}s Welt · ziehen zum Drehen und Kippen · zwei Finger zum Zoomen',
@@ -455,7 +455,7 @@ it:{
  nextLot:'Prossimo lotto', sold:'Venduto', result:'Risultato',
  sealed:'I libri sono sigillati', nobody:'Ancora nessuno lo sa',
  revealHint:'Tutte le popolazioni sono ancora oscurate. Tocca una barra per scoprirla, o scoprile tutte insieme. Il risultato vale quando sparisce l’ultima barra.',
- liftAll:'Scopri tutto', final:'Finale', takesIt:'{name} vince',
+ liftAll:'Scopri tutto', final:'Finale', takesIt:'{name} vince!',
  pointsAgainst:'{a} punti contro {b}.', smartest:'<b>{name}</b> ha comprato meglio: {v} € per milione.',
  nothing:'Se n’è andato a mani vuote.', points:'Punti', spentEff:'{n} {cur} spesi · efficienza',
  playAgain:'Rigioca', menu:'Menu', world:'Il mondo di {name} · trascina per ruotare · pizzica per lo zoom',
@@ -555,7 +555,7 @@ es:{
  nextLot:'Siguiente lote', sold:'Vendido', result:'Resultado',
  sealed:'Los libros están sellados', nobody:'Todavía nadie lo sabe',
  revealHint:'Todas las poblaciones siguen tapadas. Toca una barra para levantarla, o levántalas todas. El resultado vale cuando desaparezca la última.',
- liftAll:'Levantar todo', final:'Final', takesIt:'{name} gana',
+ liftAll:'Levantar todo', final:'Final', takesIt:'¡{name} gana!',
  pointsAgainst:'{a} puntos contra {b}.', smartest:'<b>{name}</b> compró mejor: {v} € por millón.',
  nothing:'Se fue con las manos vacías.', points:'Puntos', spentEff:'{n} {cur} gastados · eficiencia',
  playAgain:'Otra vez', menu:'Menú', world:'El mundo de {name} · arrastra para girar · pellizca para acercar',
@@ -655,7 +655,7 @@ fr:{
  nextLot:'Lot suivant', sold:'Adjugé', result:'Résultat',
  sealed:'Les registres sont scellés', nobody:'Personne ne sait encore',
  revealHint:'Toutes les populations sont encore masquées. Touche une barre pour la lever, ou lève-les toutes. Le résultat compte une fois la dernière barre partie.',
- liftAll:'Tout dévoiler', final:'Final', takesIt:'{name} l’emporte',
+ liftAll:'Tout dévoiler', final:'Final', takesIt:'{name} l’emporte !',
  pointsAgainst:'{a} points contre {b}.', smartest:'<b>{name}</b> a le mieux acheté : {v} € par million.',
  nothing:'Reparti les mains vides.', points:'Points', spentEff:'{n} {cur} dépensés · efficacité',
  playAgain:'Rejouer', menu:'Menu', world:'Le monde de {name} · fais glisser pour tourner · pince pour zoomer',
@@ -805,7 +805,7 @@ const STR_SET = {
   "dropAskTitle": "Drop out?",
   "gamesOne": "{n} game",
   "gamesN": "{n} games",
-  "youWin": "You win",
+  "youWin": "You win!",
   "dropAskBody": "You keep your money, and whoever holds the top bid buys this lot.",
   "peopleN": "People",
   "botsN": "Bots",
@@ -878,7 +878,7 @@ const STR_SET = {
   "dropAskTitle": "Aussteigen?",
   "gamesOne": "{n} Spiel",
   "gamesN": "{n} Spiele",
-  "youWin": "Du gewinnst",
+  "youWin": "Du gewinnst!",
   "dropAskBody": "Du behältst dein Geld, und wer das höchste Gebot hält, kauft dieses Los.",
   "peopleN": "Menschen",
   "botsN": "Bots",
@@ -951,7 +951,7 @@ const STR_SET = {
   "dropAskTitle": "Ritirarti?",
   "gamesOne": "{n} partita",
   "gamesN": "{n} partite",
-  "youWin": "Hai vinto",
+  "youWin": "Hai vinto!",
   "dropAskBody": "Tieni i tuoi soldi e chi ha l’offerta più alta compra questo lotto.",
   "peopleN": "Persone",
   "botsN": "Bot",
@@ -1024,7 +1024,7 @@ const STR_SET = {
   "dropAskTitle": "¿Retirarte?",
   "gamesOne": "{n} partida",
   "gamesN": "{n} partidas",
-  "youWin": "Has ganado",
+  "youWin": "¡Has ganado!",
   "dropAskBody": "Conservas tu dinero y quien tenga la puja más alta compra este lote.",
   "peopleN": "Personas",
   "botsN": "Bots",
@@ -1097,7 +1097,7 @@ const STR_SET = {
   "dropAskTitle": "Abandonner ?",
   "gamesOne": "{n} partie",
   "gamesN": "{n} parties",
-  "youWin": "Tu l’emportes",
+  "youWin": "Tu l’emportes !",
   "dropAskBody": "Tu gardes ton argent, et celui qui détient la meilleure enchère remporte ce lot.",
   "peopleN": "Personnes",
   "botsN": "Bots",
@@ -1938,7 +1938,7 @@ async function reveal(sec, rows, best, bestEff, REC) {
   const single = S.players.filter(p => !p.ai).length === 1;
   const v = $('#verdict', sec);
   v.classList.add('final');
-  /* "You take it" needs its own sentence: "{name} takes it" with the default name gave "You takes it", "Du gewinnt", "فاز أنت" (v66, playtest). A typed nickname keeps "{name} takes it". */
+  /* "You take it" needs its own sentence: "{name} takes it" with the default name gave "You takes it", "Du gewinnt", "فاز أنت" (v66, playtest). A typed nickname gets "{name} wins!" ("Leo wins!"). */
   const headline = !best.p.ai && single && best.p.name === t('you') ? t('youWin') : t('takesIt', { name: esc(best.p.name) });
   v.innerHTML = `<div class="crown" aria-hidden="true">${best.p.ai ? '🤖' : '👑'}</div>
     <h2>${headline}</h2>

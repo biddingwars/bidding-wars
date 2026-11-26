@@ -29,7 +29,7 @@
   "sold": "Vendido",
   "liftAll": "Levantar todas as barras",
   "final": "Final",
-  "takesIt": "{name} vence",
+  "takesIt": "{name} vence!",
   "points": "Pontos",
   "playAgain": "Jogar de novo",
   "menu": "Menu",
@@ -263,7 +263,7 @@
   "fairHint": "Preço justo por volta de {p}",
   "gamesOne": "{n} partida",
   "gamesN": "{n} partidas",
-  "youWin": "Você venceu",
+  "youWin": "Você venceu!",
   "dropAskTitle": "Desistir?",
   "dropAskBody": "Você fica com seu dinheiro, e quem tem o maior lance compra este lote."
  },

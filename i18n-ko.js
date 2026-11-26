@@ -29,7 +29,7 @@
   "sold": "낙찰",
   "liftAll": "모든 막대 걷기",
   "final": "최종",
-  "takesIt": "{name} 승리",
+  "takesIt": "{name} 승리!",
   "points": "점수",
   "playAgain": "다시 하기",
   "menu": "메뉴",
@@ -263,7 +263,7 @@
   "fairHint": "적정 가격 약 {p}",
   "gamesOne": "{n}게임",
   "gamesN": "{n}게임",
-  "youWin": "승리했어요",
+  "youWin": "승리했어요!",
   "dropAskTitle": "포기할까요?",
   "dropAskBody": "돈은 그대로 남고, 최고 입찰자가 이 로트를 낙찰받아요."
  },

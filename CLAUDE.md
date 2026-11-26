@@ -298,7 +298,8 @@ fair price, then drop out): Countries / US States / Capitals, every level, solo 
 pause, Play again, fun facts, record, in English, German, Arabic and Japanese. Every screenshot was looked at. Found and fixed:
 
 - **"You takes it"**: the headline was `takesIt` with the default name ("Du gewinnt", "فاز أنت"). A solo win under the default name now uses `youWin`
-  ("You win", "Du gewinnst", "لقد فزت"…, 13 languages); a typed nickname keeps "{name} takes it".
+  ("You win!", "Du gewinnst!", "لقد فزت!"…, 13 languages); every other winner gets `takesIt` = "{name} wins!" (owner: "it would also say: Leo wins!"),
+  "Bot wins!", "Leo gewinnt!", "¡Leo gana!".
 - **"1 Games" / "1 Spiele"**: counts use `gamesOne` / `gamesN` picked by `Intl.PluralRules` (`gamesN()` in `app.js`); Arabic says "عدد الألعاب: n", right for every n.
 - **"Best streak +0"** now "0" (`signed()`).
 - **Two seats with the same initial** (Ben and Bot, both "B") get two letters ("Be", "Bo"): `seatIni()`.
