@@ -56,7 +56,7 @@ const driver = async cfg => {
   if (bought.length + unsold !== lotsTotal) problems.push('lots sold ' + bought.length + ' + unsold ' + unsold + ' of ' + lotsTotal);
   S.players.forEach((p, i) => { const spent = p.bought.reduce((a, b) => a + (b.price || 0), 0); if (startBudgets[i] - spent !== p.budget) problems.push('money not conserved for seat ' + i); });
   const sb = Engine.scoreboard(S), shown = [...document.querySelectorAll('.lbr .p')].map(e => e.textContent.trim());
-  sb.rows.forEach(r => { if (!shown.includes(r.pts.toFixed(1))) problems.push('score ' + r.pts.toFixed(1) + ' not on screen'); });
+  sb.rows.forEach(r => { const v = r.pts.toFixed(1), loc = typeof fx1 === 'function' ? fx1(r.pts) : v; if (!shown.includes(v) && !shown.includes(loc)) problems.push('score ' + loc + ' not on screen'); });   // v66: points use the language's decimal separator (232,7 in Portuguese)
   if (cfg.again) { $('#again').click(); await wait(() => $('#start'), 3000, 'play again → setup'); $('#back').click(); await sleep(30); }
   return { problems, steps };
 };
