@@ -216,7 +216,7 @@
         if (b.noise !== undefined && !numOk(b.noise, v => v >= 0 && v < 1)) e('bot.noise must be 0 <= noise < 1 (a number, or per level)');
         if (b.premium !== undefined && !(isPosInt(b.premium.top) && numOk(b.premium.pct, v => v >= 0))) e('bot.premium needs { top: positive int, pct >= 0 (a number, or per level) }');
         if (b.pacing !== undefined && !(b.pacing.gamma >= 0 && b.pacing.lo > 0 && b.pacing.hi >= b.pacing.lo)) e('bot.pacing needs { gamma >= 0, 0 < lo <= hi }');
-        if (b.knockout !== undefined && !(isObj(b.knockout) && numOk(b.knockout.kappa, v => v > 0))) e('bot.knockout needs { kappa > 0 } (a number, or per level)');
+        if (b.knockout !== undefined && !(isObj(b.knockout) && numOk(b.knockout.kappa, v => v >= 0))) e('bot.knockout needs { kappa >= 0 } (a number, or per level; 0 = no knockout jump on a lot that only flips the lead)');
         if (b.mood !== undefined && !(b.mood.k >= 0 && b.mood.up >= 0 && b.mood.down >= 0)) e('bot.mood needs { k, up, down } >= 0');
         if (b.temperaments !== undefined) {
           const t = b.temperaments;
@@ -626,7 +626,12 @@
         const decisive = (lead <= 0 && after > 0) || after > restPts;
         const m = Math.floor(afford / K);
         let rankV = 1; for (const it of restView(S)) if (it.value > item.value) rankV++;
-        if (sweep || rankV <= m || (decisive && K <= lvVal(B.knockout.kappa, S) * pr.max)) {
+        /* kappa 0 turns the "decisive" branch off (v65, Countries Medium): a jump to the rival's whole purse on any lot that would flip the lead made the bot pay K at its own
+           walk-away limit, where letting the lot go was better (the rival spends, the bot keeps its money for later lots). Measured against a rival with EUR 30 and a bot with EUR 110,
+           2,000 games: 864 points with the branch against 889 without it (rationer), 911 vs 927 (creeper); off, the knockout is never worse than no knockout. The pack's own
+           decisive-lot rule (bot.decisive) still takes the lots that really decide the game. */
+        const kap = lvVal(B.knockout.kappa, S);
+        if (sweep || rankV <= m || (kap > 0 && decisive && K <= kap * pr.max)) {
           if (L.holder !== L.turn && L.price >= Math.min(me.budget - reserve, lim)) {
             const target = L.price < K ? K : K + 1;
             if (target <= afford && !heavy(target, K)) { lim = Math.max(lim, target); jump = target; }

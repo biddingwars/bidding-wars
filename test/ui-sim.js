@@ -65,13 +65,13 @@ const driver = async cfg => {
   const s = await serve();
   const exe = fs.existsSync('/opt/pw-browsers/chromium') ? '/opt/pw-browsers/chromium' : undefined;
   const browser = await chromium.launch(exe ? { executablePath: exe } : {});
-  const langs = ['en', 'de', 'it', 'es', 'fr'], levels = ['beginner', 'medium', 'expert'], strategies = ['pass', 'raise', 'mix', 'greedy', 'junk'];
+  const langs = ['en', 'de', 'it', 'es', 'fr', 'pt', 'id', 'zh', 'hi', 'ja', 'ko', 'ar', 'th'], levels = ['beginner', 'medium', 'expert'], strategies = ['pass', 'raise', 'mix', 'greedy', 'junk'];
   const pick = a => a[Math.floor(Math.random() * a.length)];
   let done = 0, failed = 0, lots = 0; const t0 = Date.now(); const failures = [];
   const worker = async w => {
     while (done + (PAR - 1) < N + PAR - 1 && done < N) {
       const idx = done++;
-      const lang = langs[idx % 5], kind = Math.floor(idx / 3) % 3 === 0 ? 'solo' : 'multi', packId = ['countries', 'states', 'capitals'][idx % 3];
+      const lang = langs[idx % langs.length], kind = Math.floor(idx / 3) % 3 === 0 ? 'solo' : 'multi', packId = ['countries', 'states', 'capitals'][idx % 3];
       const cfg = { kind, lang, level: pick(levels), pack: packId, lots: pick(packId === 'states' && idx % 2 ? [5, 10, 20] : [5, 10]), clock: idx % 11 === 0 ? 10 : 0, players: kind === 'multi' ? 2 + (idx % 3) : 2, strategy: strategies[idx % strategies.length], longNames: idx % 4 === 0, again: idx % 7 === 0, leaveAfter: idx % 13 === 5 ? 2 : 0, timeoutTest: false };
       if (cfg.clock) cfg.clock = 10;
       const ctx = await browser.newContext({ viewport: { width: [402, 375, 834, 393][idx % 4], height: [874, 667, 1194, 700][idx % 4] }, serviceWorkers: 'block', reducedMotion: 'reduce' });

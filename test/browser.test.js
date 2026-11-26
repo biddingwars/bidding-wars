@@ -1230,6 +1230,23 @@ test('SETTINGS: Text size Small fits the menu, the game setup and the results of
   }
 });
 
+test('SETTINGS: Text size Small also fits the game setup of the smallest iPhone (SE 1st generation, 320x568) in every pack and in a long language; the results show the verdict, the board and the buttons', { skip: SKIP }, async () => {
+  for (const [pk, lang] of [['countries', 'en'], ['capitals', 'de'], ['states', 'fr'], ['countries', 'ar']]) {
+    const { page, errors, ctx } = await open({ viewport: { width: 320, height: 568 }, init: l => { localStorage.setItem('settings:v1', '{"tz":-1}'); localStorage.setItem('lang:v1', l); }, initArg: lang });
+    await pickPack(page, pk);
+    await page.click('#m1'); await page.waitForSelector('#start'); await page.waitForTimeout(350);
+    const o = await page.evaluate(() => { const sb = document.querySelector('.sheetbody'); return sb.scrollHeight - sb.clientHeight; });
+    assert.ok(o <= 1, `${pk} ${lang}: the setup sheet scrolls by ${o}px`);
+    assert.ok(await page.$eval('#start', e => e.getBoundingClientRect().bottom <= innerHeight), 'the start button is on screen');
+    await pick(page, 'lots', 5); await pick(page, 'clock', 0);
+    await page.click('#start'); await page.waitForSelector('#ctrl');
+    await autoplay(page); await reveal(page); await page.waitForTimeout(1200);
+    assert.ok(await page.$eval('#again', e => e.getBoundingClientRect().bottom <= innerHeight), `${pk} ${lang}: Play again is on screen without scrolling`);
+    assert.deepEqual(errors, [], pk + ' ' + lang);
+    await ctx.close();
+  }
+});
+
 test('SETTINGS: the Text size control has four steps (Small, Normal, Large, Larger) in every language and Small is stored as tz -1', { skip: SKIP }, async () => {
   for (const lang of ['en', 'de', 'it', 'es', 'fr']) {
     const { page, errors, ctx } = await open({ init: l => localStorage.setItem('lang:v1', l), initArg: lang });
@@ -1529,9 +1546,11 @@ test('LANGUAGES: a whole game in each new language, every pack, with no English 
     const pk = packs[i % 3];
     if (pk !== 'countries') await pickPack(page, pk);
     await startSolo(page, 5, 0);
-    const auction = await page.textContent('.screen');
+    /* the US States caption is the state's fun fact, which stays English in every language but English by design (source-checked, see FACTS-SOURCES.md): not counted */
+    const text = () => page.evaluate(() => { const c = document.querySelector('.screen').cloneNode(true); c.querySelectorAll('.fact').forEach(e => e.remove()); return c.textContent; });
+    const auction = await text();
     await autoplay(page); await reveal(page);
-    const results = await page.textContent('.screen');
+    const results = await text();
     for (const [where, txt] of [['auction', auction], ['results', results]]) {
       const en = txt.match(/\b(of|Standing bid|Drop out|Bid|Points|Play again|Top bid|Your collection|Sold)\b/);   // "Menu" and "Lot" are Portuguese and Indonesian words too
       assert.ok(!en, `${lang} ${pk} ${where}: English "${en && en[0]}"`);

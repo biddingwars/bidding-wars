@@ -1,7 +1,7 @@
 /* Service worker — the whole game is cached on first visit, then served from
    cache. After that it runs with no connection at all, which is the point. */
 
-const CACHE = 'bidding-wars-v64';
+const CACHE = 'bidding-wars-v65';
 
 const SHELL = [
   './',
@@ -78,7 +78,10 @@ self.addEventListener('fetch', e => {
       if (res && res.ok) (await caches.open(CACHE)).put(req, res.clone());
       return res;
     } catch (err) {
-      return (await caches.match('./index.html')) || Response.error();
+      /* offline and not cached: a page navigation gets the game's page; anything else (an image, a script, a language file) gets a real network error,
+         so its own fallback runs (the drawn globe texture, the English strings) instead of being handed HTML */
+      if (req.mode === 'navigate') return (await caches.match('./index.html')) || Response.error();
+      return Response.error();
     }
   })());
 });

@@ -274,6 +274,19 @@ html[data-tz="-1"] .sheetbox,html[data-tz="-1"] .screen:not([data-screen=auction
 html[data-tz="-1"] .gl .globe{width:min(170px,58%)}   /* Small text: a smaller globe, so the results fit an iPhone SE without scrolling */
 html[data-tz="-1"] .gl .gph{width:min(150px,50%)}
 html[data-tz="-1"] .gl-us .usm{width:min(230px,70%)}   /* the US States results map, same reason */
+/* the smallest phones (iPhone SE 1st generation, 320x568) with Small text: the game setup fits without scrolling inside the sheet. The bot description
+   (also in How to play) is left out, the difficulty subtitle goes on the same line and the gaps tighten; tap targets keep their size. */
+@media (max-height:600px){
+  html[data-tz="-1"] .sheetbody .intro{display:none}
+  html[data-tz="-1"] .sheetbody{gap:8px}
+  html[data-tz="-1"] .lvl{min-height:44px;padding:6px 14px}
+  html[data-tz="-1"] .lvls{gap:4px}
+  html[data-tz="-1"] .lvl .tt small{display:inline;margin-inline-start:6px}
+  html[data-tz="-1"] .lvl .tt small::before{content:"· "}
+  html[data-tz="-1"] .fld{gap:5px}
+  html[data-tz="-1"] .sheetfoot{padding-top:6px;gap:2px}
+  html[data-tz="-1"] .sheetbox .sh-title{font-size:24px}
+}
 html[data-tz="1"] .sheetbox,html[data-tz="1"] .screen:not([data-screen=auction]){zoom:1.12}
 html[data-tz="2"] .sheetbox,html[data-tz="2"] .screen:not([data-screen=auction]){zoom:1.25}
 .sg{display:flex;gap:6px;flex-wrap:wrap}

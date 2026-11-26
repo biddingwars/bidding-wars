@@ -34,7 +34,9 @@ const nativeSym = () => (PACK ? PACK.currency.symbol : ((Packs.meta(SELPACK) || 
 const chosenCur = () => { const c = Engine.currencyById(SET.cur); return c && c.sym !== nativeSym() ? c : null; };   // null = write it the pack's own way
 const cur = () => { const c = chosenCur(); return c ? c.sym : nativeSym(); };
 const money = n => { const c = chosenCur(); return c ? Engine.formatMoney(PACK, n, c.id) : (PACK ? Engine.formatMoney(PACK, n) : nativeSym() + n); };   // "$1,234" for US States, "€12" for Countries, "70 kr" when kr is picked
-const ini = n => { const t = String(n || '?').trim(), m = t.match(/^(.*\S)\s+(\d)$/); return ((Array.from(m ? m[1] : t)[0] || '?') + (m ? m[2] : '')).toUpperCase(); };   // "Bot 2" -> B2, so seats with the same first letter can be told apart
+/* the first whole character a reader sees: a Hindi conjunct ("क्षे"), an emoji flag or a letter with its accent, not half of one (Intl.Segmenter where the browser has it) */
+const firstChar = s => { try { if (Intl.Segmenter) { const g = new Intl.Segmenter().segment(s)[Symbol.iterator]().next().value; if (g) return g.segment; } } catch (e) {} return Array.from(s)[0]; };
+const ini = n => { const t = String(n || '?').trim(), m = t.match(/^(.*\S)\s+(\d)$/); return ((firstChar(m ? m[1] : t) || '?') + (m ? m[2] : '')).toUpperCase(); };   // "Bot 2" -> B2, so seats with the same first letter can be told apart
 const IC = (id, cls) => `<svg class="i ${cls || ''}" aria-hidden="true" focusable="false"><use href="#i-${id}"/></svg>`;
 const isOnline = () => navigator.onLine !== false;
 
@@ -1257,7 +1259,8 @@ async function loadLang(){
   applyLang();
 }
 async function setLang(id){
-  if(!knownLang(id) || !(await loadLangFile(id))) return;
+  if(!knownLang(id)) return;
+  if(!(await loadLangFile(id))){ toast(t('packFail')); return; }   // the file could not be fetched (offline before the cache filled): say so instead of doing nothing
   LANG=id; applyLang();
   await Store.set('lang:v1', id);
   home();
@@ -1482,7 +1485,7 @@ async function setup(kind, packId = SELPACK) {
   const nBots = kind === 'solo' ? ([1, 2, 3].includes(c0.bots) ? c0.bots : 1) : ([0, 1, 2].includes(c0.bots) && nPl + c0.bots <= 4 ? c0.bots : 0);   // solo: you against 1-3 bots; multiplayer: 2-4 people plus 0-2 bots, at most 4 seats
   const lvl = l => (l.label[LANG] || l.label.en), lvlParts = l => { const p = lvl(l).split(' — '); return [p[0], p[1] || '']; };
   h.set(`
-    ${kind === 'solo' ? `<p class="sm">${t('rivalDesc')}</p>` : `<p class="sm">${esc(t('multiDesc'))}</p>`}
+    ${kind === 'solo' ? `<p class="sm intro">${t('rivalDesc')}</p>` : `<p class="sm intro">${esc(t('multiDesc'))}</p>`}
     ${kind === 'multi' ? `<div class="fld inl"><span class="label">${esc(t('peopleN'))}</span>${seg('players', t('peopleN'), [[2, '2'], [3, '3'], [4, '4']], nPl)}</div>` : ''}
     <div class="fld inl"><span class="label">${esc(t('botsN'))}</span>${seg('bots', t('botsN'), (kind === 'solo' ? [1, 2, 3] : [0, 1, 2]).map(n => [n, String(n)]), nBots)}<p class="sm" id="botsHint" role="note"${nBots > 1 ? '' : ' hidden'}>${esc(t('botsHint'))}</p></div>
     <div class="fld"><span class="label">${esc(t('lots'))}</span>${seg('lots', t('lots'), pack.lots.options.map(n => [n, n === pack.lots.all ? t('lotsAll', { n }) : n]), lots)}<p class="sm" id="lotHint" role="note"${lots <= 5 ? '' : ' hidden'}>${esc(t('shortHint'))}</p></div>
