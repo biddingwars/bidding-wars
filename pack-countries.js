@@ -69,7 +69,7 @@
       limitMul: { beginner: { 5: 2.167, 10: 1.199, 15: 0.9, 20: 1.1, 30: 1.0 }, medium: { 5: 0.863, 10: 0.907, 15: 0.815, 20: 0.777, 30: 0.738 }, expert: { 5: 1.5, 10: 0.93, 15: 1.14, 20: 1.425, 30: 1.5 } },
       premium: { top: 5, pct: { beginner: 0.5, medium: 0.15, expert: 0.15 } },   // Beginner's bot pays 50% more for its five biggest (European) countries
       pacing: { gamma: 0.5, lo: 0.7, hi: 1.5 },
-      knockout: { kappa: { beginner: 1.383, medium: 0.709, expert: 0.526 } },
+      knockout: { kappa: { beginner: 1.383, medium: 0, expert: 0.526 } },   // v65: Medium 0 = no knockout jump on a lot that only flips the lead (it cost the bot points; see engine.js)
       mood: { k: 0.25, up: 0.2, down: 0.15 },
       wallet: { lo: 0.7 },
       /* v60, Beginner 15-30 lots: a player who bid up to about 1.25 x the fair price on everything won 61-64% (limit 60). The bot's limit swung too much from lot to lot, so that player

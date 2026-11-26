@@ -56,7 +56,8 @@
 <script src="globe.js"></script>
 <script src="us-view.js"></script>
 <script>
-  Promise.all([loadLang(), loadRec(), loadTheme(), loadSettings()]).then(function () {
+  /* each loader fails soft: one that throws must not leave the game stuck on the launch curtain (it boots with that part's defaults) */
+  Promise.all([loadLang(), loadRec(), loadTheme(), loadSettings()].map(function (p) { return p.catch(function () {}); })).then(function () {
     home();
     Shell.ready();
     var c = document.getElementById('curtain');

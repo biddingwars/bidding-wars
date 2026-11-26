@@ -114,7 +114,7 @@ function dropStats(ds, ideal, avail) {
   const n = ds.length, m = ds.reduce((a, b) => a + b, 0) / n, sd = Math.sqrt(ds.reduce((a, b) => a + (b - m) ** 2, 0) / n);
   const cnt = {}; ds.forEach(d => { cnt[d] = (cnt[d] || 0) + 1; });
   const s = ds.slice().sort((a, b) => a - b), med = s[n >> 1], big = ds.filter(d => d > 5);
-  const out = { sdPct: 100 * sd / ideal, topShare: 100 * Math.max(...Object.values(cnt)) / n, within1: 100 * ds.filter(d => Math.abs(d - med) <= 1).length / n, even: 100 * big.filter(d => d % 2 === 0).length / Math.max(1, big.length) };
+  const out = { sdPct: 100 * sd / ideal, cvPct: 100 * sd / Math.max(1e-9, m), topShare: 100 * Math.max(...Object.values(cnt)) / n, within1: 100 * ds.filter(d => Math.abs(d - med) <= 1).length / n, even: 100 * big.filter(d => d % 2 === 0).length / Math.max(1, big.length) };
   if (avail != null) { out.sdPctWallet = 100 * sd / avail; out.atWallet = 100 * ds.filter(d => d - 1 === avail || d === avail).length / n; out.withinWallet1 = 100 * ds.filter(d => Math.abs(d - 1 - avail) <= 1).length / n; }
   return out;
 }

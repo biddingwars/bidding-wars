@@ -620,7 +620,10 @@ function globe3d(host, owned, pack){
     if(io) io.disconnect();
     window.removeEventListener('mousemove',onMouseMove);
     window.removeEventListener('mouseup',release);
-    try{ renderer.dispose(); }catch(e){}
+    /* free the GPU memory now, not whenever the browser collects the old context: the earth texture alone is about 75 MB at 6144x3072,
+       and every results screen builds a new globe (renderer.dispose() releases neither textures nor geometries) */
+    try{ scene.traverse(o=>{ if(o.geometry) o.geometry.dispose(); const ms=Array.isArray(o.material) ? o.material : o.material ? [o.material] : []; ms.forEach(m=>{ for(const k in m){ const v=m[k]; if(v && v.isTexture) v.dispose(); } m.dispose(); }); }); }catch(e){}
+    try{ renderer.dispose(); renderer.forceContextLoss(); }catch(e){}
   };
 }
 
