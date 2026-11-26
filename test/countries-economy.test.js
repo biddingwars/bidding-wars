@@ -142,8 +142,9 @@ test('Countries knockout (c): the bot never passes while it can afford to sweep 
         const me = S.players[S.L.turn]; let a;
         if (me.ai) {
           const K = S.players[0].budget, lotsAfter = S.items.length - S.i - 1;
+          const pts = p => p.bought.reduce((a, b) => a + b.value, 0), hopeless = lotsAfter === 0 && pts(me) + S.items[S.i].value <= pts(S.players[0]);
           a = Engine.botDecision(S);
-          if (S.L.holder === 0 && K >= 1 && (K + 1 <= 0.35 * me.budget || S.L.price >= 0.6 * K) /* v57: a jump that commits over a third of the purse waits until the price reached 0.6 x K */ && me.budget >= (K + 1) * (lotsAfter + 1) + lotsAfter && S.L.price >= Math.min(me.budget - lotsAfter, S._ceil.walk)) { checked++; if (a.type === 'pass') bad.push({ g, K, budget: me.budget, price: S.L.price }); }
+          if (S.L.holder === 0 && K >= 1 && (K + 1 <= 0.35 * me.budget || S.L.price >= 0.6 * K) /* v57: a jump that commits over a third of the purse waits until the price reached 0.6 x K */ && me.budget >= (K + 1) * (lotsAfter + 1) + lotsAfter && !hopeless /* v67: on the last lot a bot that cannot win even with it makes no jump */ && S.L.price >= Math.min(me.budget - lotsAfter, S._ceil.walk)) { checked++; if (a.type === 'pass') bad.push({ g, K, budget: me.budget, price: S.L.price }); }
         } else a = act(S, me);
         let res = a.type === 'raise' ? Engine.raise(S, a.amount) : Engine.pass(S); if (res.error) res = Engine.pass(S);
         ended = res.next === 'award';
