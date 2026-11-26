@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v66';   // increment this, every time
+const CACHE = 'bidding-wars-v67';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v66` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v67` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still five keys).
 
@@ -289,6 +289,25 @@ globe's `.glabel`/`.gload` rules live in `app.css` (they were lost once, which
 stacked the country names down the page); a plain wheel/scroll over the globe
 belongs to the page (only ctrl+wheel/pinch zooms); the results screen must fit
 iPad landscape without scrolling.
+
+## Owner's game log (v67) — "I just played 3 games, check for bugs" (Countries Expert 30, US States 20, Capitals Expert 30, you against 3 bots)
+
+The log was checked by script (`log:v1` export): money adds up on every lot, no bot ever bid past its purse, every bot bid stayed under its own secret limit but one. Two real bot bugs, both in the
+closing lots of the Capitals game, both fixed in `botDecisionExt` and replayed lot for lot from the log in `test/multibots.test.js` ("owner game log", both fail on the v66 engine):
+
+- **India, second to last, was dropped.** It was worth 28.5 of the 29 points still to come (whoever bought it won), but its fair price (EUR 95) was not `decisive.minPrice` 1.2 x the bot's purse (EUR 93),
+  so the wallet rule stopped the bot at a random 70-100% of its purse and it walked away at EUR 77 with EUR 93 in hand. **Fix:** on the closing three lots a lot that *settles the game* (with it nobody can
+  catch the bot even taking the typical rest, without it the strongest bidder still in the lot is out of the bot's reach) gets the whole purse and no reserve. Only the closing three lots, because before that
+  "the rest" is the typical rest (`restView`, no peeking) and an all-in on an estimate is what v47 removed (Seoul opening a 5-lot round). (The human still won India: they had EUR 145.)
+- **EUR 85 for Port of Spain (fair price EUR 4) on the last lot.** The knockout "sweep" fires on the last lot (`afford >= K`) and jumped to the richest rival's whole purse, for a bot that could not win
+  any more. **Fix:** on the last lot a bot that cannot win even with this lot makes no knockout or decisive jump (it still bids normally). Only the last lot, where this is certain; a version that judged
+  "hopeless" on the typical rest earlier in the round made the bot give up on games it could still win (States 20 lots: the creeper went from 34 to 42% against the conservative bot).
+- The knockout (c) property tests skip that one case; the duel digest was re-pinned on purpose.
+- **Measured after the fix** (`node test/exploit.js <pack> all 500 4000`, best confirmed blind strategy, 5 / 10 / 15 / 20 / 30 lots): Countries unchanged from v65; Capitals Beginner 45.6 / 55.5 / 56.3 / 50.7 / 56.0,
+  Medium 59.8 / 55.0 / 49.7 / 50.4 / 41.5, Expert 50.5 / 54.3 / 57.4 / 51.2 / 48.4; US States 53.4 / 53.7 / 56.8 / 51.0. **No cell above its limit.** Fuzz 80,000 games, 0 failures.
+- **Not bugs (looked at):** bots paying 2-3 x the "max" price for small capitals late in a 30-lot Expert round at a full table (crowd 1.4 x pacing up to 1.5 with money left and cheap lots around them;
+  their own limit, and they ended with EUR 8 / 72 / 85 unspent while the human saved EUR 145 for India); the human's own jumps (Bahrain EUR 11, Germany and Libya EUR 60, California 49).
+  A human who saves for the end against 3 bots is a real strategy; the exploit search is a duel tool and does not measure it (see "Several bots at one table").
 
 ## Playtest round (v66) — owner: "actually play rounds and check if everything works" (Xcode step 28 Nov 2026)
 

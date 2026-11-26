@@ -23,7 +23,7 @@ test('a duel against one bot is exactly what it was before several bots existed 
   for (const [name, pack] of Object.entries(packs)) for (const level of pack.levels.map(l => l.id)) for (const lots of [5, pack.lots.options[1]]) for (let g = 0; g < 6; g++) for (const pol of ['creeper', 'fair']) {
     const { S, log } = play(pack, level, lots, [false, true], 4000 + g, pol); h.update(name + level + lots + g + pol + log + '|' + S.players.map(p => p.budget).join('/'));
   }
-  assert.equal(h.digest('hex'), '7b973a8b2f7f0cc289bc1aa61f144b60aadc7909f77e2cc524507938089eb6ad', 'the duel changed (digest = v60: the exploit retune of Countries Beginner 15-30, Capitals Beginner 20-30 / Medium 10-30 / Expert 20-30 and US States 20 lots, plus the creeper-guard window; re-pinned on purpose in v60. Before that the engine of v59: v57 plus two fixes to the bot, it never bids past what the richest rival can top and it does not walk away from the last lot when that lot decides the game; re-pinned on purpose in v59, it was the v57 engine before, and the v47 engine before)');
+  assert.equal(h.digest('hex'), '6bffbd86b23c1d3efcc72702bbba79cb1fcd183e818ff120b71ec1c3b9186b2e', 'the duel changed (digest = v67: a lot that settles the game on the closing three lots gets the whole purse, and on the last lot a bot that cannot win makes no knockout jump; re-pinned on purpose in v67. Before that v60: the exploit retune of Countries Beginner 15-30, Capitals Beginner 20-30 / Medium 10-30 / Expert 20-30 and US States 20 lots, plus the creeper-guard window; re-pinned on purpose in v60. Before that the engine of v59: v57 plus two fixes to the bot, it never bids past what the richest rival can top and it does not walk away from the last lot when that lot decides the game; re-pinned on purpose in v59, it was the v57 engine before, and the v47 engine before)');
 });
 
 test('several bots: every bot has a style of its own (all different for 2 and 3 bots), never drawn twice, a forced style applies to all', () => {
@@ -138,4 +138,37 @@ test('creeper guard: a +1 creeper that passes once on purpose gains little in a 
     assert.ok(once <= 22, `${id} Medium 30 lots: the pass-once creeper wins ${once}% (it was 37% in Countries and 17% in Capitals before the window; the pure creeper wins ${pure}%)`);
   }
   assert.ok(Engine.validatePack(Object.assign({}, packs.countries, { bot: Object.assign({}, packs.countries.bot, { creeperGuard: { raises: 3, window: 0 } }) })).some(e => /creeperGuard/.test(e)), 'a window of 0 is refused');
+});
+
+/* ---- v67: two bot moves from the owner's own game log (Capitals Expert, 30 lots, you against 3 bots, 26 Nov 2026), replayed lot for lot ---- */
+const OWNER_GAME = ['SI','BR','GH','LB','AT','WS','BT','LV','BS','GT','LI','LR','VE','UA','JM','CU','CF','IT','ZA','TR','BZ','VA','DK','ML','BW','GN','OM','GE','IN','TT'];
+const OWNER_WON = [[0,4],[0,49],[2,43],[3,26],[1,24],[1,1],[0,4],[2,7],[1,4],[3,32],[2,1],[3,19],[0,59],[1,42],[2,8],[3,43],[2,17],[2,76],[3,49],[1,85],[2,3],[2,4],[0,31],[1,51],[0,8],[3,46],[2,38],[2,31],[0,77]];
+function ownerGameAt(lot, seed) {
+  const pack = packs.capitals, byId = new Map(pack.items.map(it => [it.id, it]));
+  const S = Engine.newAuction({ pack, kind: 'solo', level: 'expert', lots: 30, players: [{ name: 'You' }, { name: 'Bot 1', ai: true }, { name: 'Bot 2', ai: true }, { name: 'Bot 3', ai: true }], rng: Engine.seededRng(seed) });
+  S.items = OWNER_GAME.map(id => byId.get(id));
+  OWNER_WON.slice(0, lot).forEach(([w, price], i) => { S.players[w].budget -= price; S.players[w].bought.push({ ...S.items[i], price }); });
+  S.i = lot; Engine.startLot(S); return S;
+}
+function bidLot(S, human) {   // human(price, me) -> amount or null; returns the award
+  while (S.L.turn !== null) {
+    const me = S.players[S.L.turn], h = me.ai ? null : human(S.L.price, me);
+    const a = me.ai ? Engine.botDecision(S) : h != null ? { type: 'raise', amount: h } : { type: 'pass' };
+    const r = a.type === 'raise' ? Engine.raise(S, a.amount) : Engine.pass(S); assert.ok(!r.error, r.error); if (r.next === 'award') break;
+  }
+  return Engine.award(S);
+}
+test('owner game log: India second to last (28.5 of the 29 points still to come) is fought for with the whole purse, not dropped at a random 70-100% of it', () => {
+  for (let seed = 1; seed <= 40; seed++) {
+    const S = ownerGameAt(28, seed), purse = Math.max(...[1, 2, 3].map(i => S.players[i].budget));
+    const w = bidLot(S, p => (p < 92 ? Math.min(92, p + 1) : null));          // the human stops at EUR 92, one below the richest bot's purse (EUR 93)
+    assert.equal(w.winner === 0, false, `seed ${seed}: a bot with EUR ${purse} let India go to a human who stopped at EUR 92`);
+  }
+});
+test('owner game log: on the last lot a bot that cannot win any more does not jump to a rival\'s whole purse (it paid EUR 85 for Port of Spain, fair price EUR 4)', () => {
+  for (let seed = 1; seed <= 40; seed++) {
+    const S = ownerGameAt(29, seed);
+    const w = bidLot(S, p => (p < 68 ? 68 : null));                             // the human goes all in, as in the log
+    assert.ok(w.winner === 0 || w.price <= 20, `seed ${seed}: bot ${w.winner} paid EUR ${w.price} for Port of Spain`);
+  }
 });
