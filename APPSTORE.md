@@ -3,13 +3,13 @@
 Checked against the App Review Guidelines as published on developer.apple.com on 13 November 2026.
 "Done" means it is true of the code in this repository (checked again at v66, 26 November 2026). "You" means something only the
 account holder can do (App Store Connect, the Xcode project, a real device). Nothing here has been
-run on a real iPhone or iPad, and there is no native project in this repository yet.
+run on a real iPhone or iPad. The native project is in `native/` (v70, Capacitor 8; how to build it: `native/README.md`).
 
 ## 0. Before the Xcode step (28 November 2026): what only you can do
 
 1. Add an **email address** to `support.html` (guideline 1.5; today the only contact is a GitHub issue).
 2. Decide the **storefronts** (see 5 Legal below: Taiwan and Kosovo are listed as countries).
-3. Build the wrapper as in section 3, then run the device checks in item 7 and the status-bar check in item 8.
+3. Build the app from `native/` (`native/README.md`: `npm install`, `npm run sync`, `npm run open`, then sign and run in Xcode), then run the device checks in item 7 and the status-bar check in item 8.
 4. **Languages:** the game is in 13 languages (English, German, Italian, Spanish, French, Portuguese (Brazil), Indonesian, Simplified Chinese, Hindi,
    Japanese, Korean, Arabic, Thai). In Xcode, list them as the app's localizations (`CFBundleLocalizations`, or add them in the project's Info tab)
    so the App Store shows them; the game picks the phone's language itself. The eight added in v64 have not been read by a native speaker
@@ -48,10 +48,11 @@ run on a real iPhone or iPad, and there is no native project in this repository 
 - **Content rights:** "contains third-party content, and I have the rights" (NASA, UN, Census, Natural Earth, three.js; all credited in the app).
 - **Category:** Games (Trivia or Strategy); secondary Education is defensible.
 
-## 3. The native wrapper (not in this repository)
+## 3. The native wrapper (`native/`, v70)
 
-`platform.js` already speaks to Capacitor when it is present (`Preferences`, `Haptics`, `Keyboard`,
-`StatusBar`, `SplashScreen`). What the wrapper has to get right:
+`platform.js` speaks to Capacitor when it is present (`Preferences`, `Haptics`, `Keyboard`,
+`StatusBar`, `SplashScreen`). Items 1-4 and 6 are done in `native/` (the table in `native/README.md`; `test/native.test.js`
+checks them); 5, 7 and 8 need a device. What the wrapper has to get right:
 
 1. **Bundle the files.** Copy the repository root (without `test/`, `.github/`, the `*.md` files and `sw.js`) into the web directory. Never set `server.url` to the website: the app must start in airplane mode on first launch. v59 removed `<base href="/bidding-wars/">` from `index.html`; with it, every relative path would have pointed at a folder that does not exist inside an app bundle.
 2. **Privacy manifest (`PrivacyInfo.xcprivacy`).** Required since May 2024. `NSPrivacyTracking` false, no tracking domains, no collected data types. The Preferences plugin stores values in `UserDefaults`, which is a required-reason API: declare `NSPrivacyAccessedAPICategoryUserDefaults` with reason `CA92.1`. Check the manifest Xcode generates for each plugin you add.
@@ -62,7 +63,8 @@ run on a real iPhone or iPad, and there is no native project in this repository 
 7. **Test on device:** airplane mode from a fresh install, a phone call during a lot, lock and unlock mid-auction, rotate, Split View on iPad, VoiceOver through one whole game, Dynamic Type at its largest, and "Delete all data" followed by a restart.
 8. **The top buttons clear the status bar (iPad and iPhone, both orientations).** On the auction screen the Menu, pause and sound buttons must be fully visible, not dimmed or cut by the status bar.
    As a home-screen web app on iPadOS the status bar's dark band reached lower than the reported safe area and cut the top half of the buttons; v62 fixed that with extra room, but only under `@media (display-mode: standalone)` in `app.css`, which does **not** match inside the native app.
-   The app relies on `env(safe-area-inset-top)` (`--top` in `app.css`). If the buttons are clipped there too, apply the same rule when `Native.is` (for example a class on `<html>` set in `platform.js`).
+   v70 applies the same rule inside the app: `platform.js` sets `<html class="native">` when `Native.is`, and `app.css` gives `html.native` the same `--top`
+   (the app draws the status bar over the page: `contentInset: never`, `viewport-fit=cover`). Check it on a device; if the nav now sits too low, remove the `html.native` rule.
 
 ## 4. Game balance at release (none of this is a crash)
 

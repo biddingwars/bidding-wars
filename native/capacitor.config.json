@@ -1,0 +1,24 @@
+{
+  "appId": "io.github.biddingwars.biddingwars",
+  "appName": "Bidding Wars",
+  "webDir": "www",
+  "backgroundColor": "#0E0D0B",
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#0E0D0B",
+    "scrollEnabled": false,
+    "limitsNavigationsToAppBoundDomains": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": true,
+      "launchShowDuration": 1500,
+      "launchFadeOutDuration": 200,
+      "backgroundColor": "#0E0D0B",
+      "showSpinner": false
+    },
+    "Keyboard": {
+      "resize": "none"
+    }
+  }
+}

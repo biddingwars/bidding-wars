@@ -6,7 +6,7 @@
 const CONFIG = {
   /* The release number shown on the menu so anyone can check they have the latest build.
      MUST equal the number in sw.js's CACHE ('bidding-wars-v60' -> 60); test/version.test.js enforces it. */
-  version: 69,
+  version: 70,
 
   /* Online 1 vs 1 needs a real backend (Firebase, Supabase, PartyKit, …).
      Leave this false until one is wired up in Net.* below — shipping a mode
@@ -35,6 +35,8 @@ const Native = (() => {
     plugin: n => (cap && cap.Plugins && cap.Plugins[n]) || null
   };
 })();
+/* inside the iOS app the status bar is drawn over the page, as on the home screen: app.css gives the nav the same room (html.native) */
+if (Native.is) document.documentElement.classList.add('native');
 
 /* ---------------------------------------------------------------------------
    Store — Capacitor Preferences on device, localStorage in a browser,
