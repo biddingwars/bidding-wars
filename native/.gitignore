@@ -1,0 +1,3 @@
+# rebuilt by `npm install` and `npm run sync` (copy-web.mjs) on the Mac
+node_modules/
+www/

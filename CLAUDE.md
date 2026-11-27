@@ -21,9 +21,13 @@ breaking caching/icons because the files were never actually there.
 If you add a new asset or reference a path anywhere, keep it flat and
 double-check it against the real file list at the repo root.
 
-The one exception is `test/` — dev-only (unit tests, the fixture pack, a tiny
-static server, the contrast and UI-simulation scripts). The game never
-references it and `sw.js` never caches it.
+The exceptions are `test/` — dev-only (unit tests, the fixture pack, a tiny
+static server, the contrast and UI-simulation scripts) — and `native/` (v70), the iOS app:
+Capacitor 8 config, the generated Xcode project (`native/ios/`), the privacy manifest, and
+`copy-web.mjs`, which copies the files of `sw.js`'s `SHELL` list into `native/www` (git-ignored) for the
+app bundle. How to build it: `native/README.md`; `test/native.test.js` checks it. The game never
+references either folder and `sw.js` never caches them. A new game file therefore reaches the
+app only through `SHELL`, which it must be in anyway.
 
 ## `sw.js` — bump `CACHE` on every deploy that touches a cached file
 
@@ -34,7 +38,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v69';   // increment this, every time
+const CACHE = 'bidding-wars-v70';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +46,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v69` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v70` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still five keys).
 

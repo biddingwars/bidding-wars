@@ -50,6 +50,8 @@
 /* added to the home screen (iPad, iPhone): the status bar is drawn over the page (black-translucent) and on iPadOS its darkening band
    reaches lower than the reported safe-area inset, which cut the top of the nav buttons. Give the nav real room below it. Not a theme token. */
 @media (display-mode: standalone){ :root{--top:max(calc(env(safe-area-inset-top,0px) + 10px),34px)} }
+/* the iOS app (Capacitor, contentInset never) draws the status bar over the page the same way; display-mode does not match there */
+html.native{--top:max(calc(env(safe-area-inset-top,0px) + 10px),34px)}
 
 /* ---------- tokens: Daylight (light) ---------- */
 :root[data-theme=light]{
