@@ -222,7 +222,7 @@ const LANGS=[
   {id:'fr', flag:'FR', label:'Français'},
   /* added languages: their words live in i18n-<id>.js, loaded when picked (addLang below) */
   {id:'pt', flag:'BR', label:'Português'},
-  {id:'id', flag:'ID', label:'Bahasa Indonesia'},
+  {id:'id', flag:'ID', label:'Bahasa Indonesia', short:'Indonesia'},
   {id:'zh', flag:'CN', label:'中文'},
   {id:'hi', flag:'IN', label:'हिन्दी'},
   {id:'ja', flag:'JP', label:'日本語'},
@@ -1356,7 +1356,7 @@ function home() {
         </div>
         <div class="dockbar">
           <button class="glass chipbtn" id="mr">${IC('book', 'sm')}${esc(t('how'))}</button>
-          <button class="glass chipbtn" id="ml" aria-label="${esc(t('language'))}: ${esc(lang.label)}"><span aria-hidden="true">${flag(langFlag(lang))}</span> ${esc(lang.label)}</button>
+          <button class="glass chipbtn" id="ml" aria-label="${esc(t('language'))}: ${esc(lang.label)}"><span aria-hidden="true">${flag(langFlag(lang))}</span><span class="lbl"> ${esc(lang.short || lang.label)}</span></button>
           <button class="glass chipbtn sq" id="mset" aria-label="${esc(t('settings'))}">${IC('gear', 'sm')}</button>
           <button class="glass chipbtn sq" id="mp" aria-label="${esc(t('privacy'))}">${IC('lock', 'sm')}</button>
         </div>

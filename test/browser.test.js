@@ -487,6 +487,23 @@ test('BUG HUNT: hot-seat - the second tap of a double tap does not land on the n
   await ctx.close();
 });
 
+test('BUG HUNT: narrow phones - the game bar keeps every button on screen at 320 px, Menu never wraps, the menu row is not cut (320-414 px)', { skip: SKIP }, async () => {
+  for (const [w, lang] of [[320, 'en'], [320, 'ja'], [320, 'ar'], [320, 'th'], [375, 'id'], [375, 'pt'], [390, 'id'], [414, 'fr']]) {
+    const { page, errors, ctx } = await open({ viewport: { width: w, height: w < 360 ? 568 : 812 }, init: l => localStorage.setItem('lang:v1', l), initArg: lang });
+    const cut = await page.$$eval('.dockbar > *', e => e.filter(x => x.scrollWidth > x.clientWidth + 1 || x.getBoundingClientRect().right > innerWidth + 0.5).map(x => x.id + ' ' + x.textContent.trim()));
+    assert.deepEqual(cut, [], `${w} px ${lang}: the menu row`);
+    await page.click('#m1'); await page.waitForSelector('#start');
+    await page.evaluate(() => { const e = document.querySelector('[data-g="lots"] [data-v="30"]'); if (e) e.click(); });
+    await page.evaluate(() => { lotLockMs = 0; document.querySelector('#start').click(); }); await page.waitForSelector('#ctrl');
+    const bar = await page.$$eval('.nav button', e => e.filter(x => { const r = x.getBoundingClientRect(); return r.right > innerWidth + 0.5 || r.left < -0.5; }).map(x => x.id));
+    assert.deepEqual(bar, [], `${w} px ${lang}: every game-bar button on screen (the sound button was pushed off)`);
+    assert.ok((await page.$eval('#nb', e => e.getBoundingClientRect().height)) <= 48, `${w} px ${lang}: the Menu button stays one line`);
+    assert.ok(await page.$eval('#nb', e => e.textContent.trim().length > 0), 'the Menu label stays for screen readers');
+    assert.deepEqual(errors, [], `${w} ${lang}`);
+    await ctx.close();
+  }
+});
+
 test('sheets: focus moves in and is trapped, Escape closes, background is inert, role=dialog', { skip: SKIP }, async () => {
   const { page, errors, ctx } = await open();
   await page.click('#mr');

@@ -615,3 +615,21 @@ html[data-motion=reduce] .rays,html[data-motion=reduce] .confetti{display:none}
 @media (prefers-reduced-motion:reduce){.um-wins>g{animation:none}}
 
 .logta{width:100%;min-height:150px;background:var(--glass);color:var(--ink);border:1px solid var(--stroke);border-radius:14px;padding:10px;font:12px/1.35 ui-monospace,Menlo,monospace;resize:none}
+
+/* Narrow phones (bug hunt, Nov 2026; ported from Outlines). Below 430 px the menu's bottom row is tighter, so "How to play" and the language
+   fit (they were cut at 375-414 px, "Bahasa Indonesia" at 390). Below 360 px (iPhone SE 1st gen, 320 px) the game bar's Menu button shows its
+   icon only (its text stays for screen readers: font-size 0, not display none), the lot label may shrink with an ellipsis, and the language
+   chip shows the flag only: the sound button was pushed off the screen in nine languages and "メニュー" broke one character per line. */
+@media (max-width:430px){ .dockbar{gap:6px} .chipbtn{gap:5px;padding:0 7px;font-size:13.5px} #mr svg{display:none} }
+@media (max-width:360px){ .chipbtn{padding:0 4px;font-size:12px;letter-spacing:-.01em} #mr{white-space:normal;line-height:1.05;text-align:center} }
+@media (max-width:360px){
+  .nav .ibtn.pill{font-size:0;width:44px;padding:0;gap:0;justify-content:center}
+  .navr{gap:6px}
+  .lotpill{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;letter-spacing:.06em;padding:5px 8px}
+  #ml{flex:none;width:46px;padding:0} #ml .lbl{display:none}
+}
+/* Larger text zooms the menu (1.12 / 1.25), so the menu row runs out of room at a wider screen: the same narrow-phone rules, at the width the zoom leaves */
+@media (max-width:490px){ html[data-tz="1"] .dockbar,html[data-tz="2"] .dockbar{gap:6px} html[data-tz="1"] .chipbtn,html[data-tz="2"] .chipbtn{gap:5px;padding:0 7px;font-size:13.5px} html[data-tz="1"] #mr svg,html[data-tz="2"] #mr svg{display:none} }
+@media (max-width:410px){ html[data-tz="1"] .chipbtn{padding:0 4px;font-size:12px;letter-spacing:-.01em} html[data-tz="1"] #mr{white-space:normal;line-height:1.05;text-align:center} html[data-tz="1"] #ml{flex:none;width:46px;padding:0} html[data-tz="1"] #ml .lbl{display:none} }
+@media (max-width:460px){ html[data-tz="2"] .chipbtn{padding:0 4px;font-size:12px;letter-spacing:-.01em} html[data-tz="2"] #mr{white-space:normal;line-height:1.05;text-align:center} html[data-tz="2"] #ml{flex:none;width:46px;padding:0} html[data-tz="2"] #ml .lbl{display:none} }
+@media (max-width:360px){ html[data-tz="2"] .chipbtn{font-size:11px;letter-spacing:-.02em} }   /* 11 px x zoom 1.25 = 13.75 px on screen: "Spielregeln" fits at 320 px */
