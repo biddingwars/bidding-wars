@@ -29,7 +29,7 @@ const CAL = {
        A value per lot count uses the nearest listed count at or below the round length. */
     noise: { beginner: { 5: 0.392, 20: 0.1, 30: 0.1 }, medium: { 5: 0.278, 10: 0.07 }, expert: { 5: 0.471, 20: 0.118 } },   // Medium from 10 lots and Expert from 20: the same cure (a 0.7-0.75 x cap won 60-61% at Medium, a 1.5 x cap 60-64% at Expert)
     rollSpan: { beginner: { 5: 1, 20: 0.3, 30: 0.45 }, medium: { 5: 1, 10: 0.3 }, expert: { 5: 1, 20: 0.3 } },
-    crowd: { beginner: -0.15, medium: 0.15, expert: 0.2 },                // v50: the walk-away changes by this share per extra seat at a table of 3-4 (never in a duel); found with a fair-value human against 2-3 bots
+    crowd: { beginner: -0.15, medium: 0.15, expert: { 5: -0.1, 15: -0.2, 20: -0.15 } },   // v71: Expert retuned with economy.tableShare (was +0.2 when every seat had the full duel budget); the v50 note below is about the other levels                // v50: the walk-away changes by this share per extra seat at a table of 3-4 (never in a duel); found with a fair-value human against 2-3 bots
 
     efficiency: { gamma: { beginner: { 5: 0.65, 20: 0.3, 30: 0.15 }, medium: 0.989, expert: 0.598 }, lo: { beginner: 0.4, medium: 0.29, expert: 0.27 }, hi: { beginner: 3.281, medium: 3.28, expert: 2.522 }, pick: { beginner: 1.916, medium: 1.85, expert: 1.903 } },
     decisive: { share: { beginner: 0.233, medium: 0.31, expert: 0.209 }, minPrice: { beginner: 0.8, medium: 1.2, expert: 1.2 } },   // all-in only for a lot whose fair price is at least this share of the bot's current purse (1.2 = one it cannot really afford: Delhi yes; Seoul and Washington no)
@@ -107,6 +107,9 @@ const pack = `/* ===============================================================
     priceTable,
     economy: {
       budgets: ${js(CAL.budgets)},
+      /* v71 (owner: "for every additional bot ... 300 / 200 / 100"): at Expert a table of 3 seats gets 2/3 of the duel budget each, a table of 4 a third (as in Countries).
+         With the full budget at every seat the bots bid prices up to about 2x fair (measured 2.10x with 3 bots at 30 lots). */
+      tableShare: { expert: { 3: 2 / 3, 4: 1 / 3 } },
       /* no \`endgame\`: when only one player has money left, that player takes every remaining lot for 1 each (the walkover in startLot) */
       sampling: 'random',
       bidSteps: [[12, [1, 2, 5, 10, 25]], [40, [2, 5, 10, 25, 50]], [100, [5, 10, 25, 50, 100]], [null, [10, 25, 50, 100, 200]]],

@@ -53,6 +53,9 @@
        fair prices are much lower per lot, get a share of the expected value of the round (55% for 5-10 lots, 40% for 15, 36% from 20),
        rounded to multiples of 5. The expected value of a round at fair prices stays within ~4% of the August game. */
     economy: {
+      /* v71 (owner: "for every additional bot ... 300 / 200 / 100"): at Expert a table of 3 seats gets 2/3 of the duel budget each, a table of 4 a third (30 lots: EUR 300 / 200 / 100).
+         With the full budget at every seat the bots bid prices up to 2-2.5x fair until the money was spent (measured: 1.09x with 1 bot, 1.63x with 2, 2.27x with 3). */
+      tableShare: { expert: { 3: 2 / 3, 4: 1 / 3 } },
       budgets: {
         beginner: { 5: 25, 10: 50, 15: 75, 20: 100, 30: 150 },
         medium:   { 5: 50, 10: 100, 15: 150, 20: 200, 30: 300 },
@@ -77,7 +80,7 @@
          round lengths. A value per lot count uses the nearest listed count at or below the round length. */
       noise: { beginner: { 5: 0.432, 15: 0.15, 20: 0.108 }, medium: 0.483, expert: 0.405 },
       rollSpan: { beginner: { 5: 1, 15: 0.3 }, medium: 1, expert: 1 },
-      crowd: { beginner: 0.15, medium: 0.07, expert: 0.2 },                // v50: the walk-away grows by this share per extra seat at a table of 3-4 (never in a duel); found with a fair-value human against 2-3 bots
+      crowd: { beginner: 0.15, medium: 0.07, expert: { 5: -0.1, 15: -0.2, 20: -0.3 } },   // v71: Expert retuned with economy.tableShare (smaller budgets at a bigger table; +0.2 before, when every seat had the full duel budget). Per lot count: the "+1 over the bots" player won 31-35% of 10-lot rounds at -0.3                // v50: the walk-away grows by this share per extra seat at a table of 3-4 (never in a duel); found with a fair-value human against 2-3 bots
 
       efficiency: { gamma: { beginner: { 5: 0.698, 15: 0.2, 20: 0.349 }, medium: 0.9, expert: 0.488 }, lo: { beginner: 0.304, medium: 0.45, expert: 0.294 }, hi: { beginner: 3, medium: 3.28, expert: 2.248 }, pick: { beginner: 1.627, medium: 1.726, expert: 1.65 } },
       decisive: { share: { beginner: 0.309, medium: 0.439, expert: 0.326 } },
