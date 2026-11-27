@@ -470,6 +470,19 @@ test('BUG HUNT: a tap right after "See the result" does not lift every bar (Lift
   await ctx.close();
 });
 
+test('BUG HUNT: the menu warms up the pack it reopens on, not always Countries', { skip: SKIP }, async () => {
+  for (const id of ['states', 'capitals']) {
+    const { page, errors, ctx, requests } = await open({ init: l => localStorage.setItem('record:v1', JSON.stringify({ v: 2, packs: {}, last: l })), initArg: id });
+    assert.equal(await page.evaluate(() => SELPACK), id);
+    await page.waitForTimeout(1500);                            // the idle warm-up has long run
+    const packs = requests.filter(r => /pack-\w+\.js/.test(r));
+    assert.ok(!packs.some(r => /pack-countries\.js/.test(r)), `${id}: Countries is not loaded for nothing: ${packs.join(', ')}`);
+    assert.ok(await page.evaluate(i => Packs.isLoaded(i), id), `${id}: the pack on the menu is warmed up: ${packs.join(', ')}`);
+    assert.deepEqual(errors, []);
+    await ctx.close();
+  }
+});
+
 test('BUG HUNT: quick touch taps on the result bars open every one (the double-tap guard no longer cancels taps on things that take them)', { skip: SKIP }, async () => {
   const { page, errors, ctx } = await open({ viewport: { width: 390, height: 844 }, touch: true });
   await startSolo(page, 5, 0);
