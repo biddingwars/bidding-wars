@@ -38,7 +38,7 @@ app only through `SHELL`, which it must be in anyway.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v70';   // increment this, every time
+const CACHE = 'bidding-wars-v71';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -46,7 +46,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v70` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v71` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still five keys).
 
@@ -155,7 +155,7 @@ fails if the States screens contain `€`, "euro" or "country" in any language.
 - Bidding opens at €1 on every lot. Players alternate: raise, or drop out.
 - Drop out and whoever holds the top bid buys it at that price.
 - Budget. Countries: a table per level and lot count — Medium and Expert €10 per lot (€50 / 100 / 150 / 200 / 300 for 5 / 10 / 15 / 20 / 30 lots),
-  Beginner half of that (€25 / 50 / 75 / 100 / 150; see "Countries"). US States: a budget *table* by lot
+  Beginner half of that (€25 / 50 / 75 / 100 / 150; see "Countries"). **Expert at a bigger table (v71): 2/3 of that each at 3 seats, 1/3 at 4** (30 lots: €300 / 200 / 100; Countries and Capitals, see "Expert at a bigger table"). US States: a budget *table* by lot
   count ($20 / $35 / $50 / $70 for 5 / 10 / 15 / 20 lots since v43 — about $170 for all 50 states, one dollar per million people for the two players together; **States stops at 20 lots since v40**, see "The stingy-player exploit"). Money is deliberately scarce in both —
   see "Economy and bot".
 - Default 10 seconds per decision; timeout = automatic drop out.
@@ -300,6 +300,31 @@ stacked the country names down the page); a plain wheel/scroll over the globe
 belongs to the page (only ctrl+wheel/pinch zooms); the results screen must fit
 iPad landscape without scrolling.
 
+## Expert at a bigger table (v71) — owner: "the bots bid way too much when there are more than 2 bots"
+
+The owner's second log (Countries Expert, 30 lots, you against 3 bots): the bots paid **2.66x the fair price** on average (Qatar EUR 13 for a fair 3, Saudi Arabia 70 for 17) and ended with
+EUR 0 / 50 / 11 while the human kept 182. Measured on the engine (`multi2.js`-style scratch loop, fair-price / stingy 0.7x / +1 creeper human against 1-3 bots): Countries Expert 30 lots, bots pay
+1.09x fair with 1 bot, 1.63x with 2, 2.27x with 3; Capitals Expert 2.10x with 3; Countries Beginner 1.58x; Medium and US States about 1.1x (fine). **The cause is money supply**, not the bot's
+limits: every seat had the full duel budget, so a 4-seat Expert table held about three times a round's fair value and the bots (who plan to spend evenly) bid prices up until it was spent.
+Tried and rejected (measured): a lower or negative `crowd` alone (prices stay about 2x, the creeper then wins 40-68%), and capping each bot at the lot's max price (prices still 1.9x, creeper 58%).
+
+- **The rule (owner: "for every additional bot ... 300 / 200 / 100"):** `economy.tableShare` (new, optional, per level, validated: `{ levelId: { 3: share, 4: share } }`, 0 < share <= 1).
+  `Engine.budgetFor(pack, lots, level, seats)` gives a table of 3 seats that share of the duel budget each, rounded to 5; `newAuction` and the game log pass the seat count. Countries and
+  Capitals set `expert: { 3: 2/3, 4: 1/3 }`: Expert 5 / 10 / 15 / 20 / 30 lots = 50/35/15, 100/65/35, 150/100/50, 200/135/65, 300/200/100. It counts seats, so a hot-seat table with
+  people gets it too. Beginner, Medium, US States and every duel are unchanged (the duel digest and the exploit search, a duel tool, are untouched).
+- **Bots retuned with it (`bot.crowd`, Expert, now per lot count):** Countries `{ 5: -0.1, 15: -0.2, 20: -0.3 }`, Capitals `{ 5: -0.1, 15: -0.2, 20: -0.15 }` (both +0.2 before; a count that is not
+  listed uses the nearest below). Without the retune the smaller purses made the bots pushovers (a fair-price player beat 3 bots 63-75%).
+- **Measured after (300 games a cell; you win % fair / stingy / creeper, bots pay x fair):** Countries Expert, 2 bots: 5 lots 28 / 21 / 17, 10: 28 / 24 / 27, 15: 28 / 15 / 23, 20: 29 / 17 / 18,
+  30: 30 / 14 / 16 (seat share 33), prices 1.0-1.24x; 3 bots: 22 / 20 / 10, 22 / 28 / 15, 26 / 24 / 17, 30 / 25 / 18, 36 / 22 / 17 (seat share 25), prices 0.6-0.9x.
+  Capitals Expert, 2 bots: 33 / 24 / 23, 42 / 28 / 17, 42 / 19 / 17, 34 / 10 / 21, 30 / 7 / 14; 3 bots: 17 / 20 / 9, 29 / 35 / 8, 19 / 29 / 10, 25 / 35 / 9, 18 / 39 / 2; prices 0.6-1.25x.
+  Known: against 3 Capitals bots the stingy player wins a little above its seat share at 10-30 lots (29-39%); short rounds are luck-heavy as always.
+- **Wording:** the setup's budget amount follows the seats (`setup()` in `app.js`, `nSeats()`); `rulesP4` (How to play) of Countries and Capitals explains the rule in all thirteen languages. The short `budgetNote` under the amount was left as it was: a longer one wrapped onto an extra line and made the setup sheet scroll 17 px on an iPhone SE at Small text (the SETTINGS test).
+- **Last lot (also v71, from the same log):** two bots that could no longer win bid Kiribati (0.14 M, fair EUR 1) up to EUR 12: the last lot is always "decisive", so each had its whole purse
+  as a limit. A bot that cannot win even with the last lot (`hopeless` in `botDecisionExt`) gets no whole-purse limit and stops at the lot's max price. Replayed in `test/multibots.test.js`.
+- **Not changed:** Countries Beginner with 2-3 bots is also inflated (1.34 / 1.58x fair at 30 lots) and hard (a fair-price player wins 6 / 3%); the owner does not play it and will look first.
+- Tests: `test/multibots.test.js` (the budget table, the 3-bot price guard, the two owner logs, budgets 300 for the logged games), `v71: the setup shows…` in `test/browser.test.js`; the money checks in
+  `test/sim.js`, `test/ui-sim.js` and `multibots` pass the seat count.
+
 ## Bug hunt (v68-v69, 27 Nov 2026) — taps, narrow and landscape phones
 
 Four bugs, each reproduced in Chromium with touch taps at phone sizes before the fix and re-checked after; `BUG HUNT:` tests in `test/browser.test.js`
@@ -437,7 +462,7 @@ Solo is **you against 1, 2 or 3 bots**; Multiplayer is **2-4 people plus 0-2 bot
 - **Each bot has its own style** (`Engine.newAuction`): with more than one AI seat the three temperaments are dealt to the bots in a random order (seeded rng; `S.bot.byseat[seat]`, `S.bot.temper` = the first bot's), so 2 bots always differ and 3 bots are exactly conservative + balanced + aggressive. Never shown. A forced style (Settings -> Bot style) is applied to every bot. One bot keeps the old single, hidden 25/50/25 draw.
 - **Per-seat state**: `botWalk(S, item, idx, roll, me, rival, T)` takes the temperament; every bot rolls its own walk-away per lot (`S._cm[seat]`, reset in `startLot`; a preset `S._ceil` for the same lot is adopted so old tests keep working). Rival = the richest active other seat, "leader" for mood = the best other player on points, the knockout holder test is `L.holder !== L.turn`.
 - **The duel is untouched**: `test/multibots.test.js` hashes 168 seeded duels (every pack and level, two lot counts, creeper and fair-value human) and pins the digest of v47's engine (an earlier scratch comparison of 1,088 duels against main was identical too); any change to a 2-seat game fails it.
-- **`bot.crowd`** (optional, number or per level, -0.5..1, validated): at a table of 3-4 seats the walk-away is multiplied by `1 + crowd x (seats - 2)`, because more bidders push prices up and a duel-calibrated bot would otherwise be a pushover. Values: States 0.1; Countries Beginner 0.15, Medium 0.07, Expert 0.2; Capitals Beginner -0.15, Medium 0.15, Expert 0.2 (generators `test/make-pack-states.js`, `test/make-pack-capitals.js`; Countries is hand-written). Found with a scratch loop (`multi.js`, a fair-value human 1.25x, a +1 creeper and a stingy 0.7x human against 1-3 bots) and then re-measured, 300 games a cell, 10 lots:
+- **`bot.crowd`** (optional, number or per level, -0.5..1, validated): at a table of 3-4 seats the walk-away is multiplied by `1 + crowd x (seats - 2)`, because more bidders push prices up and a duel-calibrated bot would otherwise be a pushover. Values: States 0.1; Countries Beginner 0.15, Medium 0.07, Expert per lot count since v71 (see "Expert at a bigger table"; 0.2 before); Capitals Beginner -0.15, Medium 0.15, Expert per lot count since v71 (generators `test/make-pack-states.js`, `test/make-pack-capitals.js`; Countries is hand-written). Found with a scratch loop (`multi.js`, a fair-value human 1.25x, a +1 creeper and a stingy 0.7x human against 1-3 bots) and then re-measured, 300 games a cell, 10 lots:
   fair-value human wins (share of 4 seats = 25%, of 3 = 33%): States 33 / 39, Countries Medium 20 / 32, Capitals Medium 28 / 38 with 3 / 2 bots; creeper wins 8-10% (Countries, Capitals Medium) and 33-37% (States) with 2-3 bots. The three bot styles win within a few points of each other (distinct styles 100%).
 - **Known weak spots (accepted, not hidden)**: Countries Expert and Capitals Beginner/Expert bots are strong at a full table (Countries Expert, fair-value human with 3 bots wins 8%, with 2 bots 12%; Capitals Beginner stingy human 3-4%); States stays sensitive to `crowd` (the stingy-player valley of "Exploit" above: crowd 0.1 keeps the stingy human at 28-30%, and the stingy human wins less than its seat share at every `crowd` tried, but the other policies moved a lot with it, so it was tuned on the fair-value human); the fair-value policy is not a typical human; nothing was played on a device. The exploit search (`test/exploit.js`) is a duel tool and has **not** been extended to several bots.
 - **No instant all-in, and no peeking (v56-v57, owner: "the bot knew India was coming" and "the bot goes all in way too often and way too soon")**: since v56 the extended bot never reads the lots after the one on the block: `restView(S)` in `engine.js` plans with a typical rest of the round (as many lots as are left, taken at evenly spaced quantiles of the level's pool minus the lots already shown). Since v57 a jump to the rival's whole purse (knockout and decisive lots) that would commit over 35% of the bot's own purse is only allowed once the price has reached `bot.jumpFrom` (default 0.6) x that purse; before that it raises with its normal random steps. Measured on Countries Medium, 5 lots, 3 bots: an instant all-in as the bot's first or second raise on 41% of lots before, 0 after (`jumpFrom` 0.6). Cheap knockouts of a nearly broke rival stay instant. The limits were re-tuned with `test/tune-bot.js` (a generic hill-climb, `PACK=countries|capitals`), `test/tune-blind.js` and `test/scan-cell.js`. **Known issues listed here in v57 are all resolved:** Capitals Beginner at 30 lots (70-75% then) measures 56.2% since the v60 retune, the US States 20-lot budget slope is accepted and bounded by its test, and Countries knockout (b) and the repeat test pass since v65. The duel digest in `test/multibots.test.js` was re-pinned on purpose.

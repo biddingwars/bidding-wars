@@ -184,6 +184,8 @@
         if (ec.bidSteps !== undefined && !(Array.isArray(ec.bidSteps) && ec.bidSteps.length && ec.bidSteps.every((r, i) => Array.isArray(r) && Array.isArray(r[1]) && r[1].length === 5 && r[1].every(isPosInt) && r[1].every((v, k) => !k || v > r[1][k - 1]) && (i === ec.bidSteps.length - 1 ? r[0] == null : isPosInt(r[0]) && (!i || r[0] > ec.bidSteps[i - 1][0])))))
           e('economy.bidSteps must be [[upTo, [5 ascending steps]], …, [null, [5 ascending steps]]] with increasing upTo');
         if (ec.typingBonus !== undefined && !(ec.typingBonus >= 0 && ec.typingBonus <= 10)) e('economy.typingBonus must be 0..10 seconds');
+        if (ec.tableShare !== undefined && !(isObj(ec.tableShare) && Object.keys(ec.tableShare).every(id => lvIds.includes(id) && isObj(ec.tableShare[id]) && Object.keys(ec.tableShare[id]).every(n => (n === '3' || n === '4') && ec.tableShare[id][n] > 0 && ec.tableShare[id][n] <= 1))))
+          e('economy.tableShare must be { levelId: { 3: share, 4: share } } with 0 < share <= 1 (the budget each player gets at a table of 3 or 4, as a share of the duel budget)');
         if (isObj(ec.budgets) && pack.bot && pack.bot.premium && Array.isArray(pack.items) && pack.items.length && typeof pack.priceTable === 'function') {
           /* the money must stay scarce at the top: the biggest budget (the "all items" option, or the largest lot count) of every level is at
              most 80% of the expected price of that level's biggest items, counting the bot's average walk-away (midpoint of ideal and max)
@@ -353,7 +355,14 @@
   /* US States: the budget is a table by lot count (economy.budgets, in dollars); Countries: lots x budgetPerLot. */
   /* an unknown, missing or corrupted level id falls back to the pack's default level, everywhere a level is looked up */
   const validLevel = (pack, level) => (pack.levels && pack.levels.some(l => l.id === level)) ? level : pack.defaultLevel;
-  const budgetFor = (pack, lots, level) => (pack.economy && pack.economy.budgets) ? byLots(pack.economy.budgets, lots, validLevel(pack, level)) : lots * pack.budgetPerLot;
+  /* economy.tableShare (v71, owner: "for every additional bot ... 300 / 200 / 100"): at a level that sets it, a table of 3 or 4 seats gets that share of the duel budget each
+     (Expert: 2/3 and 1/3), rounded to 5. Every seat at the table had the full duel budget, so a 4-seat Expert table held about three times a round's value and the bots bid
+     prices up to 2-2.5x fair until it was spent. Absent, or a duel: the table as it was. */
+  const tableShare = (pack, level, seats) => { const T = pack.economy && pack.economy.tableShare, t = T && T[level]; return t && seats > 2 && t[seats] ? t[seats] : 1; };
+  const budgetFor = (pack, lots, level, seats) => {
+    const lv = validLevel(pack, level), base = (pack.economy && pack.economy.budgets) ? byLots(pack.economy.budgets, lots, lv) : lots * pack.budgetPerLot, f = tableShare(pack, lv, seats);
+    return f === 1 ? base : Math.max(5, 5 * Math.round(base * f / 5));
+  };
   /* The five raise buttons. Countries: always +1 +2 +5 +10 +25. A pack with economy.bidSteps scales them with the CURRENT PRICE
      (never with the item's fair price, which would leak its size): [[upTo, [5 steps]], …, [null, [5 steps]]]. */
   const DEFAULT_STEPS = [1, 2, 5, 10, 25];
@@ -373,7 +382,7 @@
      renders. Field names are stable on purpose. */
   function newAuction(opts) {
     const pack = opts.pack, rng = opts.rng || defaultRng;
-    const lots = opts.lots, level = validLevel(pack, opts.level), budget = budgetFor(pack, lots, level);
+    const lots = opts.lots, level = validLevel(pack, opts.level), budget = budgetFor(pack, lots, level, (opts.players || []).length);
     const S = {
       pack, rng,
       kind: opts.kind, mode: opts.kind === 'solo' ? 'bot' : 'table',
@@ -655,7 +664,10 @@
       const K = rival.budget, target = L.price < K ? K : (me.budget >= K + 1 ? K + 1 : null);
       if (target != null && target > L.price && !heavy(target, K)) { jump = target; lim = Math.max(lim, target); }
     }
-    if (decisiveLot || settles) lim = Math.max(lim, me.budget);     // and no random ceiling either: against a rival who goes all-in on the lot that decides the game, a bot that stops at a random 70-100% of its purse simply loses it
+    /* v71 (owner's log, Countries Expert, 3 bots): the last lot (Kiribati, 0.14 M) is always "decisive" (100% of what is left), so two bots that could no longer win bid each
+       other up to EUR 12 (fair EUR 1) with their whole purses. A bot that cannot win even with this lot gets no whole-purse limit on it, and stops at the lot's max price. */
+    if ((decisiveLot || settles) && !hopeless) lim = Math.max(lim, me.budget);
+    if (hopeless) lim = Math.min(lim, pr.max);         // and it bids no higher than the lot's usual top price     // and no random ceiling either: against a rival who goes all-in on the lot that decides the game, a bot that stops at a random 70-100% of its purse simply loses it
     /* The last lot (v59): money is worth nothing once the round is over. When this lot decides whether the bot wins (without it the bot does not win, with it the bot does),
        its limit is its whole purse, in every pack. Countries already behaved like this (its last lot is always "decisive"); US States and Capitals could walk away from the
        deciding lot with money in hand. */
@@ -733,7 +745,7 @@
   function gameLog(S, ex) {
     ex = ex || {};
     const sb = scoreboard(S);
-    return { v: 1, t: ex.t || null, pack: S.pack.id, level: S.level || null, lots: S.items.length, budget: budgetFor(S.pack, S.items.length, S.level),
+    return { v: 1, t: ex.t || null, pack: S.pack.id, level: S.level || null, lots: S.items.length, budget: budgetFor(S.pack, S.items.length, S.level, S.players.length),
       seats: S.players.map(p => p.ai ? 'bot' : 'you'), temper: S.bot && S.bot.temper ? S.bot.temper.name || null : null, kind: S.kind || null, bots: S.players.filter(p => p.ai).length,
       temperBy: S.bot && S.bot.byseat ? Object.fromEntries(Object.keys(S.bot.byseat).map(k => [k, S.bot.byseat[k].name || null])) : null, aggr: ex.aggr == null ? 2 : ex.aggr, practice: !!S.practice,
       clock: S.clock == null ? null : S.clock, end: S.reason || 'end', unsold: (S.unsold || []).length,

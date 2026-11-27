@@ -499,6 +499,22 @@ test('BUG HUNT: landscape phones - the menu\'s pack row stays inside its column 
   }
 });
 
+test('v71: the setup shows a smaller Expert budget at a bigger table (EUR 300 / 200 / 100 at 30 lots), Medium unchanged; the game uses it', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open();
+  await page.click('#m1'); await page.waitForSelector('#start');
+  await pick(page, 'lots', 30); await pick(page, 'level', 'expert');
+  const bud = () => page.textContent('#bud');
+  assert.equal(await bud(), '€300', '1 bot');
+  await pick(page, 'bots', 2); assert.equal(await bud(), '€200', '2 bots');
+  await pick(page, 'bots', 3); assert.equal(await bud(), '€100', '3 bots');
+  await pick(page, 'level', 'medium'); assert.equal(await bud(), '€300', 'Medium keeps the full budget');
+  await pick(page, 'level', 'expert'); assert.equal(await bud(), '€100');
+  await page.click('#start'); await page.waitForSelector('#ctrl');
+  assert.deepEqual(await page.evaluate(() => S.players.map(p => p.budget)), [100, 100, 100, 100]);
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
 test('BUG HUNT: quick touch taps on the result bars open every one (the double-tap guard no longer cancels taps on things that take them)', { skip: SKIP }, async () => {
   const { page, errors, ctx } = await open({ viewport: { width: 390, height: 844 }, touch: true });
   await startSolo(page, 5, 0);
