@@ -19,7 +19,7 @@ test.before(async () => {
 test.after(async () => { if (env) { await env.browser.close(); env.s.srv.close(); } });
 
 async function open(opts = {}) {
-  const ctx = await env.browser.newContext({ viewport: opts.viewport || { width: 402, height: 715 }, serviceWorkers: 'block', reducedMotion: opts.motion || 'reduce', colorScheme: opts.scheme || 'dark' });
+  const ctx = await env.browser.newContext({ viewport: opts.viewport || { width: 402, height: 715 }, serviceWorkers: 'block', reducedMotion: opts.motion || 'reduce', colorScheme: opts.scheme || 'dark', hasTouch: !!opts.touch, isMobile: !!opts.touch });
   const page = await ctx.newPage();
   const errors = [], requests = [];
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
@@ -54,6 +54,7 @@ const reveal = async page => { await page.click('#rev'); await page.waitForSelec
 const startSolo = async (page, lots = 5, clock = 0, level) => {
   await page.click('#m1'); await page.waitForSelector('#start');
   await pick(page, 'lots', lots); await pick(page, 'clock', clock); if (level) await pick(page, 'level', level);
+  await page.evaluate(() => { lotLockMs = 0; });        // scripted clicks come faster than any thumb; the new-lot guard has its own test
   await page.click('#start'); await page.waitForSelector('#ctrl');
 };
 
@@ -418,6 +419,89 @@ test('timeout is an automatic drop out; double-tapping Drop out sells the lot on
   await page.waitForFunction(() => document.getElementById('sold') || document.getElementById('rev'), null, { timeout: 8000 });
   assert.deepEqual(errors, []);
   await ctx.close();
+});
+
+test('BUG HUNT: a tap right after "Next lot" does not drop the player out of the new lot (Next lot sits on top of Drop out on phones)', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open({ viewport: { width: 390, height: 844 } });
+  await startSolo(page, 10, 0);
+  await page.evaluate(() => { window.think = () => Promise.resolve(); lotLockMs = 350; });
+  let checked = 0;
+  for (let k = 0; k < 10 && checked < 2; k++) {
+    await page.waitForSelector('#pass:not(:disabled), #n', { timeout: 6000 });
+    if (!(await page.$('#sold'))) { await page.waitForTimeout(400); await page.click('#pass'); await page.waitForSelector('#sold'); }   // a deliberate tap, after the new-lot guard
+    await page.waitForFunction(() => { const n = document.getElementById('n'); return n && getComputedStyle(n).opacity > 0.9; });
+    const p0 = await page.evaluate(() => S.i);
+    await page.click('#n');                                    // first tap: Next lot
+    await page.waitForFunction(i => S.i === i + 1 && document.getElementById('pass'), p0);
+    const r = await page.evaluate(() => {                      // second tap of a double tap, the moment the new lot is on screen, on the same spot
+      const humanFirst = S.L.turn === 0, pass = document.getElementById('pass');
+      if (humanFirst) pass.click();
+      return { humanFirst, stillIn: S.L.active.includes(0), awarded: S.L.awarded };
+    });
+    if (!r.humanFirst) continue;                              // the bot opened the bidding: nothing to tap yet
+    checked++;
+    assert.ok(r.stillIn && !r.awarded, 'the player is still in the new lot: ' + JSON.stringify(r));
+  }
+  assert.ok(checked >= 1, 'a lot where the player acts first was tested');
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('BUG HUNT: quick touch taps on the result bars open every one (the double-tap guard no longer cancels taps on things that take them)', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open({ viewport: { width: 390, height: 844 }, touch: true });
+  await startSolo(page, 5, 0);
+  await autoplay(page, { prefer: 'pass' });
+  await page.waitForTimeout(300);
+  const bars = await page.$$eval('.redact', e => e.slice(0, 4).map(x => { x.scrollIntoView({ block: 'nearest' }); const r = x.getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height / 2]; }));
+  assert.equal(bars.length, 4);
+  for (const [x, y] of bars) { await page.touchscreen.tap(x, y); await page.waitForTimeout(120); }   // well inside the guard's 320 ms
+  await page.waitForTimeout(400);
+  assert.equal(await page.$$eval('.redact.open', e => e.length), 4, 'four quick taps open four bars (v67 opened only the first)');
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('BUG HUNT: hot-seat - the second tap of a double tap does not land on the next player (350 ms, was 260)', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open();
+  await page.click('#m2'); await page.waitForSelector('#start');
+  await pick(page, 'lots', 5); await pick(page, 'clock', 0); await pick(page, 'players', 2);
+  if (await page.$('[data-g="bots"] [data-v="0"]')) await pick(page, 'bots', 0);
+  await page.click('#start'); await page.waitForSelector('#ctrl');
+  assert.equal(await page.evaluate(() => lockMs), 350);
+  await page.waitForTimeout(450);                                // past the new-lot guard
+  const r = await page.evaluate(async () => {
+    const step = () => document.querySelector('[data-s]:not(:disabled)'), first = S.L.turn;
+    step().click();                                              // player A raises: the turn passes to player B
+    const afterA = { turn: S.L.turn, price: S.L.price };
+    await new Promise(res => setTimeout(res, 300));
+    step().click();                                              // A's second tap, 300 ms later: past the old 260 ms guard, inside the new 350
+    const afterSecond = { turn: S.L.turn, price: S.L.price };
+    await new Promise(res => setTimeout(res, 100));
+    step().click();                                              // B, deliberately, after the guard
+    return { first, afterA, afterSecond, afterB: { turn: S.L.turn, price: S.L.price } };
+  });
+  assert.notEqual(r.afterA.turn, r.first, 'the turn passed');
+  assert.deepEqual(r.afterSecond, r.afterA, 'a tap 300 ms after the turn passed is ignored: ' + JSON.stringify(r));
+  assert.ok(r.afterB.price > r.afterA.price, 'the next player can bid once the guard is over');
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('BUG HUNT: narrow phones - the game bar keeps every button on screen at 320 px, Menu never wraps, the menu row is not cut (320-414 px)', { skip: SKIP }, async () => {
+  for (const [w, lang] of [[320, 'en'], [320, 'ja'], [320, 'ar'], [320, 'th'], [375, 'id'], [375, 'pt'], [390, 'id'], [414, 'fr']]) {
+    const { page, errors, ctx } = await open({ viewport: { width: w, height: w < 360 ? 568 : 812 }, init: l => localStorage.setItem('lang:v1', l), initArg: lang });
+    const cut = await page.$$eval('.dockbar > *', e => e.filter(x => x.scrollWidth > x.clientWidth + 1 || x.getBoundingClientRect().right > innerWidth + 0.5).map(x => x.id + ' ' + x.textContent.trim()));
+    assert.deepEqual(cut, [], `${w} px ${lang}: the menu row`);
+    await page.click('#m1'); await page.waitForSelector('#start');
+    await page.evaluate(() => { const e = document.querySelector('[data-g="lots"] [data-v="30"]'); if (e) e.click(); });
+    await page.evaluate(() => { lotLockMs = 0; document.querySelector('#start').click(); }); await page.waitForSelector('#ctrl');
+    const bar = await page.$$eval('.nav button', e => e.filter(x => { const r = x.getBoundingClientRect(); return r.right > innerWidth + 0.5 || r.left < -0.5; }).map(x => x.id));
+    assert.deepEqual(bar, [], `${w} px ${lang}: every game-bar button on screen (the sound button was pushed off)`);
+    assert.ok((await page.$eval('#nb', e => e.getBoundingClientRect().height)) <= 48, `${w} px ${lang}: the Menu button stays one line`);
+    assert.ok(await page.$eval('#nb', e => e.textContent.trim().length > 0), 'the Menu label stays for screen readers');
+    assert.deepEqual(errors, [], `${w} ${lang}`);
+    await ctx.close();
+  }
 });
 
 test('sheets: focus moves in and is trapped, Escape closes, background is inert, role=dialog', { skip: SKIP }, async () => {

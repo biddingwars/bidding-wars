@@ -15,7 +15,7 @@ const driver = async cfg => {
   const problems = [];
   const check = where => { const txt = document.body.innerText; if (cfg.pack === 'states' && /€/.test(txt)) problems.push('euro sign on ' + where); if (cfg.pack === 'capitals' && /\$\d/.test(txt)) problems.push('dollar sign on ' + where); if (bad.test(txt)) problems.push('bad text on ' + where + ': ' + (txt.match(bad) || [])[0]); if (S && S.players) S.players.forEach(p => { if (!(p.budget >= 0) || !Number.isInteger(p.budget)) problems.push('budget ' + p.budget); }); };
   const wait = async (fn, ms = 6000, what = '') => { const t0 = Date.now(); while (Date.now() - t0 < ms) { const r = fn(); if (r) return r; await sleep(3); } throw new Error('timeout waiting for ' + what); };
-  window.think = () => Promise.resolve(); lockMs = 0;   // the hot-seat guard has its own test
+  window.think = () => Promise.resolve(); lockMs = 0; lotLockMs = 0;   // the hot-seat and new-lot guards have their own tests (scripted clicks come faster than any thumb)
   if (cfg.pack !== 'countries') { $(`[data-pack="${cfg.pack}"]`).click(); await wait(() => $(`[data-pack="${cfg.pack}"][aria-current]`), 2000, cfg.pack + ' tile'); }
   $(cfg.kind === 'solo' ? '#m1' : '#m2').click();
   await wait(() => $('#start'), 6000, 'setup');

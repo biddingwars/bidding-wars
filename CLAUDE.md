@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v67';   // increment this, every time
+const CACHE = 'bidding-wars-v68';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v67` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v68` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still five keys).
 
@@ -264,8 +264,14 @@ Android web or a native shell.
 
 The decision clock (`startClock`) is a smooth ring that waits while a sheet is
 open and ignores a frame gap over 250 ms (a locked phone) so a background never
-costs a lot. Hot-seat games ignore taps for 260 ms after a turn passes so a
-double tap can't land on the next player.
+costs a lot. Hot-seat games ignore taps for 350 ms after a turn passes (`lockMs`; 260 ms until v68, raised because
+`lockGestures()` now lets quick taps through) so a double tap can't land on the next player, and **every new lot ignores
+the player's taps for 350 ms** (`lotLockMs`, set in `paintLot()`, v68): on phones "Next lot" sits exactly on top of "Drop
+out", and a double tap on Next lot used to drop the player out of the new lot (the bot then took it for €1). Scripted
+tests set `lotLockMs = 0` (`startSolo()` in `test/browser.test.js`, `test/ui-sim.js`); the BUG HUNT browser test sets it back.
+`lockGestures()` in `platform.js` (the 320 ms double-tap guard) never cancels a touch on a button, link, input, label,
+canvas, `[role=button]` or `.redact` (v68, as in Outlines): cancelling the touchend cancelled the click, so quick taps on the
+result bars opened only the first.
 
 **Results screen, ported from Outlines (v64, its beta found these in the shared shell):** the photo and borders of the results globe are
 fetched and decoded when the last lot is sold (`preloadGlobe()` in `globe.js`, called at the top of `finish()`), and the world card
@@ -289,6 +295,24 @@ globe's `.glabel`/`.gload` rules live in `app.css` (they were lost once, which
 stacked the country names down the page); a plain wheel/scroll over the globe
 belongs to the page (only ctrl+wheel/pinch zooms); the results screen must fit
 iPad landscape without scrolling.
+
+## Bug hunt (v68, 27 Nov 2026) — taps and narrow phones
+
+Four bugs, each reproduced in Chromium with touch taps at phone sizes before the fix and re-checked after; `BUG HUNT:` tests in `test/browser.test.js`
+(each fails on v67):
+
+- **Next lot / Drop out**: on phones "Next lot" sits on top of "Drop out". When the new lot opened with the player to act, the second tap of a double tap (or a tap
+  320+ ms later) dropped them out and the bot took the lot for €1. `paintLot()` now sets `lockUntil = now + lotLockMs` (350 ms); see "Look and feel" for the guards.
+- **Quick taps were cancelled**: `lockGestures()` (`platform.js`) cancelled any touchend within 320 ms of the last one, which also cancels its click: tapping the result
+  bars quickly opened only the first. It now leaves buttons, links, inputs, labels, canvases, `[role=button]` and `.redact` alone (as Outlines does).
+- **Hot-seat guard 260 → 350 ms** (`lockMs`), because quick taps now get through.
+- **Narrow phones** (CSS at the end of `app.css`, ported from Outlines): at 320 px the sound button was pushed off the game bar in nine languages and "メニュー" broke one
+  character per line; the menu row cut "How to play" up to 414 px and "Bahasa Indonesia". Below 430 px a tighter row; below 360 px an icon-only Menu button (label kept for
+  screen readers), a shrinkable lot label and a flag-only language chip (`#ml .lbl`; Indonesian shows `short: 'Indonesia'`). Larger text gets the same rules at the width its
+  zoom leaves. Measured clean in all 13 languages at 320 / 375 / 390 / 414 px and all four text sizes.
+
+**Found, not fixed (yet):** on landscape phones the menu's pack tile row is about 36 px wider than its column (it overlaps the globe); a double tap on "See result" lands on
+"Lift every bar"; `index.html` warms up the Countries pack even when the menu reopens on another pack.
 
 ## Owner's game log (v67) — "I just played 3 games, check for bugs" (Countries Expert 30, US States 20, Capitals Expert 30, you against 3 bots)
 
