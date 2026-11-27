@@ -1578,7 +1578,7 @@ async function setup(kind, packId = SELPACK) {
 /* ============ THE LOT — ascending auction from €1 ============ */
 let holdClock = 0;                                   // >0 while a sheet is open: the decision clock waits
 let lockUntil = 0;                                   // hot-seat: the previous player's second tap must not land on the next player
-let lockMs = 260;
+let lockMs = 350;                                     // 260 until v68: with the double-tap guard now letting taps through (platform.js), a second tap 260-350 ms later reached the next player
 let lotLockMs = 350;                                 // a new lot: "Next lot" sits on top of "Drop out" on phones, so the tap after it must not drop the player out (bug hunt, Nov 2026)
 
 function lot() {

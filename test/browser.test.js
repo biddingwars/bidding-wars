@@ -461,6 +461,32 @@ test('BUG HUNT: quick touch taps on the result bars open every one (the double-t
   await ctx.close();
 });
 
+test('BUG HUNT: hot-seat - the second tap of a double tap does not land on the next player (350 ms, was 260)', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open();
+  await page.click('#m2'); await page.waitForSelector('#start');
+  await pick(page, 'lots', 5); await pick(page, 'clock', 0); await pick(page, 'players', 2);
+  if (await page.$('[data-g="bots"] [data-v="0"]')) await pick(page, 'bots', 0);
+  await page.click('#start'); await page.waitForSelector('#ctrl');
+  assert.equal(await page.evaluate(() => lockMs), 350);
+  await page.waitForTimeout(450);                                // past the new-lot guard
+  const r = await page.evaluate(async () => {
+    const step = () => document.querySelector('[data-s]:not(:disabled)'), first = S.L.turn;
+    step().click();                                              // player A raises: the turn passes to player B
+    const afterA = { turn: S.L.turn, price: S.L.price };
+    await new Promise(res => setTimeout(res, 300));
+    step().click();                                              // A's second tap, 300 ms later: past the old 260 ms guard, inside the new 350
+    const afterSecond = { turn: S.L.turn, price: S.L.price };
+    await new Promise(res => setTimeout(res, 100));
+    step().click();                                              // B, deliberately, after the guard
+    return { first, afterA, afterSecond, afterB: { turn: S.L.turn, price: S.L.price } };
+  });
+  assert.notEqual(r.afterA.turn, r.first, 'the turn passed');
+  assert.deepEqual(r.afterSecond, r.afterA, 'a tap 300 ms after the turn passed is ignored: ' + JSON.stringify(r));
+  assert.ok(r.afterB.price > r.afterA.price, 'the next player can bid once the guard is over');
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
 test('sheets: focus moves in and is trapped, Escape closes, background is inert, role=dialog', { skip: SKIP }, async () => {
   const { page, errors, ctx } = await open();
   await page.click('#mr');

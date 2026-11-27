@@ -264,8 +264,14 @@ Android web or a native shell.
 
 The decision clock (`startClock`) is a smooth ring that waits while a sheet is
 open and ignores a frame gap over 250 ms (a locked phone) so a background never
-costs a lot. Hot-seat games ignore taps for 260 ms after a turn passes so a
-double tap can't land on the next player.
+costs a lot. Hot-seat games ignore taps for 350 ms after a turn passes (`lockMs`; 260 ms until v68, raised because
+`lockGestures()` now lets quick taps through) so a double tap can't land on the next player, and **every new lot ignores
+the player's taps for 350 ms** (`lotLockMs`, set in `paintLot()`, v68): on phones "Next lot" sits exactly on top of "Drop
+out", and a double tap on Next lot used to drop the player out of the new lot (the bot then took it for €1). Scripted
+tests set `lotLockMs = 0` (`startSolo()` in `test/browser.test.js`, `test/ui-sim.js`); the BUG HUNT browser test sets it back.
+`lockGestures()` in `platform.js` (the 320 ms double-tap guard) never cancels a touch on a button, link, input, label,
+canvas, `[role=button]` or `.redact` (v68, as in Outlines): cancelling the touchend cancelled the click, so quick taps on the
+result bars opened only the first.
 
 **Results screen, ported from Outlines (v64, its beta found these in the shared shell):** the photo and borders of the results globe are
 fetched and decoded when the last lot is sold (`preloadGlobe()` in `globe.js`, called at the top of `finish()`), and the world card
