@@ -29,6 +29,7 @@ async function open(opts = {}) {
   if (opts.init) await page.addInitScript(opts.init, opts.initArg);
   await page.goto(env.url);
   await page.waitForFunction(() => document.body.classList.contains('booted'), null, { timeout: 8000 });
+  await page.evaluate(() => { lotLockMs = 0; });          // scripted clicks come faster than any thumb; the BUG HUNT tests set the 350 ms guards back on
   return { ctx, page, errors, requests };
 }
 const pick = (page, g, v) => page.click(`[data-g="${g}"] [data-v="${v}"]`);
@@ -445,6 +446,57 @@ test('BUG HUNT: a tap right after "Next lot" does not drop the player out of the
   assert.ok(checked >= 1, 'a lot where the player acts first was tested');
   assert.deepEqual(errors, []);
   await ctx.close();
+});
+
+test('BUG HUNT: a tap right after "See the result" does not lift every bar (Lift every bar can sit under it on a short phone)', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open({ viewport: { width: 320, height: 568 } });
+  await startSolo(page, 5, 0);
+  await page.evaluate(() => { window.think = () => Promise.resolve(); });
+  for (let k = 0; k < 400; k++) {                              // play to the last SOLD moment
+    const w = await page.waitForSelector('#pass:not(:disabled), #n', { timeout: 6000 }).then(h => h.evaluate(e => e.id));
+    if (w === 'n') { if (await page.evaluate(() => S.i === S.items.length - 1)) break; await page.click('#n').catch(() => {}); continue; }
+    await page.click('#pass').catch(() => {});
+  }
+  await page.waitForFunction(() => { const n = document.getElementById('n'); return n && getComputedStyle(n).opacity > 0.9; });
+  await page.evaluate(() => { lotLockMs = 350; });
+  await page.click('#n');                                       // See the result
+  await page.waitForSelector('#rev');
+  await page.evaluate(() => { document.getElementById('rev').click(); document.querySelector('.redact').click(); });   // the second tap, at once
+  await page.waitForTimeout(500);
+  assert.equal(await page.$$eval('.redact.open', e => e.length), 0, 'no bar lifted by the second tap');
+  await page.click('#rev');                                     // a deliberate tap after the guard
+  await page.waitForFunction(() => document.querySelectorAll('.redact:not(.open)').length === 0, null, { timeout: 5000 });
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('BUG HUNT: the menu warms up the pack it reopens on, not always Countries', { skip: SKIP }, async () => {
+  for (const id of ['states', 'capitals']) {
+    const { page, errors, ctx, requests } = await open({ init: l => localStorage.setItem('record:v1', JSON.stringify({ v: 2, packs: {}, last: l })), initArg: id });
+    assert.equal(await page.evaluate(() => SELPACK), id);
+    await page.waitForTimeout(1500);                            // the idle warm-up has long run
+    const packs = requests.filter(r => /pack-\w+\.js/.test(r));
+    assert.ok(!packs.some(r => /pack-countries\.js/.test(r)), `${id}: Countries is not loaded for nothing: ${packs.join(', ')}`);
+    assert.ok(await page.evaluate(i => Packs.isLoaded(i), id), `${id}: the pack on the menu is warmed up: ${packs.join(', ')}`);
+    assert.deepEqual(errors, []);
+    await ctx.close();
+  }
+});
+
+test('BUG HUNT: landscape phones - the menu\'s pack row stays inside its column (it ran 40 px over the globe and off the screen), the bottom row is not cut', { skip: SKIP }, async () => {
+  for (const [w, h, lang] of [[568, 320, 'en'], [667, 375, 'de'], [844, 390, 'en'], [844, 390, 'ar'], [932, 430, 'fr']]) {
+    const { page, errors, ctx } = await open({ viewport: { width: w, height: h }, init: l => localStorage.setItem('lang:v1', l), initArg: lang });
+    const r = await page.evaluate(() => {
+      const pk = document.querySelector('.packs'), p = pk.getBoundingClientRect(), c = pk.parentElement.getBoundingClientRect();
+      const cut = [...document.querySelectorAll('.dockbar > *')].filter(x => x.scrollWidth > x.clientWidth + 1 || x.getBoundingClientRect().right > innerWidth + 0.5).map(x => x.id);
+      return { rowL: p.left, rowR: p.right, colL: c.left, colR: c.right, cut, pageX: document.documentElement.scrollWidth - innerWidth };
+    });
+    assert.ok(r.rowL >= r.colL - 0.5 && r.rowR <= r.colR + 0.5, `${w}x${h} ${lang}: pack row ${r.rowL}-${r.rowR} inside its column ${r.colL}-${r.colR}`);
+    assert.deepEqual(r.cut, [], `${w}x${h} ${lang}: the menu's bottom row`);
+    assert.ok(r.pageX <= 0, `${w}x${h} ${lang}: no sideways page scroll`);
+    assert.deepEqual(errors, []);
+    await ctx.close();
+  }
 });
 
 test('BUG HUNT: quick touch taps on the result bars open every one (the double-tap guard no longer cancels taps on things that take them)', { skip: SKIP }, async () => {

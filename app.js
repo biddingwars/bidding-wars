@@ -1890,8 +1890,12 @@ function finish() {
     opened++;
     if (opened === bars.length && !revealed) { revealed = true; setTimeout(() => reveal(sec, rows, best, bestEff, REC), 420); }
   };
-  bars.forEach(b => b.onclick = () => lift(b));
+  /* "See the result" sits where "Lift every bar" (or a bar) appears on a short phone (iPhone SE, 10 lots): the second tap of a double tap lifted every bar at once.
+     For lotLockMs (350 ms) after the results appear, taps on the bars and on Lift every bar are ignored (v69). */
+  const shownAt = performance.now(), settled = () => performance.now() - shownAt >= lotLockMs;
+  bars.forEach(b => b.onclick = () => { if (settled()) lift(b); });
   on('rev', () => {                                  // 70 ms a bar, but the whole lift never takes more than about 1.5 s (120 bars took 8.4 s)
+    if (!settled()) return;
     const shut = bars.filter(b => !b.classList.contains('open')), stepMs = Math.min(70, 1500 / Math.max(1, shut.length));
     let d = 0; shut.forEach(b => setTimeout(() => lift(b), d += stepMs)); $('#rev').disabled = true;
   });

@@ -34,7 +34,7 @@ references it and `sw.js` never caches it.
 until `CACHE` is bumped:
 
 ```js
-const CACHE = 'bidding-wars-v68';   // increment this, every time
+const CACHE = 'bidding-wars-v69';   // increment this, every time
 ```
 
 Forgetting this is the single most common mistake in this repo's history —
@@ -42,7 +42,7 @@ it's easy to ship a real fix and have it silently not reach anyone. After
 bumping, the user has to fully close every open tab and reopen (not just
 reload) before the new service worker takes over.
 
-**The menu shows the release number** (small `v68` after the footer line) so the player can check they have the
+**The menu shows the release number** (small `v69` after the footer line) so the player can check they have the
 latest build. It comes from `CONFIG.version` in `platform.js` and **must be bumped together with `CACHE`** (same
 number); `test/version.test.js` fails if they differ. It is a constant, not stored data (privacy: still five keys).
 
@@ -296,7 +296,7 @@ stacked the country names down the page); a plain wheel/scroll over the globe
 belongs to the page (only ctrl+wheel/pinch zooms); the results screen must fit
 iPad landscape without scrolling.
 
-## Bug hunt (v68, 27 Nov 2026) — taps and narrow phones
+## Bug hunt (v68-v69, 27 Nov 2026) — taps, narrow and landscape phones
 
 Four bugs, each reproduced in Chromium with touch taps at phone sizes before the fix and re-checked after; `BUG HUNT:` tests in `test/browser.test.js`
 (each fails on v67):
@@ -311,8 +311,16 @@ Four bugs, each reproduced in Chromium with touch taps at phone sizes before the
   screen readers), a shrinkable lot label and a flag-only language chip (`#ml .lbl`; Indonesian shows `short: 'Indonesia'`). Larger text gets the same rules at the width its
   zoom leaves. Measured clean in all 13 languages at 320 / 375 / 390 / 414 px and all four text sizes.
 
-**Found, not fixed (yet):** on landscape phones the menu's pack tile row is about 36 px wider than its column (it overlaps the globe); a double tap on "See result" lands on
-"Lift every bar"; `index.html` warms up the Countries pack even when the menu reopens on another pack.
+**Fixed in v69** (the three "found, not fixed" of v68; each reproduced first, `BUG HUNT:` tests fail on v68):
+- **Landscape phones, menu**: the pack row kept its portrait bleed (a negative `--padx` margin each side) inside the two-column landscape menu, so it was 40 px wider than its
+  column, ran over the globe and off the screen. In landscape it now stays in its column (`.packs{margin:0}`), each tile at least as wide as its own name
+  (`.pack{flex:1 0 auto;min-width:118px}`; narrower tiles broke the Arabic "US States" into the flag), scrolling inside the column only when three do not fit (568-736 px).
+  The planet moved 16 px away from the column (`right:calc(-14px - var(--hp))`; it reached 10 px into the tiles), and the landscape column gets the narrow-phone rules for
+  the menu's bottom row (it cut "How to play" and the language at 568-736 px). Checked in all 13 languages at eight landscape sizes (568x320 to 932x430).
+- **"See the result" then "Lift every bar"**: on a short phone (iPhone SE, 10 lots) Lift every bar appears where See the result was, and the second tap of a double tap lifted
+  every bar at once. For `lotLockMs` (350 ms) after the results appear (`finish()`), taps on the bars and on Lift every bar are ignored. `open()` in `test/browser.test.js`
+  now sets `lotLockMs = 0` for every scripted test.
+- **Warm-up**: `index.html` loaded `pack-countries.js` on idle even when the menu reopened on US States or Capitals; it now warms up `SELPACK`.
 
 ## Owner's game log (v67) — "I just played 3 games, check for bugs" (Countries Expert 30, US States 20, Capitals Expert 30, you against 3 bots)
 
