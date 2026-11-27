@@ -1579,6 +1579,7 @@ async function setup(kind, packId = SELPACK) {
 let holdClock = 0;                                   // >0 while a sheet is open: the decision clock waits
 let lockUntil = 0;                                   // hot-seat: the previous player's second tap must not land on the next player
 let lockMs = 260;
+let lotLockMs = 350;                                 // a new lot: "Next lot" sits on top of "Drop out" on phones, so the tap after it must not drop the player out (bug hunt, Nov 2026)
 
 function lot() {
   S._taunt = ''; S._raises = 0;
@@ -1595,6 +1596,7 @@ function tileHtml(p, i) {
 
 function paintLot() {
   PACK = S.pack;
+  lockUntil = performance.now() + lotLockMs;         // humanCan() ignores taps until then: a double tap on Next lot no longer lands on Drop out
   const c = S.items[S.i], L = S.L;
   const sec = go(`
     <p class="sr" id="live" role="status" aria-live="polite"></p>
@@ -1750,7 +1752,7 @@ function raise(amount) {
   /* the bot bids on its own, unprompted, several times a lot: a quieter, softer tone keeps that from grating */
   S._raises = (S._raises || 0) + 1;
   if (actor.ai) Snd.bot(); else { Snd.raise(S._raises); Haptics.light(); }
-  if (S.players.filter(p => !p.ai).length > 1) lockUntil = performance.now() + lockMs;
+  if (S.players.filter(p => !p.ai).length > 1) lockUntil = Math.max(lockUntil, performance.now() + lockMs);
   refresh(); showPrice(prev); if (actor.ai) showTaunt(S._taunt);
   if (r.next === 'award') return award();
   turn();
@@ -1763,7 +1765,7 @@ function pass(timedOut) {
   if (r.error) return;
   stopClock();
   Snd.drop(); Haptics.medium();
-  if (S.players.filter(p => !p.ai).length > 1) lockUntil = performance.now() + lockMs;
+  if (S.players.filter(p => !p.ai).length > 1) lockUntil = Math.max(lockUntil, performance.now() + lockMs);
   refresh();
   if (actor.ai) showTaunt(S._taunt); else live(`${actor.name}: ${t('dropOut')}`);
   if (r.next === 'award') return award();

@@ -54,6 +54,7 @@ const reveal = async page => { await page.click('#rev'); await page.waitForSelec
 const startSolo = async (page, lots = 5, clock = 0, level) => {
   await page.click('#m1'); await page.waitForSelector('#start');
   await pick(page, 'lots', lots); await pick(page, 'clock', clock); if (level) await pick(page, 'level', level);
+  await page.evaluate(() => { lotLockMs = 0; });        // scripted clicks come faster than any thumb; the new-lot guard has its own test
   await page.click('#start'); await page.waitForSelector('#ctrl');
 };
 
@@ -416,6 +417,32 @@ test('timeout is an automatic drop out; double-tapping Drop out sells the lot on
   await page.click('#n');
   await page.waitForSelector('#ctrl');
   await page.waitForFunction(() => document.getElementById('sold') || document.getElementById('rev'), null, { timeout: 8000 });
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('BUG HUNT: a tap right after "Next lot" does not drop the player out of the new lot (Next lot sits on top of Drop out on phones)', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open({ viewport: { width: 390, height: 844 } });
+  await startSolo(page, 10, 0);
+  await page.evaluate(() => { window.think = () => Promise.resolve(); lotLockMs = 350; });
+  let checked = 0;
+  for (let k = 0; k < 10 && checked < 2; k++) {
+    await page.waitForSelector('#pass:not(:disabled), #n', { timeout: 6000 });
+    if (!(await page.$('#sold'))) { await page.waitForTimeout(400); await page.click('#pass'); await page.waitForSelector('#sold'); }   // a deliberate tap, after the new-lot guard
+    await page.waitForFunction(() => { const n = document.getElementById('n'); return n && getComputedStyle(n).opacity > 0.9; });
+    const p0 = await page.evaluate(() => S.i);
+    await page.click('#n');                                    // first tap: Next lot
+    await page.waitForFunction(i => S.i === i + 1 && document.getElementById('pass'), p0);
+    const r = await page.evaluate(() => {                      // second tap of a double tap, the moment the new lot is on screen, on the same spot
+      const humanFirst = S.L.turn === 0, pass = document.getElementById('pass');
+      if (humanFirst) pass.click();
+      return { humanFirst, stillIn: S.L.active.includes(0), awarded: S.L.awarded };
+    });
+    if (!r.humanFirst) continue;                              // the bot opened the bidding: nothing to tap yet
+    checked++;
+    assert.ok(r.stillIn && !r.awarded, 'the player is still in the new lot: ' + JSON.stringify(r));
+  }
+  assert.ok(checked >= 1, 'a lot where the player acts first was tested');
   assert.deepEqual(errors, []);
   await ctx.close();
 });
