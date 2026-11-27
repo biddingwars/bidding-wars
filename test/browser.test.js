@@ -483,6 +483,22 @@ test('BUG HUNT: the menu warms up the pack it reopens on, not always Countries',
   }
 });
 
+test('BUG HUNT: landscape phones - the menu\'s pack row stays inside its column (it ran 40 px over the globe and off the screen), the bottom row is not cut', { skip: SKIP }, async () => {
+  for (const [w, h, lang] of [[568, 320, 'en'], [667, 375, 'de'], [844, 390, 'en'], [844, 390, 'ar'], [932, 430, 'fr']]) {
+    const { page, errors, ctx } = await open({ viewport: { width: w, height: h }, init: l => localStorage.setItem('lang:v1', l), initArg: lang });
+    const r = await page.evaluate(() => {
+      const pk = document.querySelector('.packs'), p = pk.getBoundingClientRect(), c = pk.parentElement.getBoundingClientRect();
+      const cut = [...document.querySelectorAll('.dockbar > *')].filter(x => x.scrollWidth > x.clientWidth + 1 || x.getBoundingClientRect().right > innerWidth + 0.5).map(x => x.id);
+      return { rowL: p.left, rowR: p.right, colL: c.left, colR: c.right, cut, pageX: document.documentElement.scrollWidth - innerWidth };
+    });
+    assert.ok(r.rowL >= r.colL - 0.5 && r.rowR <= r.colR + 0.5, `${w}x${h} ${lang}: pack row ${r.rowL}-${r.rowR} inside its column ${r.colL}-${r.colR}`);
+    assert.deepEqual(r.cut, [], `${w}x${h} ${lang}: the menu's bottom row`);
+    assert.ok(r.pageX <= 0, `${w}x${h} ${lang}: no sideways page scroll`);
+    assert.deepEqual(errors, []);
+    await ctx.close();
+  }
+});
+
 test('BUG HUNT: quick touch taps on the result bars open every one (the double-tap guard no longer cancels taps on things that take them)', { skip: SKIP }, async () => {
   const { page, errors, ctx } = await open({ viewport: { width: 390, height: 844 }, touch: true });
   await startSolo(page, 5, 0);
