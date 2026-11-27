@@ -269,7 +269,7 @@
  },
  "strp": {
   "countries": {
-   "budgetNote": "Definido pela dificuldade, pela duração da rodada e, no Especialista, pelo número de jogadores — escasso de propósito.",
+   "budgetNote": "Definido pela dificuldade e pela duração da rodada — escasso de propósito.",
    "rivalDesc": "O <b>bot</b> dá um preço a cada país pela população, gasta o dinheiro por igual ao longo da rodada e sorteia um novo limite de desistência a cada lote. Em cada partida ele está num humor diferente — cauteloso, equilibrado ou ousado — e você não fica sabendo qual. Se seu dinheiro acabar, ele pode apostar tudo para eliminar você.",
    "rulesP4": "Todos começam com o mesmo orçamento, definido pela dificuldade e pela duração da rodada. <b>Médio e Especialista: €50 para 5 países, €100 para 10, €150 para 15, €200 para 20, €300 para 30</b>. Iniciante recebe a metade: €25, €50, €75, €100, €150. O dinheiro é escasso de propósito: nem o maior orçamento compra os cinco maiores países. No Especialista, numa mesa maior cada um recebe menos: dois terços com 3 jogadores e um terço com 4 (30 países: €200 ou €100 em vez de €300), para que os bots não inflacionem os preços.",
    "rulesP5": "O bot avalia cada país pela população e sorteia um novo limite de desistência a cada lote, então você nunca consegue lê-lo por completo. Ele gasta por igual, paga um pouco a mais pelos maiores países e em cada partida é cauteloso, equilibrado ou ousado. Se tiver muito mais dinheiro que você, ele oferece o valor que você não consegue mais superar. Supere o limite dele por €1 e o lote é seu — a não ser que ele possa eliminar você.",
@@ -292,7 +292,7 @@
    "world": "Os estados de {name}, em dourado"
   },
   "capitals": {
-   "budgetNote": "Definido pela dificuldade, pela duração da rodada e, no Especialista, pelo número de jogadores — escasso de propósito.",
+   "budgetNote": "Definido pela dificuldade e pela duração da rodada — escasso de propósito.",
    "rivalDesc": "O <b>bot</b> dá um preço a cada capital pelo tamanho da cidade, gasta o dinheiro por igual ao longo da rodada e sorteia um novo limite de desistência a cada lote. Em cada partida ele está num humor diferente — cauteloso, equilibrado ou ousado — e você não fica sabendo qual. Se seu dinheiro acabar, ele pode apostar tudo para eliminar você.",
    "rulesP1": "Capitais aleatórias aparecem uma de cada vez, cada uma no máximo uma vez por rodada. <b>1 ponto = 1 milhão de pessoas</b> morando na área urbana da capital, e a população fica tarjada até o final.",
    "rulesP4": "Todos começam com o mesmo orçamento, definido pela dificuldade e pela duração da rodada. <b>Médio e Especialista: €50 para 5 capitais, €100 para 10, €150 para 15, €200 para 20, €300 para 30</b>. Iniciante recebe a metade: €25, €50, €75, €100, €150. O dinheiro é escasso de propósito: nem o maior orçamento compra as cinco maiores cidades. No Especialista, numa mesa maior cada um recebe menos: dois terços com 3 jogadores e um terço com 4 (30 capitais: €200 ou €100 em vez de €300), para que os bots não inflacionem os preços.",

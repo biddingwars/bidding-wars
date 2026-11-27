@@ -318,7 +318,7 @@ Tried and rejected (measured): a lower or negative `crowd` alone (prices stay ab
   30: 30 / 14 / 16 (seat share 33), prices 1.0-1.24x; 3 bots: 22 / 20 / 10, 22 / 28 / 15, 26 / 24 / 17, 30 / 25 / 18, 36 / 22 / 17 (seat share 25), prices 0.6-0.9x.
   Capitals Expert, 2 bots: 33 / 24 / 23, 42 / 28 / 17, 42 / 19 / 17, 34 / 10 / 21, 30 / 7 / 14; 3 bots: 17 / 20 / 9, 29 / 35 / 8, 19 / 29 / 10, 25 / 35 / 9, 18 / 39 / 2; prices 0.6-1.25x.
   Known: against 3 Capitals bots the stingy player wins a little above its seat share at 10-30 lots (29-39%); short rounds are luck-heavy as always.
-- **Wording:** the setup's budget follows the seats (`setup()` in `app.js`, `nSeats()`); `budgetNote` and `rulesP4` of Countries and Capitals say so in all thirteen languages.
+- **Wording:** the setup's budget amount follows the seats (`setup()` in `app.js`, `nSeats()`); `rulesP4` (How to play) of Countries and Capitals explains the rule in all thirteen languages. The short `budgetNote` under the amount was left as it was: a longer one wrapped onto an extra line and made the setup sheet scroll 17 px on an iPhone SE at Small text (the SETTINGS test).
 - **Last lot (also v71, from the same log):** two bots that could no longer win bid Kiribati (0.14 M, fair EUR 1) up to EUR 12: the last lot is always "decisive", so each had its whole purse
   as a limit. A bot that cannot win even with the last lot (`hopeless` in `botDecisionExt`) gets no whole-purse limit and stops at the lot's max price. Replayed in `test/multibots.test.js`.
 - **Not changed:** Countries Beginner with 2-3 bots is also inflated (1.34 / 1.58x fair at 30 lots) and hard (a fair-price player wins 6 / 3%); the owner does not play it and will look first.

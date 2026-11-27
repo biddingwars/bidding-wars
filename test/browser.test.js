@@ -509,7 +509,6 @@ test('v71: the setup shows a smaller Expert budget at a bigger table (EUR 300 / 
   await pick(page, 'bots', 3); assert.equal(await bud(), '€100', '3 bots');
   await pick(page, 'level', 'medium'); assert.equal(await bud(), '€300', 'Medium keeps the full budget');
   await pick(page, 'level', 'expert'); assert.equal(await bud(), '€100');
-  assert.match(await page.textContent('.budget small'), /number of players/, 'the budget note says so');
   await page.click('#start'); await page.waitForSelector('#ctrl');
   assert.deepEqual(await page.evaluate(() => S.players.map(p => p.budget)), [100, 100, 100, 100]);
   assert.deepEqual(errors, []);
