@@ -159,9 +159,14 @@ const Shell = {
    inside cards. Inputs keep their normal behaviour. */
 (function lockGestures() {
   let last = 0;
+  // Never on something that takes taps (ported from Outlines): cancelling a touchend also cancels its click, so a quick
+  // second tap did nothing (the results' bars opened only the first one when tapped quickly; bug hunt, Nov 2026).
+  // `touch-action: manipulation` in app.css and user-scalable=no already stop double-tap zoom there.
+  const TAPPABLE = 'button, a, input, textarea, select, label, canvas, [role="button"], .redact';
   document.addEventListener('touchend', e => {
     const now = Date.now();
-    if (now - last < 320) e.preventDefault();
+    const tappable = e.target && e.target.closest && e.target.closest(TAPPABLE);
+    if (!tappable && now - last < 320) e.preventDefault();
     last = now;
   }, { passive: false });
 

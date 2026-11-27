@@ -19,7 +19,7 @@ test.before(async () => {
 test.after(async () => { if (env) { await env.browser.close(); env.s.srv.close(); } });
 
 async function open(opts = {}) {
-  const ctx = await env.browser.newContext({ viewport: opts.viewport || { width: 402, height: 715 }, serviceWorkers: 'block', reducedMotion: opts.motion || 'reduce', colorScheme: opts.scheme || 'dark' });
+  const ctx = await env.browser.newContext({ viewport: opts.viewport || { width: 402, height: 715 }, serviceWorkers: 'block', reducedMotion: opts.motion || 'reduce', colorScheme: opts.scheme || 'dark', hasTouch: !!opts.touch, isMobile: !!opts.touch });
   const page = await ctx.newPage();
   const errors = [], requests = [];
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
@@ -443,6 +443,20 @@ test('BUG HUNT: a tap right after "Next lot" does not drop the player out of the
     assert.ok(r.stillIn && !r.awarded, 'the player is still in the new lot: ' + JSON.stringify(r));
   }
   assert.ok(checked >= 1, 'a lot where the player acts first was tested');
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('BUG HUNT: quick touch taps on the result bars open every one (the double-tap guard no longer cancels taps on things that take them)', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open({ viewport: { width: 390, height: 844 }, touch: true });
+  await startSolo(page, 5, 0);
+  await autoplay(page, { prefer: 'pass' });
+  await page.waitForTimeout(300);
+  const bars = await page.$$eval('.redact', e => e.slice(0, 4).map(x => { x.scrollIntoView({ block: 'nearest' }); const r = x.getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height / 2]; }));
+  assert.equal(bars.length, 4);
+  for (const [x, y] of bars) { await page.touchscreen.tap(x, y); await page.waitForTimeout(120); }   // well inside the guard's 320 ms
+  await page.waitForTimeout(400);
+  assert.equal(await page.$$eval('.redact.open', e => e.length), 4, 'four quick taps open four bars (v67 opened only the first)');
   assert.deepEqual(errors, []);
   await ctx.close();
 });
