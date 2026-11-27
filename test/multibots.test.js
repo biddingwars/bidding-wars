@@ -23,7 +23,7 @@ test('a duel against one bot is exactly what it was before several bots existed 
   for (const [name, pack] of Object.entries(packs)) for (const level of pack.levels.map(l => l.id)) for (const lots of [5, pack.lots.options[1]]) for (let g = 0; g < 6; g++) for (const pol of ['creeper', 'fair']) {
     const { S, log } = play(pack, level, lots, [false, true], 4000 + g, pol); h.update(name + level + lots + g + pol + log + '|' + S.players.map(p => p.budget).join('/'));
   }
-  assert.equal(h.digest('hex'), '6bffbd86b23c1d3efcc72702bbba79cb1fcd183e818ff120b71ec1c3b9186b2e', 'the duel changed (digest = v67: a lot that settles the game on the closing three lots gets the whole purse, and on the last lot a bot that cannot win makes no knockout jump; re-pinned on purpose in v67. Before that v60: the exploit retune of Countries Beginner 15-30, Capitals Beginner 20-30 / Medium 10-30 / Expert 20-30 and US States 20 lots, plus the creeper-guard window; re-pinned on purpose in v60. Before that the engine of v59: v57 plus two fixes to the bot, it never bids past what the richest rival can top and it does not walk away from the last lot when that lot decides the game; re-pinned on purpose in v59, it was the v57 engine before, and the v47 engine before)');
+  assert.equal(h.digest('hex'), '3f9b683dffa460ffb692702b78750fa1c523a1a9dfd006dd9c3c39747ef2f801', 'the duel changed (digest = v71: on the last lot a bot that cannot win even with the lot stops at its max price and gets no whole-purse limit; re-pinned on purpose. Before that v67: a lot that settles the game on the closing three lots gets the whole purse, and on the last lot a bot that cannot win makes no knockout jump; re-pinned on purpose in v67. Before that v60: the exploit retune of Countries Beginner 15-30, Capitals Beginner 20-30 / Medium 10-30 / Expert 20-30 and US States 20 lots, plus the creeper-guard window; re-pinned on purpose in v60. Before that the engine of v59: v57 plus two fixes to the bot, it never bids past what the richest rival can top and it does not walk away from the last lot when that lot decides the game; re-pinned on purpose in v59, it was the v57 engine before, and the v47 engine before)');
 });
 
 test('several bots: every bot has a style of its own (all different for 2 and 3 bots), never drawn twice, a forced style applies to all', () => {
@@ -60,7 +60,7 @@ test('every bot rolls its own walk-away for a lot, and the lot is the same for a
 test('2-3 bots at a table of 3-4 play whole games on every pack and level: money conserved, every lot sold once, nothing rejected', () => {
   for (const [name, pack] of Object.entries(packs)) for (const level of pack.levels.map(l => l.id)) for (const seats of [[false, true, true], [false, false, true, true], [false, true, true, true], [false, false, false, true]]) for (const pol of ['creeper', 'fair']) {
     const { S } = play(pack, level, pack.lots.options[0], seats, 77, pol);
-    const money0 = S.players.length * Engine.budgetFor(pack, pack.lots.options[0], level), spent = S.players.reduce((a, p) => a + p.bought.reduce((x, b) => x + b.price, 0), 0);
+    const money0 = S.players.length * Engine.budgetFor(pack, pack.lots.options[0], level, S.players.length), spent = S.players.reduce((a, p) => a + p.bought.reduce((x, b) => x + b.price, 0), 0);
     assert.equal(S.players.reduce((a, p) => a + p.budget, 0) + spent, money0, `${name} ${level} money conserved`);
     assert.equal(S.players.reduce((n, p) => n + p.bought.length, 0) + (S.unsold ? S.unsold.length : 0), S.items.length, 'every lot is sold exactly once');
   }
@@ -147,6 +147,7 @@ function ownerGameAt(lot, seed) {
   const pack = packs.capitals, byId = new Map(pack.items.map(it => [it.id, it]));
   const S = Engine.newAuction({ pack, kind: 'solo', level: 'expert', lots: 30, players: [{ name: 'You' }, { name: 'Bot 1', ai: true }, { name: 'Bot 2', ai: true }, { name: 'Bot 3', ai: true }], rng: Engine.seededRng(seed) });
   S.items = OWNER_GAME.map(id => byId.get(id));
+  S.players.forEach(p => { p.budget = 300; });                                   // the log was played before v71, when every seat at Expert had the full EUR 300
   OWNER_WON.slice(0, lot).forEach(([w, price], i) => { S.players[w].budget -= price; S.players[w].bought.push({ ...S.items[i], price }); });
   S.i = lot; Engine.startLot(S); return S;
 }
@@ -170,5 +171,49 @@ test('owner game log: on the last lot a bot that cannot win any more does not ju
     const S = ownerGameAt(29, seed);
     const w = bidLot(S, p => (p < 68 ? 68 : null));                             // the human goes all in, as in the log
     assert.ok(w.winner === 0 || w.price <= 20, `seed ${seed}: bot ${w.winner} paid EUR ${w.price} for Port of Spain`);
+  }
+});
+
+/* ---- v71: the owner's second log (Countries Expert, 30 lots, you against 3 bots, 27 Nov 2026) ---- */
+test('owner game log 2: on the last lot two bots that can no longer win do not bid each other up (Kiribati, 0.14 M, sold for EUR 12)', () => {
+  const pack = packs.countries, byId = new Map(pack.items.map(it => [it.id, it]));
+  const ids = ['BT','EG','BY','KG','BJ','AE','SD','LY','ST','VU','EC','PE','LA','SB','SL','AM','QA','TG','ZA','TD','SA','VE','SE','RU','CO','RW','GD','YE','PW','KI'];
+  const won = [[0,4],[3,98],[3,15],[1,8],[2,22],[2,18],[1,58],[2,17],[0,1],[0,3],[1,30],[2,37],[3,11],[1,3],[3,15],[2,8],[1,13],[2,29],[2,102],[1,35],[3,70],[1,39],[1,22],[1,92],[3,80],[0,39],[0,4],[0,67],[2,5]];
+  for (let seed = 1; seed <= 30; seed++) {
+    const S = Engine.newAuction({ pack, kind: 'solo', level: 'expert', lots: 30, players: [{ name: 'You' }, { name: 'B1', ai: true }, { name: 'B2', ai: true }, { name: 'B3', ai: true }], rng: Engine.seededRng(seed) });
+    S.items = ids.map(id => byId.get(id));
+    S.players.forEach(p => { p.budget = 300; });                                 // played before v71 (full EUR 300 at every seat)
+    won.forEach(([w, price], i) => { S.players[w].budget -= price; S.players[w].bought.push({ ...S.items[i], price }); });
+    S.i = 29; Engine.startLot(S);
+    const w = bidLot(S, p => (p < 4 ? p + 1 : null));
+    assert.ok(w.price <= Engine.priceOf(pack, S.items[29]).max, `seed ${seed}: Kiribati sold for EUR ${w.price}`);
+  }
+});
+
+/* ---- v71: smaller budgets at a bigger Expert table (owner: "for every additional bot ... 300 / 200 / 100") ---- */
+test('Expert: a table of 3 seats gets 2/3 of the duel budget each and a table of 4 a third (rounded to 5); other levels, duels and US States unchanged', () => {
+  for (const id of ['countries', 'capitals']) {
+    const p = packs[id];
+    assert.deepEqual(p.lots.options.map(n => [2, 3, 4].map(s => Engine.budgetFor(p, n, 'expert', s))), [[50, 35, 15], [100, 65, 35], [150, 100, 50], [200, 135, 65], [300, 200, 100]], id);
+    for (const lv of ['beginner', 'medium']) for (const n of p.lots.options) assert.equal(Engine.budgetFor(p, n, lv, 4), Engine.budgetFor(p, n, lv), `${id} ${lv} ${n}: no change`);
+    assert.equal(Engine.budgetFor(p, 30, 'expert'), 300, 'no seat count = the duel budget');
+    const S = Engine.newAuction({ pack: p, kind: 'solo', level: 'expert', lots: 30, players: [{ name: 'a' }, { name: 'b', ai: true }, { name: 'c', ai: true }, { name: 'd', ai: true }], rng: Engine.seededRng(1) });
+    assert.deepEqual(S.players.map(x => x.budget), [100, 100, 100, 100], id + ': every seat, the human too');
+  }
+  assert.equal(Engine.budgetFor(packs.states, 20, undefined, 4), 70, 'US States: no table rule');
+  const bad = Object.assign({}, packs.countries, { economy: Object.assign({}, packs.countries.economy, { tableShare: { expert: { 3: 1.5 } } }) });
+  assert.ok(Engine.validatePack(bad).some(e => /tableShare/.test(e)), 'a share above 1 is refused');
+});
+test('Expert with 3 bots: the bots no longer bid prices up to 2x the fair price (owner log: 2.7x), and a fair-price player still has a real chance', () => {
+  const fair = (S, me) => go(S, me, Math.floor(ideal(S)));
+  for (const id of ['countries', 'capitals']) for (const lots of [10, 30]) {
+    let paid = 0, fairSum = 0, wins = 0; const G = 80;
+    for (let g = 0; g < G; g++) {
+      const S = watchBot(packs[id], 'expert', lots, [false, true, true, true], 71000 + g, fair, () => {});
+      for (const p of S.players.slice(1)) for (const b of p.bought) { paid += b.price; fairSum += Engine.priceOf(S.pack, b).ideal; }
+      const sb = Engine.scoreboard(S); wins += sb.rows[0].pts > Math.max(...sb.rows.slice(1).map(r => r.pts));
+    }
+    assert.ok(paid / fairSum <= 1.3, `${id} ${lots} lots: bots pay ${(paid / fairSum).toFixed(2)}x the fair price (2.1-2.3x before v71)`);
+    assert.ok(wins / G >= 0.08 && wins / G <= 0.6, `${id} ${lots} lots: a fair-price player wins ${(100 * wins / G).toFixed(0)}% against 3 bots`);
   }
 });
