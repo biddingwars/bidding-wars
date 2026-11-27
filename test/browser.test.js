@@ -29,6 +29,7 @@ async function open(opts = {}) {
   if (opts.init) await page.addInitScript(opts.init, opts.initArg);
   await page.goto(env.url);
   await page.waitForFunction(() => document.body.classList.contains('booted'), null, { timeout: 8000 });
+  await page.evaluate(() => { lotLockMs = 0; });          // scripted clicks come faster than any thumb; the BUG HUNT tests set the 350 ms guards back on
   return { ctx, page, errors, requests };
 }
 const pick = (page, g, v) => page.click(`[data-g="${g}"] [data-v="${v}"]`);
@@ -443,6 +444,28 @@ test('BUG HUNT: a tap right after "Next lot" does not drop the player out of the
     assert.ok(r.stillIn && !r.awarded, 'the player is still in the new lot: ' + JSON.stringify(r));
   }
   assert.ok(checked >= 1, 'a lot where the player acts first was tested');
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('BUG HUNT: a tap right after "See the result" does not lift every bar (Lift every bar can sit under it on a short phone)', { skip: SKIP }, async () => {
+  const { page, errors, ctx } = await open({ viewport: { width: 320, height: 568 } });
+  await startSolo(page, 5, 0);
+  await page.evaluate(() => { window.think = () => Promise.resolve(); });
+  for (let k = 0; k < 400; k++) {                              // play to the last SOLD moment
+    const w = await page.waitForSelector('#pass:not(:disabled), #n', { timeout: 6000 }).then(h => h.evaluate(e => e.id));
+    if (w === 'n') { if (await page.evaluate(() => S.i === S.items.length - 1)) break; await page.click('#n').catch(() => {}); continue; }
+    await page.click('#pass').catch(() => {});
+  }
+  await page.waitForFunction(() => { const n = document.getElementById('n'); return n && getComputedStyle(n).opacity > 0.9; });
+  await page.evaluate(() => { lotLockMs = 350; });
+  await page.click('#n');                                       // See the result
+  await page.waitForSelector('#rev');
+  await page.evaluate(() => { document.getElementById('rev').click(); document.querySelector('.redact').click(); });   // the second tap, at once
+  await page.waitForTimeout(500);
+  assert.equal(await page.$$eval('.redact.open', e => e.length), 0, 'no bar lifted by the second tap');
+  await page.click('#rev');                                     // a deliberate tap after the guard
+  await page.waitForFunction(() => document.querySelectorAll('.redact:not(.open)').length === 0, null, { timeout: 5000 });
   assert.deepEqual(errors, []);
   await ctx.close();
 });
