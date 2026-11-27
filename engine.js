@@ -655,7 +655,10 @@
       const K = rival.budget, target = L.price < K ? K : (me.budget >= K + 1 ? K + 1 : null);
       if (target != null && target > L.price && !heavy(target, K)) { jump = target; lim = Math.max(lim, target); }
     }
-    if (decisiveLot || settles) lim = Math.max(lim, me.budget);     // and no random ceiling either: against a rival who goes all-in on the lot that decides the game, a bot that stops at a random 70-100% of its purse simply loses it
+    /* v70 (owner's log, Countries Expert, 3 bots): the last lot (Kiribati, 0.14 M) is always "decisive" (100% of what is left), so two bots that could no longer win bid each
+       other up to EUR 12 (fair EUR 1) with their whole purses. A bot that cannot win even with this lot gets no whole-purse limit on it, and stops at the lot's max price. */
+    if ((decisiveLot || settles) && !hopeless) lim = Math.max(lim, me.budget);
+    if (hopeless) lim = Math.min(lim, pr.max);         // and it bids no higher than the lot's usual top price     // and no random ceiling either: against a rival who goes all-in on the lot that decides the game, a bot that stops at a random 70-100% of its purse simply loses it
     /* The last lot (v59): money is worth nothing once the round is over. When this lot decides whether the bot wins (without it the bot does not win, with it the bot does),
        its limit is its whole purse, in every pack. Countries already behaved like this (its last lot is always "decisive"); US States and Capitals could walk away from the
        deciding lot with money in hand. */

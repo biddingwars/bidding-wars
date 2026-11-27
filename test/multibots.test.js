@@ -23,7 +23,7 @@ test('a duel against one bot is exactly what it was before several bots existed 
   for (const [name, pack] of Object.entries(packs)) for (const level of pack.levels.map(l => l.id)) for (const lots of [5, pack.lots.options[1]]) for (let g = 0; g < 6; g++) for (const pol of ['creeper', 'fair']) {
     const { S, log } = play(pack, level, lots, [false, true], 4000 + g, pol); h.update(name + level + lots + g + pol + log + '|' + S.players.map(p => p.budget).join('/'));
   }
-  assert.equal(h.digest('hex'), '6bffbd86b23c1d3efcc72702bbba79cb1fcd183e818ff120b71ec1c3b9186b2e', 'the duel changed (digest = v67: a lot that settles the game on the closing three lots gets the whole purse, and on the last lot a bot that cannot win makes no knockout jump; re-pinned on purpose in v67. Before that v60: the exploit retune of Countries Beginner 15-30, Capitals Beginner 20-30 / Medium 10-30 / Expert 20-30 and US States 20 lots, plus the creeper-guard window; re-pinned on purpose in v60. Before that the engine of v59: v57 plus two fixes to the bot, it never bids past what the richest rival can top and it does not walk away from the last lot when that lot decides the game; re-pinned on purpose in v59, it was the v57 engine before, and the v47 engine before)');
+  assert.equal(h.digest('hex'), '3f9b683dffa460ffb692702b78750fa1c523a1a9dfd006dd9c3c39747ef2f801', 'the duel changed (digest = v70: on the last lot a bot that cannot win even with the lot stops at its max price and gets no whole-purse limit; re-pinned on purpose. Before that v67: a lot that settles the game on the closing three lots gets the whole purse, and on the last lot a bot that cannot win makes no knockout jump; re-pinned on purpose in v67. Before that v60: the exploit retune of Countries Beginner 15-30, Capitals Beginner 20-30 / Medium 10-30 / Expert 20-30 and US States 20 lots, plus the creeper-guard window; re-pinned on purpose in v60. Before that the engine of v59: v57 plus two fixes to the bot, it never bids past what the richest rival can top and it does not walk away from the last lot when that lot decides the game; re-pinned on purpose in v59, it was the v57 engine before, and the v47 engine before)');
 });
 
 test('several bots: every bot has a style of its own (all different for 2 and 3 bots), never drawn twice, a forced style applies to all', () => {
@@ -170,5 +170,20 @@ test('owner game log: on the last lot a bot that cannot win any more does not ju
     const S = ownerGameAt(29, seed);
     const w = bidLot(S, p => (p < 68 ? 68 : null));                             // the human goes all in, as in the log
     assert.ok(w.winner === 0 || w.price <= 20, `seed ${seed}: bot ${w.winner} paid EUR ${w.price} for Port of Spain`);
+  }
+});
+
+/* ---- v70: the owner's second log (Countries Expert, 30 lots, you against 3 bots, 27 Nov 2026) ---- */
+test('owner game log 2: on the last lot two bots that can no longer win do not bid each other up (Kiribati, 0.14 M, sold for EUR 12)', () => {
+  const pack = packs.countries, byId = new Map(pack.items.map(it => [it.id, it]));
+  const ids = ['BT','EG','BY','KG','BJ','AE','SD','LY','ST','VU','EC','PE','LA','SB','SL','AM','QA','TG','ZA','TD','SA','VE','SE','RU','CO','RW','GD','YE','PW','KI'];
+  const won = [[0,4],[3,98],[3,15],[1,8],[2,22],[2,18],[1,58],[2,17],[0,1],[0,3],[1,30],[2,37],[3,11],[1,3],[3,15],[2,8],[1,13],[2,29],[2,102],[1,35],[3,70],[1,39],[1,22],[1,92],[3,80],[0,39],[0,4],[0,67],[2,5]];
+  for (let seed = 1; seed <= 30; seed++) {
+    const S = Engine.newAuction({ pack, kind: 'solo', level: 'expert', lots: 30, players: [{ name: 'You' }, { name: 'B1', ai: true }, { name: 'B2', ai: true }, { name: 'B3', ai: true }], rng: Engine.seededRng(seed) });
+    S.items = ids.map(id => byId.get(id));
+    won.forEach(([w, price], i) => { S.players[w].budget -= price; S.players[w].bought.push({ ...S.items[i], price }); });
+    S.i = 29; Engine.startLot(S);
+    const w = bidLot(S, p => (p < 4 ? p + 1 : null));
+    assert.ok(w.price <= Engine.priceOf(pack, S.items[29]).max, `seed ${seed}: Kiribati sold for EUR ${w.price}`);
   }
 });
